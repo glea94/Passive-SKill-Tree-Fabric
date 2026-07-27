@@ -1,51 +1,51 @@
-# 🌳 Passive Skill Tree — Fabric Port (1.20.1 now) (WIP for 1.21.x + 26.1, 26.2)
+# 🌳 Passive Skill Tree — Fabric Port (1.20.1)
 
 ![Minecraft Version](https://shields.io)
 ![Loader](https://shields.io)
 ![Status](https://shields.io)
 
-Ce projet est un portage non officiel pour **Fabric 1.20.1** du célèbre mod d'arbre de compétences passives. Il permet aux joueurs de débloquer des bonus statistiques uniques au fur et à mesure de leur progression en jeu via une interface visuelle complète.
+This project is an unofficial port for **Fabric 1.20.1** of the popular passive skill tree mod. It allows players to unlock unique statistical bonuses as they progress through the game using a fully custom visual user interface.
 
 ---
 
-## 👤 Crédits & Mentions Légales
+## 👤 Credits & Disclaimers
 
-* **Auteur d'origine :** Un immense merci à **000000000_00** (et l'équipe de développement initiale) pour la création de ce mod incroyable.
-* **Mod d'origine (Forge) :** Retrouvez le projet original sur sa page officielle [CurseForge - Passive Skill Tree](https://www.curseforge.com/minecraft/mc-mods/passive-skill-tree).
+* **Original Author:** A huge thank you to **000000000_00** (and the initial development team) for creating this amazing mod.
+* **Original Mod (Forge):** Find the original project on its official [CurseForge - Passive Skill Tree](https://curseforge.com) page.
 
-*Ce portage a été réalisé à des fins de compatibilité et de développement personnel au sein de l'écosystème Fabric.*
+*This port was made for compatibility purposes and personal development within the Fabric ecosystem.*
 
 ---
 
-## 🛠️ Dépendances Requises (Dependencies)
+## 🛠️ Required Dependencies
 
-Pour faire fonctionner ce mod en jeu ou dans votre environnement de développement, les bibliothèques suivantes sont **strictement obligatoires** :
+To run this mod in-game or within your development environment, the following libraries are **strictly mandatory**:
 
-| Mod | Utilité | Lien de Téléchargement |
+| Mod | Purpose | Download Link |
 | :--- | :--- | :--- |
-| <img src="https://shields.io🦺-yellow"> | Base essentielle pour l'écosystème Fabric | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/fabric-api) |
-| <img src="https://shields.io⚙️-purple"> | Supprime les limites imposées par Minecraft sur les attributs | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/attributefix) |
-| <img src="https://shields.io❤️-red"> | Gère proprement les modifications de barres de vie maximales | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/max-health-fix) |
+| <img src="https://shields.io🦺-yellow"> | Essential framework for the Fabric ecosystem | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/fabric-api) |
+| <img src="https://shields.io⚙️-purple"> | Removes vanilla Minecraft caps on attribute values | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/attributefix) |
+| <img src="https://shields.io❤️-red"> | Correctly handles dynamic max health bars and calculations | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/max-health-fix) |
 
 ---
 
-## 🚀 Fonctionnalités Prises en Charge
+## 🚀 Key Features
 
-* 📊 **Système d'XP Synchrone :** Gagnez des niveaux et attribuez vos points directement depuis l'interface utilisateur.
-* 🌐 **Datagen Intégré :** Génération automatique des fichiers de langue (`en_us`, `ru_ru`) et structures de données.
-* 📦 **Compatibilité Prism Launcher :** Testé avec succès dans des modpacks complexes en environnement de jeu réel.
+* 📊 **Synchronized XP System:** Earn levels and allocate your custom skill points directly inside the UI.
+* 🌐 **Built-in Datagen:** Automatic generation of core language assets (`en_us`, `ru_ru`) and data structures.
+* 📦 **Prism Launcher Compatibility:** Tested successfully within complex modpacks in a production gaming environment.
 
 ---
 
-## 💻 Instructions pour le Développement (Gradle)
+## 💻 Development Instructions (Gradle)
 
-Si vous souhaitez cloner ce projet et travailler dessus :
+If you wish to clone this repository and work on the project:
 
-1. Ouvrez le projet dans **IntelliJ IDEA**.
-2. Synchronisez le projet avec Gradle (bouton de l'éléphant bleu).
-3. Utilisez la commande suivante pour compiler votre propre fichier `.jar` final :
+1. Open the project inside **IntelliJ IDEA**.
+2. Sync the project with Gradle (click the blue elephant icon).
+3. Use the following command to compile your own final distributable `.jar` file:
    ```bash
    ./gradlew build
    ```
 
-*Note : Ne relancez pas la commande `runDatagen` sans avoir sécurisé vos fichiers du dossier `src/main/resources`, au risque de voir vos fichiers écrasés par le processus de nettoyage automatique de Fabric Loom.*
+*Note: Avoid running the `runDatagen` task without backing up your files inside `src/main/resources`. Fabric Loom's default cleanup process will overwrite manually placed assets if not explicitly isolated.*
