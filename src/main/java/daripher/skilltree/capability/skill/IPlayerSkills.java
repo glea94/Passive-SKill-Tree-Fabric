@@ -1,6 +1,6 @@
 package daripher.skilltree.capability.skill;
 
-import dev.onyxstudios.cca.api.v3.component.Component;
+import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
  * un nouveau tag). @AutoRegisterCapability disparaît : l'enregistrement se fait explicitement
  * dans PSTComponents, pas par annotation scannée au chargement.
  */
-public interface IPlayerSkills extends Component {
+public interface IPlayerSkills extends AutoSyncedComponent  {
     NonNullList<PassiveSkill> getPlayerSkills();
 
     boolean learnSkill(PassiveSkill passiveSkill);
