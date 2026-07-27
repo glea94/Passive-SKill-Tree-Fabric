@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "skilltree:block/workbench_side",
+    "north": "skilltree:block/workbench_front",
+    "south": "skilltree:block/workbench_side",
+    "east": "skilltree:block/workbench_side",
+    "west": "skilltree:block/workbench_side",
+    "up": "skilltree:block/workbench_top",
+    "down": "skilltree:block/workbench_bottom"
+  }
+}

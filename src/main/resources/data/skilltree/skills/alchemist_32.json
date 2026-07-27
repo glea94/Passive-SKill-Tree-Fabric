@@ -1,0 +1,34 @@
+{
+  "id": "skilltree:alchemist_32",
+  "bonuses": [
+    {
+      "type": "skilltree:ignore_effect_immunity",
+      "mob_effect_predicate": {
+        "effect": "minecraft:poison",
+        "type": "skilltree:effect_id"
+      }
+    }
+  ],
+  "requirements": [
+    {
+      "type": "skilltree:stat_value",
+      "statTypeId": "minecraft:killed",
+      "statId": "minecraft:spider",
+      "minValue": 27
+    }
+  ],
+  "directConnections": [
+    "skilltree:alchemist_29"
+  ],
+  "longConnections": [],
+  "oneWayConnections": [],
+  "tags": [],
+  "backgroundTexture": "skilltree:textures/icons/background/keystone.png",
+  "iconTexture": "skilltree:textures/icons/potion_green_big.png",
+  "borderTexture": "skilltree:textures/tooltip/lesser.png",
+  "titleColor": "",
+  "positionX": 124.70306,
+  "positionY": 72.00797,
+  "buttonSize": 32,
+  "isStartingPoint": false
+}

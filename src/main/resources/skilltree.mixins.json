@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_17",
+  "package": "daripher.skilltree.mixin",
+  "mixins": [
+    "PlayerMixin",
+    "PlayerBreakSpeedMixin",
+    "LivingEntityMixin",
+    "LivingFallMixin",
+    "LivingVisibilityMixin",
+    "LivingExperienceDropMixin",
+    "MobEffectMixin",
+    "ThrownPotionMixin",
+    "ItemStackMixin",
+    "AbstractWidgetAccessor",
+    "AbstractArrowAccessor",
+    "MobEffectInstanceAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

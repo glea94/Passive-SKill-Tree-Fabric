@@ -1,0 +1,108 @@
+plugins {
+	id 'fabric-loom' version '1.14.10'
+	id 'maven-publish'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+	archivesName = "PassiveSkillTree-Fabric-${minecraft_version}"
+}
+
+repositories {
+	// Cardinal Components API (remplace le système de Capabilities de Forge) + Trinkets, mêmes mainteneurs (Ladysnake)
+	// URL vérifiée en juillet 2026 : l'ancien maven JFrog (ladysnake.jfrog.io) a définitivement
+	// fermé (fin du service gratuit JFrog Artifactory pour l'open source), remplacé par celui-ci.
+	maven {
+		name = "Ladysnake Mods"
+		url = 'https://maven.ladysnake.org/releases'
+	}
+	// AttributeFix et Trinkets - distribués via le maven Modrinth
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = "Modrinth"
+				url = 'https://api.modrinth.com/maven'
+			}
+		}
+		filter {
+			includeGroup "maven.modrinth"
+		}
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	// Mappings officiels Mojang (PAS Yarn) : tout le code de ce portage utilise les noms Mojang
+	// (ChatFormatting, ResourceLocation, LivingEntity...), hérités directement de la source Forge
+	// d'origine (Forge utilise Mojmap depuis des années, pas les noms Yarn). Utiliser Yarn ici
+	// causerait un mismatch total entre le code et les mappings - repéré et corrigé le 23/07/2026.
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+	modImplementation "maven.modrinth:lOOpEntO:9PvB3nqH"
+	// Cardinal Components API -> équivalent Fabric du système de Capabilities Forge
+	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cardinal_components_version}"
+	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cardinal_components_version}"
+
+	// Trinkets API -> équivalent Fabric de Curios (choix confirmé pour la compat accessoires)
+	// Bascule vers Modrinth : maven.terraformersmc.com renvoyait une erreur 502 persistante.
+	// Coordonnées confirmées par toi depuis la page de téléchargement officielle Modrinth (3.7.2).
+	modImplementation "maven.modrinth:5aaWibi9:AHxQGtuC"
+
+	// AttributeFix (dépendance obligatoire dans le mod d'origine) - build Fabric 1.20.1 21.0.4,
+	// coordonnées Modrinth vérifiées (maven.modrinth:<slug-id>:<version-id>)
+	modImplementation "maven.modrinth:lOOpEntO:Y42wjyly"
+}
+
+loom {
+	accessWidenerPath = project.file("src/main/resources/skilltree.accesswidener")
+	runs {
+		datagen {
+			inherit client
+			name "Data Generation"
+			vmArg "-Dfabric-api.datagen"
+			vmArg "-Dfabric-api.datagen.output-dir=${project.file("src/main/generated").absolutePath}"
+			vmArg "-Dfabric-api.datagen.modid=skilltree"
+			// Force Fabric à charger toutes les usines de données (Data Providers)
+			vmArg "-Dfabric.development=true"
+			runDir "build/datagen"
+		}
+	}
+}
+
+
+processResources {
+	inputs.property "version", project.version
+	filteringCharset "UTF-8"
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 17
+}
+
+java {
+	withSourcesJar()
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
+
+sourceSets {
+	main {
+		resources {
+			// Inclut explicitement le dossier généré à côté des ressources classiques
+			srcDir 'src/main/generated'
+		}
+	}
+}
+
+// Applique la stratégie d'exclusion sur TOUTES les tâches de compression (Jar, Zip) et de copie
+tasks.withType(AbstractCopyTask).configureEach {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+

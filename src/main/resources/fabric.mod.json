@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "skilltree",
+  "version": "0.7.6+c",
+  "name": "Passive Skill Tree",
+  "description": "Adds passive skill tree with player class system",
+  "authors": ["Daripher"],
+  "contact": {
+    "sources": "https://github.com/Daripher/Passive-Skill-Tree"
+  },
+  "license": "GPL-3.0",
+  "icon": "assets/skilltree/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "daripher.skilltree.SkillTreeMod"
+    ],
+    "client": [
+      "daripher.skilltree.client.SkillTreeModClient"
+    ],
+    "cardinal-components": [
+      "daripher.skilltree.capability.skill.PlayerSkillsProvider",
+      "daripher.skilltree.entity.persistentdata.PersistentDataProvider"
+    ],
+    "fabric-datagen": [
+      "daripher.skilltree.data.generation.PSTDataGenerator"
+    ]
+  },
+  "mixins": [
+    "skilltree.mixins.json",
+    {
+      "config": "skilltree.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "accessWidener": "skilltree.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "fabric-api": "*",
+    "minecraft": "1.20.1",
+    "java": ">=17",
+    "cardinal-components-base": "*",
+    "cardinal-components-entity": "*",
+    "attributefix": "*"
+  },
+  "recommends": {
+    "trinkets": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": ["library"]
+    },
+    "cardinal-components": [
+      "skilltree:player_skills",
+      "skilltree:persistent_data"
+    ]
+  }
+}
