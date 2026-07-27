@@ -1,8 +1,5 @@
 # 🌳 Passive Skill Tree — Fabric Port (1.20.1)
 
-![Minecraft Version](https://shields.io)
-![Loader](https://shields.io)
-![Status](https://shields.io)
 
 This project is an unofficial port for **Fabric 1.20.1** of the popular passive skill tree mod. It allows players to unlock unique statistical bonuses as they progress through the game using a fully custom visual user interface.
 
