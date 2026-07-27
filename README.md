@@ -10,8 +10,8 @@ This project is an unofficial port for **Fabric 1.20.1** of the popular passive 
 
 ## 👤 Credits & Disclaimers
 
-* **Original Author:** A huge thank you to **000000000_00** (and the initial development team) for creating this amazing mod.
-* **Original Mod (Forge):** Find the original project on its official [CurseForge - Passive Skill Tree](https://curseforge.com) page.
+* **Original Author:** A huge thank you to **Daripher** (and the initial development team) for creating this amazing mod.
+* **Original Mod (Forge):** Find the original project on its official [CurseForge - Passive Skill Tree](https://www.curseforge.com/minecraft/mc-mods/passive-skill-tree) page.
 
 *This port was made for compatibility purposes and personal development within the Fabric ecosystem.*
 
