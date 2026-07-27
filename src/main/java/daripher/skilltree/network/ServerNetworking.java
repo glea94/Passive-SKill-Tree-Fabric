@@ -17,13 +17,6 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Objects;
 
-/**
- * Portage Fabric du serveur du système réseau. Équivalences avec la version Forge :
- * - NetworkEvent.Context / ctx.setPacketHandled(true) -> disparaissent, Fabric gère ça en
- *   interne.
- * - ctx.enqueueWork(...) (exécuter sur le thread principal) -> server.execute(...), même rôle.
- * - PacketDistributor.PLAYER.with(() -> player).send(...) -> ServerPlayNetworking.send(player, ...).
- */
 public class ServerNetworking {
     public static void register() {
         ServerPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.LEARN_SKILL, (server, player, handler, buf, responseSender) -> {
@@ -41,8 +34,9 @@ public class ServerNetworking {
         Objects.requireNonNull(skill);
         if (capability.learnSkill(skill)) {
             skill.learn(player, true);
+            // SYNCHRONISATION UNIQUE : Écrit sur le disque dur et met à jour l'écran du joueur proprement
+            PlayerSkillsProvider.KEY.sync(player);
         }
-        sendSyncPlayerSkills(player);
     }
 
     private static void handleGainSkillPoint(ServerPlayer player) {
@@ -59,7 +53,8 @@ public class ServerNetworking {
         }
         player.giveExperiencePoints(-cost);
         capability.grantSkillPoints(1);
-        sendSyncPlayerSkills(player);
+        // SYNCHRONISATION UNIQUE : Sauvegarde le point et stabilise l'affichage des points restants
+        PlayerSkillsProvider.KEY.sync(player);
     }
 
     public static void sendSyncPlayerSkills(ServerPlayer player) {
