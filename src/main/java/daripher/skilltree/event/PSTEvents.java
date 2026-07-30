@@ -25,4 +25,5 @@ public class PSTEvents {
     public static final PSTEventBus<MobEffectAddedPSTEvent> MOB_EFFECT_ADDED = new PSTEventBus<>();
     public static final PSTEventBus<LivingExperienceDropPSTEvent> LIVING_EXPERIENCE_DROP = new PSTEventBus<>();
     public static final PSTEventBus<ItemTooltipPSTEvent> ITEM_TOOLTIP = new PSTEventBus<>();
+    public static final PSTEventBus<LivingEntityUseItemFinishPSTEvent> ITEM_USE_FINISH = new PSTEventBus<>();
 }

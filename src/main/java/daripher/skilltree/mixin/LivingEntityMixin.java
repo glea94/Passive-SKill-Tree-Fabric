@@ -89,4 +89,21 @@ public abstract class LivingEntityMixin {
     private float skilltree$applyModifiedHealAmount(float amount) {
         return skilltree$healAmountModified ? skilltree$modifiedHealAmount : amount;
     }
+
+    /**
+     * Portage Fabric de net.minecraftforge.event.entity.living.LivingEntityUseItemEvent.Finish.
+     * Injection simple à HEAD (avant que vanilla ne traite/échange l'item) : on capture l'item
+     * en cours d'utilisation via getUseItem() (accesseur public vanilla) et on notifie nos
+     * listeners. Pas de modification du comportement vanilla ici, juste une notification -
+     * technique la plus sûre possible (pas de cancellable, pas de capture de variable locale).
+     */
+    @Inject(method = "completeUsingItem", at = @At("HEAD"), require = 1)
+    private void skilltree$onCompleteUsingItem(CallbackInfo ci) {
+        LivingEntity self = (LivingEntity) (Object) this;
+        net.minecraft.world.item.ItemStack usedItem = self.getUseItem();
+        if (usedItem.isEmpty()) {
+            return;
+        }
+        PSTEvents.ITEM_USE_FINISH.post(new daripher.skilltree.event.LivingEntityUseItemFinishPSTEvent(self, usedItem.copy()));
+    }
 }

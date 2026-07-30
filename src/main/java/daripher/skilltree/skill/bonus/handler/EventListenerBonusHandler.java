@@ -1,6 +1,7 @@
 package daripher.skilltree.skill.bonus.handler;
 
 import daripher.skilltree.event.CriticalHitPSTEvent;
+import daripher.skilltree.event.LivingEntityUseItemFinishPSTEvent;
 import daripher.skilltree.event.LivingHurtPSTEvent;
 import daripher.skilltree.event.PSTEvents;
 import daripher.skilltree.skill.SkillBonusProvider;
@@ -22,22 +23,34 @@ import java.util.function.BiConsumer;
  * - triggerCritEvents (CriticalHitEvent) -> PSTEvents.CRITICAL_HIT, event.isCrit() remplace le
  *   test Result.ALLOW/DEFAULT+vanillaCritical de Forge : porté.
  * - triggerKillEvents (LivingDeathEvent) -> ServerLivingEntityEvents.ALLOW_DEATH : porté.
+ * - triggerItemUsedEvents (LivingEntityUseItemEvent.Finish) -> PSTEvents.ITEM_USE_FINISH : porté
+ *   (mixin sur LivingEntity.completeUsingItem(), voir LivingEntityMixin). Corrige le bug signalé
+ *   où les compétences "chance d'effet en mangeant" (ex. 15% Force en mangeant) ne se
+ *   déclenchaient jamais.
  * <p>
- * VOLONTAIREMENT PAS ENCORE PORTÉ ICI (pas un stub, vraies dépendances manquantes) :
+ * VOLONTAIREMENT PAS ENCORE PORTÉ ICI (pas un stub, vraie dépendance manquante) :
  * - triggerShieldBlockEvents (ShieldBlockEvent) : nécessite un mixin sur le blocage au bouclier
  *   vanilla (LivingEntity.blockUsingShield), plus complexe que les autres mixins déjà faits
  *   (corrélation entre l'attaquant et la source de dégâts pas directement disponible au point
  *   d'injection) - à traiter spécifiquement, pas de raccourci pris ici.
- * - triggerItemUsedEvents (LivingEntityUseItemEvent.Finish) : nécessite un mixin sur
- *   LivingEntity.completeUsingItem(), à traiter avec le reste des events d'utilisation d'item.
  */
 public class EventListenerBonusHandler {
     public static void register() {
         PSTEvents.LIVING_HURT.register(EventListenerBonusHandler::triggerHurtEvents);
         PSTEvents.CRITICAL_HIT.register(EventPriority.LOWEST, EventListenerBonusHandler::triggerCritEvents);
+        PSTEvents.ITEM_USE_FINISH.register(EventListenerBonusHandler::triggerItemUsedEvents);
         ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, amount) -> {
             triggerKillEvents(entity, source);
             return true;
+        });
+    }
+
+    private static void triggerItemUsedEvents(LivingEntityUseItemFinishPSTEvent event) {
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+        triggerEvent(player, ItemUseEventListener.class, (eventListener, skillBonus) -> {
+            eventListener.onEvent(player, event.getItem(), skillBonus);
         });
     }
 
