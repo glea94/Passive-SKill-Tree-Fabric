@@ -11,7 +11,7 @@ import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 public class Label extends AbstractWidget {
-    public static final ResourceLocation WIDGETS_TEXTURE = new ResourceLocation("skilltree:textures/screen/widgets.png");
+    public static final ResourceLocation WIDGETS_TEXTURE = ResourceLocation.fromNamespaceAndPath("skilltree", "textures/screen/widgets.png");
     private boolean hasBackground;
 
     public Label(int x, int y, Component message) {

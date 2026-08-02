@@ -145,7 +145,9 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public GrantItemBonus deserialize(JsonObject json) throws JsonParseException {
-            ResourceLocation itemId = new ResourceLocation(json.get("item_id").getAsString());
+            // CORRECTION 1.21.1 : fromNamespaceAndPath(namespace, path) attend 2 arguments séparés ;
+            // la chaîne stockée est déjà une ResourceLocation complète "namespace:path", donc parse().
+            ResourceLocation itemId = ResourceLocation.parse(json.get("item_id").getAsString());
             int amount = SerializationHelper.getElement(json, "amount").getAsInt();
             return new GrantItemBonus(itemId, amount);
         }
@@ -161,7 +163,7 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
 
         @Override
         public GrantItemBonus deserialize(CompoundTag tag) {
-            ResourceLocation itemId = new ResourceLocation(tag.getString("item_id"));
+            ResourceLocation itemId = ResourceLocation.parse(tag.getString("item_id"));
             int amount = tag.getInt("amount");
             return new GrantItemBonus(itemId, amount);
         }

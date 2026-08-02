@@ -7,6 +7,7 @@ import daripher.skilltree.mixin.AbstractArrowAccessor;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.ArrowRetrievalBonus;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -65,7 +66,12 @@ public class ArrowRetrievalChanceBonusHandler {
         LivingEntity target = event.getEntity();
         CompoundTag targetPersistentData = PersistentDataProvider.get(target);
         ListTag stuckArrowsTag = targetPersistentData.getList(STUCK_ARROWS_TAG_NAME, Tag.TAG_COMPOUND);
-        stuckArrowsTag.add(arrowStack.save(new CompoundTag()));
+        // 1.21.1 : ItemStack.save(CompoundTag) a disparu. La sérialisation passe désormais par
+        // le HolderLookup.Provider (registres) du niveau, comme partout ailleurs dans le portage
+        // (cf. PlayerSkills.writeToNbt / WorkbenchCraftingRecipe.assemble).
+        HolderLookup.Provider registries = player.level().registryAccess();
+        Tag arrowTag = arrowStack.save(registries);
+        stuckArrowsTag.add(arrowTag);
         targetPersistentData.put(STUCK_ARROWS_TAG_NAME, stuckArrowsTag);
     }
 
@@ -75,8 +81,14 @@ public class ArrowRetrievalChanceBonusHandler {
         if (arrowsTag.isEmpty()) {
             return;
         }
+        // 1.21.1 : ItemStack.of(CompoundTag) a disparu au profit de ItemStack.parse(registries, tag),
+        // qui exige le contexte des registres et renvoie un Optional<ItemStack>.
+        HolderLookup.Provider registries = entity.level().registryAccess();
         for (Tag tag : arrowsTag) {
-            ItemStack arrowStack = ItemStack.of((CompoundTag) tag);
+            ItemStack arrowStack = ItemStack.parse(registries, tag).orElse(ItemStack.EMPTY);
+            if (arrowStack.isEmpty()) {
+                continue;
+            }
             entity.spawnAtLocation(arrowStack);
         }
     }

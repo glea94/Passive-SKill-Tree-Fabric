@@ -36,6 +36,8 @@ public class LiquidFireEffect extends MobEffect {
             DamageSource damageSource = new DamageSource(damageType, source, indirectSource);
             target.hurt(damageSource, damage);
         }
-        target.setSecondsOnFire((int) damage / 2);
+        // CORRECTION 1.21.1 : LivingEntity/Entity#setSecondsOnFire(int) a été retiré au profit
+        // de igniteForSeconds(float) (voir le refactor des ticks de feu dans Entity).
+        target.igniteForSeconds((int) damage / 2);
     }
 }

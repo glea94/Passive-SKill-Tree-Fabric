@@ -69,15 +69,17 @@ public final class ItemIdPredicate implements ItemStackPredicate {
     }
 
     private void selectItemId(Consumer<ItemStackPredicate> consumer, String text) {
-        setId(new ResourceLocation(text));
+        // CORRECTION 1.21.1 : fromNamespaceAndPath(namespace, path) attend 2 arguments séparés ;
+        // "text" est une chaîne "namespace:path" complète saisie par l'utilisateur, donc parse().
+        setId(ResourceLocation.parse(text));
         consumer.accept(this);
     }
 
     private static boolean isItemId(String text) {
-        if (!ResourceLocation.isValidResourceLocation(text)) {
+        if (ResourceLocation.tryParse(text) == null) {
             return false;
         }
-        return BuiltInRegistries.ITEM.containsKey(new ResourceLocation(text));
+        return BuiltInRegistries.ITEM.containsKey(ResourceLocation.parse(text));
     }
 
     public void setId(ResourceLocation id) {
@@ -87,7 +89,7 @@ public final class ItemIdPredicate implements ItemStackPredicate {
     public static class Serializer implements ItemStackPredicate.Serializer {
         @Override
         public ItemStackPredicate deserialize(JsonObject json) throws JsonParseException {
-            ResourceLocation id = new ResourceLocation(json.get("id").getAsString());
+            ResourceLocation id = ResourceLocation.parse(json.get("id").getAsString());
             return new ItemIdPredicate(id);
         }
 
@@ -103,7 +105,7 @@ public final class ItemIdPredicate implements ItemStackPredicate {
         public ItemStackPredicate deserialize(CompoundTag tag) {
             Tag idTag = tag.get("id");
             Objects.requireNonNull(idTag);
-            ResourceLocation id = new ResourceLocation(idTag.getAsString());
+            ResourceLocation id = ResourceLocation.parse(idTag.getAsString());
             return new ItemIdPredicate(id);
         }
 
@@ -119,7 +121,7 @@ public final class ItemIdPredicate implements ItemStackPredicate {
 
         @Override
         public ItemStackPredicate deserialize(FriendlyByteBuf buf) {
-            return new ItemIdPredicate(new ResourceLocation(buf.readUtf()));
+            return new ItemIdPredicate(ResourceLocation.parse(buf.readUtf()));
         }
 
         @Override
@@ -132,7 +134,7 @@ public final class ItemIdPredicate implements ItemStackPredicate {
 
         @Override
         public ItemStackPredicate createDefaultInstance() {
-            return new ItemIdPredicate(new ResourceLocation("minecraft:shield"));
+            return new ItemIdPredicate(ResourceLocation.parse("minecraft:shield"));
         }
     }
 }

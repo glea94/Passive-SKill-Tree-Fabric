@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTEventListeners {
-    public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "event_listeners");
+    public static final ResourceLocation REGISTRY_ID = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "event_listeners");
     public static final DeferredRegister<SkillEventListener.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<SkillEventListener.Serializer> ATTACK = REGISTRY.register("attack", OutgoingDamageEventListener.Serializer::new);

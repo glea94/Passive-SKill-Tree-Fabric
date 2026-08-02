@@ -42,7 +42,7 @@ public class PoisonedWeaponClientEvents {
         Style style = TooltipHelper.getSkillBonusStyle(true);
         Component effectNameTooltip = TooltipHelper.getEffectTooltip(mobEffectInstance);
         MutableComponent effectTooltip;
-        if (!mobEffectInstance.getEffect().isInstantenous()) {
+        if (!mobEffectInstance.getEffect().value().isInstantenous()) {
             int duration = mobEffectInstance.getDuration();
             Component durationTooltip = getDurationTooltip(duration);
             effectTooltip = Component.translatable("skilltree.poisoned_weapon.effect", effectNameTooltip, durationTooltip);

@@ -16,7 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 
 import org.jetbrains.annotations.NotNull;
@@ -86,7 +86,12 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
         ClientLevel clientLevel = Minecraft.getInstance().level;
         Objects.requireNonNull(clientLevel);
         RecipeManager recipesManager = clientLevel.getRecipeManager();
-        List<ResourceLocation> artisanRecipes = recipesManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH).stream().map(Recipe::getId)
+        // CORRECTION 1.21.1 : Recipe#getId() a disparu de l'interface Recipe ; getAllRecipesFor(...)
+        // renvoie désormais List<RecipeHolder<AbstractWorkbenchRecipe>>, et l'id réel de chaque
+        // recette ne vit plus que dans ce RecipeHolder (voir AbstractWorkbenchRecipe#setId(...)).
+        // On lit donc directement RecipeHolder::id ici, sans dépendre de AbstractWorkbenchRecipe#getId()
+        // ni de son éventuel placeholder.
+        List<ResourceLocation> artisanRecipes = recipesManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH).stream().map(RecipeHolder::id)
                 .toList();
         editor.addSelectionMenu(0, 0, 200, artisanRecipes).setValue(recipeId).setResponder(id -> selectRecipeId(editor, consumer, id));
         editor.increaseHeight(19);
@@ -127,7 +132,9 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public RecipeUnlockBonus deserialize(JsonObject json) throws JsonParseException {
-            ResourceLocation recipeId = new ResourceLocation(json.get("recipe_id").getAsString());
+            // CORRECTION 1.21.1 : ResourceLocation.fromNamespaceAndPath(String) à un seul argument
+            // n'existe plus ; on utilise désormais ResourceLocation.parse(String).
+            ResourceLocation recipeId = ResourceLocation.parse(json.get("recipe_id").getAsString());
             return new RecipeUnlockBonus(recipeId);
         }
 
@@ -141,7 +148,9 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
 
         @Override
         public RecipeUnlockBonus deserialize(CompoundTag tag) {
-            ResourceLocation recipeId = new ResourceLocation(tag.getString("recipe_id"));
+            // CORRECTION 1.21.1 : ResourceLocation.fromNamespaceAndPath(String) à un seul argument
+            // n'existe plus ; on utilise désormais ResourceLocation.parse(String).
+            ResourceLocation recipeId = ResourceLocation.parse(tag.getString("recipe_id"));
             return new RecipeUnlockBonus(recipeId);
         }
 
@@ -157,7 +166,9 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
 
         @Override
         public RecipeUnlockBonus deserialize(FriendlyByteBuf buf) {
-            ResourceLocation recipeId = new ResourceLocation(buf.readUtf());
+            // CORRECTION 1.21.1 : ResourceLocation.fromNamespaceAndPath(String) à un seul argument
+            // n'existe plus ; on utilise désormais ResourceLocation.parse(String).
+            ResourceLocation recipeId = ResourceLocation.parse(buf.readUtf());
             return new RecipeUnlockBonus(recipeId);
         }
 
@@ -171,7 +182,10 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
-            return new RecipeUnlockBonus(new ResourceLocation("unknown_recipe"));
+            // CORRECTION 1.21.1 : ResourceLocation.fromNamespaceAndPath(String) à un seul argument
+            // n'existe plus ; on utilise désormais ResourceLocation.parse(String) (namespace
+            // "minecraft" implicite pour ce placeholder, comme avant le portage).
+            return new RecipeUnlockBonus(ResourceLocation.parse("unknown_recipe"));
         }
     }
 }

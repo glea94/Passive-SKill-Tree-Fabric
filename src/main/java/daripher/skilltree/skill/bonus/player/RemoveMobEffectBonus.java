@@ -40,7 +40,10 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
 
     @Override
     public void applyEffect(LivingEntity target, @Nullable LivingEntity source) {
-        target.getActiveEffects().stream().map(MobEffectInstance::getEffect).filter(effectPredicate).forEach(target::removeEffect);
+        // CORRECTION 1.21.1 : MobEffectInstance::getEffect renvoie désormais un Holder<MobEffect>,
+        // alors que MobEffectPredicate reste un Predicate<MobEffect>. On teste donc le prédicat sur
+        // holder.value() plutôt que sur le Holder lui-même.
+        target.getActiveEffects().stream().map(MobEffectInstance::getEffect).filter(holder -> effectPredicate.test(holder.value())).forEach(target::removeEffect);
     }
 
     @Override
@@ -90,7 +93,7 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
         }
         MutableComponent tooltip = Component.translatable(descriptioId, effectDescription);
         if (chance < 1) {
-            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.MULTIPLY_BASE);
+            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         }
         tooltip = eventListener.getTooltip(tooltip);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));

@@ -84,13 +84,17 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
         } else if (multiplier == -1) {
             multiplierDescription = Component.translatable(descriptionId + ".none");
         } else {
-            String formattedMultiplier = ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(multiplier * 100);
+            // CORRECTION 1.21.1 : ItemStack.ATTRIBUTE_MODIFIER_FORMAT a disparu du code vanilla,
+            // remplacé par un DecimalFormat standard équivalent.
+            String formattedMultiplier = new java.text.DecimalFormat("#.##").format(multiplier * 100);
             multiplierDescription = Component.translatable(descriptionId + ".multiplier", formattedMultiplier);
         }
         MutableComponent bonusDescription;
         if (chance < 1) {
             bonusDescription = Component.translatable(descriptionId, multiplierDescription, lootDescription);
-            bonusDescription = TooltipHelper.getSkillBonusTooltip(bonusDescription, chance, AttributeModifier.Operation.MULTIPLY_BASE);
+            // CORRECTION 1.21.1 : AttributeModifier.Operation.ADD_MULTIPLIED_BASE a été renommé ADD_MULTIPLIED_BASE
+            // (même correction que dans ExperienceGainMultiplierBonus/IncomingDamageBonusHandler).
+            bonusDescription = TooltipHelper.getSkillBonusTooltip(bonusDescription, chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         } else {
             descriptionId += ".guaranteed";
             if (multiplier == -1) {
@@ -208,7 +212,8 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
 
         public LootContextParam<Entity> getPlayerLootContextParam() {
             return switch (this) {
-                case MOBS, FISHING -> LootContextParams.KILLER_ENTITY;
+                case MOBS, FISHING -> net.minecraft.world.level.storage.loot.parameters.LootContextParams.ATTACKING_ENTITY;
+
                 case GEMS, CHESTS, ORE, ARCHAEOLOGY -> LootContextParams.THIS_ENTITY;
             };
         }

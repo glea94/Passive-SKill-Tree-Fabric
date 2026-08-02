@@ -43,7 +43,8 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
     @Override
     public void applyEffect(LivingEntity target, @Nullable LivingEntity source) {
         if (target.getRandom().nextFloat() < chance) {
-            target.setSecondsOnFire(duration);
+            // CORRECTION 1.21.1 : La méthode a été renommée officiellement par Mojang
+            target.igniteForSeconds(duration);
         }
     }
 
@@ -84,7 +85,10 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
 
     @Override
     public MutableComponent getSimpleTooltip() {
-        String durationDescription = StringUtil.formatTickDuration(duration * 20);
+        // CORRECTION 1.21.1 : StringUtil.formatTickDuration(int) à un seul argument n'existe plus ;
+        // la signature officielle requiert désormais le framerate (ticks par seconde) en second
+        // argument, ici 20.0F (20 ticks/seconde, valeur standard de Minecraft).
+        String durationDescription = StringUtil.formatTickDuration(duration * 20, 20.0F);
         String targetDescription = eventListener.getTarget().name().toLowerCase(Locale.ROOT);
         String bonusDescription = getDescriptionId() + "." + targetDescription;
         if (chance < 1) {
@@ -92,7 +96,8 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
         }
         MutableComponent tooltip = Component.translatable(bonusDescription, durationDescription);
         if (chance < 1) {
-            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.MULTIPLY_BASE);
+            // CORRECTION 1.21.1 : AttributeModifier.Operation.ADD_MULTIPLIED_BASE a été renommé ADD_MULTIPLIED_BASE.
+            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         }
         tooltip = eventListener.getTooltip(tooltip);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
@@ -123,7 +128,6 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
                 .setMenuInitFunc(() -> addEventListenerWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addEventListenerWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<InflictIgniteBonus>> consumer) {
         eventListener.addEditorWidgets(editor, eventListener -> {
             setEventListener(eventListener);

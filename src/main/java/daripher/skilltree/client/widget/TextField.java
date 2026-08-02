@@ -1,12 +1,13 @@
 package daripher.skilltree.client.widget;
 
-import daripher.skilltree.mixin.EditBoxAccessor;
+import daripher.skilltree.client.EditBoxAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -35,7 +36,7 @@ public class TextField extends EditBox implements TickingWidget {
             setFocused(false);
             return true;
         }
-        EditBoxAccessor accessor = (EditBoxAccessor) this;
+        EditBoxAccessor accessor = new EditBoxAccessor(this);
         if (keyCode == GLFW.GLFW_KEY_TAB && accessor.getSuggestion() != null) {
             setValue(getValue() + accessor.getSuggestion());
             setSuggestion(null);
@@ -75,22 +76,33 @@ public class TextField extends EditBox implements TickingWidget {
 
     @Override
     public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        EditBoxAccessor accessor = (EditBoxAccessor) this;
+        EditBoxAccessor accessor = new EditBoxAccessor(this);
         if (!isVisible()) {
             return;
         }
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/widgets.png");
+        ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("skilltree", "textures/screen/widgets.png");
         int v = isHoveredOrFocused() ? 42 : 56;
         graphics.blit(texture, getX(), getY(), 0, v, width / 2, height);
         graphics.blit(texture, getX() + width / 2, getY(), -width / 2, v, width / 2, height);
+
         int textColor = getTextColor();
-        int cursorVisiblePosition = getCursorPosition() - accessor.getDisplayPos();
-        int highlightWidth = accessor.getHighlightPos() - accessor.getDisplayPos();
+        int valueLength = getValue().length();
+
+        // SÉCURISATION DES INDEX DE RÉFLEXION
+        int displayPos = Math.max(0, Math.min(accessor.getDisplayPos(), valueLength));
+        int highlightPos = Math.max(0, Math.min(accessor.getHighlightPos(), valueLength));
+
+        int cursorVisiblePosition = getCursorPosition() - displayPos;
+        int highlightWidth = highlightPos - displayPos;
+
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
-        String visibleText = font.plainSubstrByWidth(getValue().substring(accessor.getDisplayPos()), getInnerWidth());
+
+        // Ligne 92 corrigée et sécurisée contre les out-of-bounds
+        String visibleText = font.plainSubstrByWidth(getValue().substring(displayPos), getInnerWidth());
+
         boolean isTextSplitByCursor = cursorVisiblePosition >= 0 && cursorVisiblePosition <= visibleText.length();
-        boolean isCursorVisible = isFocused() && accessor.getFrame() / 6 % 2 == 0 && isTextSplitByCursor;
+        boolean isCursorVisible = isFocused() && (Util.getMillis() / 300L) % 2L == 0L && isTextSplitByCursor;
         if (visibleText.isEmpty() && hint != null && !isFocused()) {
             visibleText = hint;
         }
@@ -100,10 +112,14 @@ public class TextField extends EditBox implements TickingWidget {
         if (highlightWidth > visibleText.length()) {
             highlightWidth = visibleText.length();
         }
+
+        // Sécurisation de l'affichage du texte scindé
         if (!visibleText.isEmpty()) {
-            String s1 = isTextSplitByCursor ? visibleText.substring(0, cursorVisiblePosition) : visibleText;
-            textX = graphics.drawString(font, accessor.getFormatter().apply(s1, accessor.getDisplayPos()), textX, textY, textColor, true);
+            int cursorIndex = Math.max(0, Math.min(cursorVisiblePosition, visibleText.length()));
+            String s1 = isTextSplitByCursor ? visibleText.substring(0, cursorIndex) : visibleText;
+            graphics.drawString(font, accessor.getFormatter().apply(s1, displayPos), textX, textY, textColor, true);
         }
+
         boolean isCursorSurrounded = getCursorPosition() < getValue().length() || getValue().length() >= accessor.getMaxLength();
         int cursorX = textX;
         if (!isTextSplitByCursor) {
@@ -112,9 +128,12 @@ public class TextField extends EditBox implements TickingWidget {
             cursorX = textX - 1;
             --textX;
         }
+
+        // Sécurisation de la deuxième partie de la chaîne de texte
         if (!visibleText.isEmpty() && isTextSplitByCursor && cursorVisiblePosition < visibleText.length()) {
+            int cursorIndex = Math.max(0, Math.min(cursorVisiblePosition, visibleText.length()));
             graphics.drawString(font, accessor.getFormatter()
-                    .apply(visibleText.substring(cursorVisiblePosition), getCursorPosition()), textX, textY, textColor, true);
+                    .apply(visibleText.substring(cursorIndex), getCursorPosition()), textX, textY, textColor, true);
         }
         if (!isCursorSurrounded && accessor.getSuggestion() != null) {
             graphics.drawString(font, accessor.getSuggestion(), cursorX - 1, textY, -8355712, true);
@@ -126,8 +145,11 @@ public class TextField extends EditBox implements TickingWidget {
                 graphics.drawString(font, "_", cursorX, textY, textColor, true);
             }
         }
+
+        // Sécurisation du surbrillance de sélection
         if (highlightWidth != cursorVisiblePosition) {
-            int highlightEndX = textStartX + font.width(visibleText.substring(0, highlightWidth));
+            int hWidth = Math.max(0, Math.min(highlightWidth, visibleText.length()));
+            int highlightEndX = textStartX + font.width(visibleText.substring(0, hWidth));
             accessor.invokeRenderHighlight(graphics, cursorX, textY - 1, highlightEndX - 1, textY + 9);
         }
     }
@@ -153,7 +175,6 @@ public class TextField extends EditBox implements TickingWidget {
 
     @Override
     public void onWidgetTick() {
-        this.tick();
     }
 
     public TextField setFocused() {

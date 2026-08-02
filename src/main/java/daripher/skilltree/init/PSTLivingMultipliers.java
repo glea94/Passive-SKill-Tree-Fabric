@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTLivingMultipliers {
-    public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "skill_bonus_multipliers");
+    public static final ResourceLocation REGISTRY_ID = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_bonus_multipliers");
     public static final DeferredRegister<LivingMultiplier.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<LivingMultiplier.Serializer> NONE = REGISTRY.register("none", NoneLivingMultiplier.Serializer::new);

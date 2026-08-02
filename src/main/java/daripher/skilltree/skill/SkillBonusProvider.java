@@ -66,7 +66,10 @@ public class SkillBonusProvider {
     private static <T> List<T> getEffectBonuses(Player player, Class<T> type) {
         List<T> bonuses = new ArrayList<>();
         for (MobEffectInstance e : player.getActiveEffects()) {
-            if (e.getEffect() instanceof SkillBonusEffect skillEffect) {
+            // CORRECTION 1.21.1 : getEffect() renvoie désormais Holder<MobEffect> ; il faut
+            // déballer avec .value() avant le instanceof, sinon la condition ne matche jamais
+            // (elle compilait déjà avant car Holder est une interface, mais restait toujours fausse).
+            if (e.getEffect().value() instanceof SkillBonusEffect skillEffect) {
                 SkillBonus<?> bonus = skillEffect.getBonus().copy();
                 if (type.isInstance(bonus)) {
                     bonus = bonus.copy().multiply(e.getAmplifier());

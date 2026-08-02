@@ -53,7 +53,7 @@ public class PSTClientCommands {
 
     private static int displaySkillTreeEditor(CommandContext<FabricClientCommandSource> ctx) {
         String treeIdArg = ctx.getArgument("treeId", String.class).toLowerCase(Locale.ROOT);
-        PSTClientCommands.tree_to_display = new ResourceLocation(treeIdArg);
+        PSTClientCommands.tree_to_display = ResourceLocation.parse(treeIdArg);
         PSTClientCommands.timer = 1;
         return 1;
     }

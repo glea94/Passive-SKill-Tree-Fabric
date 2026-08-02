@@ -16,10 +16,12 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -39,13 +41,15 @@ public class TooltipHelper {
     private static final Style CLASS_TITLE_STYLE = Style.EMPTY.withColor(0xFFD75F);
     private static final Style KEYSTONE_TITLE_STYLE = Style.EMPTY.withColor(0xEB7530);
     private static final Style GATEWAY_TITLE_STYLE = Style.EMPTY.withColor(0x849696);
+    // CORRECTION 1.21.1: ItemStack.ATTRIBUTE_MODIFIER_FORMAT a été supprimé ; on le recrée avec un DecimalFormat standard.
+    private static final DecimalFormat ATTRIBUTE_MODIFIER_FORMAT = new DecimalFormat("#.##", DecimalFormatSymbols.getInstance(Locale.ROOT));
 
     public static Component getEffectTooltip(MobEffectInstance effect) {
         Component effectDescription;
-        if (effect.getEffect() instanceof SkillBonusEffect skillEffect) {
+        if (effect.getEffect().value() instanceof SkillBonusEffect skillEffect) {
             effectDescription = skillEffect.getBonus().copy().multiply(effect.getAmplifier() + 1).getSimpleTooltip().setStyle(Style.EMPTY);
         } else {
-            effectDescription = effect.getEffect().getDisplayName();
+            effectDescription = effect.getEffect().value().getDisplayName();
             if (effect.getAmplifier() == 0) {
                 return effectDescription;
             }
@@ -55,11 +59,12 @@ public class TooltipHelper {
         return effectDescription;
     }
 
+    // CORRECTION 1.21.1: ADDITION -> ADD_VALUE, MULTIPLY_BASE -> ADD_MULTIPLIED_BASE, MULTIPLY_TOTAL -> ADD_MULTIPLIED_TOTAL
     public static Component getOperationName(AttributeModifier.Operation operation) {
         return Component.literal(switch (operation) {
-            case ADDITION -> "Addition";
-            case MULTIPLY_BASE -> "Multiply Base";
-            case MULTIPLY_TOTAL -> "Multiply Total";
+            case ADD_VALUE -> "Addition";
+            case ADD_MULTIPLIED_BASE -> "Multiply Base";
+            case ADD_MULTIPLIED_TOTAL -> "Multiply Total";
         });
     }
 
@@ -81,7 +86,7 @@ public class TooltipHelper {
 
     public static MutableComponent getSkillBonusTooltip(Component bonusDescription, double amount, AttributeModifier.Operation operation) {
         float multiplier = 1;
-        if (operation != AttributeModifier.Operation.ADDITION) {
+        if (operation != AttributeModifier.Operation.ADD_VALUE) {
             multiplier = 100;
         }
         double visibleAmount = amount * multiplier;
@@ -95,7 +100,7 @@ public class TooltipHelper {
     }
 
     public static String formatNumber(double number) {
-        String formatted = ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(number);
+        String formatted = ATTRIBUTE_MODIFIER_FORMAT.format(number);
         if (formatted.endsWith(".0")) {
             formatted = formatted.substring(0, formatted.length() - 2);
         }
@@ -245,8 +250,12 @@ public class TooltipHelper {
         ClientLevel level = Minecraft.getInstance().level;
         Objects.requireNonNull(level);
         RecipeManager recipeManager = level.getRecipeManager();
-        List<AbstractWorkbenchRecipe> recipes = recipeManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH);
-        AbstractWorkbenchRecipe recipe = recipes.stream().filter(r -> r.getId().equals(recipeId)).findAny().orElse(null);
+        List<RecipeHolder<AbstractWorkbenchRecipe>> recipes = recipeManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH);
+        // CORRECTION 1.21.1 : Recipe#getId() a disparu ; on ne peut plus filtrer de façon fiable sur
+        // r.getId() après un .map(RecipeHolder::value) (getId() renverrait le placeholder UNKNOWN_ID
+        // tant que AbstractWorkbenchRecipe#setId(...) n'a pas été appelé sur cette instance précise).
+        // On filtre donc directement sur RecipeHolder::id, qui porte toujours le véritable id.
+        AbstractWorkbenchRecipe recipe = recipes.stream().filter(holder -> holder.id().equals(recipeId)).map(RecipeHolder::value).findAny().orElse(null);
         if (recipe == null) {
             return Component.literal("Unknown Recipe: " + recipeId.toString()).withStyle(ChatFormatting.RED);
         }
@@ -257,8 +266,9 @@ public class TooltipHelper {
         ClientLevel level = Minecraft.getInstance().level;
         Objects.requireNonNull(level);
         RecipeManager recipeManager = level.getRecipeManager();
-        List<AbstractWorkbenchRecipe> recipes = recipeManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH);
-        AbstractWorkbenchRecipe recipe = recipes.stream().filter(r -> r.getId().equals(recipeId)).findAny().orElse(null);
+        List<RecipeHolder<AbstractWorkbenchRecipe>> recipes = recipeManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH);
+        // CORRECTION 1.21.1 : même remarque que dans getRecipeTooltip(ResourceLocation) ci-dessus.
+        AbstractWorkbenchRecipe recipe = recipes.stream().filter(holder -> holder.id().equals(recipeId)).map(RecipeHolder::value).findAny().orElse(null);
         if (recipe == null) {
             return "Unknown Recipe: " + recipeId.toString();
         }

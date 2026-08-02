@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTFloatFunctions {
-    public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "numeric_value_providers");
+    public static final ResourceLocation REGISTRY_ID = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "numeric_value_providers");
     public static final DeferredRegister<FloatFunction.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<FloatFunction.Serializer> ATTRIBUTE_VALUE = REGISTRY.register("attribute_value", AttributeValueFunction.Serializer::new);

@@ -177,7 +177,9 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             for (int i = 0; i < innerBonusesJson.size(); i++) {
                 JsonObject innerBonusTag = innerBonusesJson.get(i).getAsJsonObject();
                 String serializerIdString = innerBonusTag.get("type").getAsString();
-                ResourceLocation serializerId = new ResourceLocation(serializerIdString);
+                // CORRECTION 1.21.1 : ResourceLocation.fromNamespaceAndPath(String) à un seul
+                // argument n'existe plus ; on utilise désormais ResourceLocation.parse(String).
+                ResourceLocation serializerId = ResourceLocation.parse(serializerIdString);
                 ItemBonus.Serializer serializer = PSTRegistries.ITEM_BONUSES.get().getValue(serializerId);
                 Objects.requireNonNull(serializer, "Unknown item bonus: " + serializerId);
                 ItemBonus<?> innerBonus = serializer.deserialize(innerBonusTag);
@@ -212,7 +214,9 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             for (Tag value : innerBonusesTag) {
                 CompoundTag innerBonusTag = (CompoundTag) value;
                 String type = innerBonusTag.getString("type");
-                ResourceLocation serializerId = new ResourceLocation(type);
+                // CORRECTION 1.21.1 : ResourceLocation.fromNamespaceAndPath(String) à un seul
+                // argument n'existe plus ; on utilise désormais ResourceLocation.parse(String).
+                ResourceLocation serializerId = ResourceLocation.parse(type);
                 ItemBonus.Serializer serializer = PSTRegistries.ITEM_BONUSES.get().getValue(serializerId);
                 Objects.requireNonNull(serializer, "Unknown item bonus: " + serializerId);
                 innerBonuses.add(serializer.deserialize(innerBonusTag));
@@ -263,7 +267,8 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
 
         @Override
         public ItemBonus<?> createDefaultInstance() {
-            AttributeModifier defaultModifier = new AttributeModifier("Default Modifier", 1, AttributeModifier.Operation.ADDITION);
+            AttributeModifier defaultModifier = new AttributeModifier(ResourceLocation.parse("skilltree:default_modifier"), 1, AttributeModifier.Operation.ADD_VALUE);
+
             ItemBonus<?> bonus1 = new EquipmentBonus(new AttributeBonus(Attributes.ARMOR, defaultModifier));
             ItemBonus<?> bonus2 = new EquipmentBonus(new AttributeBonus(Attributes.ARMOR_TOUGHNESS, defaultModifier));
             ArrayList<ItemBonus<?>> bonuses = new ArrayList<>();

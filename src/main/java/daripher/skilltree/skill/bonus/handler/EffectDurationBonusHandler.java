@@ -6,6 +6,7 @@ import daripher.skilltree.mixin.MobEffectInstanceAccessor;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.player.EffectDurationBonus;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,7 +35,11 @@ public class EffectDurationBonusHandler {
         }
         float durationMultiplier = 1f;
         MobEffectInstance effectInstance = event.getEffectInstance();
-        MobEffect mobEffect = effectInstance.getEffect();
+        // CORRECTION 1.21.1 : MobEffectInstance#getEffect() renvoie désormais un Holder<MobEffect>.
+        // EffectDurationBonus#getDurationModifier(...) attend toujours un MobEffect brut, donc on
+        // déballe immédiatement avec .value() plutôt que de propager le Holder plus loin.
+        Holder<MobEffect> mobEffectHolder = effectInstance.getEffect();
+        MobEffect mobEffect = mobEffectHolder.value();
         // outgoing effects, inflicted by players
         if (playerEffectSource != null) {
             List<EffectDurationBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(playerEffectSource, EffectDurationBonus.class);

@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.14.10'
+	id 'fabric-loom' version '1.10-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -12,8 +12,8 @@ base {
 
 repositories {
 	// Cardinal Components API (remplace le système de Capabilities de Forge) + Trinkets, mêmes mainteneurs (Ladysnake)
-	// URL vérifiée en juillet 2026 : l'ancien maven JFrog (ladysnake.jfrog.io) a définitivement
-	// fermé (fin du service gratuit JFrog Artifactory pour l'open source), remplacé par celui-ci.
+	// Maven Ladysnake officiel, groupId renommé org.ladysnake.cardinal-components-api pour la branche 1.21
+	// (voir la note dans gradle.properties).
 	maven {
 		name = "Ladysnake Mods"
 		url = 'https://maven.ladysnake.org/releases'
@@ -36,24 +36,24 @@ dependencies {
 	minecraft "com.mojang:minecraft:${minecraft_version}"
 	// Mappings officiels Mojang (PAS Yarn) : tout le code de ce portage utilise les noms Mojang
 	// (ChatFormatting, ResourceLocation, LivingEntity...), hérités directement de la source Forge
-	// d'origine (Forge utilise Mojmap depuis des années, pas les noms Yarn). Utiliser Yarn ici
-	// causerait un mismatch total entre le code et les mappings - repéré et corrigé le 23/07/2026.
+	// d'origine.
 	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
-	modImplementation "maven.modrinth:lOOpEntO:9PvB3nqH"
-	// Cardinal Components API -> équivalent Fabric du système de Capabilities Forge
-	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cardinal_components_version}"
-	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cardinal_components_version}"
+
+	// Cardinal Components API -> équivalent Fabric du système de Capabilities Forge.
+	// Groupe Maven org.ladysnake.* pour la branche 1.21 (dev.onyxstudios.* était l'ancien groupe 1.20).
+	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-base:${cardinal_components_version}"
+	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:${cardinal_components_version}"
 
 	// Trinkets API -> équivalent Fabric de Curios (choix confirmé pour la compat accessoires)
-	// Bascule vers Modrinth : maven.terraformersmc.com renvoyait une erreur 502 persistante.
-	// Coordonnées confirmées par toi depuis la page de téléchargement officielle Modrinth (3.7.2).
-	modImplementation "maven.modrinth:5aaWibi9:AHxQGtuC"
+	// COORDONNÉES À REVÉRIFIER sur la page de téléchargement Modrinth pour 1.21.1
+	// (slug-id et version-id changent probablement par rapport à la version 1.20.1 "5aaWibi9:AHxQGtuC")
+	modImplementation "maven.modrinth:trinkets:${trinkets_version}"
 
-	// AttributeFix (dépendance obligatoire dans le mod d'origine) - build Fabric 1.20.1 21.0.4,
-	// coordonnées Modrinth vérifiées (maven.modrinth:<slug-id>:<version-id>)
-	modImplementation "maven.modrinth:lOOpEntO:Y42wjyly"
+	// AttributeFix (dépendance obligatoire dans le mod d'origine)
+	// COORDONNÉES À REVÉRIFIER sur Modrinth pour 1.21.1
+	modImplementation "maven.modrinth:attributefix:XwbErf6s"
 }
 
 loom {
@@ -71,7 +71,10 @@ loom {
 		}
 	}
 }
-
+// NOTE : ce bloc "datagen" reste tel quel, inchangé depuis la 1.20.1. Conformément à la règle
+// absolue du projet, il ne doit JAMAIS être exécuté sur src/main/resources (écraserait l'arbre
+// de compétences trié manuellement). Sa présence ici n'est qu'un hook Gradle/Loom requis par la
+// structure du projet, pas une invitation à le lancer.
 
 processResources {
 	inputs.property "version", project.version
@@ -83,13 +86,14 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 17
+	it.options.release = 21
+	it.options.compilerArgs.addAll(["-Xmaxerrs", "1000"])
 }
 
 java {
 	withSourcesJar()
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }
 
 sourceSets {
@@ -105,4 +109,3 @@ sourceSets {
 tasks.withType(AbstractCopyTask).configureEach {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
-

@@ -5,13 +5,14 @@ import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTEnchantmentPredicates;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.item.ItemStack;
 
 public enum NoneEnchantmentCondition implements EnchantmentCondition {
     INSTANCE;
 
+    // CORRECTION 1.21.1: Updated to take ItemStack to keep the interface completely unified
     @Override
-    public boolean met(EnchantmentCategory category) {
+    public boolean met(ItemStack stack) {
         return true;
     }
 

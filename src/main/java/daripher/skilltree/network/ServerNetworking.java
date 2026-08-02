@@ -10,21 +10,18 @@ import daripher.skilltree.network.message.LearnSkillMessage;
 import daripher.skilltree.network.message.SyncPlayerSkillsMessage;
 import daripher.skilltree.network.message.SyncServerDataMessage;
 import daripher.skilltree.skill.PassiveSkill;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Objects;
 
 public class ServerNetworking {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.LEARN_SKILL, (server, player, handler, buf, responseSender) -> {
-            LearnSkillMessage message = LearnSkillMessage.decode(buf);
-            server.execute(() -> handleLearnSkill(player, message));
+        ServerPlayNetworking.registerGlobalReceiver(LearnSkillMessage.TYPE, (message, context) -> {
+            context.player().server.execute(() -> handleLearnSkill(context.player(), message));
         });
-        ServerPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.GAIN_SKILL_POINT, (server, player, handler, buf, responseSender) -> {
-            server.execute(() -> handleGainSkillPoint(player));
+        ServerPlayNetworking.registerGlobalReceiver(GainSkillPointMessage.TYPE, (message, context) -> {
+            context.player().server.execute(() -> handleGainSkillPoint(context.player()));
         });
     }
 
@@ -58,16 +55,10 @@ public class ServerNetworking {
     }
 
     public static void sendSyncPlayerSkills(ServerPlayer player) {
-        SyncPlayerSkillsMessage message = new SyncPlayerSkillsMessage(player);
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        message.encode(buf);
-        ServerPlayNetworking.send(player, PSTNetworkChannels.SYNC_PLAYER_SKILLS, buf);
+        ServerPlayNetworking.send(player, new SyncPlayerSkillsMessage(player));
     }
 
     public static void sendSyncServerData(ServerPlayer player) {
-        SyncServerDataMessage message = new SyncServerDataMessage();
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        message.encode(buf);
-        ServerPlayNetworking.send(player, PSTNetworkChannels.SYNC_SERVER_DATA, buf);
+        ServerPlayNetworking.send(player, new SyncServerDataMessage());
     }
 }

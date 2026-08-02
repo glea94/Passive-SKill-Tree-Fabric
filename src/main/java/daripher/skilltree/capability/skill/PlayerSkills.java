@@ -2,6 +2,7 @@ package daripher.skilltree.capability.skill;
 
 import daripher.skilltree.data.reloader.SkillsReloader;
 import daripher.skilltree.skill.PassiveSkill;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -77,8 +78,9 @@ public class PlayerSkills implements IPlayerSkills {
     }
 
     // Portage : remplace serializeNBT() (qui retournait un CompoundTag) -> écrit dans le tag fourni.
+    // 1.21.1 : Component (Cardinal Components) exige désormais un HolderLookup.Provider pour la (dé)sérialisation.
     @Override
-    public void writeToNbt(CompoundTag tag) {
+    public void writeToNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
         tag.putUUID("TreeVersion", TREE_VERSION);
         tag.putInt("Points", skillPoints);
         tag.putBoolean("TreeReset", treeReset);
@@ -89,7 +91,7 @@ public class PlayerSkills implements IPlayerSkills {
 
     // Portage : remplace deserializeNBT(CompoundTag) de Forge, même logique, juste le nom de méthode.
     @Override
-    public void readFromNbt(CompoundTag tag) {
+    public void readFromNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
         skills.clear();
         UUID treeVersion = tag.hasUUID("TreeVersion") ? tag.getUUID("TreeVersion") : null;
         skillPoints = tag.getInt("Points");
@@ -100,7 +102,7 @@ public class PlayerSkills implements IPlayerSkills {
             return;
         }
         for (Tag skillTag : skillsTag) {
-            ResourceLocation skillId = new ResourceLocation(skillTag.getAsString());
+            ResourceLocation skillId = ResourceLocation.parse(skillTag.getAsString());
             PassiveSkill passiveSkill = SkillsReloader.getSkillById(skillId);
             if (passiveSkill == null || passiveSkill.isInvalid()) {
                 skills.clear();

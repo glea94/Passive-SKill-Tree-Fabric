@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTSkillBonuses {
-    public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "skill_bonuses");
+    public static final ResourceLocation REGISTRY_ID = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_bonuses");
     public static final DeferredRegister<SkillBonus.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<SkillBonus.Serializer> ATTRIBUTE = REGISTRY.register("attribute", AttributeBonus.Serializer::new);

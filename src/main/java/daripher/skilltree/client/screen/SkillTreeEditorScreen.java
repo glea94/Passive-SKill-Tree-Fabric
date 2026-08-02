@@ -13,7 +13,6 @@ import daripher.skilltree.skill.PassiveSkillTree;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.achievement.StatsUpdateListener;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundClientCommandPacket;
@@ -24,7 +23,8 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.Objects;
 
-public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener {
+// CORRECTION 1.21.1: Removed 'implements StatsUpdateListener' completely
+public class SkillTreeEditorScreen extends Screen {
     private final PassiveSkillTree skillTree;
     private final SkillButtons skillButtons;
     private final SkillTreeEditor editorWidgets;
@@ -90,7 +90,7 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics);
+        renderBackground(graphics, mouseX, mouseY, partialTick);
         skillButtons.render(graphics, mouseX, mouseY, partialTick);
         renderOverlay(graphics);
         editorWidgets.render(graphics, mouseX, mouseY, partialTick);
@@ -104,9 +104,10 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
     }
 
     private void createBlankSkill() {
-        ResourceLocation background = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/icons/background/lesser.png");
-        ResourceLocation icon = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/icons/void.png");
-        ResourceLocation border = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/tooltip/lesser.png");
+        // CORRECTION 1.21.1: Modernized constructors
+        ResourceLocation background = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/icons/background/lesser.png");
+        ResourceLocation icon = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/icons/void.png");
+        ResourceLocation border = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/tooltip/lesser.png");
         ResourceLocation skillId = SkillNodeEditor.createNewSkillId(skillTree.getId());
         PassiveSkill skill = new PassiveSkill(skillId, 16, background, icon, border, false);
         skill.setPosition(0, 0);
@@ -125,21 +126,28 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
         return super.shouldCloseOnEsc();
     }
 
+    // CORRECTION 1.21.1: Handled legacy callback updates directly during system widget ticks safely
     @Override
     public void tick() {
+        if (!statsUpdated) {
+            statsUpdated = true;
+            init();
+        }
         editorWidgets.onWidgetTick();
     }
 
     private void renderOverlay(GuiGraphics graphics) {
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_overlay.png");
+        // CORRECTION 1.21.1: Modernized constructors
+        ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_overlay.png");
         RenderSystem.enableBlend();
         graphics.blit(texture, 0, 0, 0, 0F, 0F, width, height, width, height);
         RenderSystem.disableBlend();
     }
 
     @Override
-    public void renderBackground(GuiGraphics graphics) {
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_background.png");
+    public void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        // CORRECTION 1.21.1: Modernized constructors
+        ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_background.png");
         PoseStack poseStack = graphics.pose();
         poseStack.pushPose();
         poseStack.translate(skillButtons.getScrollX() / 3F, skillButtons.getScrollY() / 3F, 0);
@@ -159,8 +167,8 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        return editorWidgets.mouseScrolled(mouseX, mouseY, amount) || skillButtons.mouseScrolled(mouseX, mouseY, amount);
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        return editorWidgets.mouseScrolled(mouseX, mouseY, 0, scrollY) || skillButtons.mouseScrolled(mouseX, mouseY, 0, scrollY);
     }
 
     @Override
@@ -193,11 +201,5 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
         return editorWidgets.charTyped(codePoint, modifiers);
-    }
-
-    @Override
-    public void onStatsUpdated() {
-        statsUpdated = true;
-        init();
     }
 }

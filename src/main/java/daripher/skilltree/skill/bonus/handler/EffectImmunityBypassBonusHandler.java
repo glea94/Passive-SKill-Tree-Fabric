@@ -5,6 +5,7 @@ import daripher.skilltree.event.PSTEvents;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.EffectImmunityBypassBonus;
 import daripher.skilltree.util.event.EventPriority;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +29,11 @@ public class EffectImmunityBypassBonusHandler {
             return;
         }
         List<EffectImmunityBypassBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(effectSource, EffectImmunityBypassBonus.class);
-        MobEffect mobEffect = event.getEffectInstance().getEffect();
+        // CORRECTION 1.21.1 : MobEffectInstance#getEffect() renvoie désormais un Holder<MobEffect>.
+        // EffectImmunityBypassBonus#shouldIgnoreEffectImmunity(...) attend toujours un MobEffect
+        // brut, donc on déballe immédiatement avec .value().
+        Holder<MobEffect> mobEffectHolder = event.getEffectInstance().getEffect();
+        MobEffect mobEffect = mobEffectHolder.value();
         for (EffectImmunityBypassBonus skillBonus : skillBonuses) {
             if (skillBonus.shouldIgnoreEffectImmunity(mobEffect, effectSource, affectedEntity)) {
                 event.setResult(MobEffectApplicablePSTEvent.Result.ALLOW);

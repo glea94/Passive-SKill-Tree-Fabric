@@ -3,7 +3,6 @@ package daripher.skilltree.block;
 import daripher.skilltree.inventory.menu.WorkbenchMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
@@ -27,9 +26,11 @@ public class WorkbenchBlock extends Block {
                 .ignitedByLava());
     }
 
+    // CORRECTION 1.21.1: Block#use() a été scindé en useWithoutItem()/useItemOn().
+    // Comme le comportement d'origine ignorait l'item tenu, useWithoutItem() est le bon remplacement.
     @SuppressWarnings("deprecation")
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState blockState, Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull InteractionHand interactionHand, @NotNull BlockHitResult blockHitResult) {
+    protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState blockState, Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult blockHitResult) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {

@@ -5,6 +5,7 @@ import daripher.skilltree.event.PSTEvents;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.EffectImmunityBonus;
 import daripher.skilltree.util.event.EventPriority;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
 
@@ -20,7 +21,11 @@ public class EffectImmunityBonusHandler {
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
-        MobEffect mobEffect = event.getEffectInstance().getEffect();
+        // CORRECTION 1.21.1 : MobEffectInstance#getEffect() renvoie désormais un Holder<MobEffect>.
+        // EffectImmunityBonus#shouldProvideImmunity(...) attend toujours un MobEffect brut, donc on
+        // déballe immédiatement avec .value().
+        Holder<MobEffect> mobEffectHolder = event.getEffectInstance().getEffect();
+        MobEffect mobEffect = mobEffectHolder.value();
         List<EffectImmunityBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(player, EffectImmunityBonus.class);
         for (EffectImmunityBonus skillBonus : skillBonuses) {
             if (skillBonus.shouldProvideImmunity(mobEffect, player)) {

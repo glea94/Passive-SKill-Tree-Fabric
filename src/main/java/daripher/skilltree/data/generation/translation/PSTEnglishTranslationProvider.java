@@ -13,9 +13,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 
 public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
-    public PSTEnglishTranslationProvider(FabricDataOutput dataOutput) {
-        super(dataOutput, "en_us");
+    public PSTEnglishTranslationProvider(FabricDataOutput dataOutput, java.util.concurrent.CompletableFuture<net.minecraft.core.HolderLookup.Provider> registryLookup) {
+        super(dataOutput, "en_us", registryLookup);
     }
+
 
     @Override
     protected void addTranslations() {
@@ -544,9 +545,12 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         add(PSTRecipeSerializers.WORKBENCH_WEAPON_POISONING.get(), "custom_skill_description", "You can apply poisons to weapons using advanced workbench");
     }
 
-    protected void add(Potion potion, String name) {
-        add(potion.getName(Items.POTION.getDescriptionId() + ".effect."), "Potion of " + name);
-        add(potion.getName(Items.SPLASH_POTION.getDescriptionId() + ".effect."), "Splash Potion of " + name);
-        add(potion.getName(Items.LINGERING_POTION.getDescriptionId() + ".effect."), "Lingering Potion of " + name);
+    public void add(net.minecraft.world.item.alchemy.Potion potion, String name) {
+        net.minecraft.core.Holder<net.minecraft.world.item.alchemy.Potion> holder = net.minecraft.core.registries.BuiltInRegistries.POTION.wrapAsHolder(potion);
+        java.util.Optional<net.minecraft.core.Holder<net.minecraft.world.item.alchemy.Potion>> optionalHolder = java.util.Optional.of(holder);
+
+        add(net.minecraft.world.item.alchemy.Potion.getName(optionalHolder, net.minecraft.world.item.Items.POTION.getDescriptionId() + ".effect."), "Potion of " + name);
+        add(net.minecraft.world.item.alchemy.Potion.getName(optionalHolder, net.minecraft.world.item.Items.SPLASH_POTION.getDescriptionId() + ".effect."), "Splash Potion of " + name);
+        add(net.minecraft.world.item.alchemy.Potion.getName(optionalHolder, net.minecraft.world.item.Items.LINGERING_POTION.getDescriptionId() + ".effect."), "Lingering Potion of " + name);
     }
 }

@@ -2,12 +2,14 @@ package daripher.skilltree.compat.trinkets.skill.bonus;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.compat.trinkets.TrinketsCompatibility;
 import daripher.skilltree.data.serializers.SerializationHelper;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -31,31 +33,38 @@ import java.util.function.Consumer;
  * comme n'importe quel attribut vanilla (max_health, armor...) - le nombre de slots disponibles
  * suit alors la valeur de cet attribut. CONFIANCE MODÉRÉE sur le format exact de l'identifiant
  * ("trinkets:" + slotName, à confirmer une fois la dépendance Trinkets résolue dans Gradle).
+ * <p>
+ * MIGRATION 1.21.1 : AttributeModifier n'accepte plus de String/UUID pour identifier le
+ * modificateur - il exige désormais un ResourceLocation unique (voir Mojang, MC 1.21 primer).
+ * On génère donc un ResourceLocation stable au lieu d'un UUID brut, mais on garde une valeur
+ * aléatoire dans le path pour préserver l'unicité entre instances. LivingEntity#getAttribute
+ * exige également un Holder<Attribute> et non plus un Attribute brut.
  */
 public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
     private String slotName;
     private int amount;
-    private final UUID modifierId;
+    private final ResourceLocation modifierId;
 
     public TrinketSlotsBonus(String slotName, int amount) {
         this.slotName = slotName;
         this.amount = amount;
-        this.modifierId = UUID.randomUUID();
+        this.modifierId = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "trinket_slots_bonus_" + UUID.randomUUID());
     }
 
-    private TrinketSlotsBonus(String slotName, int amount, UUID modifierId) {
+    private TrinketSlotsBonus(String slotName, int amount, ResourceLocation modifierId) {
         this.slotName = slotName;
         this.amount = amount;
         this.modifierId = modifierId;
     }
 
     private AttributeInstance getSlotAttributeInstance(ServerPlayer player) {
-        ResourceLocation attributeId = new ResourceLocation("trinkets", slotName);
+        ResourceLocation attributeId = ResourceLocation.fromNamespaceAndPath("trinkets", slotName);
         Attribute slotAttribute = BuiltInRegistries.ATTRIBUTE.get(attributeId);
         if (slotAttribute == null) {
             return null;
         }
-        return player.getAttribute(slotAttribute);
+        Holder<Attribute> slotAttributeHolder = BuiltInRegistries.ATTRIBUTE.wrapAsHolder(slotAttribute);
+        return player.getAttribute(slotAttributeHolder);
     }
 
     @Override
@@ -67,7 +76,7 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
         if (attributeInstance == null) {
             return;
         }
-        AttributeModifier modifier = new AttributeModifier(modifierId, "SkillBonus", amount, AttributeModifier.Operation.ADDITION);
+        AttributeModifier modifier = new AttributeModifier(modifierId, amount, AttributeModifier.Operation.ADD_VALUE);
         attributeInstance.addPermanentModifier(modifier);
     }
 
@@ -113,7 +122,7 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
         } else {
             slotDescription = TooltipHelper.getSlotTooltip(slotName);
         }
-        MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(slotDescription, amount, AttributeModifier.Operation.ADDITION);
+        MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(slotDescription, amount, AttributeModifier.Operation.ADD_VALUE);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
 
@@ -155,8 +164,8 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
         public TrinketSlotsBonus deserialize(JsonObject json) throws JsonParseException {
             String slotName = SerializationHelper.getElement(json, "slot").getAsString();
             int amount = SerializationHelper.getElement(json, "amount").getAsInt();
-            String uuid = SerializationHelper.getElement(json, "modifier_id").getAsString();
-            return new TrinketSlotsBonus(slotName, amount, UUID.fromString(uuid));
+            String modifierId = SerializationHelper.getElement(json, "modifier_id").getAsString();
+            return new TrinketSlotsBonus(slotName, amount, ResourceLocation.parse(modifierId));
         }
 
         @Override
@@ -173,8 +182,8 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
         public TrinketSlotsBonus deserialize(CompoundTag tag) {
             String slotName = tag.getString("slot");
             int amount = tag.getInt("amount");
-            String uuid = tag.getString("modifier_id");
-            return new TrinketSlotsBonus(slotName, amount, UUID.fromString(uuid));
+            String modifierId = tag.getString("modifier_id");
+            return new TrinketSlotsBonus(slotName, amount, ResourceLocation.parse(modifierId));
         }
 
         @Override
@@ -193,8 +202,8 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
         public TrinketSlotsBonus deserialize(FriendlyByteBuf buf) {
             String slotName = buf.readUtf();
             int amount = buf.readInt();
-            String uuid = buf.readUtf();
-            return new TrinketSlotsBonus(slotName, amount, UUID.fromString(uuid));
+            String modifierId = buf.readUtf();
+            return new TrinketSlotsBonus(slotName, amount, ResourceLocation.parse(modifierId));
         }
 
         @Override

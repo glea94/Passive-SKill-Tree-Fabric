@@ -1,23 +1,16 @@
 package daripher.skilltree.recipe.builder;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import daripher.skilltree.init.PSTRecipeSerializers;
-import net.minecraft.data.recipes.FinishedRecipe;
+import daripher.skilltree.recipe.workbench.WorkbenchCraftingRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.core.registries.BuiltInRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.function.Consumer;
 
 public class WorkbenchCraftingRecipeBuilder {
     private final ResourceLocation id;
@@ -54,9 +47,11 @@ public class WorkbenchCraftingRecipeBuilder {
         return this;
     }
 
-    public void save(Consumer<FinishedRecipe> finishedRecipeConsumer) {
+    public void save(RecipeOutput recipeOutput) {
         validate();
-        finishedRecipeConsumer.accept(new Result(id, baseIngredient, ingredients, requiresPassiveSkill, result));
+        WorkbenchCraftingRecipe recipe =
+                new WorkbenchCraftingRecipe(id, baseIngredient, ingredients, requiresPassiveSkill, result);
+        recipeOutput.accept(id, recipe, null);
     }
 
     private void validate() {
@@ -68,61 +63,6 @@ public class WorkbenchCraftingRecipeBuilder {
         }
         if (result == null) {
             throw new IllegalStateException("No result item set for recipe " + id);
-        }
-    }
-
-    private record Result(ResourceLocation id, @Nullable Pair<Ingredient, Integer> baseIngredient, Map<Ingredient, Integer> ingredients,
-                          boolean requiresPassiveSkill, ItemStack result) implements FinishedRecipe {
-        @Override
-        public void serializeRecipeData(@NotNull JsonObject jsonObject) {
-            JsonArray ingredientsJson = new JsonArray();
-            ingredients.forEach(((ingredient, requiredAmount) -> {
-                JsonObject ingredientJson = new JsonObject();
-                ingredientJson.add("ingredient", ingredient.toJson());
-                ingredientJson.addProperty("required_amount", requiredAmount);
-                ingredientsJson.add(ingredientJson);
-            }));
-            jsonObject.addProperty("requires_passive_skill", requiresPassiveSkill);
-            jsonObject.add("ingredients", ingredientsJson);
-            if (baseIngredient != null) {
-                JsonObject baseIngredientJson = new JsonObject();
-                baseIngredientJson.add("ingredient", baseIngredient.getLeft().toJson());
-                baseIngredientJson.addProperty("required_amount", baseIngredient.getRight());
-                jsonObject.add("base_ingredient", baseIngredientJson);
-            }
-            JsonObject resultJson = new JsonObject();
-            Item resultItem = this.result.getItem();
-            ResourceLocation itemId = Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(resultItem));
-            resultJson.addProperty("item", itemId.toString());
-            if (result.getCount() > 1) {
-                resultJson.addProperty("count", result.getCount());
-            }
-            if (result.getTag() != null) {
-                resultJson.addProperty("nbt", result.getTag().toString());
-            }
-            jsonObject.add("result", resultJson);
-        }
-
-        @Override
-        public @NotNull ResourceLocation getId() {
-            return id;
-        }
-
-        @Override
-        public @NotNull RecipeSerializer<?> getType() {
-            return PSTRecipeSerializers.WORKBENCH_CRAFTING.get();
-        }
-
-        @Nullable
-        @Override
-        public JsonObject serializeAdvancement() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public ResourceLocation getAdvancementId() {
-            return null;
         }
     }
 }

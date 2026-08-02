@@ -1,19 +1,26 @@
 package daripher.skilltree.recipe.workbench;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.MapLike;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.RecordBuilder;
 import daripher.skilltree.inventory.menu.WorkbenchContainer;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.VanillaRecipeUnlockBonus;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -21,14 +28,34 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+/**
+ * Portage Fabric 1.21.1 : recette purement synthétique, jamais chargée depuis un fichier JSON
+ * (elle est reconstruite à la volée par WorkbenchMenu#convertVanillaRecipe à partir des
+ * RecipeHolder<CraftingRecipe> vanilla renvoyés par le RecipeManager). Son Serializer n'est
+ * volontairement PAS enregistré dans PSTRecipeSerializers (vérifié : aucune référence dans tout
+ * le mod à un WorkbenchVanillaCraftingRecipe.Serializer::codec ou ::streamCodec en dehors de
+ * cette classe elle-même) : il n'existe que pour satisfaire le contrat de l'interface
+ * Recipe#getSerializer(). codec()/streamCodec() ne sont donc jamais réellement invoqués en jeu,
+ * mais doivent tout de même être implémentés pour compiler et respecter le contrat de
+ * RecipeSerializer (l'ancien couple fromJson/fromNetwork/toNetwork de Forge a disparu de
+ * l'interface 1.21.1).
+ */
 public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
+    // Portage 1.21.1 : id placeholder utilisé uniquement si cette recette était un jour
+    // reconstruite via streamCodec() (aujourd'hui : jamais). getId() renverrait ce placeholder
+    // tant qu'AbstractWorkbenchRecipe#setId(ResourceLocation) n'aurait pas été rappelé avec le
+    // véritable id — voir la javadoc d'AbstractWorkbenchRecipe.
+    private static final ResourceLocation UNKNOWN_ID = ResourceLocation.fromNamespaceAndPath("skilltree", "unknown_workbench_vanilla_crafting_recipe");
+
     private @Nullable Pair<Ingredient, Integer> baseIngredient;
     private Map<Ingredient, Integer> additionalIngredients;
     private final ItemStack result;
 
-    public WorkbenchVanillaCraftingRecipe(CraftingRecipe vanillaRecipe, RegistryAccess registryAccess) {
-        super(vanillaRecipe.getId(), true);
+    public WorkbenchVanillaCraftingRecipe(RecipeHolder<CraftingRecipe> vanillaRecipeHolder, RegistryAccess registryAccess) {
+        super(vanillaRecipeHolder.id(), true);
+        CraftingRecipe vanillaRecipe = vanillaRecipeHolder.value();
         this.result = vanillaRecipe.getResultItem(registryAccess);
         additionalIngredients = getIngredientsFromCraftingRecipe(vanillaRecipe);
         List<Pair<Ingredient, Integer>> ingredients = new ArrayList<>(additionalIngredients.entrySet().stream().map(Pair::of).toList());
@@ -72,7 +99,7 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container, @NotNull RegistryAccess registryAccess) {
+    public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container, HolderLookup.@NotNull Provider registries) {
         return getResult(container);
     }
 
@@ -137,42 +164,85 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<WorkbenchVanillaCraftingRecipe> {
+        // CORRECTION 1.21.1 : RecipeSerializer#fromJson(id, JsonObject) a disparu de l'interface.
+        // Comme cette recette n'est jamais chargée depuis un fichier de datapack (elle est
+        // synthétisée en Java depuis une CraftingRecipe vanilla, cf. javadoc de la classe), on
+        // reproduit le refus explicite de l'ancien fromJson en faisant échouer le decode()
+        // du MapCodec plutôt que de fournir un vrai schéma JSON.
+        private static final MapCodec<WorkbenchVanillaCraftingRecipe> CODEC = new MapCodec<>() {
+            @Override
+            public <T> DataResult<WorkbenchVanillaCraftingRecipe> decode(DynamicOps<T> ops, MapLike<T> input) {
+                return DataResult.error(() -> "Attempted to load an invalid recipe type.");
+            }
+
+            @Override
+            public <T> RecordBuilder<T> encode(WorkbenchVanillaCraftingRecipe input, DynamicOps<T> ops, RecordBuilder<T> prefix) {
+                return prefix.withErrorsFrom(DataResult.error(() -> "Attempted to save an invalid recipe type."));
+            }
+
+            @Override
+            public <T> Stream<T> keys(DynamicOps<T> ops) {
+                return Stream.empty();
+            }
+        };
+
+        // CORRECTION 1.21.1 : RecipeSerializer#fromNetwork(id, FriendlyByteBuf) / #toNetwork(buf, recipe)
+        // ont disparu de l'interface, remplacés par streamCodec() (StreamCodec<RegistryFriendlyByteBuf, T>).
+        // Contrairement au JSON, on garde ici une implémentation réseau réellement fonctionnelle
+        // (au cas où ce serializer serait un jour effectivement utilisé pour une synchronisation),
+        // avec les StreamCodec d'ingrédients 1.21.1 (Ingredient.CONTENTS_STREAM_CODEC) et
+        // ItemStack.STREAM_CODEC à la place des anciens buf.readItem()/writeItem() et
+        // Ingredient#toNetwork/fromNetwork.
+        private static final StreamCodec<RegistryFriendlyByteBuf, WorkbenchVanillaCraftingRecipe> STREAM_CODEC = StreamCodec.of(
+                Serializer::toNetwork, Serializer::fromNetwork
+        );
+
         @Override
-        public @NotNull WorkbenchVanillaCraftingRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject jsonObject) {
-            throw new UnsupportedOperationException("Attempted to load an invalid recipe type.");
+        public com.mojang.serialization.@NotNull MapCodec<WorkbenchVanillaCraftingRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public @Nullable WorkbenchVanillaCraftingRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, WorkbenchVanillaCraftingRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
+
+        private static @NotNull WorkbenchVanillaCraftingRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buf) {
             Map<Ingredient, Integer> ingredients = new HashMap<>();
             int ingredientsCount = buf.readInt();
             for (int i = 0; i < ingredientsCount; i++) {
-                ingredients.put(Ingredient.fromNetwork(buf), buf.readInt());
+                // CORRECTION 1.21.1: Ingredient.fromNetwork(buf) a disparu ; remplacé par le StreamCodec dédié.
+                ingredients.put(Ingredient.CONTENTS_STREAM_CODEC.decode(buf), buf.readInt());
             }
             Pair<Ingredient, Integer> baseIngredient = null;
             boolean hasBaseIngredient = buf.readBoolean();
             if (hasBaseIngredient) {
-                baseIngredient = Pair.of(Ingredient.fromNetwork(buf), buf.readInt());
+                baseIngredient = Pair.of(Ingredient.CONTENTS_STREAM_CODEC.decode(buf), buf.readInt());
             }
-            ItemStack result = buf.readItem();
-            return new WorkbenchVanillaCraftingRecipe(id, baseIngredient, ingredients, result);
+            // CORRECTION 1.21.1: buf.readItem() a disparu ; remplacé par ItemStack.STREAM_CODEC.
+            ItemStack result = ItemStack.STREAM_CODEC.decode(buf);
+            // CORRECTION 1.21.1 : voir la remarque sur UNKNOWN_ID en haut du fichier — le véritable
+            // id devra être réinjecté via AbstractWorkbenchRecipe#setId(...) par l'appelant si ce
+            // chemin réseau est un jour effectivement emprunté.
+            return new WorkbenchVanillaCraftingRecipe(UNKNOWN_ID, baseIngredient, ingredients, result);
         }
 
-        @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull WorkbenchVanillaCraftingRecipe recipe) {
+        private static void toNetwork(@NotNull RegistryFriendlyByteBuf buf, @NotNull WorkbenchVanillaCraftingRecipe recipe) {
             int ingredientsCount = recipe.getAdditionalIngredients().size();
             buf.writeInt(ingredientsCount);
             recipe.getAdditionalIngredients().forEach((ingredient, requiredAmount) -> {
-                ingredient.toNetwork(buf);
+                // CORRECTION 1.21.1: Ingredient#toNetwork(buf) a disparu ; remplacé par le StreamCodec dédié.
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buf, ingredient);
                 buf.writeInt(requiredAmount);
             });
             Pair<Ingredient, Integer> baseIngredient = recipe.baseIngredient;
             buf.writeBoolean(baseIngredient != null);
             if (baseIngredient != null) {
-                baseIngredient.getLeft().toNetwork(buf);
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buf, baseIngredient.getLeft());
                 buf.writeInt(baseIngredient.getRight());
             }
-            buf.writeItem(recipe.result);
+            // CORRECTION 1.21.1: buf.writeItem(...) a disparu ; remplacé par ItemStack.STREAM_CODEC.
+            ItemStack.STREAM_CODEC.encode(buf, recipe.result);
         }
     }
 }

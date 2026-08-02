@@ -59,13 +59,16 @@ public class ItemTagPredicate implements ItemStackPredicate {
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<ItemStackPredicate> consumer) {
         editor.addLabel(0, 0, "Tag", ChatFormatting.GREEN);
         editor.increaseHeight(19);
-        editor.addTextField(0, 0, 200, 14, tagId.toString()).setSoftFilter(ResourceLocation::isValidResourceLocation)
+        // CORRECTION 1.21.1 : ResourceLocation.isValidResourceLocation(String) a été supprimée ;
+        // on valide désormais le texte saisi via tryParse (renvoie null si le format est invalide),
+        // comme le fait déjà isItemId() dans ItemIdPredicate.java.
+        editor.addTextField(0, 0, 200, 14, tagId.toString()).setSoftFilter(text -> ResourceLocation.tryParse(text) != null)
                 .setResponder(text -> selectTagId(consumer, text));
         editor.increaseHeight(19);
     }
 
     private void selectTagId(Consumer<ItemStackPredicate> consumer, String text) {
-        setTagId(new ResourceLocation(text));
+        setTagId(ResourceLocation.parse(text));
         consumer.accept(this);
     }
 
@@ -76,7 +79,7 @@ public class ItemTagPredicate implements ItemStackPredicate {
     public static class Serializer implements ItemStackPredicate.Serializer {
         @Override
         public ItemStackPredicate deserialize(JsonObject json) throws JsonParseException {
-            ResourceLocation tagId = new ResourceLocation(json.get("tag_id").getAsString());
+            ResourceLocation tagId = ResourceLocation.parse(json.get("tag_id").getAsString());
             return new ItemTagPredicate(tagId);
         }
 
@@ -90,7 +93,7 @@ public class ItemTagPredicate implements ItemStackPredicate {
 
         @Override
         public ItemStackPredicate deserialize(CompoundTag tag) {
-            ResourceLocation tagId = new ResourceLocation(tag.getString("tag_id"));
+            ResourceLocation tagId = ResourceLocation.parse(tag.getString("tag_id"));
             return new ItemTagPredicate(tagId);
         }
 
@@ -106,7 +109,7 @@ public class ItemTagPredicate implements ItemStackPredicate {
 
         @Override
         public ItemStackPredicate deserialize(FriendlyByteBuf buf) {
-            ResourceLocation tagId = new ResourceLocation(buf.readUtf());
+            ResourceLocation tagId = ResourceLocation.parse(buf.readUtf());
             return new ItemTagPredicate(tagId);
         }
 

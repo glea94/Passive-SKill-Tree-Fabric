@@ -19,7 +19,7 @@ public class PSTDataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
-        pack.addProvider((output, registriesFuture) -> new PSTEnglishTranslationProvider(output));
-        pack.addProvider((output, registriesFuture) -> new PSTRussianTranslationProvider(output));
+        pack.addProvider((output, registriesFuture) -> new PSTEnglishTranslationProvider(output, registriesFuture));
+        pack.addProvider((output, registriesFuture) -> new PSTRussianTranslationProvider(output, registriesFuture));
     }
 }
