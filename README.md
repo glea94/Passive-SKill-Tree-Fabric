@@ -46,3 +46,6 @@ If you wish to clone this repository and work on the project:
    ```
 
 *Note: Avoid running the `runDatagen` task without backing up your files inside `src/main/resources`. Fabric Loom's default cleanup process will overwrite manually placed assets if not explicitly isolated.*
+
+ToDo
+Update to 1.21.4 till 26.2.
