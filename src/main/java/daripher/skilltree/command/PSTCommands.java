@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/command/PSTCommands.java
 package daripher.skilltree.command;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -29,9 +30,12 @@ import java.util.stream.Stream;
 
 public class PSTCommands {
     public static final SuggestionProvider<CommandSourceStack> SKILL_ID_SUGGESTION = (ctx, builder) -> SharedSuggestionProvider.suggest(gatherSkillIds(), builder);
+    public static final SuggestionProvider<CommandSourceStack> SKILL_TREE_ID_SUGGESTION = (ctx, builder) -> SharedSuggestionProvider.suggest(gatherSkillTreesIds(), builder);
     public static final String AMOUNT_ARGUMENT_NAME = "amount";
     public static final String PLAYER_ARGUMENT_NAME = "player";
     public static final String SKILL_ID_ARGUMENT_NAME = "skill_id";
+    public static final String TREE_ID_ARGUMENT_NAME = "treeId";
+    public static final ResourceLocation DEFAULT_EDITOR_TREE_ID = new ResourceLocation("skilltree", "tree");
 
     public static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> registerCommands(dispatcher));
@@ -49,6 +53,11 @@ public class PSTCommands {
 
         var grantSkillCommand = getRootCommand().then(getGrantSkillSubCommand().then(getPlayerArgument().then(getSkillArgument().executes(PSTCommands::executeGrantSkillCommand))));
         dispatcher.register(grantSkillCommand);
+
+        var editorCommand = getRootCommand().then(getEditorSubCommand()
+                .executes(PSTCommands::executeDefaultEditorCommand)
+                .then(getTreeIdArgument().executes(PSTCommands::executeEditorCommand)));
+        dispatcher.register(editorCommand);
     }
 
     private static @NotNull LiteralArgumentBuilder<CommandSourceStack> getGrantSkillSubCommand() {
@@ -71,6 +80,10 @@ public class PSTCommands {
         return Commands.literal("points");
     }
 
+    private static @NotNull LiteralArgumentBuilder<CommandSourceStack> getEditorSubCommand() {
+        return Commands.literal("editor");
+    }
+
     private static LiteralArgumentBuilder<CommandSourceStack> getRootCommand() {
         return Commands.literal("skilltree").requires(PSTCommands::hasPermission);
     }
@@ -85,6 +98,10 @@ public class PSTCommands {
 
     private static @NotNull RequiredArgumentBuilder<CommandSourceStack, ResourceLocation> getSkillArgument() {
         return Commands.argument(SKILL_ID_ARGUMENT_NAME, ResourceLocationArgument.id()).suggests(SKILL_ID_SUGGESTION);
+    }
+
+    private static @NotNull RequiredArgumentBuilder<CommandSourceStack, ResourceLocation> getTreeIdArgument() {
+        return Commands.argument(TREE_ID_ARGUMENT_NAME, ResourceLocationArgument.id()).suggests(SKILL_TREE_ID_SUGGESTION);
     }
 
     private static int executeResetCommand(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
@@ -125,6 +142,19 @@ public class PSTCommands {
             player.sendSystemMessage(Component.translatable("skilltree.message.grant_skill_command", skillName)
                     .withStyle(ChatFormatting.YELLOW));
         }
+        return 1;
+    }
+
+    private static int executeDefaultEditorCommand(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        ServerNetworking.sendOpenSkillTreeEditor(player, DEFAULT_EDITOR_TREE_ID);
+        return 1;
+    }
+
+    private static int executeEditorCommand(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        ResourceLocation treeId = ctx.getArgument(TREE_ID_ARGUMENT_NAME, ResourceLocation.class);
+        ServerNetworking.sendOpenSkillTreeEditor(player, treeId);
         return 1;
     }
 

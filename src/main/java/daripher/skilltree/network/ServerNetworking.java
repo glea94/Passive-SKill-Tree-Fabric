@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/network/ServerNetworking.java
 package daripher.skilltree.network;
 
 import daripher.skilltree.capability.skill.IPlayerSkills;
@@ -7,12 +8,17 @@ import daripher.skilltree.data.reloader.SkillsReloader;
 import daripher.skilltree.exp.ExpHelper;
 import daripher.skilltree.network.message.GainSkillPointMessage;
 import daripher.skilltree.network.message.LearnSkillMessage;
+import daripher.skilltree.network.message.OpenSkillTreeEditorMessage;
 import daripher.skilltree.network.message.SyncPlayerSkillsMessage;
 import daripher.skilltree.network.message.SyncServerDataMessage;
 import daripher.skilltree.skill.PassiveSkill;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
+<<<<<<< Updated upstream
+=======
+import net.minecraft.resources.ResourceLocation;
+>>>>>>> Stashed changes
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Objects;
@@ -34,7 +40,6 @@ public class ServerNetworking {
         Objects.requireNonNull(skill);
         if (capability.learnSkill(skill)) {
             skill.learn(player, true);
-            // SYNCHRONISATION UNIQUE : Écrit sur le disque dur et met à jour l'écran du joueur proprement
             PlayerSkillsProvider.KEY.sync(player);
         }
     }
@@ -53,7 +58,6 @@ public class ServerNetworking {
         }
         player.giveExperiencePoints(-cost);
         capability.grantSkillPoints(1);
-        // SYNCHRONISATION UNIQUE : Sauvegarde le point et stabilise l'affichage des points restants
         PlayerSkillsProvider.KEY.sync(player);
     }
 
@@ -69,5 +73,15 @@ public class ServerNetworking {
         FriendlyByteBuf buf = PacketByteBufs.create();
         message.encode(buf);
         ServerPlayNetworking.send(player, PSTNetworkChannels.SYNC_SERVER_DATA, buf);
+<<<<<<< Updated upstream
+=======
+    }
+
+    public static void sendOpenSkillTreeEditor(ServerPlayer player, ResourceLocation treeId) {
+        OpenSkillTreeEditorMessage message = new OpenSkillTreeEditorMessage(treeId);
+        FriendlyByteBuf buf = PacketByteBufs.create();
+        message.encode(buf);
+        ServerPlayNetworking.send(player, PSTNetworkChannels.OPEN_SKILL_TREE_EDITOR, buf);
+>>>>>>> Stashed changes
     }
 }
