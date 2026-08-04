@@ -107,6 +107,7 @@ public class SkillTreeMod implements ModInitializer {
         GrindstoneBonusHandler.register();
         RepairEfficiencyBonusHandler.register();
         ItemUsageSpeedBonusHandler.register();
+        daripher.skilltree.event.PlayerJoinEventHandler.register();
     }
 
     private static void registerCommands() {

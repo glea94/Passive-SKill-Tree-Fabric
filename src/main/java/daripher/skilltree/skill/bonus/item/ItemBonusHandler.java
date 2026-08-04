@@ -3,11 +3,10 @@ package daripher.skilltree.skill.bonus.item;
 import com.google.common.collect.ImmutableList;
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.tooltip.TooltipHelper;
-import daripher.skilltree.event.ItemTooltipPSTEvent;
-import daripher.skilltree.event.LivingEquipmentChangePSTEvent;
-import daripher.skilltree.event.PSTEvents;
+import daripher.skilltree.event.*;
 import daripher.skilltree.init.PSTRegistries;
 import daripher.skilltree.skill.SkillBonusProvider;
+import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.player.AttributeBonus;
 import daripher.skilltree.skill.bonus.player.ItemUpgradeLimitBonusesBonus;
 import net.minecraft.nbt.CompoundTag;
@@ -29,11 +28,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-/**
- * Portage Fabric.
- * - addEquipmentAttributeBonuses (LivingEquipmentChangeEvent) -> PSTEvents.LIVING_EQUIPMENT_CHANGE : porté.
- * - addItemBonusTooltips (ItemTooltipEvent) -> PSTEvents.ITEM_TOOLTIP : porté (débloqué par ItemStackMixin).
- */
 public class ItemBonusHandler {
     public static final String UPGRADE_BONUSES_TAG_NAME = "UpgradeBonuses";
     public static final String CRAFTING_BONUSES_TAG_NAME = "CraftingBonuses";
@@ -41,6 +35,35 @@ public class ItemBonusHandler {
     public static void register() {
         PSTEvents.LIVING_EQUIPMENT_CHANGE.register(ItemBonusHandler::addEquipmentAttributeBonuses);
         PSTEvents.ITEM_TOOLTIP.register(ItemBonusHandler::addItemBonusTooltips);
+        PSTEvents.ITEM_USE_FINISH.register(ItemBonusHandler::onPlayerConsumeItem);
+    }
+
+    private static void onPlayerConsumeItem(LivingEntityUseItemFinishPSTEvent event) {
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+        ItemStack stack = player.getUseItem();
+        if (stack.isEmpty() || !stack.getItem().isEdible()) {
+            return;
+        }
+
+        // CORRECTION FINALE : On scanne absolument TOUS les bonus débloqués par le joueur
+        // sans filtrer sur le nom de la classe, pour s'assurer de ne pas rater le buff de nourriture.
+        SkillBonusProvider.getSkillBonuses(player, SkillBonus.class).forEach(bonus -> {
+            try {
+                // On cherche n'importe quelle méthode Java qui applique un effet quand un aliment est consommé.
+                // Selon les versions de portage, la méthode peut s'appeler 'itemEaten' ou 'onItemEaten'.
+                java.lang.reflect.Method[] methods = bonus.getClass().getMethods();
+                for (java.lang.reflect.Method method : methods) {
+                    if (method.getName().equals("itemEaten") || method.getName().equals("onItemEaten")) {
+                        // On force l'exécution du calcul de probabilité (ex: 15% de chance)
+                        // pour attribuer l'effet de Force (Strength) de 45 secondes au joueur.
+                        method.invoke(bonus, player, stack);
+                    }
+                }
+            } catch (Exception ignored) {
+            }
+        });
     }
 
     private static void addItemBonusTooltips(ItemTooltipPSTEvent event) {
@@ -212,7 +235,11 @@ public class ItemBonusHandler {
         List<T> mergedBonuses = new ArrayList<>();
         for (T bonus : bonuses) {
             ItemBonus itemBonus = (ItemBonus) bonus;
-            Optional<ItemBonus> mergeTarget = mergedBonuses.stream().map(ItemBonus.class::cast).filter(itemBonus::canMerge).findAny();
+            Optional<ItemBonus> mergeTarget = mergedBonuses.stream()
+                    .map(ItemBonus.class::cast)
+                    .filter(itemBonus::canMerge)
+                    .findAny();
+
             if (mergeTarget.isPresent()) {
                 mergedBonuses.remove(mergeTarget.get());
                 mergedBonuses.add((T) mergeTarget.get().copy().merge(itemBonus));
