@@ -27,6 +27,12 @@ public class ClientNetworking {
         });
         ClientPlayNetworking.registerGlobalReceiver(SyncPlayerSkillsMessage.TYPE, (message, context) -> {
             context.client().execute(() -> handleSyncPlayerSkills(context.client(), message));
+<<<<<<< Updated upstream
+=======
+        });
+        ClientPlayNetworking.registerGlobalReceiver(OpenSkillTreeEditorMessage.TYPE, (message, context) -> {
+            context.client().execute(() -> handleOpenSkillTreeEditor(context.client(), message));
+>>>>>>> Stashed changes
         });
     }
 
@@ -41,6 +47,10 @@ public class ClientNetworking {
             screen.updateSkillPoints(capability.getSkillPoints());
             screen.init();
         }
+    }
+
+    private static void handleOpenSkillTreeEditor(Minecraft minecraft, OpenSkillTreeEditorMessage message) {
+        minecraft.setScreen(new SkillTreeEditorScreen(message.treeId()));
     }
 
     public static void sendLearnSkill(PassiveSkill skill) {

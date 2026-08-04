@@ -11,6 +11,10 @@ import daripher.skilltree.network.message.SyncPlayerSkillsMessage;
 import daripher.skilltree.network.message.SyncServerDataMessage;
 import daripher.skilltree.skill.PassiveSkill;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+<<<<<<< Updated upstream
+=======
+import net.minecraft.resources.ResourceLocation;
+>>>>>>> Stashed changes
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Objects;
@@ -61,4 +65,11 @@ public class ServerNetworking {
     public static void sendSyncServerData(ServerPlayer player) {
         ServerPlayNetworking.send(player, new SyncServerDataMessage());
     }
+<<<<<<< Updated upstream
+=======
+
+    public static void sendOpenSkillTreeEditor(ServerPlayer player, ResourceLocation treeId) {
+        ServerPlayNetworking.send(player, new OpenSkillTreeEditorMessage(treeId));
+    }
+>>>>>>> Stashed changes
 }
