@@ -4,6 +4,7 @@ import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.recipe.workbench.WorkbenchCraftingRecipe;
 import daripher.skilltree.recipe.workbench.WorkbenchPotionMixingRecipe;
 import daripher.skilltree.recipe.workbench.WorkbenchUpgradeBonusRecipe;
+import daripher.skilltree.recipe.workbench.WorkbenchVanillaCraftingRecipe;
 import daripher.skilltree.recipe.workbench.WorkbenchWeaponPoisoningRecipe;
 import daripher.skilltree.util.registry.DeferredRegister;
 import daripher.skilltree.util.registry.RegistryObject;
@@ -17,4 +18,7 @@ public class PSTRecipeSerializers {
     public static final RegistryObject<WorkbenchCraftingRecipe.Serializer> WORKBENCH_CRAFTING = REGISTRY.register("workbench_crafting", WorkbenchCraftingRecipe.Serializer::new);
     public static final RegistryObject<WorkbenchPotionMixingRecipe.Serializer> WORKBENCH_POTION_MIXING = REGISTRY.register("workbench_potion_mixing", WorkbenchPotionMixingRecipe.Serializer::new);
     public static final RegistryObject<WorkbenchWeaponPoisoningRecipe.Serializer> WORKBENCH_WEAPON_POISONING = REGISTRY.register("workbench_weapon_poisoning", WorkbenchWeaponPoisoningRecipe.Serializer::new);
+    // Ajout : nécessaire uniquement pour le dispatch réseau de Recipe.STREAM_CODEC (SyncWorkbenchRecipesMessage).
+    // Ne peut jamais être chargé depuis un datapack : WorkbenchVanillaCraftingRecipe.Serializer#codec() échoue toujours par conception.
+    public static final RegistryObject<WorkbenchVanillaCraftingRecipe.Serializer> WORKBENCH_VANILLA_CRAFTING = REGISTRY.register("workbench_vanilla_crafting", WorkbenchVanillaCraftingRecipe.Serializer::new);
 }

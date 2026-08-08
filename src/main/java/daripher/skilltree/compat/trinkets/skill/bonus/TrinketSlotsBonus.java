@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/compat/trinkets/skill/bonus/TrinketSlotsBonus.java
 package daripher.skilltree.compat.trinkets.skill.bonus;
 
 import com.google.gson.JsonObject;
@@ -50,8 +51,13 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
     }
 
     private AttributeInstance getSlotAttributeInstance(ServerPlayer player) {
+<<<<<<< Updated upstream
         ResourceLocation attributeId = new ResourceLocation("trinkets", slotName);
         Attribute slotAttribute = BuiltInRegistries.ATTRIBUTE.get(attributeId);
+=======
+        ResourceLocation attributeId = ResourceLocation.fromNamespaceAndPath("trinkets", slotName);
+        Attribute slotAttribute = BuiltInRegistries.ATTRIBUTE.getValue(attributeId);
+>>>>>>> Stashed changes
         if (slotAttribute == null) {
             return null;
         }

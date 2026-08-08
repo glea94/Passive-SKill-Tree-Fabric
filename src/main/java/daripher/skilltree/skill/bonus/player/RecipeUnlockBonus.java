@@ -2,22 +2,24 @@ package daripher.skilltree.skill.bonus.player;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import daripher.skilltree.client.recipe.WorkbenchRecipeClientCache;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
-import daripher.skilltree.init.PSTRecipeTypes;
 import daripher.skilltree.init.PSTSkillBonuses;
+import daripher.skilltree.recipe.workbench.AbstractWorkbenchRecipe;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+<<<<<<< Updated upstream
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
+=======
+>>>>>>> Stashed changes
 
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
@@ -83,10 +85,14 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<RecipeUnlockBonus> consumer) {
         editor.addLabel(0, 0, "Recipe ID", ChatFormatting.GOLD);
         editor.increaseHeight(19);
+<<<<<<< Updated upstream
         ClientLevel clientLevel = Minecraft.getInstance().level;
         Objects.requireNonNull(clientLevel);
         RecipeManager recipesManager = clientLevel.getRecipeManager();
         List<ResourceLocation> artisanRecipes = recipesManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH).stream().map(Recipe::getId)
+=======
+        List<ResourceLocation> artisanRecipes = WorkbenchRecipeClientCache.get().stream().map(AbstractWorkbenchRecipe::getId)
+>>>>>>> Stashed changes
                 .toList();
         editor.addSelectionMenu(0, 0, 200, artisanRecipes).setValue(recipeId).setResponder(id -> selectRecipeId(editor, consumer, id));
         editor.increaseHeight(19);

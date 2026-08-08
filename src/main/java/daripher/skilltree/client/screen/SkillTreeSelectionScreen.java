@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/client/screen/SkillTreeSelectionScreen.java
 package daripher.skilltree.client.screen;
 
 import daripher.skilltree.client.widget.SkillTreeSelectionButton;
@@ -7,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -64,6 +66,6 @@ public class SkillTreeSelectionScreen extends Screen {
     public void renderBackground(GuiGraphics guiGraphics) {
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_background.png");
         int size = SkillTreeScreen.BACKGROUND_SIZE;
-        guiGraphics.blit(texture, (width - size) / 2, (height - size) / 2, 0, 0F, 0F, size, size, size, size);
+        guiGraphics.blit(RenderType::guiTextured, texture, (width - size) / 2, (height - size) / 2, 0F, 0F, size, size, size, size);
     }
 }

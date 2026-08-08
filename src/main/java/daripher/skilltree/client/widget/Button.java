@@ -3,6 +3,7 @@ package daripher.skilltree.client.widget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -38,8 +39,8 @@ public class Button extends net.minecraft.client.gui.components.Button {
     protected void renderBackground(@NotNull GuiGraphics graphics) {
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/widgets.png");
         int v = getTextureVariant() * 14;
-        graphics.blit(texture, getX(), getY(), 0, v, width / 2, height);
-        graphics.blit(texture, getX() + width / 2, getY(), -width / 2, v, width / 2, height);
+        graphics.blit(RenderType::guiTextured, texture, getX(), getY(), 0F, (float) v, width / 2, height, 256, 256);
+        graphics.blit(RenderType::guiTextured, texture, getX() + width / 2, getY(), (float) (-width / 2), (float) v, width / 2, height, 256, 256);
     }
 
     protected void renderText(@NotNull GuiGraphics graphics) {

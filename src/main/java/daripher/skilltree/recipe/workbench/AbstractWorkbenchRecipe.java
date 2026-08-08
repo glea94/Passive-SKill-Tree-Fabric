@@ -1,5 +1,6 @@
 package daripher.skilltree.recipe.workbench;
 
+import daripher.skilltree.init.PSTRecipeBookCategories;
 import daripher.skilltree.init.PSTRecipeTypes;
 import daripher.skilltree.inventory.menu.WorkbenchContainer;
 import daripher.skilltree.recipe.SkillRequiringRecipe;
@@ -11,7 +12,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+<<<<<<< Updated upstream
+=======
+import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.minecraft.world.item.crafting.RecipeHolder;
+>>>>>>> Stashed changes
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -83,25 +90,46 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
         return container.hasIngredients(ingredients);
     }
 
-    @Override
     public boolean canCraftInDimensions(int width, int height) {
         return width == 5 && height == 2;
     }
 
+<<<<<<< Updated upstream
     @Override
+=======
+>>>>>>> Stashed changes
     public @NotNull ResourceLocation getId() {
         return id;
     }
 
+<<<<<<< Updated upstream
     @Deprecated
     @Override
     public @NotNull ItemStack getResultItem(@NotNull RegistryAccess registryAccess) {
+=======
+    public void setId(@NotNull ResourceLocation id) {
+        this.id = id;
+    }
+
+    @Deprecated
+    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registries) {
+>>>>>>> Stashed changes
         return ItemStack.EMPTY;
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
+    public @NotNull RecipeType<? extends Recipe<WorkbenchContainer>> getType() {
         return PSTRecipeTypes.WORKBENCH;
+    }
+
+    @Override
+    public @NotNull PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
+    }
+
+    @Override
+    public @NotNull RecipeBookCategory recipeBookCategory() {
+        return PSTRecipeBookCategories.WORKBENCH;
     }
 
     @Override

@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/skill/bonus/player/GrantItemBonus.java
 package daripher.skilltree.skill.bonus.player;
 
 import com.google.gson.JsonObject;
@@ -39,7 +40,7 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
     @Override
     public void onSkillLearned(ServerPlayer player, boolean firstTime) {
         if (firstTime) {
-            Item item = BuiltInRegistries.ITEM.get(itemId);
+            Item item = BuiltInRegistries.ITEM.getValue(itemId);
             if (item == null) {
                 SkillTreeEditorData.sendChatMessage("Unknown item: " + itemId, ChatFormatting.DARK_RED);
                 return;
@@ -89,12 +90,12 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
 
     @Override
     public MutableComponent getSimpleTooltip() {
-        Item item = BuiltInRegistries.ITEM.get(itemId);
+        Item item = BuiltInRegistries.ITEM.getValue(itemId);
         if (item == null) {
             return Component.literal("Unknown item: " + itemId).withStyle(ChatFormatting.DARK_RED);
         }
         Style style = TooltipHelper.getSkillBonusStyle(isPositive());
-        Component itemDescription = item.getDescription();
+        Component itemDescription = Component.translatable(item.getDescriptionId());
         if (amount > 1) {
             String amountDescription = TooltipHelper.formatNumber(amount);
             return Component.translatable(getDescriptionId() + ".amount", amountDescription, itemDescription).withStyle(style);
@@ -145,7 +146,12 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public GrantItemBonus deserialize(JsonObject json) throws JsonParseException {
+<<<<<<< Updated upstream
             ResourceLocation itemId = new ResourceLocation(json.get("item_id").getAsString());
+=======
+
+            ResourceLocation itemId = ResourceLocation.parse(json.get("item_id").getAsString());
+>>>>>>> Stashed changes
             int amount = SerializationHelper.getElement(json, "amount").getAsInt();
             return new GrantItemBonus(itemId, amount);
         }

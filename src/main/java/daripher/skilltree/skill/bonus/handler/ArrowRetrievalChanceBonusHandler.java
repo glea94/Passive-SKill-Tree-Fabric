@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -76,8 +77,16 @@ public class ArrowRetrievalChanceBonusHandler {
             return;
         }
         for (Tag tag : arrowsTag) {
+<<<<<<< Updated upstream
             ItemStack arrowStack = ItemStack.of((CompoundTag) tag);
             entity.spawnAtLocation(arrowStack);
+=======
+            ItemStack arrowStack = ItemStack.parse(registries, tag).orElse(ItemStack.EMPTY);
+            if (arrowStack.isEmpty()) {
+                continue;
+            }
+            entity.spawnAtLocation((ServerLevel) entity.level(), arrowStack);
+>>>>>>> Stashed changes
         }
     }
 }

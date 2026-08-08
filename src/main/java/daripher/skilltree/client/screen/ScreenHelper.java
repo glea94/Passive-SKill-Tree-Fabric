@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -95,13 +96,13 @@ public class ScreenHelper {
         int textX = 5;
         int textY = 2;
         ResourceLocation texture = button.skill.getTooltipFrameTexture();
-        graphics.blit(texture, -4, -4, 0, 0, 21, 20, 110, 20);
-        graphics.blit(texture, tooltipWidth + 4 - 21, -4, -21, 0, 21, 20, 110, 20);
+        graphics.blit(RenderType::guiTextured, texture, -4, -4, 0F, 0F, 21, 20, 110, 20);
+        graphics.blit(RenderType::guiTextured, texture, tooltipWidth + 4 - 21, -4, -21F, 0F, 21, 20, 110, 20);
         int centerWidth = tooltipWidth + 8 - 42;
         int centerX = -4 + 21;
         while (centerWidth > 0) {
             int partWidth = Math.min(centerWidth, 68);
-            graphics.blit(texture, centerX, -4, 21, 0, partWidth, 20, 110, 20);
+            graphics.blit(RenderType::guiTextured, texture, centerX, -4, 21F, 0F, partWidth, 20, 110, 20);
             centerX += partWidth;
             centerWidth -= partWidth;
         }
@@ -127,8 +128,8 @@ public class ScreenHelper {
         graphics.pose().mulPose(Axis.ZP.rotation(rotation));
         int length = (int) (ScreenHelper.getDistanceBetweenButtons(button1, button2) / zoom);
         graphics.pose().scale(zoom, zoom, 1F);
-        graphics.blit(texture, 0, -8, length, 6, -animation, highlighted ? 0 : 6, length, 6, 30, 12);
-        graphics.blit(texture, 0, 2, length, 6, animation, highlighted ? 0 : 6, length, 6, -30, 12);
+        graphics.blit(RenderType::guiTextured, texture, 0, -8, -animation, (float) (highlighted ? 0 : 6), length, 6, length, 6, 30, 12);
+        graphics.blit(RenderType::guiTextured, texture, 0, 2, animation, (float) (highlighted ? 0 : 6), length, 6, length, 6, -30, 12);
         graphics.pose().popPose();
     }
 
@@ -144,7 +145,7 @@ public class ScreenHelper {
         graphics.pose().mulPose(Axis.ZP.rotation(rotation));
         int length = (int) (ScreenHelper.getDistanceBetweenButtons(button1, button2) / zoom);
         graphics.pose().scale(zoom, zoom, 1F);
-        graphics.blit(texture, 0, -3, length, 6, -animation, highlighted ? 0 : 6, length, 6, 30, 12);
+        graphics.blit(RenderType::guiTextured, texture, 0, -3, -animation, (float) (highlighted ? 0 : 6), length, 6, length, 6, 30, 12);
         graphics.pose().popPose();
     }
 
@@ -161,11 +162,11 @@ public class ScreenHelper {
         int length = (int) ScreenHelper.getDistanceBetweenButtons(button1, button2);
         boolean highlighted = button1.skillLearned && button2.skillLearned;
         graphics.pose().scale(1F, zoom, 1F);
-        graphics.blit(texture, 0, -3, length, 6, 0, highlighted ? 0 : 6, length, 6, 50, 12);
+        graphics.blit(RenderType::guiTextured, texture, 0, -3, 0F, (float) (highlighted ? 0 : 6), length, 6, length, 6, 50, 12);
         boolean shouldAnimate = button1.skillLearned && button2.canLearn || button2.skillLearned && button1.canLearn;
         if (!highlighted && shouldAnimate) {
             RenderSystem.setShaderColor(1F, 1F, 1F, (Mth.sin(animation / 3F) + 1) / 2);
-            graphics.blit(texture, 0, -3, length, 6, 0, 0, length, 6, 50, 12);
+            graphics.blit(RenderType::guiTextured, texture, 0, -3, 0F, 0F, length, 6, length, 6, 50, 12);
             RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         }
         graphics.pose().popPose();

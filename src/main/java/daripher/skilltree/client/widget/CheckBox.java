@@ -1,6 +1,7 @@
 package daripher.skilltree.client.widget;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +29,7 @@ public class CheckBox extends Button {
         super.renderBackground(graphics);
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/widgets.png");
         if (value) {
-            graphics.blit(texture, getX(), getY(), 0, 242, width, height);
+            graphics.blit(RenderType::guiTextured, texture, getX(), getY(), 0F, 242F, width, height, 256, 256);
         }
     }
 

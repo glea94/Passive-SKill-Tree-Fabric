@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/skill/bonus/player/LootAmountModifierBonus.java
 package daripher.skilltree.skill.bonus.player;
 
 import com.google.gson.JsonObject;
@@ -14,12 +15,12 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 import java.util.Locale;
@@ -188,11 +189,11 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
         MOBS("mobs"), FISHING("fishing"), GEMS("gems"), CHESTS("chests"), ORE("ore"), ARCHAEOLOGY("archaeology");
 
         public boolean canAffect(LootContext lootContext, ResourceLocation lootTableId) {
-            LootContextParam<Entity> playerLootContextParam = getPlayerLootContextParam();
-            if (!lootContext.hasParam(playerLootContextParam)) {
+            ContextKey<Entity> playerLootContextParam = getPlayerLootContextParam();
+            if (!lootContext.hasParameter(playerLootContextParam)) {
                 return false;
             }
-            if (!(lootContext.getParam(playerLootContextParam) instanceof Player)) {
+            if (!(lootContext.getParameter(playerLootContextParam) instanceof Player)) {
                 return false;
             }
             String lootTableName = lootTableId.toString();
@@ -206,9 +207,14 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
             };
         }
 
-        public LootContextParam<Entity> getPlayerLootContextParam() {
+        public ContextKey<Entity> getPlayerLootContextParam() {
             return switch (this) {
+<<<<<<< Updated upstream
                 case MOBS, FISHING -> LootContextParams.KILLER_ENTITY;
+=======
+                case MOBS, FISHING -> LootContextParams.ATTACKING_ENTITY;
+
+>>>>>>> Stashed changes
                 case GEMS, CHESTS, ORE, ARCHAEOLOGY -> LootContextParams.THIS_ENTITY;
             };
         }

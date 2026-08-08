@@ -3,7 +3,7 @@
   "bonuses": [
     {
       "type": "skilltree:attribute",
-      "attribute": "minecraft:generic.attack_knockback",
+      "attribute": "minecraft:attack_knockback",
       "id": "40820e81-7e19-4e6b-8370-8a1f033d72d8",
       "name": "Skill",
       "amount": 5.0,

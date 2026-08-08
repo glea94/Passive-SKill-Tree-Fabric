@@ -21,6 +21,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -164,7 +165,7 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
     }
 
     private static CommandSourceStack createCommandSourceStack(Player player, ServerLevel level) {
-        return new CommandSourceStack(player, player.position(), player.getRotationVector(), level, 4, player.getName()
+        return new CommandSourceStack(((ServerPlayer) player).commandSource(), player.position(), player.getRotationVector(), level, 4, player.getName()
                 .getString(), player.getDisplayName(), level.getServer(), player);
     }
 

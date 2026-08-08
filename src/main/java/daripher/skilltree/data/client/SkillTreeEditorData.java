@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/data/client/SkillTreeEditorData.java
 package daripher.skilltree.data.client;
 
 import com.google.gson.JsonIOException;
@@ -236,7 +237,7 @@ public class SkillTreeEditorData {
             for (ChatFormatting style : styles) {
                 component.withStyle(style);
             }
-            player.sendSystemMessage(component);
+            player.displayClientMessage(component, false);
         }
     }
 

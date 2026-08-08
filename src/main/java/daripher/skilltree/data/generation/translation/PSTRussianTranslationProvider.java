@@ -614,9 +614,17 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         add(PSTRecipeSerializers.WORKBENCH_WEAPON_POISONING.get(), "custom_skill_description", "Вы можете отравлять оружие используя продвинутый рабочий стол");
     }
 
+<<<<<<< Updated upstream
     protected void add(Potion potion, String name) {
         add(potion.getName(Items.POTION.getDescriptionId() + ".effect."), "Зелье " + name);
         add(potion.getName(Items.SPLASH_POTION.getDescriptionId() + ".effect."), "Взрывное зелье " + name);
         add(potion.getName(Items.LINGERING_POTION.getDescriptionId() + ".effect."), "Туманное зелье " + name);
+=======
+    public void add(net.minecraft.world.item.alchemy.Potion potion, String name) {
+        String potionName = potion.name();
+        add(net.minecraft.world.item.Items.POTION.getDescriptionId() + ".effect." + potionName, "Зелье " + name);
+        add(net.minecraft.world.item.Items.SPLASH_POTION.getDescriptionId() + ".effect." + potionName, "Взрывное зелье " + name);
+        add(net.minecraft.world.item.Items.LINGERING_POTION.getDescriptionId() + ".effect." + potionName, "Туманное зелье " + name);
+>>>>>>> Stashed changes
     }
 }

@@ -25,7 +25,7 @@ public class TextArea extends MultiLineEditBox implements TickingWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        setFocused(clicked(mouseX, mouseY));
+        setFocused(isMouseOver(mouseX, mouseY));
         return super.mouseClicked(mouseX, mouseY, button);
     }
 

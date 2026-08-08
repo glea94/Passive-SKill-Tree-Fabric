@@ -20,6 +20,7 @@ import daripher.skilltree.skill.bonus.predicate.item.NoneItemStackPredicate;
 import daripher.skilltree.skill.bonus.predicate.item.PotionStackPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -29,7 +30,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.UUID;
@@ -39,7 +39,7 @@ public class SerializationHelper {
     public static Attribute deserializeAttribute(JsonObject json) {
         ResourceLocation attributeId = new ResourceLocation(json.get("attribute").getAsString());
         Attribute attribute;
-        attribute = BuiltInRegistries.ATTRIBUTE.get(attributeId);
+        attribute = BuiltInRegistries.ATTRIBUTE.get(attributeId).map(Holder::value).orElse(null);
         if (attribute == null) {
             throw new RuntimeException("Attribute " + attributeId + " doesn't exist!");
         }
@@ -237,8 +237,13 @@ public class SerializationHelper {
         if (!json.has("effect")) {
             return null;
         }
+<<<<<<< Updated upstream
         ResourceLocation effectId = new ResourceLocation(json.get("effect").getAsString());
         return BuiltInRegistries.MOB_EFFECT.get(effectId);
+=======
+        ResourceLocation effectId = ResourceLocation.parse(json.get("effect").getAsString());
+        return BuiltInRegistries.MOB_EFFECT.get(effectId).map(Holder::value).orElse(null);
+>>>>>>> Stashed changes
     }
 
     public static void serializeMobEffect(JsonObject json, MobEffect effect) {
@@ -258,11 +263,19 @@ public class SerializationHelper {
         MobEffect effect = deserializeMobEffect(json);
         int duration = json.get("duration").getAsInt();
         int amplifier = json.get("amplifier").getAsInt();
+<<<<<<< Updated upstream
         return new MobEffectInstance(Objects.requireNonNull(effect), duration, amplifier);
     }
 
     public static void serializeEffectInstance(JsonObject json, MobEffectInstance effect) {
         serializeMobEffect(json, effect.getEffect());
+=======
+        return new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), duration, amplifier);
+    }
+
+    public static void serializeEffectInstance(JsonObject json, MobEffectInstance effect) {
+        serializeMobEffect(json, effect.getEffect().value());
+>>>>>>> Stashed changes
         json.addProperty("duration", effect.getDuration());
         json.addProperty("amplifier", effect.getAmplifier());
     }
@@ -286,8 +299,13 @@ public class SerializationHelper {
 
     @Nullable
     public static Attribute deserializeAttribute(CompoundTag tag) {
+<<<<<<< Updated upstream
         ResourceLocation attributeId = new ResourceLocation(tag.getString("attribute"));
         Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(attributeId);
+=======
+        ResourceLocation attributeId = ResourceLocation.parse(tag.getString("attribute"));
+        Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(attributeId).map(Holder::value).orElse(null);
+>>>>>>> Stashed changes
         if (attribute == null) {
             SkillTreeMod.LOGGER.error("Attribute {} doesn't exist!", attributeId);
         }
@@ -322,7 +340,11 @@ public class SerializationHelper {
     }
 
     public static void serializeOperation(CompoundTag tag, AttributeModifier.Operation operation) {
+<<<<<<< Updated upstream
         tag.putInt("operation", operation.toValue());
+=======
+        tag.putString("operation", operation.name());
+>>>>>>> Stashed changes
     }
 
     public static @NotNull LivingMultiplier deserializeLivingMultiplier(CompoundTag tag, String name) {
@@ -433,8 +455,13 @@ public class SerializationHelper {
         if (!tag.contains("effect")) {
             return null;
         }
+<<<<<<< Updated upstream
         ResourceLocation effectId = new ResourceLocation(tag.getString("effect"));
         return BuiltInRegistries.MOB_EFFECT.get(effectId);
+=======
+        ResourceLocation effectId = ResourceLocation.parse(tag.getString("effect"));
+        return BuiltInRegistries.MOB_EFFECT.get(effectId).map(Holder::value).orElse(null);
+>>>>>>> Stashed changes
     }
 
     public static void serializeMobEffect(CompoundTag tag, MobEffect effect) {
@@ -454,7 +481,11 @@ public class SerializationHelper {
         MobEffect effect = Objects.requireNonNull(deserializeMobEffect(tag));
         int duration = tag.getInt("duration");
         int amplifier = tag.getInt("amplifier");
+<<<<<<< Updated upstream
         return new MobEffectInstance(effect, duration, amplifier);
+=======
+        return new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), duration, amplifier);
+>>>>>>> Stashed changes
     }
 
     public static void serializeEffectInstance(CompoundTag tag, MobEffectInstance effect) {

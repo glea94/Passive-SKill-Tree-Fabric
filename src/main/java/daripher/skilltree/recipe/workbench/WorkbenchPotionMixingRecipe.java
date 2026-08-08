@@ -15,6 +15,7 @@ import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.apache.commons.lang3.tuple.Pair;
@@ -69,11 +70,15 @@ public class WorkbenchPotionMixingRecipe extends AbstractWorkbenchRecipe {
         return !itemStack.getOrCreateTag().getBoolean(IS_MIXTURE_TAG_NAME);
     }
 
+    // CORRECTION 1.21.4 : Ingredient.of(ItemStack...) a disparu. On retombe sur
+    // Ingredient.of(Stream<? extends ItemLike>) en extrayant l'Item de chaque stack — sans perte de
+    // comportement, puisqu'un Ingredient vanilla ne matche jamais par data component (potion effects),
+    // seulement par Item : ici toutes les stacks partagent de toute façon le même baseItem.
     private Ingredient getPotionItemIngredient(PotionItem baseItem) {
         Collection<Potion> availablePotions = com.google.common.collect.Lists.newArrayList(BuiltInRegistries.POTION);
         Stream<Potion> potionsWithEffects = availablePotions.stream().filter(potion -> !potion.getEffects().isEmpty());
         Stream<ItemStack> suitablePotionStacks = potionsWithEffects.map(potion -> getPotionStack(baseItem, potion));
-        return Ingredient.of(suitablePotionStacks.toList().toArray(new ItemStack[0]));
+        return Ingredient.of(suitablePotionStacks.map(ItemStack::getItem));
     }
 
     private Ingredient getAllPotionsIngredient() {
@@ -85,7 +90,7 @@ public class WorkbenchPotionMixingRecipe extends AbstractWorkbenchRecipe {
                     .map(PotionItem.class::cast).toList();
             potionItems.forEach(potionItem -> suitablePotionStacks.add(getPotionStack(potionItem, potion)));
         });
-        return Ingredient.of(suitablePotionStacks.toArray(new ItemStack[0]));
+        return Ingredient.of(suitablePotionStacks.stream().map(ItemStack::getItem));
     }
 
     private static @NotNull ItemStack getPotionStack(PotionItem baseItem, Potion potion) {
@@ -124,8 +129,11 @@ public class WorkbenchPotionMixingRecipe extends AbstractWorkbenchRecipe {
         return resultItemStack;
     }
 
+    // CORRECTION 1.21.4 : PotionContents a désormais 4 champs (potion, customColor, customEffects,
+    // customName) au lieu de 3 -> on préserve existingContents.customName() pour ne rien perdre.
     private void setMixtureEffects(ItemStack potionStack1, ItemStack potionStack2, ItemStack resultItemStack) {
         List<MobEffectInstance> mobEffectInstances = new ArrayList<>();
+<<<<<<< Updated upstream
         mobEffectInstances.addAll(PotionUtils.getMobEffects(potionStack1));
         mobEffectInstances.addAll(PotionUtils.getMobEffects(potionStack2));
         PotionUtils.setCustomEffects(resultItemStack, mobEffectInstances);
@@ -134,6 +142,20 @@ public class WorkbenchPotionMixingRecipe extends AbstractWorkbenchRecipe {
     private void setMixtureColor(ItemStack potionStack1, ItemStack potionStack2, ItemStack resultItemStack) {
         int potionColor = mixHexColors(PotionUtils.getColor(potionStack1), PotionUtils.getColor(potionStack2));
         resultItemStack.getOrCreateTag().putInt(PotionUtils.TAG_CUSTOM_POTION_COLOR, potionColor);
+=======
+        mobEffectInstances.addAll(getPotionEffects(potionStack1));
+        mobEffectInstances.addAll(getPotionEffects(potionStack2));
+        PotionContents existingContents = resultItemStack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+        resultItemStack.set(DataComponents.POTION_CONTENTS,
+                new PotionContents(existingContents.potion(), existingContents.customColor(), mobEffectInstances, existingContents.customName()));
+    }
+
+    private void setMixtureColor(ItemStack potionStack1, ItemStack potionStack2, ItemStack resultItemStack) {
+        int potionColor = mixHexColors(getPotionColor(potionStack1), getPotionColor(potionStack2));
+        PotionContents existingContents = resultItemStack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+        resultItemStack.set(DataComponents.POTION_CONTENTS,
+                new PotionContents(existingContents.potion(), Optional.of(potionColor), existingContents.customEffects(), existingContents.customName()));
+>>>>>>> Stashed changes
     }
 
     private void setMixtureName(ItemStack potionStack1, ItemStack resultItemStack) {
@@ -152,7 +174,7 @@ public class WorkbenchPotionMixingRecipe extends AbstractWorkbenchRecipe {
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<? extends Recipe<WorkbenchContainer>> getSerializer() {
         return PSTRecipeSerializers.WORKBENCH_POTION_MIXING.get();
     }
 

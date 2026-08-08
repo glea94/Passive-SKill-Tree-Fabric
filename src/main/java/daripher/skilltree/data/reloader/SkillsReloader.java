@@ -3,6 +3,12 @@ package daripher.skilltree.data.reloader;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+<<<<<<< Updated upstream
+=======
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+import com.mojang.serialization.JsonOps;
+>>>>>>> Stashed changes
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.data.serializers.SkillBonusSerializer;
 import daripher.skilltree.data.serializers.SkillRequirementSerializer;
@@ -14,35 +20,49 @@ import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+<<<<<<< Updated upstream
 import net.minecraft.network.chat.MutableComponent;
+=======
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.resources.FileToIdConverter;
+>>>>>>> Stashed changes
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
+<<<<<<< Updated upstream
 public class SkillsReloader extends SimpleJsonResourceReloadListener implements IdentifiableResourceReloadListener {
     public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+=======
+public class SkillsReloader extends SimplePreparableReloadListener<Map<ResourceLocation, JsonElement>> implements IdentifiableResourceReloadListener {
+    public static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+>>>>>>> Stashed changes
             .registerTypeAdapter(SkillBonus.class, new SkillBonusSerializer())
             .registerTypeAdapter(SkillRequirement.class, new SkillRequirementSerializer())
             .registerTypeAdapter(MutableComponent.class, new Component.Serializer()).setPrettyPrinting().create();
     private static final Map<ResourceLocation, PassiveSkill> SKILLS = new HashMap<>();
-
-    public SkillsReloader() {
-        super(GSON, "skills");
-    }
+    private static final FileToIdConverter CONVERTER = FileToIdConverter.json("skills");
 
     @Override
     public ResourceLocation getFabricId() {
         return new ResourceLocation(daripher.skilltree.SkillTreeMod.MOD_ID, "skills_reloader");
     }
 
+<<<<<<< Updated upstream
     // Portage Fabric : AddReloadListenerEvent (Forge) -> ResourceManagerHelper (Fabric API).
+=======
+>>>>>>> Stashed changes
     public static void register() {
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new SkillsReloader());
     }
@@ -58,6 +78,24 @@ public class SkillsReloader extends SimpleJsonResourceReloadListener implements 
     public static void loadFromByteBuf(FriendlyByteBuf buf) {
         SKILLS.clear();
         NetworkHelper.readPassiveSkills(buf).forEach(s -> SKILLS.put(s.getId(), s));
+    }
+
+    @Override
+    protected Map<ResourceLocation, JsonElement> prepare(@NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
+        Map<ResourceLocation, JsonElement> map = new HashMap<>();
+        for (Map.Entry<ResourceLocation, Resource> entry : CONVERTER.listMatchingResources(resourceManager).entrySet()) {
+            ResourceLocation fileId = entry.getKey();
+            ResourceLocation id = CONVERTER.fileToId(fileId);
+            try (Reader reader = entry.getValue().openAsReader()) {
+                JsonElement json = JsonParser.parseReader(reader);
+                if (map.putIfAbsent(id, json) != null) {
+                    SkillTreeMod.LOGGER.error("Duplicate data file ignored with ID {}", id);
+                }
+            } catch (IllegalArgumentException | IOException | JsonParseException exception) {
+                SkillTreeMod.LOGGER.error("Couldn't parse data file '{}' from '{}'", id, fileId, exception);
+            }
+        }
+        return map;
     }
 
     @Override

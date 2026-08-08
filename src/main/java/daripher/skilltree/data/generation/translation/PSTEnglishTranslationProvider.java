@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/data/generation/translation/PSTEnglishTranslationProvider.java
 package daripher.skilltree.data.generation.translation;
 
 import daripher.skilltree.SkillTreeMod;
@@ -544,9 +545,17 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         add(PSTRecipeSerializers.WORKBENCH_WEAPON_POISONING.get(), "custom_skill_description", "You can apply poisons to weapons using advanced workbench");
     }
 
+<<<<<<< Updated upstream
     protected void add(Potion potion, String name) {
         add(potion.getName(Items.POTION.getDescriptionId() + ".effect."), "Potion of " + name);
         add(potion.getName(Items.SPLASH_POTION.getDescriptionId() + ".effect."), "Splash Potion of " + name);
         add(potion.getName(Items.LINGERING_POTION.getDescriptionId() + ".effect."), "Lingering Potion of " + name);
+=======
+    public void add(net.minecraft.world.item.alchemy.Potion potion, String name) {
+        String potionName = potion.name();
+        add(net.minecraft.world.item.Items.POTION.getDescriptionId() + ".effect." + potionName, "Potion of " + name);
+        add(net.minecraft.world.item.Items.SPLASH_POTION.getDescriptionId() + ".effect." + potionName, "Splash Potion of " + name);
+        add(net.minecraft.world.item.Items.LINGERING_POTION.getDescriptionId() + ".effect." + potionName, "Lingering Potion of " + name);
+>>>>>>> Stashed changes
     }
 }

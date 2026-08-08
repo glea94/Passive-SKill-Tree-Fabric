@@ -1,15 +1,26 @@
 package daripher.skilltree.recipe.builder;
 
+<<<<<<< Updated upstream
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import daripher.skilltree.init.PSTRecipeSerializers;
 import net.minecraft.data.recipes.FinishedRecipe;
+=======
+import daripher.skilltree.recipe.workbench.WorkbenchCraftingRecipe;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.resources.ResourceKey;
+>>>>>>> Stashed changes
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+<<<<<<< Updated upstream
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.core.registries.BuiltInRegistries;
+=======
+import net.minecraft.world.item.crafting.Recipe;
+>>>>>>> Stashed changes
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +67,13 @@ public class WorkbenchCraftingRecipeBuilder {
 
     public void save(Consumer<FinishedRecipe> finishedRecipeConsumer) {
         validate();
+<<<<<<< Updated upstream
         finishedRecipeConsumer.accept(new Result(id, baseIngredient, ingredients, requiresPassiveSkill, result));
+=======
+        WorkbenchCraftingRecipe recipe =
+                new WorkbenchCraftingRecipe(id, baseIngredient, ingredients, requiresPassiveSkill, result);
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, id), recipe, null);
+>>>>>>> Stashed changes
     }
 
     private void validate() {

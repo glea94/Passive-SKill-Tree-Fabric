@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/skill/bonus/handler/ItemUsagePreventionBonusHandler.java
 package daripher.skilltree.skill.bonus.handler;
 
 import daripher.skilltree.event.ItemTooltipPSTEvent;
@@ -10,7 +11,6 @@ import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -41,9 +41,9 @@ public class ItemUsagePreventionBonusHandler {
         UseItemCallback.EVENT.register((player, level, hand) -> {
             ItemStack itemStack = player.getItemInHand(hand);
             if (shouldPreventItemUsage(player, itemStack)) {
-                return InteractionResultHolder.fail(itemStack);
+                return InteractionResult.FAIL;
             }
-            return InteractionResultHolder.pass(itemStack);
+            return InteractionResult.PASS;
         });
         PSTEvents.LIVING_EQUIPMENT_CHANGE.register(ItemUsagePreventionBonusHandler::preventItemEquipping);
         PSTEvents.ITEM_TOOLTIP.register(ItemUsagePreventionBonusHandler::addPreventedUsageTooltip);

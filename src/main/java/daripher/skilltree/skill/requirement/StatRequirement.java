@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/skill/requirement/StatRequirement.java
 package daripher.skilltree.skill.requirement;
 
 import com.google.gson.JsonObject;
@@ -39,7 +40,7 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
 
     @Override
     public boolean test(Player player) {
-        StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(statTypeId);
+        StatType<?> statType = BuiltInRegistries.STAT_TYPE.getValue(statTypeId);
         Objects.requireNonNull(statType);
         int statValue = getStatValue(player, statType);
         return statValue >= minValue;
@@ -47,12 +48,12 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
 
     @Override
     public MutableComponent getTooltip() {
-        StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(statTypeId);
+        StatType<?> statType = BuiltInRegistries.STAT_TYPE.getValue(statTypeId);
         if (statType == null) {
             return Component.literal("Unknown stat type: " + statTypeId).withStyle(ChatFormatting.RED);
         }
         if (statType == Stats.CUSTOM) {
-            ResourceLocation originalStatId = Stats.CUSTOM.getRegistry().get(statId);
+            ResourceLocation originalStatId = Stats.CUSTOM.getRegistry().getValue(statId);
             if (originalStatId == null) {
                 return Component.literal("Unknown stat: " + statId).withStyle(ChatFormatting.RED);
             }
@@ -63,7 +64,7 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
             return Component.literal(statName.getString() + ": " + formattedMinValue);
         }
         if (statType == Stats.ENTITY_KILLED) {
-            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(statId);
+            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.getValue(statId);
             if (entityType == null) {
                 return Component.literal("Unknown entity: " + statId).withStyle(ChatFormatting.RED);
             }
@@ -71,18 +72,18 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
             return Component.translatable(getDescriptionId() + ".killed", minValue, entityName);
         }
         if (statType == Stats.ENTITY_KILLED_BY) {
-            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(statId);
+            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.getValue(statId);
             if (entityType == null) {
                 return Component.literal("Unknown entity: " + statId).withStyle(ChatFormatting.RED);
             }
             Component entityName = entityType.getDescription();
             return Component.translatable(getDescriptionId() + ".killed_by", entityName, minValue);
         } else {
-            Item item = BuiltInRegistries.ITEM.get(statId);
+            Item item = BuiltInRegistries.ITEM.getValue(statId);
             if (item == null) {
                 return Component.literal("Unknown item: " + statId).withStyle(ChatFormatting.RED);
             }
-            Component itemName = item.getDescription();
+            Component itemName = Component.translatable(item.getDescriptionId());
             return Component.literal(statType.getDisplayName().getString() + " " + itemName.getString() + ": " + minValue);
         }
     }
@@ -91,13 +92,13 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         StatsCounter playerStats = getPlayerStats(player);
         int statValue;
         if (statType == Stats.CUSTOM) {
-            ResourceLocation originalStatId = Stats.CUSTOM.getRegistry().get(statId);
+            ResourceLocation originalStatId = Stats.CUSTOM.getRegistry().getValue(statId);
             if (originalStatId == null) {
                 return 0;
             }
             statValue = playerStats.getValue(Stats.CUSTOM, originalStatId);
         } else {
-            T stat = statType.getRegistry().get(statId);
+            T stat = statType.getRegistry().getValue(statId);
             Objects.requireNonNull(stat);
             statValue = playerStats.getValue(statType, stat);
         }
@@ -125,7 +126,7 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Stat", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-        StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(getStatTypeId());
+        StatType<?> statType = BuiltInRegistries.STAT_TYPE.getValue(getStatTypeId());
         Objects.requireNonNull(statType);
         Set<ResourceLocation> statIds = statType.getRegistry().keySet();
         editor.addSelectionMenu(0, 0, 200, statIds).setValue(getStatId()).setElementNameGetter(v -> Component.literal(v.toString()))
@@ -150,7 +151,7 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
 
     private void selectStatType(Consumer<StatRequirement> consumer, ResourceLocation statTypeId) {
         setStatTypeId(statTypeId);
-        StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(getStatTypeId());
+        StatType<?> statType = BuiltInRegistries.STAT_TYPE.getValue(getStatTypeId());
         Objects.requireNonNull(statType);
         Set<ResourceLocation> statIds = statType.getRegistry().keySet();
         statIds.stream().findFirst().ifPresent(this::setStatId);

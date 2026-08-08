@@ -17,6 +17,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.apache.commons.lang3.tuple.Pair;
@@ -64,7 +65,7 @@ public class WorkbenchWeaponPoisoningRecipe extends AbstractWorkbenchRecipe {
     private Ingredient getMeleeWeaponIngredient() {
         Collection<Item> items = com.google.common.collect.Lists.newArrayList(BuiltInRegistries.ITEM);
         Stream<ItemStack> meleeWeapons = items.stream().map(ItemStack::new).filter(EquipmentPredicate::isMeleeWeapon);
-        return Ingredient.of(meleeWeapons.toList().toArray(new ItemStack[0]));
+        return Ingredient.of(meleeWeapons.map(ItemStack::getItem));
     }
 
     @Override
@@ -77,7 +78,7 @@ public class WorkbenchWeaponPoisoningRecipe extends AbstractWorkbenchRecipe {
         Collection<Potion> availablePotions = com.google.common.collect.Lists.newArrayList(BuiltInRegistries.POTION);
         Stream<Potion> harmfulPotions = availablePotions.stream().filter(WorkbenchWeaponPoisoningRecipe::isHarmfulPotion);
         Stream<ItemStack> suitablePotionStacks = harmfulPotions.map(potion -> getPotionStack(baseItem, potion));
-        return Ingredient.of(suitablePotionStacks.toList().toArray(new ItemStack[0]));
+        return Ingredient.of(suitablePotionStacks.map(ItemStack::getItem));
     }
 
     private static boolean isHarmfulPotion(Potion potion) {
@@ -116,7 +117,7 @@ public class WorkbenchWeaponPoisoningRecipe extends AbstractWorkbenchRecipe {
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<? extends Recipe<WorkbenchContainer>> getSerializer() {
         return PSTRecipeSerializers.WORKBENCH_WEAPON_POISONING.get();
     }
 

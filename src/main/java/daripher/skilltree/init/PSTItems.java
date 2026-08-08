@@ -17,5 +17,5 @@ public class PSTItems {
     public static final RegistryObject<Item> AMNESIA_SCROLL = REGISTRY.register("amnesia_scroll", AmnesiaScrollItem::new);
 
     // blocks
-    public static final RegistryObject<Item> WORKBENCH = REGISTRY.register("workbench", () -> new ModBlockItem(PSTBlocks.WORKBENCH));
+    public static final RegistryObject<Item> WORKBENCH = REGISTRY.register("workbench", id -> new ModBlockItem(id, PSTBlocks.WORKBENCH));
 }

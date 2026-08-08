@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTDamagePredicates;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -34,8 +33,7 @@ public record ThornsDamageCondition() implements DamageCondition {
 
     @Override
     public DamageSource createDamageSource(Player player) {
-        Registry<DamageType> damageTypes = player.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
-        Holder.Reference<DamageType> damageType = damageTypes.getHolderOrThrow(DamageTypes.THORNS);
+        Holder<DamageType> damageType = player.level().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.THORNS);
         return new DamageSource(damageType, null, player);
     }
 

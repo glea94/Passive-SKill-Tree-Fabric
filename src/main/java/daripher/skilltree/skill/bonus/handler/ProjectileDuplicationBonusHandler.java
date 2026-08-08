@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -81,7 +82,7 @@ public class ProjectileDuplicationBonusHandler {
 
     private static void spawnDuplicateProjectileWithOffset(Projectile original, Player player, ServerLevel level, float angleOffset) {
         EntityType<?> projectileType = original.getType();
-        Projectile duplicate = (Projectile) projectileType.create(level);
+        Projectile duplicate = (Projectile) projectileType.create(level, EntitySpawnReason.TRIGGERED);
         if (duplicate == null) {
             return;
         }

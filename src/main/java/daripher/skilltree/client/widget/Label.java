@@ -5,6 +5,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -28,8 +29,8 @@ public class Label extends AbstractWidget {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
         if (hasBackground) {
-            graphics.blit(WIDGETS_TEXTURE, getX(), getY(), 0, 14, width / 2, height);
-            graphics.blit(WIDGETS_TEXTURE, getX() + width / 2, getY(), 256 - width / 2, 14, width / 2, height);
+            graphics.blit(RenderType::guiTextured, WIDGETS_TEXTURE, getX(), getY(), 0F, 14F, width / 2, height, 256, 256);
+            graphics.blit(RenderType::guiTextured, WIDGETS_TEXTURE, getX() + width / 2, getY(), (float) (256 - width / 2), 14F, width / 2, height, 256, 256);
             int textColor = 0xFFFFFF | Mth.ceil(alpha * 255F) << 24; // couleur par défaut vanilla
             graphics.drawCenteredString(font, getMessage(), getX() + width / 2, getY() + (height - 8) / 2, textColor);
         } else {

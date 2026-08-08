@@ -1,9 +1,16 @@
+// Fichier : src/main/java/daripher/skilltree/block/WorkbenchBlock.java
 package daripher.skilltree.block;
 
 import daripher.skilltree.inventory.menu.WorkbenchMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+<<<<<<< Updated upstream
 import net.minecraft.world.InteractionHand;
+=======
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+>>>>>>> Stashed changes
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
@@ -22,8 +29,11 @@ import org.jetbrains.annotations.Nullable;
 public class WorkbenchBlock extends Block {
     private static final Component CONTAINER_TITLE = Component.translatable("container.upgrade");
 
-    public WorkbenchBlock() {
-        super(Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)
+    // CORRECTION 1.21.4 : BlockBehaviour.Properties doit recevoir son id via setId(...) avant
+    // construction (sinon NullPointerException "Block id not set" - même mécanisme que pour Item,
+    // voir DeferredRegister).
+    public WorkbenchBlock(ResourceLocation id) {
+        super(Properties.of().setId(ResourceKey.create(Registries.BLOCK, id)).mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)
                 .ignitedByLava());
     }
 

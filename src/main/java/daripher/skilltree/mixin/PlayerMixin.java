@@ -1,3 +1,5 @@
+// Fichier : src/main/java/daripher/skilltree/mixin/PlayerMixin.java
+// 1.21.1 Fichier : src/main/java/daripher/skilltree/mixin/PlayerMixin.java
 package daripher.skilltree.mixin;
 
 import daripher.skilltree.event.CriticalHitPSTEvent;
@@ -20,16 +22,21 @@ import org.spongepowered.asm.mixin.injection.Redirect;
  * 1) @ModifyConstant sur la constante 1.5F (le multiplicateur de crit vanilla dans
  *    Player.attack()) : détecte qu'un crit vanilla a eu lieu (mémorisé dans un champ) et permet
  *    d'ajuster ce multiplicateur (équivalent de CriticalHitEvent.setDamageMultiplier).
- * 2) @Redirect sur l'appel Entity.hurt(DamageSource, float) à l'intérieur de Player.attack() :
- *    poste l'event ; si aucun crit vanilla n'a eu lieu mais qu'un bonus de compétence force un
- *    crit (CriticalHitEvent.setResult(ALLOW) côté Forge), applique le multiplicateur nous-mêmes
- *    avant d'appeler hurt().
+ * 2) @Redirect sur l'appel Entity.hurtOrSimulate(DamageSource, float) à l'intérieur de
+ *    Player.attack() : poste l'event ; si aucun crit vanilla n'a eu lieu mais qu'un bonus de
+ *    compétence force un crit (CriticalHitEvent.setResult(ALLOW) côté Forge), applique le
+ *    multiplicateur nous-mêmes avant d'appeler hurtOrSimulate().
  * <p>
  * LIMITE CONNUE (mineure, cosmétique) : quand un crit est forcé par un bonus de compétence sans
  * crit vanilla, l'animation/particule de crit vanilla (déclenchée par Player.crit(target),
  * ailleurs dans attack(), sur la variable locale qu'on ne touche pas ici) ne se joue pas - seul
  * le dégât est correct. Aucun impact sur le gameplay, seulement visuel. À corriger plus tard via
  * un appel client-side explicite si besoin, pas bloquant pour la suite du portage.
+ * <p>
+ * CORRECTION 1.21.4 (07/08/2026) : dans Player.attack(), l'appel n'est plus
+ * Entity.hurt(DamageSource, float) (void) mais Entity.hurtOrSimulate(DamageSource, float),
+ * qui renvoie boolean (cette valeur pilote ensuite le knockback/les sons/le sweep dans attack()).
+ * Le @Redirect cible désormais hurtOrSimulate et relaie son retour.
  */
 @Mixin(Player.class)
 public abstract class PlayerMixin {
@@ -46,7 +53,7 @@ public abstract class PlayerMixin {
     }
 
     @Redirect(method = "attack", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"), require = 1)
+            target = "Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"), require = 1)
     private boolean skilltree$onAttackHurt(Entity target, DamageSource source, float amount) {
         Player self = (Player) (Object) this;
         CriticalHitPSTEvent event = new CriticalHitPSTEvent(self, target, skilltree$wasVanillaCrit);
@@ -62,6 +69,6 @@ public abstract class PlayerMixin {
         }
         skilltree$wasVanillaCrit = false;
         skilltree$vanillaCritMultiplier = 1.5f;
-        return target.hurt(source, amount);
+        return target.hurtOrSimulate(source, amount);
     }
 }

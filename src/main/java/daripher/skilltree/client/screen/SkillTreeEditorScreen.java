@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/client/screen/SkillTreeEditorScreen.java
 package daripher.skilltree.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.achievement.StatsUpdateListener;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundClientCommandPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -72,7 +74,7 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
 
     @Override
     protected void rebuildWidgets() {
-        this.minecraft.tell(super::rebuildWidgets);
+        this.minecraft.execute(super::rebuildWidgets);
     }
 
     private void calculateMaxScroll() {
@@ -133,7 +135,7 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
     private void renderOverlay(GuiGraphics graphics) {
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_overlay.png");
         RenderSystem.enableBlend();
-        graphics.blit(texture, 0, 0, 0, 0F, 0F, width, height, width, height);
+        graphics.blit(RenderType::guiTextured, texture, 0, 0, 0F, 0F, width, height, width, height);
         RenderSystem.disableBlend();
     }
 
@@ -144,7 +146,7 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
         poseStack.pushPose();
         poseStack.translate(skillButtons.getScrollX() / 3F, skillButtons.getScrollY() / 3F, 0);
         int size = SkillTreeScreen.BACKGROUND_SIZE;
-        graphics.blit(texture, (width - size) / 2, (height - size) / 2, 0, 0F, 0F, size, size, size, size);
+        graphics.blit(RenderType::guiTextured, texture, (width - size) / 2, (height - size) / 2, 0F, 0F, size, size, size, size);
         poseStack.popPose();
     }
 
@@ -194,6 +196,7 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
     public boolean charTyped(char codePoint, int modifiers) {
         return editorWidgets.charTyped(codePoint, modifiers);
     }
+<<<<<<< Updated upstream
 
     @Override
     public void onStatsUpdated() {
@@ -201,3 +204,6 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
         init();
     }
 }
+=======
+}
+>>>>>>> Stashed changes

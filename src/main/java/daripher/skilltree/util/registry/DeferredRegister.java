@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/util/registry/DeferredRegister.java
 package daripher.skilltree.util.registry;
 
 import net.minecraft.core.Registry;
@@ -7,6 +8,7 @@ import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -28,6 +30,13 @@ import java.util.function.Supplier;
  * Dans les deux cas, l'ordre d'initialisation entre classes PSTxxx qui se référencent entre
  * elles (ex. PSTPotions -> PSTMobEffects) reste correct : Java garantit qu'une classe est
  * initialisée avant le premier accès à un de ses champs statiques.
+ * <p>
+ * CORRECTION 1.21.4 (07/08/2026) : depuis la refonte des components, Item.Properties doit
+ * recevoir son ResourceKey<Item> via setId(...) AVANT la construction de l'Item (le constructeur
+ * Item(Properties) valide en interne que l'id est présent, sinon NullPointerException "Item id
+ * not set"). Ajout d'une surcharge register(String, Function<ResourceLocation, I>) qui fournit
+ * l'id au moment de la construction, sans toucher à la surcharge Supplier<I> existante (utilisée
+ * par les registries qui n'ont pas cette contrainte, ex. Blocks/MobEffects/Potions).
  */
 public class DeferredRegister<T> {
     private final Registry<T> backingRegistry; // null pour les registries "maison"
@@ -53,6 +62,22 @@ public class DeferredRegister<T> {
     public <I extends T> RegistryObject<I> register(String name, Supplier<I> supplier) {
         ResourceLocation id = new ResourceLocation(modId, name);
         I value = supplier.get();
+        if (backingRegistry != null) {
+            value = Registry.register(backingRegistry, id, value);
+        }
+        byId.put(id, value);
+        byValue.put(value, id);
+        return RegistryObject.of(id, value);
+    }
+
+    /**
+     * Variante pour les types dont la construction a besoin de connaître son propre id à
+     * l'avance (ex. Item depuis la refonte 1.21.2+ : Item.Properties#setId doit être appelé
+     * avant new Item(properties)).
+     */
+    public <I extends T> RegistryObject<I> register(String name, Function<ResourceLocation, I> factory) {
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modId, name);
+        I value = factory.apply(id);
         if (backingRegistry != null) {
             value = Registry.register(backingRegistry, id, value);
         }

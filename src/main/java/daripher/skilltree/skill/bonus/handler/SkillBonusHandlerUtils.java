@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/skill/bonus/handler/SkillBonusHandlerUtils.java
 package daripher.skilltree.skill.bonus.handler;
 
 import daripher.skilltree.entity.persistentdata.PersistentDataProvider;
@@ -74,6 +75,6 @@ public class SkillBonusHandlerUtils {
             livingEntity.invulnerableTime = 0;
             livingEntity.hurt(damageSource, amount);
         });
-        minecraftServer.tell(delayedDamageTask);
+        minecraftServer.execute(delayedDamageTask);
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -81,8 +82,14 @@ public class TextField extends EditBox implements TickingWidget {
         }
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/widgets.png");
         int v = isHoveredOrFocused() ? 42 : 56;
+<<<<<<< Updated upstream
         graphics.blit(texture, getX(), getY(), 0, v, width / 2, height);
         graphics.blit(texture, getX() + width / 2, getY(), -width / 2, v, width / 2, height);
+=======
+        graphics.blit(RenderType::guiTextured, texture, getX(), getY(), 0F, (float) v, width / 2, height, 256, 256);
+        graphics.blit(RenderType::guiTextured, texture, getX() + width / 2, getY(), (float) (-width / 2), (float) v, width / 2, height, 256, 256);
+
+>>>>>>> Stashed changes
         int textColor = getTextColor();
         int cursorVisiblePosition = getCursorPosition() - accessor.getDisplayPos();
         int highlightWidth = accessor.getHighlightPos() - accessor.getDisplayPos();
@@ -147,7 +154,7 @@ public class TextField extends EditBox implements TickingWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        setFocused(clicked(mouseX, mouseY));
+        setFocused(isMouseOver(mouseX, mouseY));
         return super.mouseClicked(mouseX, mouseY, button);
     }
 

@@ -16,6 +16,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.achievement.StatsUpdateListener;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundClientCommandPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -76,7 +77,7 @@ public class SkillTreeScreen extends Screen implements StatsUpdateListener {
 
     @Override
     protected void rebuildWidgets() {
-        this.minecraft.tell(super::rebuildWidgets);
+        this.minecraft.execute(super::rebuildWidgets);
     }
 
     private void calculateMaxScroll() {
@@ -148,7 +149,7 @@ public class SkillTreeScreen extends Screen implements StatsUpdateListener {
     private void renderOverlay(GuiGraphics graphics) {
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_overlay.png");
         RenderSystem.enableBlend();
-        graphics.blit(texture, 0, 0, 0, 0F, 0F, width, height, width, height);
+        graphics.blit(RenderType::guiTextured, texture, 0, 0, 0F, 0F, width, height, width, height);
         RenderSystem.disableBlend();
     }
 
@@ -165,7 +166,7 @@ public class SkillTreeScreen extends Screen implements StatsUpdateListener {
         }
         poseStack.translate(x, y, 0);
         int size = BACKGROUND_SIZE;
-        graphics.blit(texture, (width - size) / 2, (height - size) / 2, 0, 0F, 0F, size, size, size, size);
+        graphics.blit(RenderType::guiTextured, texture, (width - size) / 2, (height - size) / 2, 0F, 0F, size, size, size, size);
         poseStack.popPose();
     }
 
@@ -186,6 +187,7 @@ public class SkillTreeScreen extends Screen implements StatsUpdateListener {
     public void updateSkillPoints(int skillPoints) {
         skillTreeWidgets.updateSkillPoints(skillPoints);
     }
+<<<<<<< Updated upstream
 
     @Override
     public void onStatsUpdated() {
@@ -193,3 +195,6 @@ public class SkillTreeScreen extends Screen implements StatsUpdateListener {
         init();
     }
 }
+=======
+}
+>>>>>>> Stashed changes

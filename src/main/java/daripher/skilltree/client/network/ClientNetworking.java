@@ -2,13 +2,17 @@ package daripher.skilltree.client.network;
 
 import daripher.skilltree.capability.skill.IPlayerSkills;
 import daripher.skilltree.capability.skill.PlayerSkillsProvider;
+import daripher.skilltree.client.recipe.WorkbenchRecipeClientCache;
+import daripher.skilltree.client.screen.SkillTreeEditorScreen;
 import daripher.skilltree.client.screen.SkillTreeScreen;
 import daripher.skilltree.data.reloader.SkillsReloader;
 import daripher.skilltree.network.PSTNetworkChannels;
 import daripher.skilltree.network.message.GainSkillPointMessage;
 import daripher.skilltree.network.message.LearnSkillMessage;
+import daripher.skilltree.network.message.OpenSkillTreeEditorMessage;
 import daripher.skilltree.network.message.SyncPlayerSkillsMessage;
 import daripher.skilltree.network.message.SyncServerDataMessage;
+import daripher.skilltree.network.message.SyncWorkbenchRecipesMessage;
 import daripher.skilltree.skill.PassiveSkill;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -32,9 +36,20 @@ public class ClientNetworking {
                 // le decode() a déjà appliqué les données (SkillsReloader/SkillTreesReloader), comme dans la version Forge.
             });
         });
+<<<<<<< Updated upstream
         ClientPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.SYNC_PLAYER_SKILLS, (client, handler, buf, responseSender) -> {
             SyncPlayerSkillsMessage message = SyncPlayerSkillsMessage.decode(buf);
             client.execute(() -> handleSyncPlayerSkills(client, message));
+=======
+        ClientPlayNetworking.registerGlobalReceiver(SyncPlayerSkillsMessage.TYPE, (message, context) -> {
+            context.client().execute(() -> handleSyncPlayerSkills(context.client(), message));
+        });
+        ClientPlayNetworking.registerGlobalReceiver(OpenSkillTreeEditorMessage.TYPE, (message, context) -> {
+            context.client().execute(() -> handleOpenSkillTreeEditor(context.client(), message));
+        });
+        ClientPlayNetworking.registerGlobalReceiver(SyncWorkbenchRecipesMessage.TYPE, (message, context) -> {
+            context.client().execute(() -> WorkbenchRecipeClientCache.set(message.recipes()));
+>>>>>>> Stashed changes
         });
     }
 

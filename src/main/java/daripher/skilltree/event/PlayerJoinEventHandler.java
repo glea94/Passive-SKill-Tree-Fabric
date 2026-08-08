@@ -1,6 +1,11 @@
 package daripher.skilltree.event;
 
 import daripher.skilltree.capability.skill.PlayerSkillsProvider;
+<<<<<<< Updated upstream
+=======
+import daripher.skilltree.network.ServerNetworking;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+>>>>>>> Stashed changes
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -17,6 +22,11 @@ public class PlayerJoinEventHandler {
             ServerPlayer player = handler.getPlayer();
 
             server.execute(() -> {
+                // Portage 1.21.4 : Level#getRecipeManager() a disparu côté client. On envoie la
+                // liste des recettes du workbench au joueur à chaque connexion pour remplir son
+                // WorkbenchRecipeClientCache (cf. daripher.skilltree.network.ServerNetworking).
+                ServerNetworking.sendSyncWorkbenchRecipes(player);
+
                 if (PlayerSkillsProvider.hasSkills(player)) {
                     // 1. Force Cardinal Components à synchroniser l'arbre au client
                     PlayerSkillsProvider.KEY.sync(player);

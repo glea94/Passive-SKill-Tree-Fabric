@@ -5,6 +5,7 @@ import daripher.skilltree.mixin.AbstractWidgetAccessor;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -85,8 +86,8 @@ public abstract class SelectionList<T> extends AbstractButton {
 
     private void renderBackgroundLine(@NotNull GuiGraphics graphics, int x, int y, int textureOffset, int width, int height) {
         ResourceLocation texture = WIDGETS_TEXTURE;
-        graphics.blit(texture, x, y, 0, textureOffset, width / 2, height);
-        graphics.blit(texture, x + width / 2, y, -width / 2, textureOffset, width / 2, height);
+        graphics.blit(RenderType::guiTextured, texture, x, y, 0F, (float) textureOffset, width / 2, height, 256, 256);
+        graphics.blit(RenderType::guiTextured, texture, x + width / 2, y, (float) (-width / 2), (float) textureOffset, width / 2, height, 256, 256);
     }
 
     private void renderElements(@NotNull GuiGraphics graphics) {
@@ -131,7 +132,7 @@ public abstract class SelectionList<T> extends AbstractButton {
 
     @Override
     public void onClick(double mouseX, double mouseY) {
-        if (!clicked(mouseX, mouseY)) {
+        if (!isMouseOver(mouseX, mouseY)) {
             return;
         }
         int hoveredElement = getHoveredElement((int) mouseX, (int) mouseY);

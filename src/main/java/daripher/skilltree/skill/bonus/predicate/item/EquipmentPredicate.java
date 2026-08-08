@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/skill/bonus/predicate/item/EquipmentPredicate.java
 package daripher.skilltree.skill.bonus.predicate.item;
 
 import com.google.gson.JsonObject;
@@ -7,6 +8,7 @@ import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.init.predicate.PSTItemPredicates;
 import daripher.skilltree.init.PSTTags;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -14,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.equipment.Equippable;
 import net.minecraft.world.item.*;
 
 import java.util.Locale;
@@ -64,8 +67,16 @@ public class EquipmentPredicate implements ItemStackPredicate {
         return isSword(stack) || isAxe(stack) || isTrident(stack) || stack.is(PSTTags.Items.MELEE_WEAPON);
     }
 
+    private static boolean isArmorInSlot(ItemStack stack, EquipmentSlot slot) {
+        if (!(stack.getItem() instanceof ArmorItem)) {
+            return false;
+        }
+        Equippable equippable = stack.get(DataComponents.EQUIPPABLE);
+        return equippable != null && equippable.slot() == slot;
+    }
+
     public static boolean isLeggings(ItemStack stack) {
-        return stack.getItem() instanceof ArmorItem armor && armor.getEquipmentSlot() == EquipmentSlot.LEGS;
+        return isArmorInSlot(stack, EquipmentSlot.LEGS);
     }
 
     public static boolean isTrident(ItemStack stack) {
@@ -97,7 +108,7 @@ public class EquipmentPredicate implements ItemStackPredicate {
     }
 
     public static boolean isChestplate(ItemStack stack) {
-        return stack.getItem() instanceof ArmorItem armor && armor.getEquipmentSlot() == EquipmentSlot.CHEST;
+        return isArmorInSlot(stack, EquipmentSlot.CHEST);
     }
 
     public static boolean isShovel(ItemStack stack) {
@@ -113,7 +124,7 @@ public class EquipmentPredicate implements ItemStackPredicate {
     }
 
     public static boolean isHelmet(ItemStack stack) {
-        return stack.getItem() instanceof ArmorItem armor && armor.getEquipmentSlot() == EquipmentSlot.HEAD;
+        return isArmorInSlot(stack, EquipmentSlot.HEAD);
     }
 
     public static boolean isSword(ItemStack stack) {
@@ -141,7 +152,7 @@ public class EquipmentPredicate implements ItemStackPredicate {
     }
 
     public static boolean isBoots(ItemStack stack) {
-        return stack.getItem() instanceof ArmorItem armor && armor.getEquipmentSlot() == EquipmentSlot.FEET;
+        return isArmorInSlot(stack, EquipmentSlot.FEET);
     }
 
     public static boolean isAxe(ItemStack stack) {

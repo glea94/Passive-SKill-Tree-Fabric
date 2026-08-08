@@ -1,6 +1,7 @@
 package daripher.skilltree.client.widget.editor.menu.selection;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +22,7 @@ public class TextureSelectionList extends SelectionList<ResourceLocation> {
         ResourceLocation texture = getDisplayedElements().get(elementIndex);
         int textureX = x + (elementWidth - textureWidth) / 2;
         int textureY = y + (elementHeight - textureHeight) / 2;
-        graphics.blit(texture, textureX, textureY, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
+        graphics.blit(RenderType::guiTextured, texture, textureX, textureY, 0F, 0F, textureWidth, textureHeight, textureWidth, textureHeight);
     }
 
     public TextureSelectionList setElementTextureSize(int width, int height) {

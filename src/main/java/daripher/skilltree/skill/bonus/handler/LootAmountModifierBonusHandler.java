@@ -25,9 +25,23 @@ public class LootAmountModifierBonusHandler {
             if (!lootType.canAffect(lootContext, lootTableId)) {
                 continue;
             }
+<<<<<<< Updated upstream
             if (lootContext.hasParam(LootContextParams.TOOL)) {
                 ItemStack tool = lootContext.getParam(LootContextParams.TOOL);
                 if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, tool) > 0) {
+=======
+            // CORRECTION 1.21.1 : le player doit être résolu avant le contrôle Silk Touch, car
+            // Enchantments.SILK_TOUCH est désormais un ResourceKey<Enchantment> qu'il faut résoudre
+            // en Holder<Enchantment> via le registryAccess du joueur (voir plus bas).
+            player = (Player) lootContext.getParameter(lootType.getPlayerLootContextParam());
+            if (lootContext.hasParameter(LootContextParams.TOOL)) {
+                ItemStack tool = lootContext.getParameter(LootContextParams.TOOL);
+                // CORRECTION 1.21.1 : Enchantments.SILK_TOUCH est un ResourceKey<Enchantment>, pas
+                // un Holder<Enchantment> : on le résout via le registre des enchantements accessible
+                // depuis le joueur avant de le passer à getItemEnchantmentLevel.
+                int silkTouchLevel = EnchantmentHelper.getItemEnchantmentLevel(player.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH), tool);
+                if (silkTouchLevel > 0) {
+>>>>>>> Stashed changes
                     return defaultLoot;
                 }
             }

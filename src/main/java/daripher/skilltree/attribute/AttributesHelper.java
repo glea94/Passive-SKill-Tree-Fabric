@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/attribute/AttributesHelper.java
 package daripher.skilltree.attribute;
 
 import daripher.skilltree.SkillTreeMod;
@@ -18,7 +19,11 @@ public class AttributesHelper {
             return List.of();
         }
         AttributeSupplier attributeSupplier = DefaultAttributes.getSupplier(EntityType.PLAYER);
+<<<<<<< Updated upstream
         return com.google.common.collect.Lists.newArrayList(BuiltInRegistries.ATTRIBUTE).stream().filter(attributeSupplier::hasAttribute).toList();
+=======
+        return BuiltInRegistries.ATTRIBUTE.listElements().filter(attributeSupplier::hasAttribute).map(Holder.Reference::value).toList();
+>>>>>>> Stashed changes
     }
 
     public static String getName(Attribute attribute) {

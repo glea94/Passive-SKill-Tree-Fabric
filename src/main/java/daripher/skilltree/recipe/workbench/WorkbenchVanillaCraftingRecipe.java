@@ -4,7 +4,12 @@ import com.google.gson.JsonObject;
 import daripher.skilltree.inventory.menu.WorkbenchContainer;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.VanillaRecipeUnlockBonus;
+<<<<<<< Updated upstream
 import net.minecraft.core.NonNullList;
+=======
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+>>>>>>> Stashed changes
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -12,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -23,13 +29,25 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
+<<<<<<< Updated upstream
+=======
+    private static final ResourceLocation UNKNOWN_ID = ResourceLocation.fromNamespaceAndPath("skilltree", "unknown_workbench_vanilla_crafting_recipe");
+
+>>>>>>> Stashed changes
     private @Nullable Pair<Ingredient, Integer> baseIngredient;
     private Map<Ingredient, Integer> additionalIngredients;
     private final ItemStack result;
 
+<<<<<<< Updated upstream
     public WorkbenchVanillaCraftingRecipe(CraftingRecipe vanillaRecipe, RegistryAccess registryAccess) {
         super(vanillaRecipe.getId(), true);
         this.result = vanillaRecipe.getResultItem(registryAccess);
+=======
+    public WorkbenchVanillaCraftingRecipe(RecipeHolder<CraftingRecipe> vanillaRecipeHolder, RegistryAccess registryAccess) {
+        super(vanillaRecipeHolder.id().location(), true);
+        CraftingRecipe vanillaRecipe = vanillaRecipeHolder.value();
+        this.result = assembleResult(vanillaRecipe, registryAccess);
+>>>>>>> Stashed changes
         additionalIngredients = getIngredientsFromCraftingRecipe(vanillaRecipe);
         List<Pair<Ingredient, Integer>> ingredients = new ArrayList<>(additionalIngredients.entrySet().stream().map(Pair::of).toList());
         if (!ingredients.isEmpty()) {
@@ -45,20 +63,30 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
         this.additionalIngredients = additionalIngredients;
     }
 
+    // Portage 1.21.4 : getResultItem(RegistryAccess) a disparu de CraftingRecipe. On reconstruit
+    // un CraftingInput synthétique (une rangée d'un item représentatif par ingrédient) et on
+    // appelle assemble() dessus, comme le ferait le jeu. Fidèle pour les recettes à résultat fixe ;
+    // à vérifier si le mod utilise des recettes vanilla "spéciales" à résultat dynamique (isSpecial()).
+    private static ItemStack assembleResult(CraftingRecipe vanillaRecipe, RegistryAccess registryAccess) {
+        List<Ingredient> ingredients = vanillaRecipe.placementInfo().ingredients();
+        List<ItemStack> gridItems = new ArrayList<>(ingredients.size());
+        for (Ingredient ingredient : ingredients) {
+            gridItems.add(ingredient.items().findFirst().map(holder -> new ItemStack(holder.value())).orElse(ItemStack.EMPTY));
+        }
+        CraftingInput craftingInput = CraftingInput.of(gridItems.size(), 1, gridItems);
+        return vanillaRecipe.assemble(craftingInput, registryAccess);
+    }
+
     private static Map<Ingredient, Integer> getIngredientsFromCraftingRecipe(CraftingRecipe vanillaRecipe) {
         record IngredientKey(Set<Item> items) {
         }
         Map<IngredientKey, Ingredient> uniqueIngredients = new HashMap<>();
         Map<IngredientKey, Integer> ingredientCounts = new HashMap<>();
-        NonNullList<Ingredient> vanillaIngredients = vanillaRecipe.getIngredients();
+        List<Ingredient> vanillaIngredients = vanillaRecipe.placementInfo().ingredients();
         for (Ingredient ingredient : vanillaIngredients) {
-            ItemStack[] matchingStacks = ingredient.getItems();
-            if (matchingStacks.length == 0) {
+            Set<Item> itemSet = ingredient.items().map(Holder::value).collect(Collectors.toSet());
+            if (itemSet.isEmpty()) {
                 continue;
-            }
-            Set<Item> itemSet = new HashSet<>(matchingStacks.length);
-            for (ItemStack matchingStack : matchingStacks) {
-                itemSet.add(matchingStack.getItem());
             }
             IngredientKey key = new IngredientKey(itemSet);
             uniqueIngredients.putIfAbsent(key, ingredient);
@@ -132,11 +160,35 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
-        return new Serializer();
+    public @NotNull RecipeSerializer<WorkbenchVanillaCraftingRecipe> getSerializer() {
+        return daripher.skilltree.init.PSTRecipeSerializers.WORKBENCH_VANILLA_CRAFTING.get();
     }
 
     public static class Serializer implements RecipeSerializer<WorkbenchVanillaCraftingRecipe> {
+<<<<<<< Updated upstream
+=======
+        private static final MapCodec<WorkbenchVanillaCraftingRecipe> CODEC = new MapCodec<>() {
+            @Override
+            public <T> DataResult<WorkbenchVanillaCraftingRecipe> decode(DynamicOps<T> ops, MapLike<T> input) {
+                return DataResult.error(() -> "Attempted to load an invalid recipe type.");
+            }
+
+            @Override
+            public <T> RecordBuilder<T> encode(WorkbenchVanillaCraftingRecipe input, DynamicOps<T> ops, RecordBuilder<T> prefix) {
+                return prefix.withErrorsFrom(DataResult.error(() -> "Attempted to save an invalid recipe type."));
+            }
+
+            @Override
+            public <T> Stream<T> keys(DynamicOps<T> ops) {
+                return Stream.empty();
+            }
+        };
+
+        private static final StreamCodec<RegistryFriendlyByteBuf, WorkbenchVanillaCraftingRecipe> STREAM_CODEC = StreamCodec.of(
+                Serializer::toNetwork, Serializer::fromNetwork
+        );
+
+>>>>>>> Stashed changes
         @Override
         public @NotNull WorkbenchVanillaCraftingRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject jsonObject) {
             throw new UnsupportedOperationException("Attempted to load an invalid recipe type.");
@@ -147,15 +199,24 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
             Map<Ingredient, Integer> ingredients = new HashMap<>();
             int ingredientsCount = buf.readInt();
             for (int i = 0; i < ingredientsCount; i++) {
+<<<<<<< Updated upstream
                 ingredients.put(Ingredient.fromNetwork(buf), buf.readInt());
+=======
+                ingredients.put(Ingredient.CONTENTS_STREAM_CODEC.decode(buf), buf.readInt());
+>>>>>>> Stashed changes
             }
             Pair<Ingredient, Integer> baseIngredient = null;
             boolean hasBaseIngredient = buf.readBoolean();
             if (hasBaseIngredient) {
                 baseIngredient = Pair.of(Ingredient.fromNetwork(buf), buf.readInt());
             }
+<<<<<<< Updated upstream
             ItemStack result = buf.readItem();
             return new WorkbenchVanillaCraftingRecipe(id, baseIngredient, ingredients, result);
+=======
+            ItemStack result = ItemStack.STREAM_CODEC.decode(buf);
+            return new WorkbenchVanillaCraftingRecipe(UNKNOWN_ID, baseIngredient, ingredients, result);
+>>>>>>> Stashed changes
         }
 
         @Override
@@ -163,7 +224,11 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
             int ingredientsCount = recipe.getAdditionalIngredients().size();
             buf.writeInt(ingredientsCount);
             recipe.getAdditionalIngredients().forEach((ingredient, requiredAmount) -> {
+<<<<<<< Updated upstream
                 ingredient.toNetwork(buf);
+=======
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buf, ingredient);
+>>>>>>> Stashed changes
                 buf.writeInt(requiredAmount);
             });
             Pair<Ingredient, Integer> baseIngredient = recipe.baseIngredient;
@@ -172,7 +237,11 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
                 baseIngredient.getLeft().toNetwork(buf);
                 buf.writeInt(baseIngredient.getRight());
             }
+<<<<<<< Updated upstream
             buf.writeItem(recipe.result);
+=======
+            ItemStack.STREAM_CODEC.encode(buf, recipe.result);
+>>>>>>> Stashed changes
         }
     }
 }

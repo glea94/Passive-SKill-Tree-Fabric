@@ -14,6 +14,7 @@ import daripher.skilltree.skill.bonus.predicate.effect.MobEffectPredicate;
 import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.requirement.SkillRequirement;
+import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -83,7 +84,11 @@ public class NetworkHelper {
 
     public static @Nullable Attribute readAttribute(FriendlyByteBuf buf) {
         String attributeId = buf.readUtf();
+<<<<<<< Updated upstream
         Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(new ResourceLocation(attributeId));
+=======
+        Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(ResourceLocation.parse(attributeId)).map(Holder::value).orElse(null);
+>>>>>>> Stashed changes
         if (attribute == null) {
             SkillTreeMod.LOGGER.error("Attribute {} does not exist", attributeId);
         }
@@ -385,8 +390,13 @@ public class NetworkHelper {
     }
 
     public static @Nullable MobEffect readMobEffect(FriendlyByteBuf buf) {
+<<<<<<< Updated upstream
         ResourceLocation effectId = new ResourceLocation(buf.readUtf());
         return BuiltInRegistries.MOB_EFFECT.get(effectId);
+=======
+        ResourceLocation effectId = ResourceLocation.parse(buf.readUtf());
+        return BuiltInRegistries.MOB_EFFECT.get(effectId).map(Holder::value).orElse(null);
+>>>>>>> Stashed changes
     }
 
     public static <T extends Enum<T>> void writeEnum(FriendlyByteBuf buf, T anEnum) {
@@ -407,7 +417,11 @@ public class NetworkHelper {
     }
 
     public static void writeEffectInstance(FriendlyByteBuf buf, MobEffectInstance effect) {
+<<<<<<< Updated upstream
         writeMobEffect(buf, effect.getEffect());
+=======
+        writeMobEffect(buf, effect.getEffect().value());
+>>>>>>> Stashed changes
         buf.writeInt(effect.getDuration());
         buf.writeInt(effect.getAmplifier());
     }
@@ -416,7 +430,11 @@ public class NetworkHelper {
     public static MobEffectInstance readEffectInstance(FriendlyByteBuf buf) {
         MobEffect effect = readMobEffect(buf);
         Objects.requireNonNull(effect);
+<<<<<<< Updated upstream
         return new MobEffectInstance(effect, buf.readInt(), buf.readInt());
+=======
+        return new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), buf.readInt(), buf.readInt());
+>>>>>>> Stashed changes
     }
 
     public static void writeValueProvider(FriendlyByteBuf buf, FloatFunction<?> provider) {

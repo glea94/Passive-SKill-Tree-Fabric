@@ -5,7 +5,7 @@ import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTDamagePredicates;
 import daripher.skilltree.init.PSTDamageTypes;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -34,8 +34,8 @@ public record PoisonDamageCondition() implements DamageCondition {
 
     @Override
     public DamageSource createDamageSource(Player player) {
-        Registry<DamageType> damageTypes = player.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
-        Holder.Reference<DamageType> damageType = damageTypes.getHolderOrThrow(PSTDamageTypes.POISON);
+        HolderGetter.Provider registries = player.level().registryAccess();
+        Holder<DamageType> damageType = registries.lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(PSTDamageTypes.POISON);
         return new DamageSource(damageType, null, player);
     }
 

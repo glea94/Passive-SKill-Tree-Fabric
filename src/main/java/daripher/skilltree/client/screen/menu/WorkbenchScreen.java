@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/client/screen/menu/WorkbenchScreen.java
 package daripher.skilltree.client.screen.menu;
 
 import daripher.skilltree.SkillTreeMod;
@@ -14,6 +15,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -73,8 +75,13 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
 
     @Override
     protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
+<<<<<<< Updated upstream
         renderBackground(guiGraphics);
         guiGraphics.blit(BACKGROUND_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+=======
+        renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
+        guiGraphics.blit(RenderType::guiTextured, BACKGROUND_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+>>>>>>> Stashed changes
         renderScroll(guiGraphics);
         renderRecipes(guiGraphics, mouseX, mouseY);
         if (searchBox.getValue().isEmpty()) {
@@ -88,7 +95,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
         int scrollerX = leftPos + 156;
         float scrollOffset = (float) amountScrolled / getMaxScroll();
         int scrollerY = (int) (topPos + 24 + (SCROLLER_FULL_HEIGHT - SCROLLER_HEIGHT) * scrollOffset);
-        guiGraphics.blit(BACKGROUND_TEXTURE, scrollerX, scrollerY, -SCROLLER_WIDTH * scrollerIconIndex, 0, SCROLLER_WIDTH, SCROLLER_HEIGHT);
+        guiGraphics.blit(RenderType::guiTextured, BACKGROUND_TEXTURE, scrollerX, scrollerY, -SCROLLER_WIDTH * scrollerIconIndex, 0, SCROLLER_WIDTH, SCROLLER_HEIGHT, 256, 256);
     }
 
     private void renderRecipes(GuiGraphics guiGraphics, double mouseX, double mouseY) {
@@ -98,7 +105,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
             int y = topPos + RECIPES_Y + i * RECIPE_HEIGHT;
             int recipeTexture = getRecipeTexture(mouseX, mouseY, recipeIndex, i);
             int vOffset = recipeTexture * RECIPE_HEIGHT;
-            guiGraphics.blit(RECIPES_TEXTURE, x, y, 0, vOffset, RECIPE_WIDTH, RECIPE_HEIGHT);
+            guiGraphics.blit(RenderType::guiTextured, RECIPES_TEXTURE, x, y, 0, vOffset, RECIPE_WIDTH, RECIPE_HEIGHT, 256, 256);
             AbstractWorkbenchRecipe recipe = getRecipeInSlot(i).getKey();
             String tooltip = recipe.getShortDescription().getString();
             tooltip = TooltipHelper.getTrimmedString(font, tooltip, RECIPE_WIDTH - 4);
@@ -194,11 +201,12 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
     }
 
     private ItemStack getDisplayedItemStack(Pair<Ingredient, Integer> ingredientAmountPair, int slot) {
-        ItemStack[] ingredientItemStacks = ingredientAmountPair.getLeft().getItems();
+        List<ItemStack> ingredientItemStacks = ingredientAmountPair.getLeft().items()
+                .map(Holder::value).map(ItemStack::new).toList();
         Random random = new Random(slot);
-        int ingredientCount = ingredientItemStacks.length;
+        int ingredientCount = ingredientItemStacks.size();
         int displayedItemIndex = Mth.floor((tickCount / 20f + random.nextInt(ingredientCount)) % ingredientCount);
-        return ingredientItemStacks[displayedItemIndex];
+        return ingredientItemStacks.get(displayedItemIndex);
     }
 
     private void renderMissingItemOverlay(GuiGraphics guiGraphics, int x, int y) {

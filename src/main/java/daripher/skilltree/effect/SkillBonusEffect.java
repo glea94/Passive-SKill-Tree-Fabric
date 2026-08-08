@@ -2,6 +2,7 @@ package daripher.skilltree.effect;
 
 import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.TickingSkillBonus;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -39,7 +40,11 @@ public abstract class SkillBonusEffect extends MobEffect {
     }
 
     @Override
+<<<<<<< Updated upstream
     public void applyEffectTick(@NotNull LivingEntity entity, int amplifier) {
+=======
+    public boolean applyEffectTick(ServerLevel serverLevel, @NotNull LivingEntity entity, int amplifier) {
+>>>>>>> Stashed changes
         if (entity instanceof ServerPlayer player && bonus instanceof TickingSkillBonus ticking) {
             ticking.tick(player);
         }

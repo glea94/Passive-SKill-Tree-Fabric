@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/skill/bonus/predicate/item/ItemIdPredicate.java
 package daripher.skilltree.skill.bonus.predicate.item;
 
 import com.google.gson.JsonObject;
@@ -25,12 +26,12 @@ public final class ItemIdPredicate implements ItemStackPredicate {
 
     @Override
     public boolean test(ItemStack stack) {
-        return BuiltInRegistries.ITEM.get(id) == stack.getItem();
+        return BuiltInRegistries.ITEM.getValue(id) == stack.getItem();
     }
 
     @Override
     public String getDescriptionId() {
-        Item item = BuiltInRegistries.ITEM.get(id);
+        Item item = BuiltInRegistries.ITEM.getValue(id);
         if (item != null) {
             return item.getDescriptionId();
         }

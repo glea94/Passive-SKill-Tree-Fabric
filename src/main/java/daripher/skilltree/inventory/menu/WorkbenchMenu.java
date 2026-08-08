@@ -1,5 +1,6 @@
 package daripher.skilltree.inventory.menu;
 
+import daripher.skilltree.client.recipe.WorkbenchRecipeClientCache;
 import daripher.skilltree.init.PSTBlocks;
 import daripher.skilltree.init.PSTMenuTypes;
 import daripher.skilltree.init.PSTRecipeTypes;
@@ -10,12 +11,20 @@ import daripher.skilltree.recipe.workbench.AbstractWorkbenchRecipe;
 import daripher.skilltree.recipe.workbench.WorkbenchVanillaCraftingRecipe;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.CraftedItemBonusBonus;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+<<<<<<< Updated upstream
+=======
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
+>>>>>>> Stashed changes
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -185,7 +194,11 @@ public class WorkbenchMenu extends AbstractContainerMenu {
             if (!level.isClientSide) {
                 ItemStack craftResult = selectedRecipe.assemble(workbenchContainer, level.registryAccess());
                 addCraftingBonuses(craftResult);
+<<<<<<< Updated upstream
                 resultSlots.setRecipeUsed(selectedRecipe);
+=======
+                resultSlots.setRecipeUsed(new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, selectedRecipe.getId()), selectedRecipe));
+>>>>>>> Stashed changes
                 resultSlots.setItem(0, craftResult);
             }
         }
@@ -206,15 +219,53 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         if (!WORKBENCH_RECIPE_CACHE.isEmpty()) {
             return WORKBENCH_RECIPE_CACHE;
         }
+<<<<<<< Updated upstream
         List<CraftingRecipe> vanillaCraftingRecipes = level.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING).stream()
                 .filter(recipe -> !recipe.getResultItem(level.registryAccess()).isEmpty()).toList();
         WORKBENCH_RECIPE_CACHE.addAll(level.getRecipeManager().getAllRecipesFor(PSTRecipeTypes.WORKBENCH));
+=======
+        // Portage 1.21.4 : Level#getRecipeManager() a disparu (RecipeAccess ne fournit plus
+        // d'énumération des recettes par type, cf. daripher.skilltree.network.message.SyncWorkbenchRecipesMessage).
+        // Côté serveur : accès direct et frais via ServerLevel#recipeAccess(). Côté client : lecture
+        // du cache statique rempli par le paquet réseau à la connexion (WorkbenchRecipeClientCache).
+        if (level.isClientSide) {
+            WORKBENCH_RECIPE_CACHE.addAll(WorkbenchRecipeClientCache.get());
+            return WORKBENCH_RECIPE_CACHE;
+        }
+        RecipeManager recipeManager = ((ServerLevel) level).recipeAccess();
+        // Portage 1.21.4 : RecipeManager#getAllRecipesFor(RecipeType) n'existe plus. On filtre
+        // nous-mêmes RecipeManager#getRecipes() (Collection<RecipeHolder<?>> non typée) par type.
+        // getResultItem(RegistryAccess) a aussi disparu de CraftingRecipe (déjà confirmé dans
+        // WorkbenchVanillaCraftingRecipe) ; Recipe#isSpecial() (confirmé par décompilation de
+        // RecipeManager) est l'équivalent direct pour exclure les recettes à résultat dynamique.
+        List<RecipeHolder<CraftingRecipe>> vanillaCraftingRecipes = recipeManager.getRecipes().stream()
+                .filter(recipe -> recipe.value().getType() == RecipeType.CRAFTING)
+                .map(recipe -> (RecipeHolder<CraftingRecipe>) recipe)
+                .filter(recipe -> !recipe.value().isSpecial())
+                .toList();
+        List<RecipeHolder<AbstractWorkbenchRecipe>> workbenchRecipes = recipeManager.getRecipes().stream()
+                .filter(recipe -> recipe.value().getType() == PSTRecipeTypes.WORKBENCH)
+                .map(recipe -> (RecipeHolder<AbstractWorkbenchRecipe>) recipe)
+                .toList();
+        WORKBENCH_RECIPE_CACHE.addAll(workbenchRecipes.stream().map(this::resolveWorkbenchRecipeId).toList());
+>>>>>>> Stashed changes
         WORKBENCH_RECIPE_CACHE.addAll(vanillaCraftingRecipes.stream().map(this::convertVanillaRecipe).toList());
         return WORKBENCH_RECIPE_CACHE;
     }
 
+<<<<<<< Updated upstream
     private AbstractWorkbenchRecipe convertVanillaRecipe(CraftingRecipe craftingRecipe) {
         return new WorkbenchVanillaCraftingRecipe(craftingRecipe, level.registryAccess());
+=======
+    private AbstractWorkbenchRecipe resolveWorkbenchRecipeId(RecipeHolder<AbstractWorkbenchRecipe> recipeHolder) {
+        AbstractWorkbenchRecipe recipe = recipeHolder.value();
+        recipe.setId(recipeHolder.id().location());
+        return recipe;
+    }
+
+    private AbstractWorkbenchRecipe convertVanillaRecipe(RecipeHolder<CraftingRecipe> craftingRecipeHolder) {
+        return new WorkbenchVanillaCraftingRecipe(craftingRecipeHolder, level.registryAccess());
+>>>>>>> Stashed changes
     }
 
     private boolean shouldDisplayRecipe(AbstractWorkbenchRecipe recipe) {

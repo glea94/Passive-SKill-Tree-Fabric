@@ -1,29 +1,30 @@
 package daripher.skilltree.client.tooltip;
 
+import daripher.skilltree.client.recipe.WorkbenchRecipeClientCache;
 import daripher.skilltree.data.reloader.SkillsReloader;
 import daripher.skilltree.effect.SkillBonusEffect;
-import daripher.skilltree.init.PSTRecipeTypes;
 import daripher.skilltree.recipe.workbench.AbstractWorkbenchRecipe;
 import daripher.skilltree.skill.PassiveSkill;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+<<<<<<< Updated upstream
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
+=======
+>>>>>>> Stashed changes
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 public class TooltipHelper {
@@ -242,10 +243,14 @@ public class TooltipHelper {
     }
 
     public static Component getRecipeTooltip(ResourceLocation recipeId) {
+<<<<<<< Updated upstream
         ClientLevel level = Minecraft.getInstance().level;
         Objects.requireNonNull(level);
         RecipeManager recipeManager = level.getRecipeManager();
         List<AbstractWorkbenchRecipe> recipes = recipeManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH);
+=======
+        List<AbstractWorkbenchRecipe> recipes = WorkbenchRecipeClientCache.get();
+>>>>>>> Stashed changes
         AbstractWorkbenchRecipe recipe = recipes.stream().filter(r -> r.getId().equals(recipeId)).findAny().orElse(null);
         if (recipe == null) {
             return Component.literal("Unknown Recipe: " + recipeId.toString()).withStyle(ChatFormatting.RED);
@@ -254,10 +259,14 @@ public class TooltipHelper {
     }
 
     public static String getRecipeDescriptionId(ResourceLocation recipeId) {
+<<<<<<< Updated upstream
         ClientLevel level = Minecraft.getInstance().level;
         Objects.requireNonNull(level);
         RecipeManager recipeManager = level.getRecipeManager();
         List<AbstractWorkbenchRecipe> recipes = recipeManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH);
+=======
+        List<AbstractWorkbenchRecipe> recipes = WorkbenchRecipeClientCache.get();
+>>>>>>> Stashed changes
         AbstractWorkbenchRecipe recipe = recipes.stream().filter(r -> r.getId().equals(recipeId)).findAny().orElse(null);
         if (recipe == null) {
             return "Unknown Recipe: " + recipeId.toString();
