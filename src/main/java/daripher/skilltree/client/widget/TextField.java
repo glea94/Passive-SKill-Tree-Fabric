@@ -5,6 +5,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -17,8 +21,10 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class TextField extends EditBox implements TickingWidget {
-    public static final int INVALID_TEXT_COLOR = 0xD80000;
-    private static final int HINT_COLOR = 0x575757;
+    // Fix 1.21.8 : couleur ARGB au lieu de RGB depuis 1.21.6 - ces constantes sans octet alpha
+    // rendaient en transparent (invisible), notamment le placeholder "Search..."
+    public static final int INVALID_TEXT_COLOR = 0xFFD80000;
+    private static final int HINT_COLOR = 0xFF575757;
     private Predicate<String> softFilter = Objects::nonNull;
     private Function<String, @Nullable String> suggestionProvider = s -> null;
     private String hint = null;
@@ -81,8 +87,18 @@ public class TextField extends EditBox implements TickingWidget {
         }
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/widgets.png");
         int v = isHoveredOrFocused() ? 42 : 56;
+<<<<<<< Updated upstream
         graphics.blit(texture, getX(), getY(), 0, v, width / 2, height);
         graphics.blit(texture, getX() + width / 2, getY(), -width / 2, v, width / 2, height);
+=======
+
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), 0F, v, currentWidth / 2, currentHeight, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX() + currentWidth / 2, getY(), (256 - currentWidth / 2F), v, currentWidth / 2, currentHeight, 256, 256);
+
+>>>>>>> Stashed changes
         int textColor = getTextColor();
         int cursorVisiblePosition = getCursorPosition() - accessor.getDisplayPos();
         int highlightWidth = accessor.getHighlightPos() - accessor.getDisplayPos();

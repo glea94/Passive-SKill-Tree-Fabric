@@ -1,5 +1,9 @@
 package daripher.skilltree.client.widget;
 
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 import daripher.skilltree.capability.skill.IPlayerSkills;
 import daripher.skilltree.capability.skill.PlayerSkillsProvider;
 import daripher.skilltree.client.screen.ScreenHelper;
@@ -47,12 +51,21 @@ public class ProgressBar extends Button {
     protected void renderBackground(GuiGraphics graphics) {
         float experienceProgress = getExperienceProgress();
         int filledBarWidth = (int) (experienceProgress * 183);
+<<<<<<< Updated upstream
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/progress_bars.png");
         graphics.blit(texture, getX() + 26, getY() + 7, 0, 0, 182, 5);
         if (filledBarWidth == 0) {
             return;
         }
         graphics.blit(texture, getX() + 26, getY() + 7, 0, 5, filledBarWidth, 5);
+=======
+        ResourceLocation texture = ResourceLocation.parse("skilltree:textures/screen/progress_bars.png");
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX() + 26, getY() + 7, 0F, 0F, 182, 5, 256, 256);
+        if (filledBarWidth == 0) {
+            return;
+        }
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX() + 26, getY() + 7, 0F, 5F, filledBarWidth, 5, 256, 256);
+>>>>>>> Stashed changes
     }
 
     protected void renderProgress(GuiGraphics graphics) {

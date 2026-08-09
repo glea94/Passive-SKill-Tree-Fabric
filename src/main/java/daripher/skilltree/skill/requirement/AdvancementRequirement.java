@@ -60,6 +60,37 @@ public final class AdvancementRequirement implements SkillRequirement<Advancemen
             }
             return advancements.getOrStartProgress(advancement).getPercent() >= 1f;
         }
+<<<<<<< Updated upstream
+=======
+        return testClient();
+    }
+
+    private boolean testServer(ServerPlayer player) {
+        // Factual Fix 1.21.8 : champ ServerPlayer#server devenu private. Pattern player.level().getServer()
+        // confirmé par décompilation de ServerPlayer lui-même (utilisé en interne, ex. loadAndSpawnEnderPearl :
+        // "this.level().getServer().getLevel(...)"), et ServerPlayer#level() renvoie bien ServerLevel.
+        ServerAdvancementManager manager = player.level().getServer().getAdvancements();
+        AdvancementHolder advancement = manager.get(advancementId);
+        if (advancement == null) return false;
+        PlayerAdvancements playerAdvancements = player.getAdvancements();
+        return playerAdvancements.getOrStartProgress(advancement).isDone();
+    }
+
+    private boolean testClient() {
+        ClientAdvancements advancements = Minecraft.getInstance().getConnection().getAdvancements();
+        AdvancementHolder advancement = advancements.get(advancementId);
+        if (advancement == null) return false;
+        AdvancementProgress progress = ((ClientAdvancementsAccessor) advancements).getProgress().get(advancement);
+        return progress != null && progress.isDone();
+    }
+
+    public static List<ResourceLocation> getAdvancementIds() {
+        ClientAdvancements advancements = Minecraft.getInstance().getConnection().getAdvancements();
+        return advancements.getTree().nodes().stream()
+                .map(AdvancementNode::holder)
+                .map(AdvancementHolder::id)
+                .toList();
+>>>>>>> Stashed changes
     }
 
     @Override

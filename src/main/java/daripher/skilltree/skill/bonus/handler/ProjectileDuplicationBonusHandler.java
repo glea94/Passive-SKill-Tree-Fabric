@@ -3,6 +3,7 @@ package daripher.skilltree.skill.bonus.handler;
 import daripher.skilltree.entity.persistentdata.PersistentDataProvider;
 import daripher.skilltree.event.LivingHurtPSTEvent;
 import daripher.skilltree.event.PSTEvents;
+import daripher.skilltree.mixin.AbstractArrowAccessor;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.ProjectileDuplicationBonus;
 import daripher.skilltree.util.event.EntityLoadHelper;
@@ -98,11 +99,23 @@ public class ProjectileDuplicationBonusHandler {
         if (duplicate instanceof AbstractArrow duplicateArrow) {
             AbstractArrow originalArrow = (AbstractArrow) original;
             duplicateArrow.pickup = AbstractArrow.Pickup.DISALLOWED;
+<<<<<<< Updated upstream
             float velocity = (float) movementVector.length();
             duplicateArrow.setEnchantmentEffectsFromEntity(player, velocity);
             duplicateArrow.setBaseDamage(originalArrow.getBaseDamage());
         } else if (duplicate instanceof ThrownPotion potion) {
             ThrownPotion originalPotion = (ThrownPotion) original;
+=======
+            ItemStack weaponItem = originalArrow.getWeaponItem();
+
+            // Aligned 1.21.4: Map the item context safely over the native EnchantmentHelper initialization logic
+            EnchantmentHelper.onProjectileSpawned(level, weaponItem != null ? weaponItem : ItemStack.EMPTY, duplicateArrow, item -> {});
+
+            AbstractArrowAccessor originalArrowAccessor = (AbstractArrowAccessor) originalArrow;
+            duplicateArrow.setBaseDamage(originalArrowAccessor.getBaseDamage());
+        } else if (duplicate instanceof AbstractThrownPotion potion) {
+            AbstractThrownPotion originalPotion = (AbstractThrownPotion) original;
+>>>>>>> Stashed changes
             potion.setItem(originalPotion.getItem());
         }
         level.addFreshEntity(duplicate);

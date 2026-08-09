@@ -1,7 +1,10 @@
 package daripher.skilltree.client.widget.editor;
 
+<<<<<<< Updated upstream
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
+=======
+>>>>>>> Stashed changes
 import daripher.skilltree.client.screen.ScreenHelper;
 import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.ChatFormatting;
@@ -56,21 +59,25 @@ public class SkillMirrorer extends AbstractWidget {
         if (!active) {
             return;
         }
-        graphics.pose().pushPose();
+        graphics.pose().pushMatrix();
         int width = editor.getScreenWidth();
         int height = editor.getScreenHeight();
         float mirrorX = width / 2f + mirrorCenterX * editor.getZoom() + editor.getScrollX();
         float mirrorY = height / 2f + mirrorCenterY * editor.getZoom() + editor.getScrollY();
-        graphics.pose().translate(mirrorX, mirrorY, -1);
-        graphics.pose().mulPose(Axis.ZP.rotationDegrees(mirrorAngle));
+        graphics.pose().translate(mirrorX, mirrorY);
+        graphics.pose().rotate((float) Math.toRadians(mirrorAngle));
         for (int i = 0; i < mirrorSides; i++) {
-            graphics.pose().mulPose(Axis.ZP.rotationDegrees(360f / mirrorSides));
+            graphics.pose().rotate((float) Math.toRadians(360f / mirrorSides));
             graphics.fill(-1, -1, 1, width * 2, 0x55CFCFCF);
         }
         ScreenHelper.drawRectangle(graphics, -4, -4, 8, 8, 0x55CFCFCF);
+<<<<<<< Updated upstream
         graphics.pose().popPose();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
+=======
+        graphics.pose().popMatrix();
+>>>>>>> Stashed changes
     }
 
     private void setActive(SkillTreeEditor editor, boolean active) {
@@ -141,4 +148,13 @@ public class SkillMirrorer extends AbstractWidget {
     @Override
     protected void updateWidgetNarration(@NotNull NarrationElementOutput output) {
     }
+<<<<<<< Updated upstream
 }
+=======
+
+    @FunctionalInterface
+    public interface SkillFactory {
+        void accept(float x, float y, PassiveSkill skill);
+    }
+}
+>>>>>>> Stashed changes

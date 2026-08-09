@@ -24,9 +24,9 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     @Override
     protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         widgetsCopy().forEach(widget -> widget.render(graphics, mouseX, mouseY, partialTick));
-        graphics.pose().pushPose();
-        graphics.pose().translate(0, 0, 1f);
-        graphics.pose().popPose();
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(0f, 0f);
+        graphics.pose().popMatrix();
     }
 
     @Override

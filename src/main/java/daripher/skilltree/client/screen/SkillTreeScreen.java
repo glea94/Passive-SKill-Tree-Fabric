@@ -1,7 +1,10 @@
 package daripher.skilltree.client.screen;
 
+<<<<<<< Updated upstream
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+=======
+>>>>>>> Stashed changes
 import daripher.skilltree.client.widget.SkillTreeWidgets;
 import daripher.skilltree.mixin.AbstractWidgetAccessor;
 import daripher.skilltree.client.widget.skill.SkillButtons;
@@ -16,11 +19,16 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.achievement.StatsUpdateListener;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundClientCommandPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix3x2fStack;
 import org.lwjgl.glfw.GLFW;
 
 import org.jetbrains.annotations.NotNull;
@@ -146,6 +154,7 @@ public class SkillTreeScreen extends Screen implements StatsUpdateListener {
     }
 
     private void renderOverlay(GuiGraphics graphics) {
+<<<<<<< Updated upstream
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_overlay.png");
         RenderSystem.enableBlend();
         graphics.blit(texture, 0, 0, 0, 0F, 0F, width, height, width, height);
@@ -157,16 +166,35 @@ public class SkillTreeScreen extends Screen implements StatsUpdateListener {
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_background.png");
         PoseStack poseStack = graphics.pose();
         poseStack.pushPose();
+=======
+        // CORRECTION 1.21.1: Modern factory constructor pattern
+        ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_overlay.png");
+        // Fix 1.21.8 : RenderPipelines.GUI_TEXTURED gère déjà le blending, pas besoin de RenderSystem.enableBlend()/disableBlend()
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, width, height, width, height);
+    }
+
+    // Fix 1.21.5 : renderBackground n'est plus surchargeable avec l'ancienne signature (GuiGraphics, int, int, float) -> plus de @Override, signature réduite à (GuiGraphics)
+    public void renderBackground(@NotNull GuiGraphics graphics) {
+        // CORRECTION 1.21.1: Modern factory constructor pattern
+        ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_background.png");
+        Matrix3x2fStack poseStack = graphics.pose();
+        poseStack.pushMatrix();
+>>>>>>> Stashed changes
         float x = skillButtons.getScrollX();
         float y = skillButtons.getScrollY();
         if (ClientConfig.skill_tree_background_parallax) {
             x /= 3f;
             y /= 3f;
         }
-        poseStack.translate(x, y, 0);
+        poseStack.translate(x, y);
         int size = BACKGROUND_SIZE;
+<<<<<<< Updated upstream
         graphics.blit(texture, (width - size) / 2, (height - size) / 2, 0, 0F, 0F, size, size, size, size);
         poseStack.popPose();
+=======
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (width - size) / 2, (height - size) / 2, 0F, 0F, size, size, size, size);
+        poseStack.popMatrix();
+>>>>>>> Stashed changes
     }
 
     @Override
