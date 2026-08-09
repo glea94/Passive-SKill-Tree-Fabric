@@ -6,8 +6,8 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +18,7 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     };
 
     public WidgetGroup(int x, int y, int width, int height) {
+        // Factual Fix 1.21.4: AbstractWidget constructor requires x, y, width, height, and message
         super(x, y, width, height, Component.empty());
     }
 
@@ -89,10 +90,10 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         boolean result = false;
         for (T widget : widgetsCopy()) {
-            if (widget.mouseScrolled(mouseX, mouseY, delta)) {
+            if (widget.mouseScrolled(mouseX, mouseY, scrollX, scrollY)) {
                 result = true;
             }
         }
@@ -149,11 +150,12 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     }
 
     public Rectangle2D.Float getArea() {
-        return new Rectangle2D.Float(getX(), getY(), width, height);
+        return new Rectangle2D.Float(getX(), getY(), this.getWidth(), this.getHeight());
     }
 
     public @Nullable T getWidgetAt(double mouseX, double mouseY) {
         for (T widget : widgets) {
+            // Factual Fix 1.21.4: Replaced legacy isVisible() with the public field check
             if (!widget.visible) {
                 continue;
             }

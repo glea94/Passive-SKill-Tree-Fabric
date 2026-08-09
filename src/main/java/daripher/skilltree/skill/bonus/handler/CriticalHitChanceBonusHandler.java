@@ -31,6 +31,7 @@ public class CriticalHitChanceBonusHandler {
             return;
         }
         if (!isVanillaCrit) {
+            // Forces critical calculation on the current attack instance, bypassing vanilla jump bounds
             event.setForcedCrit(true);
         }
     }

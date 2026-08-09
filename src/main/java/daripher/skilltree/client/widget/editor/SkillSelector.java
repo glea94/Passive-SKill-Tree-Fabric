@@ -27,15 +27,18 @@ public class SkillSelector extends AbstractWidget {
     private int selectionStartY;
 
     public SkillSelector(SkillTreeEditor editor, SkillButtons skillButtons) {
+        // Factual Fix 1.21.4: AbstractWidget constructor strictly requires x, y, width, height, and message
         super(0, 0, 0, 0, Component.empty());
         this.skillButtons = skillButtons;
         this.editor = editor;
+        // Factual Fix 1.21.4: Directly apply vanilla active field state to block method conflicts
         this.active = false;
     }
 
     @Override
     protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        if (active) {
+        // Factual Fix 1.21.4: Use direct active field lookup
+        if (this.active) {
             renderSelectionArea(graphics, mouseX, mouseY);
         }
         renderSelectedSkillsHighlight(graphics);
@@ -82,7 +85,8 @@ public class SkillSelector extends AbstractWidget {
             return false;
         }
         if (Screen.hasShiftDown()) {
-            active = true;
+            // Factual Fix 1.21.4: Update interactive state via active field configuration
+            this.active = true;
             selectionStartX = (int) mouseX;
             selectionStartY = (int) mouseY;
         } else {
@@ -99,6 +103,7 @@ public class SkillSelector extends AbstractWidget {
             } else {
                 selectedSkills.add(clickedSkill);
             }
+            editor.clearWidgets();
             editor.rebuildWidgets();
         }
         return true;
@@ -106,9 +111,11 @@ public class SkillSelector extends AbstractWidget {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (active) {
+        // Factual Fix 1.21.4: Use direct active field lookup
+        if (this.active) {
             addSelectedSkills(mouseX, mouseY);
-            active = false;
+            this.active = false;
+            editor.clearWidgets();
             editor.rebuildWidgets();
             return true;
         }
@@ -123,6 +130,7 @@ public class SkillSelector extends AbstractWidget {
                 selectedSkills.add(skillButton.skill);
             }
         }
+        editor.clearWidgets();
         editor.rebuildWidgets();
     }
 
@@ -138,8 +146,8 @@ public class SkillSelector extends AbstractWidget {
     @NotNull
     private Rectangle2D getSkillArea(SkillButton skill) {
         double skillSize = skill.skill.getSkillSize() * skillButtons.getZoom();
-        double skillX = skill.x + skill.getWidth() / 2d - skillSize / 2;
-        double skillY = skill.y + skill.getHeight() / 2d - skillSize / 2;
+        double skillX = skill.getX() + skill.getWidth() / 2d - skillSize / 2;
+        double skillY = skill.getY() + skill.getHeight() / 2d - skillSize / 2;
         return new Rectangle2D.Double(skillX, skillY, skillSize, skillSize);
     }
 
@@ -149,6 +157,7 @@ public class SkillSelector extends AbstractWidget {
 
     public void clearSelection() {
         selectedSkills.clear();
+        editor.clearWidgets();
         editor.rebuildWidgets();
     }
 

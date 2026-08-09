@@ -12,7 +12,7 @@ import daripher.skilltree.skill.bonus.multiplier.LivingMultiplier;
 import daripher.skilltree.skill.bonus.multiplier.NoneLivingMultiplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -76,7 +76,7 @@ public final class ExperienceGainMultiplierBonus implements SkillBonus<Experienc
     public MutableComponent getSimpleTooltip() {
         Component sourceDescription = Component.translatable(experienceSource.getDescriptionId());
         MutableComponent tooltip = Component.translatable(getDescriptionId(), sourceDescription);
-        tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, multiplier, AttributeModifier.Operation.MULTIPLY_BASE);
+        tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, multiplier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         tooltip = playerMultiplier.getTooltip(tooltip, Target.PLAYER);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
@@ -94,7 +94,7 @@ public final class ExperienceGainMultiplierBonus implements SkillBonus<Experienc
         editor.addNumericTextField(110, 0, 90, 14, multiplier).setNumericResponder(value -> selectMultiplier(consumer, value));
         editor.addSelection(0, 0, 80, 1, experienceSource)
                 .setNameGetter(ExperienceSource::getFormattedName)
-                .setResponder(experienceSource -> selectExperienceSource(consumer, experienceSource));
+                .setResponder(source -> selectExperienceSource(consumer, source));
         editor.increaseHeight(29);
         editor.addLabel(0, 0, "Player Multiplier", ChatFormatting.GOLD);
         editor.increaseHeight(19);
@@ -126,8 +126,6 @@ public final class ExperienceGainMultiplierBonus implements SkillBonus<Experienc
             consumer.accept(this.copy());
         });
     }
-
-
     public void setMultiplier(float multiplier) {
         this.multiplier = multiplier;
     }
@@ -190,8 +188,9 @@ public final class ExperienceGainMultiplierBonus implements SkillBonus<Experienc
 
         @Override
         public ExperienceGainMultiplierBonus deserialize(CompoundTag tag) {
-            float multiplier = tag.getFloat("multiplier");
-            ExperienceSource experienceSource = ExperienceSource.byName(tag.getString("experience_source"));
+            float multiplier = tag.getFloatOr("multiplier", 0f);
+            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            ExperienceSource experienceSource = ExperienceSource.byName(tag.getString("experience_source").orElse(""));
             LivingMultiplier playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             return new ExperienceGainMultiplierBonus(multiplier, experienceSource, playerMultiplier);
         }
@@ -208,16 +207,18 @@ public final class ExperienceGainMultiplierBonus implements SkillBonus<Experienc
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ExperienceGainMultiplierBonus deserialize(FriendlyByteBuf buf) {
+        public ExperienceGainMultiplierBonus deserialize(RegistryFriendlyByteBuf buf) {
             float multiplier = buf.readFloat();
             ExperienceSource experienceSource = ExperienceSource.values()[buf.readInt()];
             LivingMultiplier playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
             return new ExperienceGainMultiplierBonus(multiplier, experienceSource, playerMultiplier);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ExperienceGainMultiplierBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

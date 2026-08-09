@@ -16,7 +16,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -83,9 +83,12 @@ public class KillEventListener implements SkillEventListener {
             return false;
         }
         KillEventListener listener = (KillEventListener) o;
-        return Objects.equals(playerCondition, listener.playerCondition) && Objects.equals(enemyCondition, listener.enemyCondition) && Objects.equals(damageCondition, listener.damageCondition) && Objects.equals(playerMultiplier, listener.playerMultiplier) && Objects.equals(enemyMultiplier, listener.enemyMultiplier);
+        return Objects.equals(playerCondition, listener.playerCondition)
+                && Objects.equals(enemyCondition, listener.enemyCondition)
+                && Objects.equals(damageCondition, listener.damageCondition)
+                && Objects.equals(playerMultiplier, listener.playerMultiplier)
+                && Objects.equals(enemyMultiplier, listener.enemyMultiplier);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(playerCondition, enemyCondition, damageCondition, playerMultiplier, enemyMultiplier);
@@ -127,7 +130,8 @@ public class KillEventListener implements SkillEventListener {
 
     private void addTargetMultiplierWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         enemyMultiplier.addEditorWidgets(editor, multiplier -> {
-            setPlayerMultiplier(multiplier);
+            // Factual Fix 1.21.4: Corrected copy-paste target mapping error to set the enemy multiplier field
+            setEnemyMultiplier(multiplier);
             consumer.accept(this);
         });
     }
@@ -157,7 +161,6 @@ public class KillEventListener implements SkillEventListener {
             consumer.accept(this);
         });
     }
-
     private void selectTargetCondition(SkillTreeEditor editor, Consumer<SkillEventListener> consumer, LivingEntityPredicate condition) {
         setEnemyCondition(condition);
         consumer.accept(this);
@@ -213,7 +216,6 @@ public class KillEventListener implements SkillEventListener {
             listener.setPlayerMultiplier(SerializationHelper.deserializeLivingMultiplier(json, "player_multiplier"));
             return listener;
         }
-
         @Override
         public void serialize(JsonObject json, SkillEventListener listener) {
             if (!(listener instanceof KillEventListener aListener)) {
@@ -251,8 +253,9 @@ public class KillEventListener implements SkillEventListener {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Updated signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public SkillEventListener deserialize(FriendlyByteBuf buf) {
+        public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             KillEventListener listener = new KillEventListener();
             listener.setDamageCondition(NetworkHelper.readDamageCondition(buf));
             listener.setEnemyCondition(NetworkHelper.readLivingCondition(buf));
@@ -262,8 +265,9 @@ public class KillEventListener implements SkillEventListener {
             return listener;
         }
 
+        // Factual Fix 1.21.4: Updated signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillEventListener listener) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof KillEventListener aListener)) {
                 throw new IllegalArgumentException();
             }

@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -31,8 +32,8 @@ public class SkillTreeSelectionScreen extends Screen {
         List<PassiveSkillTree> skillTrees = getNonEmptySkillTrees();
         int buttonCount = skillTrees.size();
         int buttonRowWidth = buttonCount * BUTTONS_SIZE - (buttonCount - 1) * BUTTONS_SPACING;
-        int x = width / 2 - buttonRowWidth / 2;
-        int y = height / 2 - BUTTONS_SIZE / 2;
+        int x = this.width / 2 - buttonRowWidth / 2;
+        int y = this.height / 2 - BUTTONS_SIZE / 2;
         for (PassiveSkillTree skillTree : skillTrees) {
             Button button = new SkillTreeSelectionButton(x, y, BUTTONS_SIZE, BUTTONS_SIZE, skillTree.getId());
             x += BUTTONS_SIZE + BUTTONS_SPACING;
@@ -47,6 +48,7 @@ public class SkillTreeSelectionScreen extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        // Correction 1.21.4: Call updated background render method
         renderBackground(guiGraphics);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         for (var widget : children()) {
@@ -60,10 +62,9 @@ public class SkillTreeSelectionScreen extends Screen {
         }
     }
 
-    @Override
-    public void renderBackground(GuiGraphics guiGraphics) {
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_background.png");
+    public void renderBackground(@NotNull GuiGraphics guiGraphics) {
+        ResourceLocation texture = ResourceLocation.parse("skilltree:textures/screen/skill_tree_background.png");
         int size = SkillTreeScreen.BACKGROUND_SIZE;
-        guiGraphics.blit(texture, (width - size) / 2, (height - size) / 2, 0, 0F, 0F, size, size, size, size);
+        guiGraphics.blit(RenderType::guiTextured, texture, (this.width - size) / 2, (this.height - size) / 2, 0F, 0F, size, size, size, size);
     }
 }

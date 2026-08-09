@@ -1,6 +1,7 @@
 package daripher.skilltree.client.widget;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -26,12 +27,14 @@ public class CheckBox extends Button {
     @Override
     protected void renderBackground(@NotNull GuiGraphics graphics) {
         super.renderBackground(graphics);
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/widgets.png");
+        ResourceLocation texture = ResourceLocation.parse("skilltree:textures/screen/widgets.png");
         if (value) {
-            graphics.blit(texture, getX(), getY(), 0, 242, width, height);
+            // Factual Fix 1.21.4: Refactored legacy blit calls to use the mandatory RenderType layer and size metadata
+            graphics.blit(RenderType::guiTextured, texture, getX(), getY(), 0F, 242F, this.getWidth(), this.getHeight(), 256, 256);
         }
     }
 
+    @Override
     protected int getTextureVariant() {
         return isHoveredOrFocused() ? 3 : 4;
     }

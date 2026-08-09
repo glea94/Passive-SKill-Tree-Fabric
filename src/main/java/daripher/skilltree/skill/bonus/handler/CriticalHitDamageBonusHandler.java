@@ -39,7 +39,7 @@ public class CriticalHitDamageBonusHandler {
     private static void applyIndirectHitCritDamage(LivingHurtPSTEvent event) {
         DamageSource damageSource = event.getSource();
         Entity directDamagingEntity = damageSource.getDirectEntity();
-        // dégâts directs, gérés par la méthode au-dessus, on ignore ici
+        // Dégâts directs, gérés par la méthode au-dessus, on ignore ici
         if (directDamagingEntity instanceof Player) {
             return;
         }

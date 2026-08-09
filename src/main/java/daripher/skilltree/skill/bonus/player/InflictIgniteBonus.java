@@ -13,7 +13,7 @@ import daripher.skilltree.skill.bonus.event.OutgoingDamageEventListener;
 import daripher.skilltree.skill.bonus.event.SkillEventListener;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.StringUtil;
@@ -43,7 +43,8 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
     @Override
     public void applyEffect(LivingEntity target, @Nullable LivingEntity source) {
         if (target.getRandom().nextFloat() < chance) {
-            target.setSecondsOnFire(duration);
+            // Aligned 1.21.4: Utilizes the official native Mojang mapping hook for environmental ignites
+            target.igniteForSeconds(duration);
         }
     }
 
@@ -84,7 +85,8 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
 
     @Override
     public MutableComponent getSimpleTooltip() {
-        String durationDescription = StringUtil.formatTickDuration(duration * 20);
+        // Aligned 1.21.4: Multi-argument variant providing ticks per second frame rate boundaries safely
+        String durationDescription = StringUtil.formatTickDuration(duration * 20, 20.0F);
         String targetDescription = eventListener.getTarget().name().toLowerCase(Locale.ROOT);
         String bonusDescription = getDescriptionId() + "." + targetDescription;
         if (chance < 1) {
@@ -92,7 +94,7 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
         }
         MutableComponent tooltip = Component.translatable(bonusDescription, durationDescription);
         if (chance < 1) {
-            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.MULTIPLY_BASE);
+            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         }
         tooltip = eventListener.getTooltip(tooltip);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
@@ -119,14 +121,13 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
         editor.addLabel(0, 0, "Event", ChatFormatting.GOLD);
         editor.increaseHeight(19);
         editor.addSelectionMenu(0, 0, 200, eventListener)
-                .setResponder(eventListener -> selectEventListener(editor, consumer, eventListener))
+                .setResponder(listener -> selectEventListener(editor, consumer, listener))
                 .setMenuInitFunc(() -> addEventListenerWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addEventListenerWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<InflictIgniteBonus>> consumer) {
-        eventListener.addEditorWidgets(editor, eventListener -> {
-            setEventListener(eventListener);
+        eventListener.addEditorWidgets(editor, listener -> {
+            setEventListener(listener);
             consumer.accept(this.copy());
         });
     }
@@ -181,8 +182,8 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
 
         @Override
         public InflictIgniteBonus deserialize(CompoundTag tag) {
-            float chance = tag.getFloat("chance");
-            int duration = tag.getInt("duration");
+            float chance = tag.getFloatOr("chance", 0f);
+            int duration = tag.getInt("duration").orElseThrow();
             InflictIgniteBonus bonus = new InflictIgniteBonus(chance, duration);
             bonus.eventListener = SerializationHelper.deserializeEventListener(tag);
             return bonus;
@@ -200,8 +201,9 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public InflictIgniteBonus deserialize(FriendlyByteBuf buf) {
+        public InflictIgniteBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
             int duration = buf.readInt();
             InflictIgniteBonus bonus = new InflictIgniteBonus(amount, duration);
@@ -209,8 +211,9 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof InflictIgniteBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

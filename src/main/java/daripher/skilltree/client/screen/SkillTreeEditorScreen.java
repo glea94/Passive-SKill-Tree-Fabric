@@ -1,6 +1,5 @@
 package daripher.skilltree.client.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.mixin.AbstractWidgetAccessor;
@@ -13,7 +12,7 @@ import daripher.skilltree.skill.PassiveSkillTree;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.achievement.StatsUpdateListener;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundClientCommandPacket;
@@ -24,7 +23,8 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.Objects;
 
-public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener {
+// CORRECTION 1.21.1: Removed 'implements StatsUpdateListener' completely
+public class SkillTreeEditorScreen extends Screen {
     private final PassiveSkillTree skillTree;
     private final SkillButtons skillButtons;
     private final SkillTreeEditor editorWidgets;
@@ -53,11 +53,13 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
             return;
         }
         clearWidgets();
-        ((AbstractWidgetAccessor) (Object) skillButtons).setWidth(width);
-        ((AbstractWidgetAccessor) (Object) skillButtons).setHeight(height);
+        ((AbstractWidgetAccessor) (Object) skillButtons).setWidth(this.width);
+        ((AbstractWidgetAccessor) (Object) skillButtons).setHeight(this.height);
         ((AbstractWidgetAccessor) (Object) editorWidgets).setWidth(210);
         ((AbstractWidgetAccessor) (Object) editorWidgets).setHeight(10);
-        editorWidgets.setX(width - editorWidgets.getWidth());
+
+        // En 1.21.4, setX est disponible nativement sur la plupart des implémentations d'AbstractWidget
+        editorWidgets.setX(this.width - editorWidgets.getWidth());
         editorWidgets.init();
         editorWidgets.increaseHeight(5);
         editorWidgets.setRebuildFunc(this::rebuildWidgets);
@@ -72,12 +74,12 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
 
     @Override
     protected void rebuildWidgets() {
-        this.minecraft.tell(super::rebuildWidgets);
+        this.minecraft.execute(super::rebuildWidgets);
     }
 
     private void calculateMaxScroll() {
-        skillButtons.setMaxScrollX(Math.min(0, width / 2 - 350));
-        skillButtons.setMaxScrollY(Math.min(0, height / 2 - 350));
+        skillButtons.setMaxScrollX(Math.min(0, this.width / 2 - 350));
+        skillButtons.setMaxScrollY(Math.min(0, this.height / 2 - 350));
         skillButtons.getWidgets().forEach(button -> {
             float skillX = button.skill.getPositionX();
             float skillY = button.skill.getPositionY();
@@ -90,6 +92,7 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        // Correction 1.21.4 : La méthode renderBackground prend uniquement GuiGraphics en paramètre standard
         renderBackground(graphics);
         skillButtons.render(graphics, mouseX, mouseY, partialTick);
         renderOverlay(graphics);
@@ -102,11 +105,10 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
         prevMouseX = mouseX;
         prevMouseY = mouseY;
     }
-
     private void createBlankSkill() {
-        ResourceLocation background = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/icons/background/lesser.png");
-        ResourceLocation icon = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/icons/void.png");
-        ResourceLocation border = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/tooltip/lesser.png");
+        ResourceLocation background = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/icons/background/lesser.png");
+        ResourceLocation icon = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/icons/void.png");
+        ResourceLocation border = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/tooltip/lesser.png");
         ResourceLocation skillId = SkillNodeEditor.createNewSkillId(skillTree.getId());
         PassiveSkill skill = new PassiveSkill(skillId, 16, background, icon, border, false);
         skill.setPosition(0, 0);
@@ -127,24 +129,25 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
 
     @Override
     public void tick() {
+        if (!statsUpdated) {
+            statsUpdated = true;
+            init();
+        }
         editorWidgets.onWidgetTick();
     }
 
     private void renderOverlay(GuiGraphics graphics) {
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_overlay.png");
-        RenderSystem.enableBlend();
-        graphics.blit(texture, 0, 0, 0, 0F, 0F, width, height, width, height);
-        RenderSystem.disableBlend();
+        ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_overlay.png");
+        graphics.blit(RenderType::guiTextured, texture, 0, 0, 0F, 0F, this.width, this.height, this.width, this.height);
     }
 
-    @Override
-    public void renderBackground(GuiGraphics graphics) {
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_background.png");
+    public void renderBackground(@NotNull GuiGraphics graphics) {
+        ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_background.png");
         PoseStack poseStack = graphics.pose();
         poseStack.pushPose();
         poseStack.translate(skillButtons.getScrollX() / 3F, skillButtons.getScrollY() / 3F, 0);
         int size = SkillTreeScreen.BACKGROUND_SIZE;
-        graphics.blit(texture, (width - size) / 2, (height - size) / 2, 0, 0F, 0F, size, size, size, size);
+        graphics.blit(RenderType::guiTextured, texture, (this.width - size) / 2, (this.height - size) / 2, 0F, 0F, size, size, size, size);
         poseStack.popPose();
     }
 
@@ -158,9 +161,10 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
         return editorWidgets.mouseReleased(mouseX, mouseY, button);
     }
 
+    // Alignement 1.21.4 : Conserve la structure double pour la capture du défilement horizontal/vertical
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        return editorWidgets.mouseScrolled(mouseX, mouseY, amount) || skillButtons.mouseScrolled(mouseX, mouseY, amount);
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        return editorWidgets.mouseScrolled(mouseX, mouseY, 0, scrollY) || skillButtons.mouseScrolled(mouseX, mouseY, 0, scrollY);
     }
 
     @Override
@@ -193,11 +197,5 @@ public class SkillTreeEditorScreen extends Screen implements StatsUpdateListener
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
         return editorWidgets.charTyped(codePoint, modifiers);
-    }
-
-    @Override
-    public void onStatsUpdated() {
-        statsUpdated = true;
-        init();
     }
 }

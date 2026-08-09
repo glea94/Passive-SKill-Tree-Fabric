@@ -4,6 +4,7 @@ import daripher.skilltree.entity.persistentdata.PersistentDataProvider;
 import daripher.skilltree.event.LivingHurtPSTEvent;
 import daripher.skilltree.event.PSTEvents;
 import daripher.skilltree.util.event.EventPriority;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /** Portage Fabric : logique 100% identique, seule la souscription à LivingHurtEvent change. */
@@ -41,15 +43,16 @@ public class SkillBonusHandlerUtils {
 
     private static void setLastPlayerAttackTarget(Player player, LivingEntity target) {
         CompoundTag dataTag = PersistentDataProvider.get(player);
-        dataTag.putUUID(LAST_ATTACK_TARGET_TAG_NAME, target.getUUID());
+        dataTag.store(LAST_ATTACK_TARGET_TAG_NAME, UUIDUtil.CODEC, target.getUUID());
     }
 
     public static @Nullable Entity getLastPlayerAttackTarget(Player player) {
         CompoundTag playerPersistentData = PersistentDataProvider.get(player);
-        if (!playerPersistentData.hasUUID(LAST_ATTACK_TARGET_TAG_NAME)) {
+        Optional<UUID> lastTargetUUIDOpt = playerPersistentData.read(LAST_ATTACK_TARGET_TAG_NAME, UUIDUtil.CODEC);
+        if (lastTargetUUIDOpt.isEmpty()) {
             return null;
         }
-        UUID lastTargetUUID = playerPersistentData.getUUID(LAST_ATTACK_TARGET_TAG_NAME);
+        UUID lastTargetUUID = lastTargetUUIDOpt.get();
         MinecraftServer minecraftServer = player.getServer();
         if (minecraftServer == null) {
             return null;
@@ -74,6 +77,6 @@ public class SkillBonusHandlerUtils {
             livingEntity.invulnerableTime = 0;
             livingEntity.hurt(damageSource, amount);
         });
-        minecraftServer.tell(delayedDamageTask);
+        minecraftServer.schedule(delayedDamageTask);
     }
 }

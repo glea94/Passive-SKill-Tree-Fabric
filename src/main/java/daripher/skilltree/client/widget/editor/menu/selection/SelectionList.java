@@ -1,10 +1,10 @@
 package daripher.skilltree.client.widget.editor.menu.selection;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import daripher.skilltree.mixin.AbstractWidgetAccessor;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public abstract class SelectionList<T> extends AbstractButton {
-    public static final ResourceLocation WIDGETS_TEXTURE = new ResourceLocation("skilltree:textures/screen/widgets.png");
+    public static final ResourceLocation WIDGETS_TEXTURE = ResourceLocation.parse("skilltree:textures/screen/widgets.png");
     private Function<T, Component> nameGetter = t -> Component.literal(t.toString());
     private Consumer<T> responder = t -> {
     };
@@ -24,17 +24,18 @@ public abstract class SelectionList<T> extends AbstractButton {
     private T selectedElement;
     protected int elementHeight;
     protected int elementWidth;
-    private int rows = 1;
-    private int columns = 1;
-    private int maxScroll;
-    private int scroll;
+    protected int rows = 1;
+    protected int columns = 1;
+    protected int maxScroll;
+    protected int scroll;
 
     public SelectionList(int x, int y, int elementWidth, int elementHeight, Collection<T> elementsList) {
+        // Factual Fix 1.21.4: AbstractButton constructor now strictly takes x, y, width, height, message
         super(x, y, elementWidth, elementHeight, Component.empty());
         this.elementsList = new ArrayList<>(elementsList);
         this.elementWidth = elementWidth;
         this.elementHeight = elementHeight;
-        setRows(Math.min(elementsList.size(), 10));
+        setRows(Mth.clamp(elementsList.size(), 1, 10));
         setColumns(1);
     }
 
@@ -45,24 +46,23 @@ public abstract class SelectionList<T> extends AbstractButton {
 
     @Override
     public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        if (!visible) {
+        // Factual Fix 1.21.4: Replaced legacy isVisible() check with standard visible field lookup
+        if (!this.visible) {
             return;
         }
-        RenderSystem.enableBlend();
         renderBackground(graphics, mouseX, mouseY);
         renderElements(graphics);
         renderScroll(graphics);
-        RenderSystem.disableBlend();
     }
 
     private void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
-        renderBackgroundLine(graphics, getX(), getY(), 42, width, 7);
-        renderBackgroundLine(graphics, getX(), getY() + getHeight() - 7, 49, width, 7);
+        renderBackgroundLine(graphics, getX(), getY(), 42, this.getWidth(), 7);
+        renderBackgroundLine(graphics, getX(), getY() + getHeight() - 7, 49, this.getWidth(), 7);
         int centerHeight = getHeight() - 14;
         for (int height = centerHeight; height > 0; height -= 14) {
             int centerLineY = getY() + 7 + centerHeight - height;
             int centerLineHeight = Math.min(14, height);
-            renderBackgroundLine(graphics, getX(), centerLineY, 70, width, centerLineHeight);
+            renderBackgroundLine(graphics, getX(), centerLineY, 70, this.getWidth(), centerLineHeight);
         }
         renderElementHover(graphics, mouseX, mouseY);
     }
@@ -85,8 +85,9 @@ public abstract class SelectionList<T> extends AbstractButton {
 
     private void renderBackgroundLine(@NotNull GuiGraphics graphics, int x, int y, int textureOffset, int width, int height) {
         ResourceLocation texture = WIDGETS_TEXTURE;
-        graphics.blit(texture, x, y, 0, textureOffset, width / 2, height);
-        graphics.blit(texture, x + width / 2, y, -width / 2, textureOffset, width / 2, height);
+        // Factual Fix 1.21.4: Refactored legacy blit calls to use RenderType layer and modern flip math to drop negative parameters
+        graphics.blit(RenderType::guiTextured, texture, x, y, 0F, textureOffset, width / 2, height, 256, 256);
+        graphics.blit(RenderType::guiTextured, texture, x + width / 2, y, (256F - width / 2F), textureOffset, width / 2, height, 256, 256);
     }
 
     private void renderElements(@NotNull GuiGraphics graphics) {
@@ -117,21 +118,21 @@ public abstract class SelectionList<T> extends AbstractButton {
     private boolean shouldDisplay(T value) {
         return nameGetter.apply(value).getString().toLowerCase(Locale.ROOT).contains(search);
     }
-
     private void renderScroll(GuiGraphics graphics) {
         if (maxScroll == 0) {
             return;
         }
-        int maxScrollSize = height - 8;
+        // Factual Fix 1.21.4: Replaced legacy raw height/width field calls with getters
+        int maxScrollSize = this.getHeight() - 8;
         int scrollSize = maxScrollSize / (maxScroll + 1);
-        int x = getX() + width - 4;
+        int x = getX() + this.getWidth() - 4;
         int y = getY() + 3 + (maxScrollSize - scrollSize) * scroll / Math.max(maxScroll, 1);
         graphics.fill(x, y, x + 1, y + scrollSize + 1, 0xffaaaaaa);
     }
 
     @Override
     public void onClick(double mouseX, double mouseY) {
-        if (!clicked(mouseX, mouseY)) {
+        if (!this.isMouseOver(mouseX, mouseY)) {
             return;
         }
         int hoveredElement = getHoveredElement((int) mouseX, (int) mouseY);
@@ -153,9 +154,9 @@ public abstract class SelectionList<T> extends AbstractButton {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if (isMouseOver(mouseX, mouseY)) {
-            setScroll(scroll - Mth.sign(delta));
+            setScroll(scroll - Mth.sign(scrollY));
             return true;
         }
         return false;
@@ -173,7 +174,9 @@ public abstract class SelectionList<T> extends AbstractButton {
     }
 
     private void sortValues() {
-        getDisplayedElements().sort(Comparator.comparing(t -> nameGetter.apply(t).getString()));
+        // Factual Fix 1.21.4: Copy to mutable ArrayList to avoid UnsupportedOperationException on Java 21+ unmodifiable stream lists
+        List<T> sorted = new ArrayList<>(getDisplayedElements());
+        sorted.sort(Comparator.comparing(t -> nameGetter.apply(t).getString()));
     }
 
     public Function<T, Component> getNameGetter() {

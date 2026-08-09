@@ -1,8 +1,13 @@
 package daripher.skilltree.recipe.workbench;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.data.serializers.SerializationHelper;
 import daripher.skilltree.init.PSTRecipeSerializers;
@@ -11,11 +16,13 @@ import daripher.skilltree.network.NetworkHelper;
 import daripher.skilltree.skill.bonus.item.ItemBonus;
 import daripher.skilltree.skill.bonus.item.ItemBonusHandler;
 import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
+import daripher.skilltree.skill.bonus.predicate.item.NoneItemStackPredicate;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -29,8 +36,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class WorkbenchUpgradeBonusRecipe extends AbstractWorkbenchRecipe {
+    // CORRECTION 1.21.1 : voir la javadoc d'AbstractWorkbenchRecipe — codec()/streamCodec() ne
+    // reçoivent plus l'id de la recette (contrairement à l'ancien fromJson(id, json)). Ce
+    // placeholder est utilisé le temps que l'appelant réinjecte le vrai id via setId(...).
+    private static final ResourceLocation UNKNOWN_ID = ResourceLocation.fromNamespaceAndPath("skilltree", "unknown_workbench_upgrade_bonus_recipe");
+
     private final ItemStackPredicate baseItemStackPredicate;
     private final Map<Ingredient, Integer> additionalIngredients;
     private final ItemBonus<?> itemBonus;
@@ -43,7 +57,7 @@ public class WorkbenchUpgradeBonusRecipe extends AbstractWorkbenchRecipe {
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container, @NotNull RegistryAccess registryAccess) {
+    public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container, HolderLookup.@NotNull Provider registries) {
         return getResult(container);
     }
 
@@ -108,48 +122,136 @@ public class WorkbenchUpgradeBonusRecipe extends AbstractWorkbenchRecipe {
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<WorkbenchUpgradeBonusRecipe> getSerializer() {
         return PSTRecipeSerializers.WORKBENCH_ITEM_BONUS.get();
     }
 
-    public static class Serializer implements RecipeSerializer<WorkbenchUpgradeBonusRecipe> {
+    // Portage 1.21.1 : petit conteneur interne pour représenter une entrée "ingrédient + quantité
+    // requise" dans additionalIngredients, exactement comme dans WorkbenchCraftingRecipe (même
+    // format JSON {"ingredient": {...}, "required_amount": N} que l'ancien fromJson lisait).
+    private record IngredientAmountEntry(Ingredient ingredient, int requiredAmount) {
+        static final Codec<IngredientAmountEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Ingredient.CODEC.fieldOf("ingredient").forGetter(IngredientAmountEntry::ingredient),
+                Codec.INT.fieldOf("required_amount").forGetter(IngredientAmountEntry::requiredAmount)
+        ).apply(instance, IngredientAmountEntry::new));
+    }
+
+    // Portage 1.21.1 : pont générique entre un JsonElement "brut" et n'importe quel DynamicOps<T>.
+    // Permet de continuer à utiliser SerializationHelper (Gson/JsonObject) tel quel pour
+    // ItemStackPredicate et ItemBonus, qui n'ont jamais été migrés vers de vrais Codec Mojang, sans
+    // avoir à changer le format JSON existant dans data/ (règle absolue : pas de runDatagen).
+    private static final Codec<JsonElement> JSON_ELEMENT_CODEC = new Codec<>() {
         @Override
-        public @NotNull WorkbenchUpgradeBonusRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject jsonObject) {
-            ItemStackPredicate baseItemStackPredicate = SerializationHelper.deserializeItemPredicate(jsonObject, "base_item_condition");
-            ItemBonus<?> itemBonus = SerializationHelper.deserializeItemBonus(jsonObject);
-            boolean requiresPassiveSkill = jsonObject.get("requires_passive_skill").getAsBoolean();
-            Map<Ingredient, Integer> additionalIngredients = new HashMap<>();
-            JsonArray ingredientsJson = jsonObject.getAsJsonArray("additionalIngredients");
-            for (JsonElement jsonElement : ingredientsJson) {
-                Ingredient ingredient = Ingredient.fromJson(jsonElement.getAsJsonObject().get("ingredient"));
-                int requiredAmount = jsonElement.getAsJsonObject().get("required_amount").getAsInt();
-                additionalIngredients.put(ingredient, requiredAmount);
-            }
-            return new WorkbenchUpgradeBonusRecipe(id, baseItemStackPredicate, additionalIngredients, requiresPassiveSkill, itemBonus);
+        public <T> DataResult<com.mojang.datafixers.util.Pair<JsonElement, T>> decode(DynamicOps<T> ops, T input) {
+            JsonElement element = ops.convertTo(JsonOps.INSTANCE, input);
+            return DataResult.success(com.mojang.datafixers.util.Pair.of(element, ops.empty()));
         }
 
         @Override
-        public @Nullable WorkbenchUpgradeBonusRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
+        public <T> DataResult<T> encode(JsonElement input, DynamicOps<T> ops, T prefix) {
+            // CORRECTION 1.21.1 : DynamicOps<T> n'expose pas de merge(T,T) générique. La méthode
+            // correcte pour un codec "passe-plat" (qui encode une valeur JSON brute sans la fusionner
+            // dans une map) est mergeToPrimitive : quand prefix == ops.empty() (cas normal ici, car
+            // fieldOf/optionalFieldOf appellent encodeStart, qui passe ops.empty() comme prefix),
+            // elle renvoie directement converted. Si prefix n'est pas vide, elle renvoie une erreur
+            // explicite plutôt qu'un échec de compilation silencieux.
+            T converted = JsonOps.INSTANCE.convertTo(ops, input);
+            return ops.mergeToPrimitive(prefix, converted);
+        }
+    };
+
+    // Reproduit SerializationHelper.deserializeItemPredicate(jsonObject, "base_item_condition") :
+    // champ optionnel, absent -> NoneItemStackPredicate.INSTANCE.
+    private static Optional<JsonElement> serializeBaseItemCondition(ItemStackPredicate predicate) {
+        JsonObject wrapper = new JsonObject();
+        SerializationHelper.serializeItemPredicate(wrapper, predicate, "base_item_condition");
+        return Optional.ofNullable(wrapper.get("base_item_condition"));
+    }
+
+    private static ItemStackPredicate deserializeBaseItemCondition(Optional<JsonElement> element) {
+        if (element.isEmpty()) {
+            return NoneItemStackPredicate.INSTANCE;
+        }
+        JsonObject wrapper = new JsonObject();
+        wrapper.add("base_item_condition", element.get());
+        return SerializationHelper.deserializeItemPredicate(wrapper, "base_item_condition");
+    }
+
+    // Reproduit SerializationHelper.deserializeItemBonus(jsonObject) / serializeItemBonus(jsonObject, ...) :
+    // champ obligatoire "item_bonus" (JsonObject imbriqué avec sa propre clé "type").
+    private static JsonElement serializeItemBonusField(ItemBonus<?> itemBonus) {
+        JsonObject wrapper = new JsonObject();
+        SerializationHelper.serializeItemBonus(wrapper, itemBonus);
+        return wrapper.get("item_bonus");
+    }
+
+    private static ItemBonus<?> deserializeItemBonusField(JsonElement element) {
+        JsonObject wrapper = new JsonObject();
+        wrapper.add("item_bonus", element);
+        return SerializationHelper.deserializeItemBonus(wrapper);
+    }
+
+    public static class Serializer implements RecipeSerializer<WorkbenchUpgradeBonusRecipe> {
+        // CORRECTION 1.21.1 : remplace fromJson(id, JsonObject). Cette recette EST bien chargée
+        // depuis de vrais fichiers JSON dans data/ (contrairement à WorkbenchVanillaCraftingRecipe),
+        // donc le codec doit fonctionner réellement.
+        private static final MapCodec<WorkbenchUpgradeBonusRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Codec.BOOL.fieldOf("requires_passive_skill").forGetter(AbstractWorkbenchRecipe::hasPassiveSkillRequirement),
+                JSON_ELEMENT_CODEC.optionalFieldOf("base_item_condition").forGetter(recipe -> serializeBaseItemCondition(recipe.baseItemStackPredicate)),
+                JSON_ELEMENT_CODEC.fieldOf("item_bonus").forGetter(recipe -> serializeItemBonusField(recipe.itemBonus)),
+                IngredientAmountEntry.CODEC.listOf().fieldOf("additionalIngredients").forGetter(recipe -> recipe.getAdditionalIngredients().entrySet().stream()
+                        .map(entry -> new IngredientAmountEntry(entry.getKey(), entry.getValue())).toList())
+        ).apply(instance, (requiresPassiveSkill, baseItemConditionJson, itemBonusJson, ingredientEntries) -> {
+            ItemStackPredicate baseItemStackPredicate = deserializeBaseItemCondition(baseItemConditionJson);
+            ItemBonus<?> itemBonus = deserializeItemBonusField(itemBonusJson);
+            Map<Ingredient, Integer> additionalIngredients = ingredientEntries.stream()
+                    .collect(Collectors.toMap(IngredientAmountEntry::ingredient, IngredientAmountEntry::requiredAmount));
+            // CORRECTION 1.21.1 : voir la remarque sur UNKNOWN_ID en haut du fichier.
+            return new WorkbenchUpgradeBonusRecipe(UNKNOWN_ID, baseItemStackPredicate, additionalIngredients, requiresPassiveSkill, itemBonus);
+        }));
+
+        // CORRECTION 1.21.1 : remplace fromNetwork(id, FriendlyByteBuf) / toNetwork(buf, recipe).
+        // RegistryFriendlyByteBuf est bien une FriendlyByteBuf, donc les méthodes existantes de
+        // NetworkHelper (readItemPredicate/writeItemPredicate, readItemBonus/writeItemBonus)
+        // restent utilisables telles quelles ; seul Ingredient.fromNetwork/toNetwork (supprimés)
+        // est remplacé par le StreamCodec dédié Ingredient.CONTENTS_STREAM_CODEC.
+        private static final StreamCodec<RegistryFriendlyByteBuf, WorkbenchUpgradeBonusRecipe> STREAM_CODEC = StreamCodec.of(
+                Serializer::toNetwork, Serializer::fromNetwork
+        );
+
+        @Override
+        public com.mojang.serialization.@NotNull MapCodec<WorkbenchUpgradeBonusRecipe> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, WorkbenchUpgradeBonusRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
+
+        private static @NotNull WorkbenchUpgradeBonusRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buf) {
             ItemStackPredicate baseItemStackPredicate = NetworkHelper.readItemPredicate(buf);
             ItemBonus<?> itemBonus = NetworkHelper.readItemBonus(buf);
             boolean requiresPassiveSkill = buf.readBoolean();
             Map<Ingredient, Integer> additionalIngredients = new HashMap<>();
             int ingredientsCount = buf.readInt();
             for (int i = 0; i < ingredientsCount; i++) {
-                additionalIngredients.put(Ingredient.fromNetwork(buf), buf.readInt());
+                // CORRECTION 1.21.1: Ingredient.fromNetwork(buf) a disparu ; remplacé par le StreamCodec dédié.
+                additionalIngredients.put(Ingredient.CONTENTS_STREAM_CODEC.decode(buf), buf.readInt());
             }
-            return new WorkbenchUpgradeBonusRecipe(id, baseItemStackPredicate, additionalIngredients, requiresPassiveSkill, itemBonus);
+            // CORRECTION 1.21.1 : voir la remarque sur UNKNOWN_ID en haut du fichier.
+            return new WorkbenchUpgradeBonusRecipe(UNKNOWN_ID, baseItemStackPredicate, additionalIngredients, requiresPassiveSkill, itemBonus);
         }
 
-        @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull WorkbenchUpgradeBonusRecipe recipe) {
+        private static void toNetwork(@NotNull RegistryFriendlyByteBuf buf, @NotNull WorkbenchUpgradeBonusRecipe recipe) {
             NetworkHelper.writeItemPredicate(buf, recipe.baseItemStackPredicate);
             NetworkHelper.writeItemBonus(buf, recipe.itemBonus);
             buf.writeBoolean(recipe.hasPassiveSkillRequirement());
             int ingredientsCount = recipe.getAdditionalIngredients().size();
             buf.writeInt(ingredientsCount);
             recipe.getAdditionalIngredients().forEach((ingredient, requiredAmount) -> {
-                ingredient.toNetwork(buf);
+                // CORRECTION 1.21.1: Ingredient#toNetwork(buf) a disparu ; remplacé par le StreamCodec dédié.
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buf, ingredient);
                 buf.writeInt(requiredAmount);
             });
         }

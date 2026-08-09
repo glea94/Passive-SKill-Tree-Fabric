@@ -11,12 +11,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * Portage Fabric de net.minecraftforge.event.entity.living.LivingFallEvent, sans équivalent
- * Fabric API direct. Même schéma que LivingEntityMixin (2 injecteurs à HEAD, priorités
- * explicites) : le premier poste l'event et gère l'annulation, le second applique la distance
- * modifiée sur le paramètre.
- */
 @Mixin(LivingEntity.class)
 public abstract class LivingFallMixin {
     @Unique
@@ -25,21 +19,23 @@ public abstract class LivingFallMixin {
     private boolean skilltree$fallDistanceModified;
 
     @Inject(method = "causeFallDamage", at = @At("HEAD"), cancellable = true, require = 1)
-    private void skilltree$postLivingFallEvent(float distance, float damageMultiplier, DamageSource source, CallbackInfoReturnable<Boolean> cir) {
-        LivingFallPSTEvent event = new LivingFallPSTEvent((LivingEntity) (Object) this, distance);
+    private void skilltree$postLivingFallEvent(double distance, float damageMultiplier, DamageSource source, CallbackInfoReturnable<Boolean> cir) {
+        LivingFallPSTEvent event = new LivingFallPSTEvent((LivingEntity) (Object) this, (float) distance);
         PSTEvents.LIVING_FALL.post(event);
+
         if (event.isCanceled()) {
             skilltree$fallDistanceModified = false;
             cir.setReturnValue(false);
             cir.cancel();
             return;
         }
-        skilltree$fallDistanceModified = event.getDistance() != distance;
+
+        skilltree$fallDistanceModified = event.getDistance() != (float) distance;
         skilltree$modifiedFallDistance = event.getDistance();
     }
 
     @ModifyVariable(method = "causeFallDamage", at = @At("HEAD"), argsOnly = true, require = 1, ordinal = 0)
-    private float skilltree$applyModifiedFallDistance(float distance) {
-        return skilltree$fallDistanceModified ? skilltree$modifiedFallDistance : distance;
+    private double skilltree$applyModifiedFallDistance(double distance) {
+        return skilltree$fallDistanceModified ? (double) skilltree$modifiedFallDistance : distance;
     }
 }

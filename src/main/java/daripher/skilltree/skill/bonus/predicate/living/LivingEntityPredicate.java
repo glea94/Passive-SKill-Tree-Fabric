@@ -7,13 +7,14 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public interface LivingEntityPredicate extends Predicate<LivingEntity> {
     default String getDescriptionId() {
         ResourceLocation id = PSTRegistries.LIVING_CONDITIONS.get().getKey(getSerializer());
-        assert id != null;
+        Objects.requireNonNull(id);
         return "living_condition.%s.%s".formatted(id.getNamespace(), id.getPath());
     }
 

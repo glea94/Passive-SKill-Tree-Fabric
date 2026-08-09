@@ -12,7 +12,7 @@ import daripher.skilltree.skill.bonus.multiplier.LivingMultiplier;
 import daripher.skilltree.skill.bonus.multiplier.NoneLivingMultiplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
@@ -78,7 +78,6 @@ public class SkillRemovedEventListener implements SkillEventListener {
             consumer.accept(this);
         });
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<SkillEventListener> consumer, LivingMultiplier multiplier) {
         setPlayerMultiplier(multiplier);
         consumer.accept(this);
@@ -123,15 +122,17 @@ public class SkillRemovedEventListener implements SkillEventListener {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Updated signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public SkillEventListener deserialize(FriendlyByteBuf buf) {
+        public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             SkillRemovedEventListener listener = new SkillRemovedEventListener();
             listener.setPlayerMultiplier(NetworkHelper.readLivingMultiplier(buf));
             return listener;
         }
 
+        // Factual Fix 1.21.4: Updated signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillEventListener listener) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof SkillRemovedEventListener aListener)) {
                 throw new IllegalArgumentException();
             }

@@ -2,39 +2,39 @@ package daripher.skilltree.client.network;
 
 import daripher.skilltree.capability.skill.IPlayerSkills;
 import daripher.skilltree.capability.skill.PlayerSkillsProvider;
+import daripher.skilltree.client.screen.SkillTreeEditorScreen;
 import daripher.skilltree.client.screen.SkillTreeScreen;
 import daripher.skilltree.data.reloader.SkillsReloader;
-import daripher.skilltree.network.PSTNetworkChannels;
 import daripher.skilltree.network.message.GainSkillPointMessage;
 import daripher.skilltree.network.message.LearnSkillMessage;
+import daripher.skilltree.network.message.OpenSkillTreeEditorMessage;
 import daripher.skilltree.network.message.SyncPlayerSkillsMessage;
 import daripher.skilltree.network.message.SyncServerDataMessage;
+import daripher.skilltree.network.message.SyncWorkbenchRecipesMessage;
 import daripher.skilltree.skill.PassiveSkill;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.Objects;
 
-/**
- * Portage Fabric : remplace la partie DistExecutor.unsafeRunWhenOn(Dist.CLIENT, ...) /
- * @OnlyIn(Dist.CLIENT) de SyncPlayerSkillsMessage côté Forge. Sous Fabric, cette séparation se
- * fait simplement en gardant ce code dans le package client (jamais référencé par le code
- * commun ni par l'entrypoint serveur), donc jamais chargé sur un serveur dédié - même résultat
- * qu'avec DistExecutor, par la structure du code plutôt que par un test à l'exécution.
- */
 public class ClientNetworking {
     public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.SYNC_SERVER_DATA, (client, handler, buf, responseSender) -> {
-            SyncServerDataMessage message = SyncServerDataMessage.decode(buf);
-            client.execute(() -> {
-                // le decode() a déjà appliqué les données (SkillsReloader/SkillTreesReloader), comme dans la version Forge.
-            });
+        // En 1.21.4, l'exécution est déjà synchronisée sur le thread principal par Fabric lors de la réception du payload
+        ClientPlayNetworking.registerGlobalReceiver(SyncServerDataMessage.TYPE, (message, context) -> {
+            // Le decode() du STREAM_CODEC a déjà appliqué les données (SkillsReloader/SkillTreesReloader)
         });
-        ClientPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.SYNC_PLAYER_SKILLS, (client, handler, buf, responseSender) -> {
-            SyncPlayerSkillsMessage message = SyncPlayerSkillsMessage.decode(buf);
-            client.execute(() -> handleSyncPlayerSkills(client, message));
+
+        ClientPlayNetworking.registerGlobalReceiver(SyncPlayerSkillsMessage.TYPE, (message, context) -> {
+            handleSyncPlayerSkills(context.client(), message);
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(OpenSkillTreeEditorMessage.TYPE, (message, context) -> {
+            handleOpenSkillTreeEditor(context.client(), message);
+        });
+
+        // Ajouté 1.21.5 : reçoit et met en cache les recettes Workbench (RecipeAccess client ne les expose plus)
+        ClientPlayNetworking.registerGlobalReceiver(SyncWorkbenchRecipesMessage.TYPE, (message, context) -> {
+            ClientWorkbenchRecipeCache.set(message.recipes);
         });
     }
 
@@ -51,17 +51,27 @@ public class ClientNetworking {
         }
     }
 
+    private static void handleOpenSkillTreeEditor(Minecraft minecraft, OpenSkillTreeEditorMessage message) {
+        minecraft.setScreen(new SkillTreeEditorScreen(message.treeId()));
+    }
+
     public static void sendLearnSkill(PassiveSkill skill) {
-        LearnSkillMessage message = new LearnSkillMessage(skill);
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        message.encode(buf);
-        ClientPlayNetworking.send(PSTNetworkChannels.LEARN_SKILL, buf);
+        ClientPlayNetworking.send(new LearnSkillMessage(skill));
     }
 
     public static void sendGainSkillPoint() {
-        GainSkillPointMessage message = new GainSkillPointMessage();
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        message.encode(buf);
-        ClientPlayNetworking.send(PSTNetworkChannels.GAIN_SKILL_POINT, buf);
+        // 1. Envoi réel du paquet au serveur
+        ClientPlayNetworking.send(new GainSkillPointMessage());
+
+        // 2. FEINTE VISUELLE : Rafraîchissement instantané de l'affichage client
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.player != null && minecraft.screen instanceof SkillTreeScreen screen) {
+            IPlayerSkills capability = PlayerSkillsProvider.get(minecraft.player);
+            // On incrémente localement le compteur de points
+            capability.setSkillPoints(capability.getSkillPoints() + 1);
+            // On force l'écran de l'arbre de compétences à recalculer et à s'initialiser
+            screen.updateSkillPoints(capability.getSkillPoints());
+            screen.init();
+        }
     }
 }

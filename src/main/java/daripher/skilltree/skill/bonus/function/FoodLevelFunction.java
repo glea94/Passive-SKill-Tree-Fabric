@@ -8,7 +8,7 @@ import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.predicate.living.FloatFunctionEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
@@ -81,7 +81,6 @@ public class FoodLevelFunction implements FloatFunction<FoodLevelFunction> {
         Component logicDescription = logic.getTooltip("food_level", valueDescription);
         return Component.translatable(key, bonusTooltip, logicDescription, pointsDescription);
     }
-
     @Override
     public MutableComponent getRequirementTooltip(FloatFunctionEntityPredicate.Logic logic, float requiredValue) {
         String key = "%s.requirement".formatted(getDescriptionId());
@@ -148,7 +147,6 @@ public class FoodLevelFunction implements FloatFunction<FoodLevelFunction> {
         FoodLevelFunction that = (FoodLevelFunction) o;
         return percentage == that.percentage && missing == that.missing;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(percentage, missing);
@@ -181,8 +179,9 @@ public class FoodLevelFunction implements FloatFunction<FoodLevelFunction> {
 
         @Override
         public FloatFunction<?> deserialize(CompoundTag tag) {
-            boolean percentage = tag.getBoolean("percentage");
-            boolean missing = tag.getBoolean("missing");
+            // Factual Fix 1.21.5 (confirmé par décompilation de CompoundTag) : getBoolean(String) retourne désormais Optional<Boolean> ; getBooleanOr(String, boolean) retrouve l'ancien comportement (false par défaut si absent)
+            boolean percentage = tag.getBooleanOr("percentage", false);
+            boolean missing = tag.getBooleanOr("missing", false);
             return new FoodLevelFunction(percentage, missing);
         }
 
@@ -197,15 +196,17 @@ public class FoodLevelFunction implements FloatFunction<FoodLevelFunction> {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public FloatFunction<?> deserialize(FriendlyByteBuf buf) {
+        public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             boolean percentage = buf.readBoolean();
             boolean missing = buf.readBoolean();
             return new FoodLevelFunction(percentage, missing);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, FloatFunction<?> provider) {
+        public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof FoodLevelFunction aProvider)) {
                 throw new IllegalArgumentException();
             }

@@ -16,7 +16,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -108,10 +108,9 @@ public final class CritChanceBonus implements SkillBonus<CritChanceBonus> {
         mergedBonus.targetCondition = this.targetCondition;
         return mergedBonus;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
-        AttributeModifier.Operation operation = AttributeModifier.Operation.MULTIPLY_BASE;
+        AttributeModifier.Operation operation = AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
         MutableComponent tooltip;
         if (damageCondition == NoneDamageCondition.INSTANCE) {
             tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), chance, operation);
@@ -191,17 +190,17 @@ public final class CritChanceBonus implements SkillBonus<CritChanceBonus> {
         editor.rebuildWidgets();
     }
 
+    private void selectTargetCondition(SkillTreeEditor editor, Consumer<CritChanceBonus> consumer, LivingEntityPredicate condition) {
+        setTargetCondition(condition);
+        consumer.accept(this.copy());
+        editor.rebuildWidgets();
+    }
+
     private void addTargetConditionWidgets(SkillTreeEditor editor, Consumer<CritChanceBonus> consumer) {
         targetCondition.addEditorWidgets(editor, c -> {
             setTargetCondition(c);
             consumer.accept(this.copy());
         });
-    }
-
-    private void selectTargetCondition(SkillTreeEditor editor, Consumer<CritChanceBonus> consumer, LivingEntityPredicate condition) {
-        setTargetCondition(condition);
-        consumer.accept(this.copy());
-        editor.rebuildWidgets();
     }
 
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<CritChanceBonus> consumer) {
@@ -210,7 +209,6 @@ public final class CritChanceBonus implements SkillBonus<CritChanceBonus> {
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<CritChanceBonus> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this.copy());
@@ -268,7 +266,6 @@ public final class CritChanceBonus implements SkillBonus<CritChanceBonus> {
             bonus.targetCondition = SerializationHelper.deserializeLivingCondition(json, "target_condition");
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof CritChanceBonus aBonus)) {
@@ -284,7 +281,7 @@ public final class CritChanceBonus implements SkillBonus<CritChanceBonus> {
 
         @Override
         public CritChanceBonus deserialize(CompoundTag tag) {
-            float amount = tag.getFloat("chance");
+            float amount = tag.getFloatOr("chance", 0f);
             CritChanceBonus bonus = new CritChanceBonus(amount);
             bonus.playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             bonus.targetMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "enemy_multiplier");
@@ -309,8 +306,9 @@ public final class CritChanceBonus implements SkillBonus<CritChanceBonus> {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public CritChanceBonus deserialize(FriendlyByteBuf buf) {
+        public CritChanceBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
             CritChanceBonus bonus = new CritChanceBonus(amount);
             bonus.playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
@@ -321,8 +319,9 @@ public final class CritChanceBonus implements SkillBonus<CritChanceBonus> {
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof CritChanceBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

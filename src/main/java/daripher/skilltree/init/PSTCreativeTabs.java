@@ -16,11 +16,17 @@ public class PSTCreativeTabs {
     public static final Supplier<ItemStack> TAB_ICON_STACK = () -> new ItemStack(PSTItems.AMNESIA_SCROLL.get());
 
     static {
-        REGISTRY.register("skilltree", () -> CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0).title(TAB_TITLE).icon(TAB_ICON_STACK)
-                .displayItems((params, output) -> collectModItems(output)).build());
+        // Fix 1.21.5 : CreativeModeTab.builder(Row, int) exige désormais une ligne (TOP/BOTTOM) et une colonne — confirmé par décompilation IntelliJ
+        REGISTRY.register("skilltree", () -> CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
+                .title(TAB_TITLE)
+                .icon(TAB_ICON_STACK)
+                .displayItems((params, output) -> collectModItems(output))
+                .build());
     }
 
     private static void collectModItems(CreativeModeTab.Output output) {
-        PSTItems.REGISTRY.getEntries().stream().map(daripher.skilltree.util.registry.RegistryObject::get).forEach(output::accept);
+        PSTItems.REGISTRY.getEntries().stream()
+                .map(daripher.skilltree.util.registry.RegistryObject::get)
+                .forEach(output::accept);
     }
 }

@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/skill/bonus/handler/ProjectileDuplicationBonusHandler.java
 package daripher.skilltree.skill.bonus.handler;
 
 import daripher.skilltree.entity.persistentdata.PersistentDataProvider;
@@ -12,12 +13,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.AbstractThrownPotion;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
@@ -45,7 +49,7 @@ public class ProjectileDuplicationBonusHandler {
 
     private static void duplicateProjectiles(Projectile projectile, ServerLevel level, Player player) {
         CompoundTag projectileTag = PersistentDataProvider.get(projectile);
-        if (projectileTag.getBoolean(IS_DUPLICATED_TAG_NAME)) {
+        if (projectileTag.getBooleanOr(IS_DUPLICATED_TAG_NAME, false)) {
             return;
         }
         List<ProjectileDuplicationBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(player, ProjectileDuplicationBonus.class);
@@ -81,7 +85,7 @@ public class ProjectileDuplicationBonusHandler {
 
     private static void spawnDuplicateProjectileWithOffset(Projectile original, Player player, ServerLevel level, float angleOffset) {
         EntityType<?> projectileType = original.getType();
-        Projectile duplicate = (Projectile) projectileType.create(level);
+        Projectile duplicate = (Projectile) projectileType.create(level, EntitySpawnReason.TRIGGERED);
         if (duplicate == null) {
             return;
         }
@@ -98,11 +102,16 @@ public class ProjectileDuplicationBonusHandler {
         if (duplicate instanceof AbstractArrow duplicateArrow) {
             AbstractArrow originalArrow = (AbstractArrow) original;
             duplicateArrow.pickup = AbstractArrow.Pickup.DISALLOWED;
-            float velocity = (float) movementVector.length();
-            duplicateArrow.setEnchantmentEffectsFromEntity(player, velocity);
-            duplicateArrow.setBaseDamage(originalArrow.getBaseDamage());
-        } else if (duplicate instanceof ThrownPotion potion) {
-            ThrownPotion originalPotion = (ThrownPotion) original;
+            ItemStack weaponItem = originalArrow.getWeaponItem();
+
+            // Aligned 1.21.4: Map the item context safely over the native EnchantmentHelper initialization logic
+            EnchantmentHelper.onProjectileSpawned(level, weaponItem != null ? weaponItem : ItemStack.EMPTY, duplicateArrow, item -> {});
+
+            CompoundTag originalArrowTag = new CompoundTag();
+            originalArrow.addAdditionalSaveData(originalArrowTag);
+            duplicateArrow.setBaseDamage(originalArrowTag.getDoubleOr("damage", 2.0));
+        } else if (duplicate instanceof AbstractThrownPotion potion) {
+            AbstractThrownPotion originalPotion = (AbstractThrownPotion) original;
             potion.setItem(originalPotion.getItem());
         }
         level.addFreshEntity(duplicate);
@@ -126,7 +135,7 @@ public class ProjectileDuplicationBonusHandler {
             return;
         }
         CompoundTag projectileTag = PersistentDataProvider.get(projectile);
-        if (!(projectileTag.getBoolean(IS_DUPLICATED_TAG_NAME))) {
+        if (!(projectileTag.getBooleanOr(IS_DUPLICATED_TAG_NAME, false))) {
             return;
         }
         LivingEntity target = event.getEntity();

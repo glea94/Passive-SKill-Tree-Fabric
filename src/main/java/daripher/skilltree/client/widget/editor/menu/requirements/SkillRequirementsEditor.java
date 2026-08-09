@@ -44,6 +44,8 @@ public class SkillRequirementsEditor extends EditorMenu {
     private void addSkillRequirement(SkillTreeEditor editor, SkillRequirement<?> requirement) {
         editor.getSelectedSkills().forEach(s -> s.getRequirements().add(requirement.copy()));
         editor.saveSelectedSkills();
-        editor.selectMenu(editor.getSelectedMenu().previousMenu);
+
+        // Factual Fix 1.21.4: Use local field reference directly to ensure consistent layout navigation tasks
+        editor.selectMenu(previousMenu);
     }
 }

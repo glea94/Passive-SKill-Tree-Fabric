@@ -4,15 +4,20 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTEnchantmentPredicates;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Objects;
 
 public class WeaponEnchantmentCondition implements EnchantmentCondition {
+
     @Override
-    public boolean met(EnchantmentCategory category) {
-        return category == EnchantmentCategory.WEAPON || category == EnchantmentCategory.BOW || category == EnchantmentCategory.CROSSBOW || category == EnchantmentCategory.TRIDENT;
+    public boolean met(ItemStack stack) {
+        return stack.is(ItemTags.WEAPON_ENCHANTABLE)
+                || stack.is(ItemTags.BOW_ENCHANTABLE)
+                || stack.is(ItemTags.CROSSBOW_ENCHANTABLE)
+                || stack.is(ItemTags.TRIDENT_ENCHANTABLE);
     }
 
     @Override
@@ -59,13 +64,15 @@ public class WeaponEnchantmentCondition implements EnchantmentCondition {
             return new CompoundTag();
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public EnchantmentCondition deserialize(FriendlyByteBuf buf) {
+        public EnchantmentCondition deserialize(RegistryFriendlyByteBuf buf) {
             return new WeaponEnchantmentCondition();
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, EnchantmentCondition condition) {
+        public void serialize(RegistryFriendlyByteBuf buf, EnchantmentCondition condition) {
             if (!(condition instanceof WeaponEnchantmentCondition)) {
                 throw new IllegalArgumentException();
             }

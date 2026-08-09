@@ -16,7 +16,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -88,7 +88,7 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
     public MutableComponent getSimpleTooltip() {
         MutableComponent tooltip;
         if (chance < 1f || chance % 1 != 0) {
-            tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId() + ".chance", chance, AttributeModifier.Operation.MULTIPLY_BASE);
+            tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId() + ".chance", chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         } else if (chance == 1f) {
             tooltip = Component.translatable(getDescriptionId());
         } else {
@@ -134,7 +134,6 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<ProjectileDuplicationBonus> consumer, LivingMultiplier multiplier) {
         setPlayerMultiplier(multiplier);
         consumer.accept(this.copy());
@@ -190,7 +189,7 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
 
         @Override
         public ProjectileDuplicationBonus deserialize(CompoundTag tag) {
-            float chance = tag.getFloat("chance");
+            float chance = tag.getFloatOr("chance", 0f);
             ProjectileDuplicationBonus bonus = new ProjectileDuplicationBonus(chance);
             bonus.playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
@@ -209,8 +208,9 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ProjectileDuplicationBonus deserialize(FriendlyByteBuf buf) {
+        public ProjectileDuplicationBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
             ProjectileDuplicationBonus bonus = new ProjectileDuplicationBonus(chance);
             bonus.playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
@@ -218,8 +218,9 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ProjectileDuplicationBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

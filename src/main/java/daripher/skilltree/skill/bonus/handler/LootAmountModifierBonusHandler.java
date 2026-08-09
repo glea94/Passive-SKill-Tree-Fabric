@@ -5,16 +5,15 @@ import daripher.skilltree.skill.bonus.player.LootAmountModifierBonus;
 import it.unimi.dsi.fastutil.floats.Float2FloatMap;
 import it.unimi.dsi.fastutil.floats.Float2FloatOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class LootAmountModifierBonusHandler {
@@ -25,13 +24,19 @@ public class LootAmountModifierBonusHandler {
             if (!lootType.canAffect(lootContext, lootTableId)) {
                 continue;
             }
-            if (lootContext.hasParam(LootContextParams.TOOL)) {
-                ItemStack tool = lootContext.getParam(LootContextParams.TOOL);
-                if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, tool) > 0) {
+            // Factual Fix 1.21.5 (confirmé par décompilation LootContext) : getParams() n'existe plus ; hasParam/getParam renommés hasParameter/getParameter, appelés directement sur lootContext
+            player = (Player) lootContext.getParameter(lootType.getPlayerLootContextParam());
+            if (lootContext.hasParameter(LootContextParams.TOOL)) {
+                ItemStack tool = lootContext.getParameter(LootContextParams.TOOL);
+
+                // Factual Fix 1.21.5 (confirmé par décompilation ItemStack + ItemEnchantments) : EnchantmentHelper.getEnchantmentLevel(Holder, ItemStack) supprimé ; remplacé par tool.getEnchantments().getLevel(Holder<Enchantment>)
+                int silkTouchLevel = tool.getEnchantments().getLevel(
+                        player.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH)
+                );
+                if (silkTouchLevel > 0) {
                     return defaultLoot;
                 }
             }
-            player = (Player) lootContext.getParam(lootType.getPlayerLootContextParam());
             lootAmountModifier = LootAmountModifierBonusHandler.getLootAmountModifier(player, lootType);
             break;
         }

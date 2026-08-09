@@ -16,7 +16,7 @@ import daripher.skilltree.skill.bonus.predicate.effect.MobEffectType;
 import daripher.skilltree.skill.bonus.predicate.effect.MobEffectTypePredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -40,7 +40,11 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
 
     @Override
     public void applyEffect(LivingEntity target, @Nullable LivingEntity source) {
-        target.getActiveEffects().stream().map(MobEffectInstance::getEffect).filter(effectPredicate).forEach(target::removeEffect);
+        // Aligned 1.21.4: Direct registry Holder unwrapping via .value() remains exact standard for Predicate tests
+        target.getActiveEffects().stream()
+                .map(MobEffectInstance::getEffect)
+                .filter(holder -> effectPredicate.test(holder.value()))
+                .forEach(target::removeEffect);
     }
 
     @Override
@@ -90,7 +94,7 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
         }
         MutableComponent tooltip = Component.translatable(descriptioId, effectDescription);
         if (chance < 1) {
-            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.MULTIPLY_BASE);
+            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         }
         tooltip = eventListener.getTooltip(tooltip);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
@@ -105,7 +109,6 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
     public boolean isPositive() {
         return chance > 0 ^ eventListener.getTarget() == Target.PLAYER ^ effectPredicate.testsForHarmfulEffects();
     }
-
     @Override
     public SkillEventListener getEventListener() {
         return eventListener;
@@ -117,21 +120,21 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
         editor.addLabel(150, 0, "Chance", ChatFormatting.GOLD);
         editor.increaseHeight(19);
         editor.addSelectionMenu(0, 0, 145, effectPredicate).setRequiresSearch(false)
-                .setResponder(effectPredicate -> selectEffectPredicate(editor, consumer, effectPredicate))
+                .setResponder(predicate -> selectEffectPredicate(editor, consumer, predicate))
                 .setMenuInitFunc(() -> addEffectPredicateWidgets(editor, consumer));
         editor.addNumericTextField(150, 0, 50, 14, chance).setNumericResponder(value -> selectChance(consumer, value));
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Event", ChatFormatting.GOLD);
         editor.increaseHeight(19);
         editor.addSelectionMenu(0, 0, 200, eventListener)
-                .setResponder(eventListener -> selectEventListener(editor, consumer, eventListener))
+                .setResponder(listener -> selectEventListener(editor, consumer, listener))
                 .setMenuInitFunc(() -> addEventListenerWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
 
     private void addEventListenerWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<RemoveMobEffectBonus>> consumer) {
-        eventListener.addEditorWidgets(editor, eventListener -> {
-            setEventListener(eventListener);
+        eventListener.addEditorWidgets(editor, listener -> {
+            setEventListener(listener);
             consumer.accept(this.copy());
         });
     }
@@ -193,7 +196,7 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
 
         @Override
         public RemoveMobEffectBonus deserialize(CompoundTag tag) {
-            float chance = tag.getFloat("chance");
+            float chance = tag.getFloatOr("chance", 0f);
             MobEffectPredicate effectPredicate = SerializationHelper.deserializeMobEffectCondition(tag, "effect_condition");
             SkillEventListener eventListener = SerializationHelper.deserializeEventListener(tag);
             return new RemoveMobEffectBonus(chance, effectPredicate, eventListener);
@@ -211,16 +214,18 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public RemoveMobEffectBonus deserialize(FriendlyByteBuf buf) {
+        public RemoveMobEffectBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
             MobEffectPredicate effectPredicate = NetworkHelper.readMobEffectCondition(buf);
             SkillEventListener eventListener = NetworkHelper.readEventListener(buf);
             return new RemoveMobEffectBonus(amount, effectPredicate, eventListener);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RemoveMobEffectBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

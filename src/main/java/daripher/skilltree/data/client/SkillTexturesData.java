@@ -8,7 +8,6 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,17 +24,13 @@ public class SkillTexturesData implements IdentifiableResourceReloadListener {
 
     @Override
     public ResourceLocation getFabricId() {
-        return new ResourceLocation(SkillTreeMod.MOD_ID, "skill_textures_reloader");
+        return ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_textures_reloader");
     }
 
-    // Portage Fabric : IdentifiableResourceReloadListener étend PreparableReloadListener
-    // directement (pas le simple ResourceManagerReloadListener) : la vraie méthode abstraite à
-    // implémenter est reload(...), pas onResourceManagerReload(ResourceManager). Le travail
-    // (scan des textures) est simple et synchrone, donc fait entièrement côté "prepare".
+    // Factual Fix 1.21.4: Refactored signature to exactly 4 parameters, dropping the legacy separate ProfilerFiller arguments
     @Override
     public CompletableFuture<Void> reload(PreparableReloadListener.PreparationBarrier barrier, ResourceManager resourceManager,
-                                           ProfilerFiller prepareProfiler, ProfilerFiller applyProfiler,
-                                           Executor prepareExecutor, Executor applyExecutor) {
+                                          Executor prepareExecutor, Executor applyExecutor) {
         return CompletableFuture.supplyAsync(() -> scanTextures(resourceManager), prepareExecutor)
                 .thenCompose(barrier::wait)
                 .thenAcceptAsync(result -> {
@@ -46,6 +41,7 @@ public class SkillTexturesData implements IdentifiableResourceReloadListener {
 
     private static Map<String, Set<ResourceLocation>> scanTextures(ResourceManager resourceManager) {
         Map<String, Set<ResourceLocation>> result = new HashMap<>();
+
         Map<ResourceLocation, Resource> textures = resourceManager.listResources("textures", SkillTexturesData::isTexturePath);
         List<ResourceLocation> textureLocations = textures.keySet().stream().toList();
         for (ResourceLocation textureLocation : textureLocations) {
@@ -65,7 +61,8 @@ public class SkillTexturesData implements IdentifiableResourceReloadListener {
         if (lastSlash <= 0) {
             return "";
         }
-        return path.substring(0, lastSlash);    }
+        return path.substring(0, lastSlash);
+    }
 
     private static boolean isTexturePath(ResourceLocation location) {
         return location.getPath().endsWith(".png");

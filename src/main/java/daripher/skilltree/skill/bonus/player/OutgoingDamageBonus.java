@@ -17,7 +17,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -127,7 +127,6 @@ public final class OutgoingDamageBonus implements SkillBonus<OutgoingDamageBonus
         tooltip = targetCondition.getTooltip(tooltip, Target.ENEMY);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return amount > 0;
@@ -139,7 +138,7 @@ public final class OutgoingDamageBonus implements SkillBonus<OutgoingDamageBonus
         editor.addLabel(0, 0, "Operation", ChatFormatting.GOLD);
         editor.increaseHeight(19);
         editor.addNumericTextField(110, 0, 50, 14, amount).setNumericResponder(value -> selectAmount(consumer, value));
-        editor.addOperationSelection(0, 0, 80, operation).setResponder(operation -> selectOperation(consumer, operation));
+        editor.addOperationSelection(0, 0, 80, operation).setResponder(op -> selectOperation(consumer, op));
         editor.increaseHeight(29);
         editor.addLabel(0, 0, "Damage Condition", ChatFormatting.GOLD);
         editor.increaseHeight(19);
@@ -211,7 +210,6 @@ public final class OutgoingDamageBonus implements SkillBonus<OutgoingDamageBonus
             consumer.accept(this.copy());
         });
     }
-
     private void selectTargetCondition(SkillTreeEditor editor, Consumer<OutgoingDamageBonus> consumer, LivingEntityPredicate condition) {
         setTargetCondition(condition);
         consumer.accept(this.copy());
@@ -299,7 +297,7 @@ public final class OutgoingDamageBonus implements SkillBonus<OutgoingDamageBonus
 
         @Override
         public OutgoingDamageBonus deserialize(CompoundTag tag) {
-            float amount = tag.getFloat("amount");
+            float amount = tag.getFloatOr("amount", 0f);
             AttributeModifier.Operation operation = SerializationHelper.deserializeOperation(tag);
             OutgoingDamageBonus bonus = new OutgoingDamageBonus(amount, operation);
             bonus.playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
@@ -326,10 +324,11 @@ public final class OutgoingDamageBonus implements SkillBonus<OutgoingDamageBonus
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public OutgoingDamageBonus deserialize(FriendlyByteBuf buf) {
+        public OutgoingDamageBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
-            AttributeModifier.Operation operation = AttributeModifier.Operation.fromValue(buf.readInt());
+            AttributeModifier.Operation operation = AttributeModifier.Operation.values()[buf.readInt()];
             OutgoingDamageBonus bonus = new OutgoingDamageBonus(amount, operation);
             bonus.playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
             bonus.targetMultiplier = NetworkHelper.readLivingMultiplier(buf);
@@ -339,13 +338,14 @@ public final class OutgoingDamageBonus implements SkillBonus<OutgoingDamageBonus
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof OutgoingDamageBonus aBonus)) {
                 throw new IllegalArgumentException();
             }
             buf.writeFloat(aBonus.amount);
-            buf.writeInt(aBonus.operation.toValue());
+            buf.writeInt(aBonus.operation.ordinal());
             NetworkHelper.writeLivingMultiplier(buf, aBonus.playerMultiplier);
             NetworkHelper.writeLivingMultiplier(buf, aBonus.targetMultiplier);
             NetworkHelper.writeLivingCondition(buf, aBonus.playerCondition);
@@ -355,7 +355,7 @@ public final class OutgoingDamageBonus implements SkillBonus<OutgoingDamageBonus
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
-            return new OutgoingDamageBonus(0.1f, AttributeModifier.Operation.MULTIPLY_BASE).setDamageCondition(new MeleeDamageCondition());
+            return new OutgoingDamageBonus(0.1f, AttributeModifier.Operation.ADD_MULTIPLIED_BASE).setDamageCondition(new MeleeDamageCondition());
         }
     }
 }

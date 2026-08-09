@@ -35,6 +35,7 @@ public class AnvilUpdatePSTEvent extends PSTEvent {
     }
 
     public void setOutput(ItemStack output) {
-        this.output = output;
+        // En 1.21.4, s'assurer de passer une copie propre si vous mutez des composants de données
+        this.output = output != null ? output : ItemStack.EMPTY;
     }
 }

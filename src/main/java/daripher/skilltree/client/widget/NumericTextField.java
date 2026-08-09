@@ -71,7 +71,13 @@ public class NumericTextField extends TextField {
     }
 
     private Predicate<String> createNumericFilter(Predicate<Double> filter) {
-        return s -> filter.test(Double.parseDouble(s));
+        return s -> {
+            try {
+                return filter.test(Double.parseDouble(s));
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        };
     }
 
     private static String formatDefaultValue(double defaultValue) {

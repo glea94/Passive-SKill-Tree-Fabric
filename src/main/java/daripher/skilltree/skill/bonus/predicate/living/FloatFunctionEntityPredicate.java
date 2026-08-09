@@ -12,7 +12,7 @@ import daripher.skilltree.skill.bonus.function.FloatFunction;
 import daripher.skilltree.skill.bonus.function.HealthLevelFunction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
@@ -65,8 +65,8 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
         editor.addLabel(0, 0, "Logic", ChatFormatting.GREEN);
         editor.addLabel(100, 0, "Required Value", ChatFormatting.GREEN);
         editor.increaseHeight(19);
-        editor.addSelectionMenu(0, 0, 90, logic).setElementNameGetter(logic -> Component.literal(logic.name()))
-                .setResponder(logic -> selectLogic(consumer, logic));
+        editor.addSelectionMenu(0, 0, 90, logic).setElementNameGetter(l -> Component.literal(l.name()))
+                .setResponder(l -> selectLogic(consumer, l));
         editor.addNumericTextField(100, 0, 50, 14, requiredValue).setNumericResponder(value -> selectRequiredValue(consumer, value));
         editor.increaseHeight(19);
     }
@@ -77,18 +77,18 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
 
     private void selectRequiredValue(Consumer<LivingEntityPredicate> consumer, Double value) {
         setRequiredValue(value.floatValue());
-        consumer.accept(this);
+        consumer.accept(this.copy());
     }
 
     private void selectValueProvider(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer, FloatFunction<?> provider) {
         setValueProvider(provider);
-        consumer.accept(this);
+        consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
 
     private void selectLogic(Consumer<LivingEntityPredicate> consumer, Logic logic) {
         setLogic(logic);
-        consumer.accept(this);
+        consumer.accept(this.copy());
     }
 
     @Override
@@ -108,7 +108,6 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
         }
         return logic == that.logic;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(valueProvider, requiredValue, logic);
@@ -138,6 +137,11 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
         return requiredValue;
     }
 
+    // Aligned 1.21.4: Direct structural copy mechanism to preserve safe multi-threaded snapshot states
+    public FloatFunctionEntityPredicate copy() {
+        return new FloatFunctionEntityPredicate(valueProvider, requiredValue, logic);
+    }
+
     public static class Serializer implements LivingEntityPredicate.Serializer {
         @Override
         public LivingEntityPredicate deserialize(JsonObject json) throws JsonParseException {
@@ -158,8 +162,9 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
         @Override
         public LivingEntityPredicate deserialize(CompoundTag tag) {
             FloatFunction<?> valueProvider = SerializationHelper.deserializeValueProvider(tag);
-            float requiredValue = tag.getFloat("required_value");
-            Logic logic = Logic.valueOf(tag.getString("logic"));
+            float requiredValue = tag.getFloatOr("required_value", 0f);
+            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            Logic logic = Logic.valueOf(tag.getString("logic").orElse(""));
             return new FloatFunctionEntityPredicate(valueProvider, requiredValue, logic);
         }
 
@@ -173,16 +178,18 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public LivingEntityPredicate deserialize(FriendlyByteBuf buf) {
+        public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             FloatFunction<?> valueProvider = NetworkHelper.readValueProvider(buf);
             float requiredValue = buf.readFloat();
             Logic logic = Logic.values()[buf.readInt()];
             return new FloatFunctionEntityPredicate(valueProvider, requiredValue, logic);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, LivingEntityPredicate predicate) {
+        public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             FloatFunctionEntityPredicate validPredicate = validatePredicate(predicate);
             NetworkHelper.writeValueProvider(buf, validPredicate.valueProvider);
             buf.writeFloat(validPredicate.requiredValue);

@@ -8,11 +8,10 @@ import daripher.skilltree.init.predicate.PSTItemPredicates;
 import daripher.skilltree.network.NetworkHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -26,7 +25,8 @@ public final class EnchantedStackPredicate implements ItemStackPredicate {
 
     @Override
     public boolean test(ItemStack stack) {
-        return !EnchantmentHelper.getEnchantments(stack).isEmpty() && itemStackPredicate.test(stack);
+        // Aligned 1.21.4: Utilizes the optimized vanilla capability state lookup
+        return stack.isEnchanted() && itemStackPredicate.test(stack);
     }
 
     @Override
@@ -116,13 +116,15 @@ public final class EnchantedStackPredicate implements ItemStackPredicate {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ItemStackPredicate deserialize(FriendlyByteBuf buf) {
+        public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new EnchantedStackPredicate(NetworkHelper.readItemPredicate(buf));
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, ItemStackPredicate condition) {
+        public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof EnchantedStackPredicate aCondition)) {
                 throw new IllegalArgumentException();
             }

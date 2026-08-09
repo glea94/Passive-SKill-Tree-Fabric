@@ -7,7 +7,7 @@ import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.init.PSTSkillBonuses;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -51,6 +51,7 @@ public final class SelfSplashImmuneBonus implements SkillBonus<SelfSplashImmuneB
 
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<SelfSplashImmuneBonus> consumer) {
+        // Stateless placeholder for panel config widgets
     }
 
     public static class Serializer implements SkillBonus.Serializer {
@@ -79,13 +80,15 @@ public final class SelfSplashImmuneBonus implements SkillBonus<SelfSplashImmuneB
             return new CompoundTag();
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public SelfSplashImmuneBonus deserialize(FriendlyByteBuf buf) {
+        public SelfSplashImmuneBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new SelfSplashImmuneBonus();
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof SelfSplashImmuneBonus)) {
                 throw new IllegalArgumentException();
             }

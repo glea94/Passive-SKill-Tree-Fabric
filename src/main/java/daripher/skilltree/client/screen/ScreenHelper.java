@@ -10,6 +10,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -91,81 +93,92 @@ public class ScreenHelper {
         }
         graphics.pose().pushPose();
         graphics.pose().translate(tooltipX, tooltipY, 10);
-        graphics.fill(1, 4, tooltipWidth - 1, tooltipHeight + 4, 0xDD000000);
+        graphics.fill(1, 4, (int) (tooltipWidth - 1), tooltipHeight + 4, 0xDD000000);
         int textX = 5;
         int textY = 2;
         ResourceLocation texture = button.skill.getTooltipFrameTexture();
-        graphics.blit(texture, -4, -4, 0, 0, 21, 20, 110, 20);
-        graphics.blit(texture, tooltipWidth + 4 - 21, -4, -21, 0, 21, 20, 110, 20);
-        int centerWidth = tooltipWidth + 8 - 42;
+        // Factual Fix 1.21.4: Refactored legacy blit calls to use mandatory RenderType::guiTextured layer pipelines
+        graphics.blit(RenderType::guiTextured, texture, -4, -4, 0F, 0F, 21, 20, 110, 20);
+        // Cleaned up negative blit width assignment to properly flip texture mappings via source width maths
+        graphics.blit(RenderType::guiTextured, texture, (int) (tooltipWidth + 4 - 21), -4, 89F, 0F, 21, 20, 110, 20);
+        int centerWidth = (int) (tooltipWidth + 8 - 42);
         int centerX = -4 + 21;
         while (centerWidth > 0) {
             int partWidth = Math.min(centerWidth, 68);
-            graphics.blit(texture, centerX, -4, 21, 0, partWidth, 20, 110, 20);
+            graphics.blit(RenderType::guiTextured, texture, centerX, -4, 21F, 0F, partWidth, 20, 110, 20);
             centerX += partWidth;
             centerWidth -= partWidth;
         }
         MutableComponent title = tooltip.remove(0);
-        graphics.drawCenteredString(font, title, tooltipWidth / 2, textY, 0xFFFFFF);
+        graphics.drawCenteredString(font, title, (int) (tooltipWidth / 2), textY, 0xFFFFFF);
         textY += 19;
         for (MutableComponent component : tooltip) {
-            graphics.drawString(font, component, textX, textY, 0xFFFFFF);
+            graphics.drawString(font, component, textX, textY, 0xFFFFFF, false);
             textY += font.lineHeight + 2;
         }
         graphics.pose().popPose();
     }
 
     public static void renderGatewayConnection(GuiGraphics graphics, SkillConnection connection, boolean highlighted, float zoom, float animation) {
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/long_connection.png");
+        ResourceLocation texture = ResourceLocation.parse("skilltree:textures/screen/long_connection.png");
         graphics.pose().pushPose();
         SkillButton button1 = connection.getFirstButton();
         SkillButton button2 = connection.getSecondButton();
-        double connectionX = button1.x + button1.getWidth() / 2F;
-        double connectionY = button1.y + button1.getHeight() / 2F;
+
+        double connectionX = button1.getX() + button1.getWidth() / 2F;
+        double connectionY = button1.getY() + button1.getHeight() / 2F;
         graphics.pose().translate(connectionX, connectionY, 0);
         float rotation = ScreenHelper.getAngleBetweenButtons(button1, button2);
         graphics.pose().mulPose(Axis.ZP.rotation(rotation));
         int length = (int) (ScreenHelper.getDistanceBetweenButtons(button1, button2) / zoom);
         graphics.pose().scale(zoom, zoom, 1F);
-        graphics.blit(texture, 0, -8, length, 6, -animation, highlighted ? 0 : 6, length, 6, 30, 12);
-        graphics.blit(texture, 0, 2, length, 6, animation, highlighted ? 0 : 6, length, 6, -30, 12);
+
+        // Factual Fix 1.21.4: Refactored connection line blits to explicitly pass RenderType layout layer parameters
+        graphics.blit(RenderType::guiTextured, texture, 0, -8, -animation, highlighted ? 0F : 6F, length, 6, 30, 12);
+        graphics.blit(RenderType::guiTextured, texture, 0, 2, animation, highlighted ? 0F : 6F, length, 6, 30, 12);
         graphics.pose().popPose();
     }
 
     public static void renderOneWayConnection(GuiGraphics graphics, SkillConnection connection, boolean highlighted, float zoom, float animation) {
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/one_way_connection.png");
+        ResourceLocation texture = ResourceLocation.parse("skilltree:textures/screen/one_way_connection.png");
         graphics.pose().pushPose();
         SkillButton button1 = connection.getFirstButton();
         SkillButton button2 = connection.getSecondButton();
-        double connectionX = button1.x + button1.getWidth() / 2F;
-        double connectionY = button1.y + button1.getHeight() / 2F;
+
+        double connectionX = button1.getX() + button1.getWidth() / 2F;
+        double connectionY = button1.getY() + button1.getHeight() / 2F;
         graphics.pose().translate(connectionX, connectionY, 0);
         float rotation = ScreenHelper.getAngleBetweenButtons(button1, button2);
         graphics.pose().mulPose(Axis.ZP.rotation(rotation));
         int length = (int) (ScreenHelper.getDistanceBetweenButtons(button1, button2) / zoom);
         graphics.pose().scale(zoom, zoom, 1F);
-        graphics.blit(texture, 0, -3, length, 6, -animation, highlighted ? 0 : 6, length, 6, 30, 12);
+
+        // Factual Fix 1.21.4: Refactored connection line blits to explicitly pass RenderType layout layer parameters
+        graphics.blit(RenderType::guiTextured, texture, 0, -3, -animation, highlighted ? 0F : 6F, length, 6, 30, 12);
         graphics.pose().popPose();
     }
 
     public static void renderConnection(GuiGraphics graphics, SkillConnection connection, float zoom, float animation) {
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/direct_connection.png");
+        ResourceLocation texture = ResourceLocation.parse("skilltree:textures/screen/direct_connection.png");
         graphics.pose().pushPose();
         SkillButton button1 = connection.getFirstButton();
         SkillButton button2 = connection.getSecondButton();
-        double connectionX = button1.x + button1.getWidth() / 2F;
-        double connectionY = button1.y + button1.getHeight() / 2F;
+
+        double connectionX = button1.getX() + button1.getWidth() / 2F;
+        double connectionY = button1.getY() + button1.getHeight() / 2F;
         graphics.pose().translate(connectionX, connectionY, 0);
         float rotation = ScreenHelper.getAngleBetweenButtons(button1, button2);
         graphics.pose().mulPose(Axis.ZP.rotation(rotation));
         int length = (int) ScreenHelper.getDistanceBetweenButtons(button1, button2);
         boolean highlighted = button1.skillLearned && button2.skillLearned;
         graphics.pose().scale(1F, zoom, 1F);
-        graphics.blit(texture, 0, -3, length, 6, 0, highlighted ? 0 : 6, length, 6, 50, 12);
+
+        // Factual Fix 1.21.4: Refactored connection line blits to explicitly pass RenderType layout layer parameters
+        graphics.blit(RenderType::guiTextured, texture, 0, -3, 0F, highlighted ? 0F : 6F, length, 6, 50, 12);
         boolean shouldAnimate = button1.skillLearned && button2.canLearn || button2.skillLearned && button1.canLearn;
         if (!highlighted && shouldAnimate) {
             RenderSystem.setShaderColor(1F, 1F, 1F, (Mth.sin(animation / 3F) + 1) / 2);
-            graphics.blit(texture, 0, -3, length, 6, 0, 0, length, 6, 50, 12);
+            graphics.blit(RenderType::guiTextured, texture, 0, -3, 0F, 0F, length, 6, 50, 12);
             RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         }
         graphics.pose().popPose();

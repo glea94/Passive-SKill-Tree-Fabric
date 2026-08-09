@@ -9,18 +9,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * Portage Fabric de net.minecraftforge.event.entity.living.LivingEvent.LivingVisibilityEvent,
- * sans équivalent Fabric API direct. Technique @Inject à RETURN (comme PlayerBreakSpeedMixin) :
- * pas de capture de variable locale, juste multiplication de la valeur déjà calculée par vanilla.
- */
 @Mixin(LivingEntity.class)
 public abstract class LivingVisibilityMixin {
     @Inject(method = "getVisibilityPercent", at = @At("RETURN"), cancellable = true, require = 1)
     private void skilltree$onGetVisibilityPercent(Entity lookingEntity, CallbackInfoReturnable<Double> cir) {
         LivingVisibilityPSTEvent event = new LivingVisibilityPSTEvent((LivingEntity) (Object) this, lookingEntity);
         PSTEvents.LIVING_VISIBILITY.post(event);
+
         if (event.getVisibilityModifier() != 1.0) {
+            // Apply cumulative multiplication to the return value, mirroring legacy Forge behaviors
             cir.setReturnValue(cir.getReturnValue() * event.getVisibilityModifier());
         }
     }

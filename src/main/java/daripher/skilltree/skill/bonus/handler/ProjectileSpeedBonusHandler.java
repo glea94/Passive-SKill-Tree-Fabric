@@ -33,7 +33,7 @@ public class ProjectileSpeedBonusHandler {
 
     private static void applyProjectileSpeedBonus(Projectile projectile, Player player) {
         CompoundTag projectileTag = PersistentDataProvider.get(projectile);
-        if (projectileTag.getBoolean(IS_SPED_UP_TAG_NAME)) {
+        if (projectileTag.getBoolean(IS_SPED_UP_TAG_NAME).orElse(false)) {
             return;
         }
         float speedMultiplier = 1f;

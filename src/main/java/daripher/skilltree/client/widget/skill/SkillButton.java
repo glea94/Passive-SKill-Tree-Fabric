@@ -1,6 +1,5 @@
 package daripher.skilltree.client.widget.skill;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.config.ClientConfig;
@@ -14,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -43,64 +43,70 @@ public class SkillButton extends Button {
     public boolean hasBrokenBonuses;
 
     public SkillButton(Supplier<Float> animationFunc, float x, float y, PassiveSkill skill) {
-        super((int) x, (int) y, skill.getSkillSize(), skill.getSkillSize(), Component.empty(), b -> {
-        }, Supplier::get);
+        // Factual Fix 1.21.4: Super constructor requires x, y, width, height, message, pressAction, and narration
+        super((int) x, (int) y, skill.getSkillSize(), skill.getSkillSize(), Component.empty(), b -> {}, DEFAULT_NARRATION);
         this.x = x;
         this.y = y;
         this.skill = skill;
         this.animationFunction = animationFunc;
+        // Factual Fix 1.21.4: Use direct field assignment to completely avoid method overloading conflicts
         this.active = false;
         this.hasBrokenBonuses = skill.getBonuses().stream().anyMatch(bonus -> bonus instanceof BrokenSkillBonus);
     }
 
+    private static final int WHITE = 0xFFFFFFFF;
+
+    private static int argb(float r, float g, float b, float a) {
+        return ((int) (Mth.clamp(a, 0F, 1F) * 255) << 24)
+                | ((int) (Mth.clamp(r, 0F, 1F) * 255) << 16)
+                | ((int) (Mth.clamp(g, 0F, 1F) * 255) << 8)
+                | (int) (Mth.clamp(b, 0F, 1F) * 255);
+    }
+
     @Override
     public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        RenderSystem.enableBlend();
+
         graphics.pose().pushPose();
         graphics.pose().translate(x, y, 0);
+
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+
         if (hasBrokenBonuses) {
-            ResourceLocation brokenTexture = new ResourceLocation("skilltree:textures/icons/broken_skill.png");
-            graphics.blit(brokenTexture, 0, 0, width, height, 0, 0, width, height, width, height);
+            ResourceLocation brokenTexture = ResourceLocation.parse("skilltree:textures/icons/broken_skill.png");
+            graphics.blit(RenderType::guiTextured, brokenTexture, 0, 0, 0F, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth, currentHeight);
             graphics.pose().popPose();
             return;
         }
         renderFavoriteSkillHighlight(graphics);
-        renderBackground(graphics);
+        renderBackground(graphics, WHITE);
         graphics.pose().pushPose();
-        graphics.pose().translate(width / 2d, height / 2d, 0);
+        graphics.pose().translate(currentWidth / 2d, currentHeight / 2d, 0);
         graphics.pose().scale(0.5F, 0.5F, 1);
-        if (width == 32) {
+        if (currentWidth == 32) {
             graphics.pose().scale(0.75F, 0.75F, 1);
         }
-        graphics.pose().translate(-width / 2d, -height / 2d, 0);
-        renderIcon(graphics);
+        graphics.pose().translate(-currentWidth / 2d, -currentHeight / 2d, 0);
+        renderIcon(graphics, WHITE);
         graphics.pose().popPose();
         float animation = (Mth.sin(animationFunction.get() / 3F) + 1) / 2;
         float rb = searched ? 0.1f : 1f;
-        if (canLearn || searched) {
-            graphics.setColor(rb, 1F, rb, 1 - animation);
-        }
+        int darkeningColor = (canLearn || searched) ? argb(rb, 1F, rb, 1 - animation) : WHITE;
         if (!skillLearned) {
-            renderDarkening(graphics);
+            renderDarkening(graphics, darkeningColor);
         }
-        if (canLearn || searched) {
-            graphics.setColor(rb, 1F, rb, animation);
-        }
+        int frameColor = (canLearn || searched) ? argb(rb, 1F, rb, animation) : WHITE;
         if (skillLearned || canLearn || searched) {
-            renderFrame(graphics);
-        }
-        if (canLearn || searched || selected) {
-            graphics.setColor(1F, 1F, 1F, 1F);
+            renderFrame(graphics, frameColor);
         }
         graphics.pose().popPose();
-        RenderSystem.disableBlend();
     }
 
     private void renderFavoriteSkillHighlight(GuiGraphics graphics) {
         if (!ClientConfig.favorite_skills.contains(skill.getId())) {
             return;
         }
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/favorite_skill.png");
+        ResourceLocation texture = ResourceLocation.parse("skilltree:textures/screen/favorite_skill.png");
         int color;
         if (ClientConfig.favorite_color_is_rainbow) {
             color = Color.getHSBColor(animationFunction.get() / 240f, 1f, 1f).getRGB();
@@ -110,41 +116,53 @@ public class SkillButton extends Button {
         float r = ((color >> 16) & 0xFF) / 255f;
         float g = ((color >> 8) & 0xFF) / 255f;
         float b = ((color) & 0xFF) / 255f;
-        graphics.setColor(r, g, b, 1f);
-        int size = (int) (width * 1.4);
+        int tint = argb(r, g, b, 1f);
+
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+        int size = (int) (currentWidth * 1.4);
+
         graphics.pose().pushPose();
-        graphics.pose().translate(width / 2f, height / 2f, 0f);
+        graphics.pose().translate(currentWidth / 2f, currentHeight / 2f, 0f);
         float animation = 1 + 0.3f * (Mth.sin(animationFunction.get() / 3F) + 1) / 2;
         graphics.pose().scale(animation, animation, 1);
         graphics.pose().mulPose(Axis.ZP.rotationDegrees(animationFunction.get()));
         graphics.pose().translate(-size / 2f, -size / 2f, 0f);
-        graphics.blit(texture, 0, 0, size, size, 0, 0, 80, 80, 80, 80);
+        graphics.blit(RenderType::guiTextured, texture, 0, 0, 0F, 0F, size, size, 80, 80, 80, 80, tint);
         graphics.pose().popPose();
-        graphics.setColor(1f, 1f, 1f, 1f);
     }
 
-    private void renderFrame(GuiGraphics graphics) {
+    private void renderFrame(GuiGraphics graphics, int color) {
         ResourceLocation texture = skill.getFrameTexture();
-        graphics.blit(texture, 0, 0, width, height, width * 2, 0, width, height, width * 3, height);
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+        graphics.blit(RenderType::guiTextured, texture, 0, 0, currentWidth * 2, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth * 3, currentHeight, color);
     }
-
-    private void renderDarkening(GuiGraphics graphics) {
+    private void renderDarkening(GuiGraphics graphics, int color) {
         ResourceLocation texture = skill.getFrameTexture();
-        graphics.blit(texture, 0, 0, width, height, width, 0, width, height, width * 3, height);
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+        graphics.blit(RenderType::guiTextured, texture, 0, 0, currentWidth, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth * 3, currentHeight, color);
     }
 
-    private void renderIcon(GuiGraphics graphics) {
+    private void renderIcon(GuiGraphics graphics, int color) {
         ResourceLocation texture = skill.getIconTexture();
-        graphics.blit(texture, 0, 0, width, height, 0, 0, width, height, width, height);
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+        graphics.blit(RenderType::guiTextured, texture, 0, 0, 0F, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth, currentHeight, color);
     }
 
-    private void renderBackground(GuiGraphics graphics) {
+    private void renderBackground(GuiGraphics graphics, int color) {
         ResourceLocation texture = skill.getFrameTexture();
-        graphics.blit(texture, 0, 0, width, height, 0, 0, width, height, width * 3, height);
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+        graphics.blit(RenderType::guiTextured, texture, 0, 0, 0F, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth * 3, currentHeight, color);
     }
 
     public void setButtonSize(int size) {
-        width = height = size;
+        // Factual Fix 1.21.4: Alter layout dimension states safely using encapsulated setters
+        this.setWidth(size);
+        this.setHeight(size);
     }
 
     public List<MutableComponent> getSkillTooltip(PassiveSkillTree skillTree) {
@@ -262,7 +280,8 @@ public class SkillButton extends Button {
     }
 
     public void setActive() {
-        active = true;
+        // Factual Fix 1.21.4: Update interactive state via direct vanilla active field configuration
+        this.active = true;
     }
 
     private String getSkillId() {

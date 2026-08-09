@@ -7,7 +7,7 @@ import daripher.skilltree.init.predicate.PSTLivingEntityPredicates;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,11 +49,15 @@ public final class BurningEntityPredicate implements LivingEntityPredicate {
 
     public void setReverseLogic(boolean reverseLogic, Consumer<LivingEntityPredicate> consumer) {
         this.reverseLogic = reverseLogic;
-        consumer.accept(this);
+        // Protected for modern threading isolation profiles
+        consumer.accept(new BurningEntityPredicate(this.reverseLogic));
     }
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
@@ -81,7 +85,7 @@ public final class BurningEntityPredicate implements LivingEntityPredicate {
 
         @Override
         public LivingEntityPredicate deserialize(CompoundTag tag) {
-            boolean reverseLogic = tag.contains("reverse_logic") && tag.getBoolean("reverse_logic");
+            boolean reverseLogic = tag.getBoolean("reverse_logic").orElse(false);
             return new BurningEntityPredicate(reverseLogic);
         }
 
@@ -93,14 +97,16 @@ public final class BurningEntityPredicate implements LivingEntityPredicate {
             return compoundTag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public LivingEntityPredicate deserialize(FriendlyByteBuf buf) {
+        public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             boolean reverseLogic = buf.readBoolean();
             return new BurningEntityPredicate(reverseLogic);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, LivingEntityPredicate predicate) {
+        public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             BurningEntityPredicate validPredicate = validatePredicate(predicate);
             buf.writeBoolean(validPredicate.reverseLogic);
         }

@@ -14,6 +14,7 @@ import java.util.List;
 /** Portage Fabric : logique identique. */
 public class HealthReservationBonusHandler {
     public static void register() {
+        // Aligned 1.21.4: Direct server loop extraction mapping over the active players collection
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                 applyHealthReservation(player);

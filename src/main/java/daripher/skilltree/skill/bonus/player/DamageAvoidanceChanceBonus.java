@@ -17,7 +17,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -27,6 +27,7 @@ import net.minecraft.world.entity.player.Player;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -117,11 +118,10 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
         mergedBonus.attackerCondition = this.attackerCondition;
         return mergedBonus;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         MutableComponent tooltip = Component.translatable(getDescriptionId(), damageCondition.getTooltip());
-        tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.MULTIPLY_BASE);
+        tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         tooltip = playerMultiplier.getTooltip(tooltip, Target.PLAYER);
         tooltip = attackerMultiplier.getTooltip(tooltip, Target.ENEMY);
         tooltip = playerCondition.getTooltip(tooltip, Target.PLAYER);
@@ -211,7 +211,6 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<DamageAvoidanceChanceBonus> consumer) {
         playerCondition.addEditorWidgets(editor, c -> {
             setPlayerCondition(c);
@@ -287,7 +286,7 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
 
         @Override
         public DamageAvoidanceChanceBonus deserialize(CompoundTag tag) {
-            float chance = tag.getFloat("chance");
+            float chance = tag.getFloatOr("chance", 0f);
             DamageAvoidanceChanceBonus bonus = new DamageAvoidanceChanceBonus(chance);
             bonus.playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             bonus.attackerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "attacker_multiplier");
@@ -312,8 +311,9 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public DamageAvoidanceChanceBonus deserialize(FriendlyByteBuf buf) {
+        public DamageAvoidanceChanceBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
             DamageAvoidanceChanceBonus bonus = new DamageAvoidanceChanceBonus(chance);
             bonus.playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
@@ -324,8 +324,9 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof DamageAvoidanceChanceBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

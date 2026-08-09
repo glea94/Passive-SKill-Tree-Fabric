@@ -7,7 +7,7 @@ import daripher.skilltree.client.widget.editor.menu.selection.SelectionList;
 import daripher.skilltree.init.predicate.PSTMobEffectPredicates;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -56,7 +56,7 @@ public final class MobEffectTypePredicate implements MobEffectPredicate {
             return false;
         }
         MobEffectTypePredicate that = (MobEffectTypePredicate) o;
-        return effectType.equals(that.effectType);
+        return effectType == that.effectType;
     }
 
     @Override
@@ -89,7 +89,7 @@ public final class MobEffectTypePredicate implements MobEffectPredicate {
 
     public static class Serializer implements MobEffectPredicate.Serializer {
         @Override
-        public MobEffectPredicate deserialize(JsonObject json) throws JsonParseException {
+        public MobEffectTypePredicate deserialize(JsonObject json) throws JsonParseException {
             MobEffectType effectType = MobEffectType.fromName(json.get("effect_type").getAsString());
             return new MobEffectTypePredicate(effectType);
         }
@@ -101,8 +101,9 @@ public final class MobEffectTypePredicate implements MobEffectPredicate {
         }
 
         @Override
-        public MobEffectPredicate deserialize(CompoundTag tag) {
-            MobEffectType effectType = MobEffectType.fromName(tag.getString("effect_type"));
+        public MobEffectTypePredicate deserialize(CompoundTag tag) {
+            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            MobEffectType effectType = MobEffectType.fromName(tag.getString("effect_type").orElse(""));
             return new MobEffectTypePredicate(effectType);
         }
 
@@ -114,14 +115,16 @@ public final class MobEffectTypePredicate implements MobEffectPredicate {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public MobEffectPredicate deserialize(FriendlyByteBuf buf) {
+        public MobEffectTypePredicate deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectType effectType = MobEffectType.values()[buf.readInt()];
             return new MobEffectTypePredicate(effectType);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, MobEffectPredicate predicate) {
+        public void serialize(RegistryFriendlyByteBuf buf, MobEffectPredicate predicate) {
             MobEffectTypePredicate validPredicate = validatePredicate(predicate);
             buf.writeInt(validPredicate.effectType.ordinal());
         }

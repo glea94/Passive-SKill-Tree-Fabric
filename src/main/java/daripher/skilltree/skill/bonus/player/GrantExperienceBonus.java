@@ -13,7 +13,7 @@ import daripher.skilltree.skill.bonus.event.OutgoingDamageEventListener;
 import daripher.skilltree.skill.bonus.event.SkillEventListener;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
@@ -99,7 +99,7 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
         }
         MutableComponent tooltip = Component.translatable(bonusDescription, amount);
         if (chance < 1) {
-            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.MULTIPLY_BASE);
+            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         }
         tooltip = eventListener.getTooltip(tooltip);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
@@ -127,14 +127,13 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
         editor.addLabel(0, 0, "Event", ChatFormatting.GOLD);
         editor.increaseHeight(19);
         editor.addSelectionMenu(0, 0, 200, eventListener)
-                .setResponder(eventListener -> selectEventListener(editor, consumer, eventListener))
+                .setResponder(listener -> selectEventListener(editor, consumer, listener))
                 .setMenuInitFunc(() -> addEventListenerWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addEventListenerWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<GrantExperienceBonus>> consumer) {
-        eventListener.addEditorWidgets(editor, eventListener -> {
-            setEventListener(eventListener);
+        eventListener.addEditorWidgets(editor, listener -> {
+            setEventListener(listener);
             consumer.accept(this.copy());
         });
     }
@@ -189,8 +188,8 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
 
         @Override
         public GrantExperienceBonus deserialize(CompoundTag tag) {
-            float chance = tag.getFloat("chance");
-            int amount = tag.getInt("amount");
+            float chance = tag.getFloatOr("chance", 0f);
+            int amount = tag.getInt("amount").orElseThrow();
             GrantExperienceBonus bonus = new GrantExperienceBonus(chance, amount);
             bonus.eventListener = SerializationHelper.deserializeEventListener(tag);
             return bonus;
@@ -208,8 +207,9 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public GrantExperienceBonus deserialize(FriendlyByteBuf buf) {
+        public GrantExperienceBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
             int amount = buf.readInt();
             GrantExperienceBonus bonus = new GrantExperienceBonus(chance, amount);
@@ -217,8 +217,9 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof GrantExperienceBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

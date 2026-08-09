@@ -12,7 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,7 +65,8 @@ public class SkillBonusProvider {
     private static <T> List<T> getEffectBonuses(Player player, Class<T> type) {
         List<T> bonuses = new ArrayList<>();
         for (MobEffectInstance e : player.getActiveEffects()) {
-            if (e.getEffect() instanceof SkillBonusEffect skillEffect) {
+            // Aligned 1.21.4: Direct registry Holder unwrapping via .value() before checking instanceof
+            if (e.getEffect().value() instanceof SkillBonusEffect skillEffect) {
                 SkillBonus<?> bonus = skillEffect.getBonus().copy();
                 if (type.isInstance(bonus)) {
                     bonus = bonus.copy().multiply(e.getAmplifier());

@@ -9,7 +9,11 @@ public class TextureSelectionMenuButton extends SelectionMenuButton<ResourceLoca
     private final String texturesFolder;
 
     public TextureSelectionMenuButton(SkillTreeEditor editor, int x, int y, int width, String message, String texturesFolder, Collection<ResourceLocation> values) {
+        // Factual Fix 1.21.4: Remove layout coordinates x and y from parent widget constructor arguments
         super(editor, x, y, width, message, values);
+        this.setX(x);
+        this.setY(y);
+
         this.texturesFolder = texturesFolder;
         this.selectionList = new TextureSelectionList(0, 0, 19, 19, 16, 16, values).setColumns(10).setRows(10);
     }

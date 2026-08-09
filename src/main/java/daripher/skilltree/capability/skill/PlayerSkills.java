@@ -2,7 +2,9 @@ package daripher.skilltree.capability.skill;
 
 import daripher.skilltree.data.reloader.SkillsReloader;
 import daripher.skilltree.skill.PassiveSkill;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -76,10 +78,9 @@ public class PlayerSkills implements IPlayerSkills {
         getPlayerSkills().clear();
     }
 
-    // Portage : remplace serializeNBT() (qui retournait un CompoundTag) -> écrit dans le tag fourni.
     @Override
-    public void writeToNbt(CompoundTag tag) {
-        tag.putUUID("TreeVersion", TREE_VERSION);
+    public void writeToNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
+        tag.store("TreeVersion", UUIDUtil.CODEC, TREE_VERSION);
         tag.putInt("Points", skillPoints);
         tag.putBoolean("TreeReset", treeReset);
         ListTag skillsTag = new ListTag();
@@ -87,20 +88,22 @@ public class PlayerSkills implements IPlayerSkills {
         tag.put("Skills", skillsTag);
     }
 
-    // Portage : remplace deserializeNBT(CompoundTag) de Forge, même logique, juste le nom de méthode.
     @Override
-    public void readFromNbt(CompoundTag tag) {
+    public void readFromNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
         skills.clear();
-        UUID treeVersion = tag.hasUUID("TreeVersion") ? tag.getUUID("TreeVersion") : null;
-        skillPoints = tag.getInt("Points");
-        ListTag skillsTag = tag.getList("Skills", Tag.TAG_STRING);
+
+        // En 1.21.5, plus de contains(key, type) : on lit directement via le Codec, Optional.empty() si absent/invalide
+        UUID treeVersion = tag.read("TreeVersion", UUIDUtil.CODEC).orElse(null);
+
+        skillPoints = tag.getIntOr("Points", 0);
+        ListTag skillsTag = tag.getListOrEmpty("Skills");
         if (!TREE_VERSION.equals(treeVersion)) {
             skillPoints += skillsTag.size();
             treeReset = true;
             return;
         }
         for (Tag skillTag : skillsTag) {
-            ResourceLocation skillId = new ResourceLocation(skillTag.getAsString());
+            ResourceLocation skillId = ResourceLocation.parse(skillTag.asString().orElse(""));
             PassiveSkill passiveSkill = SkillsReloader.getSkillById(skillId);
             if (passiveSkill == null || passiveSkill.isInvalid()) {
                 skills.clear();
