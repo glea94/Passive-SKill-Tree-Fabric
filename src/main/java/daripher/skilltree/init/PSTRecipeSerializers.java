@@ -11,8 +11,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 public class PSTRecipeSerializers {
+    // Aligned 1.21.4: Direct recipe serializer linking with BuiltInRegistries.RECIPE_SERIALIZER
     public static final DeferredRegister<RecipeSerializer<?>> REGISTRY = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, SkillTreeMod.MOD_ID);
 
+    // Custom artisan workbench processing serializations
     public static final RegistryObject<WorkbenchUpgradeBonusRecipe.Serializer> WORKBENCH_ITEM_BONUS = REGISTRY.register("workbench_item_bonus", WorkbenchUpgradeBonusRecipe.Serializer::new);
     public static final RegistryObject<WorkbenchCraftingRecipe.Serializer> WORKBENCH_CRAFTING = REGISTRY.register("workbench_crafting", WorkbenchCraftingRecipe.Serializer::new);
     public static final RegistryObject<WorkbenchPotionMixingRecipe.Serializer> WORKBENCH_POTION_MIXING = REGISTRY.register("workbench_potion_mixing", WorkbenchPotionMixingRecipe.Serializer::new);

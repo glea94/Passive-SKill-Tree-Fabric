@@ -20,7 +20,13 @@ public class SkillRequirementSerializer implements JsonSerializer<SkillRequireme
         } else {
             type = jsonObj.get("type").getAsString();
         }
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(type);
+=======
+
+        // Aligned 1.21.4: Using ResourceLocation.parse is standard and clean for handling full asset string IDs
+        ResourceLocation serializerId = ResourceLocation.parse(type);
+>>>>>>> Stashed changes
         SkillRequirement.Serializer serializer = PSTRegistries.SKILL_REQUIREMENTS.get().getValue(serializerId);
         Objects.requireNonNull(serializer, "Unknown skill requirement: " + serializerId);
         return serializer.deserialize(jsonObj);

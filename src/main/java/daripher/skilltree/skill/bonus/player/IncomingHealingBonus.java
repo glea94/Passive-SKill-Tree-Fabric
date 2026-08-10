@@ -14,7 +14,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -85,7 +85,7 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
 
     @Override
     public MutableComponent getSimpleTooltip() {
-        MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), multiplier, AttributeModifier.Operation.MULTIPLY_BASE);
+        MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), multiplier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         tooltip = playerMultiplier.getTooltip(tooltip, Target.PLAYER);
         tooltip = playerCondition.getTooltip(tooltip, Target.PLAYER);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
@@ -121,7 +121,6 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<IncomingHealingBonus> consumer, LivingMultiplier multiplier) {
         setMultiplier(multiplier);
         consumer.accept(this.copy());
@@ -182,7 +181,7 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
 
         @Override
         public IncomingHealingBonus deserialize(CompoundTag tag) {
-            float multiplier = tag.getFloat("multiplier");
+            float multiplier = tag.getFloatOr("multiplier", 0f);
             IncomingHealingBonus bonus = new IncomingHealingBonus(multiplier);
             bonus.playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
@@ -201,16 +200,18 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public IncomingHealingBonus deserialize(FriendlyByteBuf buf) {
+        public IncomingHealingBonus deserialize(RegistryFriendlyByteBuf buf) {
             IncomingHealingBonus bonus = new IncomingHealingBonus(buf.readFloat());
             bonus.playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
             bonus.playerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof IncomingHealingBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

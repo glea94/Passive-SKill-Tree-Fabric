@@ -37,7 +37,9 @@ public class EquipmentChangeDetector {
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             ItemStack current = player.getItemBySlot(slot);
             ItemStack before = previous.getOrDefault(slot, ItemStack.EMPTY);
-            if (!ItemStack.matches(before, current)) {
+
+            // Factual Fix 1.21.4: Replace obsolete legacy matches() with modern standard components-aware equivalence check
+            if (!ItemStack.isSameItemSameComponents(before, current)) {
                 previous.put(slot, current.copy());
                 PSTEvents.LIVING_EQUIPMENT_CHANGE.post(new LivingEquipmentChangePSTEvent(player, slot, before, current));
             }

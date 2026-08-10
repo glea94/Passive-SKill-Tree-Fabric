@@ -10,6 +10,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public interface FloatFunction<T> {
@@ -17,7 +18,11 @@ public interface FloatFunction<T> {
 
     default String getDescriptionId() {
         ResourceLocation id = PSTRegistries.FLOAT_FUNCTIONS.get().getKey(getSerializer());
+<<<<<<< Updated upstream
         assert id != null;
+=======
+        Objects.requireNonNull(id);
+>>>>>>> Stashed changes
         return "value_provider.%s.%s".formatted(id.getNamespace(), id.getPath());
     }
 

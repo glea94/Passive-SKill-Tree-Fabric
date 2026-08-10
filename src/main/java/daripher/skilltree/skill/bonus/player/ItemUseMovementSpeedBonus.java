@@ -17,7 +17,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
@@ -141,7 +141,6 @@ public final class ItemUseMovementSpeedBonus implements SkillBonus<ItemUseMoveme
                 .setMenuInitFunc(() -> addPlayerMultiplierWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectMultiplier(Consumer<ItemUseMovementSpeedBonus> consumer, Double value) {
         setMultiplier(value.floatValue());
         consumer.accept(this.copy());
@@ -229,7 +228,7 @@ public final class ItemUseMovementSpeedBonus implements SkillBonus<ItemUseMoveme
 
         @Override
         public ItemUseMovementSpeedBonus deserialize(CompoundTag tag) {
-            float multiplier = tag.getFloat("multiplier");
+            float multiplier = tag.getFloatOr("multiplier", 0f);
             ItemUseMovementSpeedBonus bonus = new ItemUseMovementSpeedBonus(multiplier);
             bonus.playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
@@ -250,8 +249,9 @@ public final class ItemUseMovementSpeedBonus implements SkillBonus<ItemUseMoveme
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ItemUseMovementSpeedBonus deserialize(FriendlyByteBuf buf) {
+        public ItemUseMovementSpeedBonus deserialize(RegistryFriendlyByteBuf buf) {
             float multiplier = buf.readFloat();
             ItemUseMovementSpeedBonus bonus = new ItemUseMovementSpeedBonus(multiplier);
             bonus.playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
@@ -260,8 +260,9 @@ public final class ItemUseMovementSpeedBonus implements SkillBonus<ItemUseMoveme
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemUseMovementSpeedBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

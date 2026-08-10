@@ -3,7 +3,7 @@
   "bonuses": [
     {
       "type": "skilltree:attribute",
-      "attribute": "minecraft:generic.attack_damage",
+      "attribute": "minecraft:attack_damage",
       "id": "43425501-f9bb-4977-9389-dd8d285af602",
       "name": "Skill",
       "amount": 2.0,

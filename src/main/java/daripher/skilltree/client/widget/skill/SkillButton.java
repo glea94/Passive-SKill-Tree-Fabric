@@ -1,7 +1,10 @@
 package daripher.skilltree.client.widget.skill;
 
+<<<<<<< Updated upstream
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
+=======
+>>>>>>> Stashed changes
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.config.ClientConfig;
 import daripher.skilltree.skill.PassiveSkill;
@@ -9,11 +12,16 @@ import daripher.skilltree.skill.PassiveSkillTree;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.player.BrokenSkillBonus;
 import daripher.skilltree.skill.requirement.SkillRequirement;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+<<<<<<< Updated upstream
 import net.minecraft.client.gui.screens.Screen;
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -21,6 +29,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -43,18 +52,29 @@ public class SkillButton extends Button {
     public boolean hasBrokenBonuses;
 
     public SkillButton(Supplier<Float> animationFunc, float x, float y, PassiveSkill skill) {
-        super((int) x, (int) y, skill.getSkillSize(), skill.getSkillSize(), Component.empty(), b -> {
-        }, Supplier::get);
+        // Factual Fix 1.21.4: Super constructor requires x, y, width, height, message, pressAction, and narration
+        super((int) x, (int) y, skill.getSkillSize(), skill.getSkillSize(), Component.empty(), b -> {}, DEFAULT_NARRATION);
         this.x = x;
         this.y = y;
         this.skill = skill;
         this.animationFunction = animationFunc;
+        // Factual Fix 1.21.4: Use direct field assignment to completely avoid method overloading conflicts
         this.active = false;
         this.hasBrokenBonuses = skill.getBonuses().stream().anyMatch(bonus -> bonus instanceof BrokenSkillBonus);
     }
 
+    private static final int WHITE = 0xFFFFFFFF;
+
+    private static int argb(float r, float g, float b, float a) {
+        return ((int) (Mth.clamp(a, 0F, 1F) * 255) << 24)
+                | ((int) (Mth.clamp(r, 0F, 1F) * 255) << 16)
+                | ((int) (Mth.clamp(g, 0F, 1F) * 255) << 8)
+                | (int) (Mth.clamp(b, 0F, 1F) * 255);
+    }
+
     @Override
     public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+<<<<<<< Updated upstream
         RenderSystem.enableBlend();
         graphics.pose().pushPose();
         graphics.pose().translate(x, y, 0);
@@ -75,32 +95,62 @@ public class SkillButton extends Button {
         graphics.pose().translate(-width / 2d, -height / 2d, 0);
         renderIcon(graphics);
         graphics.pose().popPose();
+=======
+
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(x, y);
+
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+
+        if (hasBrokenBonuses) {
+            ResourceLocation brokenTexture = ResourceLocation.parse("skilltree:textures/icons/broken_skill.png");
+            graphics.blit(RenderPipelines.GUI_TEXTURED, brokenTexture, 0, 0, 0F, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth, currentHeight);
+            graphics.pose().popMatrix();
+            return;
+        }
+        renderFavoriteSkillHighlight(graphics);
+        renderBackground(graphics, WHITE);
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(currentWidth / 2f, currentHeight / 2f);
+        graphics.pose().scale(0.5F, 0.5F);
+        if (currentWidth == 32) {
+            graphics.pose().scale(0.75F, 0.75F);
+        }
+        graphics.pose().translate(-currentWidth / 2f, -currentHeight / 2f);
+        renderIcon(graphics, WHITE);
+        graphics.pose().popMatrix();
+>>>>>>> Stashed changes
         float animation = (Mth.sin(animationFunction.get() / 3F) + 1) / 2;
         float rb = searched ? 0.1f : 1f;
-        if (canLearn || searched) {
-            graphics.setColor(rb, 1F, rb, 1 - animation);
-        }
+        int darkeningColor = (canLearn || searched) ? argb(rb, 1F, rb, 1 - animation) : WHITE;
         if (!skillLearned) {
-            renderDarkening(graphics);
+            renderDarkening(graphics, darkeningColor);
         }
-        if (canLearn || searched) {
-            graphics.setColor(rb, 1F, rb, animation);
-        }
+        int frameColor = (canLearn || searched) ? argb(rb, 1F, rb, animation) : WHITE;
         if (skillLearned || canLearn || searched) {
-            renderFrame(graphics);
+            renderFrame(graphics, frameColor);
         }
+<<<<<<< Updated upstream
         if (canLearn || searched || selected) {
             graphics.setColor(1F, 1F, 1F, 1F);
         }
         graphics.pose().popPose();
         RenderSystem.disableBlend();
+=======
+        graphics.pose().popMatrix();
+>>>>>>> Stashed changes
     }
 
     private void renderFavoriteSkillHighlight(GuiGraphics graphics) {
         if (!ClientConfig.favorite_skills.contains(skill.getId())) {
             return;
         }
+<<<<<<< Updated upstream
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/favorite_skill.png");
+=======
+        ResourceLocation texture = ResourceLocation.parse("skilltree:textures/screen/favorite_skill.png");
+>>>>>>> Stashed changes
         int color;
         if (ClientConfig.favorite_color_is_rainbow) {
             color = Color.getHSBColor(animationFunction.get() / 240f, 1f, 1f).getRGB();
@@ -110,6 +160,7 @@ public class SkillButton extends Button {
         float r = ((color >> 16) & 0xFF) / 255f;
         float g = ((color >> 8) & 0xFF) / 255f;
         float b = ((color) & 0xFF) / 255f;
+<<<<<<< Updated upstream
         graphics.setColor(r, g, b, 1f);
         int size = (int) (width * 1.4);
         graphics.pose().pushPose();
@@ -141,10 +192,55 @@ public class SkillButton extends Button {
     private void renderBackground(GuiGraphics graphics) {
         ResourceLocation texture = skill.getFrameTexture();
         graphics.blit(texture, 0, 0, width, height, 0, 0, width, height, width * 3, height);
+=======
+        int tint = argb(r, g, b, 1f);
+
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+        int size = (int) (currentWidth * 1.4);
+
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(currentWidth / 2f, currentHeight / 2f);
+        float animation = 1 + 0.3f * (Mth.sin(animationFunction.get() / 3F) + 1) / 2;
+        graphics.pose().scale(animation, animation);
+        graphics.pose().rotate((float) Math.toRadians(animationFunction.get()));
+        graphics.pose().translate(-size / 2f, -size / 2f);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, size, size, 80, 80, 80, 80, tint);
+        graphics.pose().popMatrix();
+    }
+
+    private void renderFrame(GuiGraphics graphics, int color) {
+        ResourceLocation texture = skill.getFrameTexture();
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, currentWidth * 2, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth * 3, currentHeight, color);
+    }
+    private void renderDarkening(GuiGraphics graphics, int color) {
+        ResourceLocation texture = skill.getFrameTexture();
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, currentWidth, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth * 3, currentHeight, color);
+    }
+
+    private void renderIcon(GuiGraphics graphics, int color) {
+        ResourceLocation texture = skill.getIconTexture();
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth, currentHeight, color);
+    }
+
+    private void renderBackground(GuiGraphics graphics, int color) {
+        ResourceLocation texture = skill.getFrameTexture();
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth * 3, currentHeight, color);
+>>>>>>> Stashed changes
     }
 
     public void setButtonSize(int size) {
-        width = height = size;
+        // Factual Fix 1.21.4: Alter layout dimension states safely using encapsulated setters
+        this.setWidth(size);
+        this.setHeight(size);
     }
 
     public List<MutableComponent> getSkillTooltip(PassiveSkillTree skillTree) {
@@ -189,7 +285,14 @@ public class SkillButton extends Button {
     }
 
     private void addInfoTooltip(List<MutableComponent> tooltip) {
-        if (!Screen.hasAltDown()) {
+        // Fix 1.21.9 : Screen.hasAltDown() a disparu (le polling de modificateurs passe
+        // maintenant par les records d'input reçus dans les event handlers) ; comme cette
+        // méthode est appelée hors handler d'input (rendu de tooltip), on reproduit l'ancien
+        // comportement de Screen.hasAltDown() en interrogeant directement GLFW via InputConstants
+        // (même API que celle utilisée en interne par KeyMapping pour son propre polling).
+        boolean altDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_LEFT_ALT)
+                || InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_RIGHT_ALT);
+        if (!altDown) {
             return;
         }
         List<MutableComponent> info = new ArrayList<>();
@@ -262,7 +365,8 @@ public class SkillButton extends Button {
     }
 
     public void setActive() {
-        active = true;
+        // Factual Fix 1.21.4: Update interactive state via direct vanilla active field configuration
+        this.active = true;
     }
 
     private String getSkillId() {

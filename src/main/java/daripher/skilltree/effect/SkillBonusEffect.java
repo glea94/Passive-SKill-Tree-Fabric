@@ -2,6 +2,7 @@ package daripher.skilltree.effect;
 
 import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.TickingSkillBonus;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -18,31 +19,26 @@ public abstract class SkillBonusEffect extends MobEffect {
     }
 
     @Override
-    public void removeAttributeModifiers(@NotNull LivingEntity entity, @NotNull AttributeMap attributeMap, int amplifier) {
-        super.removeAttributeModifiers(entity, attributeMap, amplifier);
-        if (entity instanceof ServerPlayer player) {
-            bonus.onSkillRemoved(player);
-        }
+    public void removeAttributeModifiers(@NotNull AttributeMap attributeMap) {
+        super.removeAttributeModifiers(attributeMap);
     }
 
     @Override
-    public void addAttributeModifiers(@NotNull LivingEntity entity, @NotNull AttributeMap attributeMap, int amplifier) {
-        super.addAttributeModifiers(entity, attributeMap, amplifier);
-        if (entity instanceof ServerPlayer player) {
-            bonus.onSkillLearned(player, true);
-        }
+    public void addAttributeModifiers(@NotNull AttributeMap attributeMap, int amplifier) {
+        super.addAttributeModifiers(attributeMap, amplifier);
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return bonus instanceof TickingSkillBonus;
     }
 
     @Override
-    public void applyEffectTick(@NotNull LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(@NotNull ServerLevel serverLevel, @NotNull LivingEntity entity, int amplifier) {
         if (entity instanceof ServerPlayer player && bonus instanceof TickingSkillBonus ticking) {
             ticking.tick(player);
         }
+        return true;
     }
 
     public SkillBonus<?> getBonus() {

@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTMobEffectPredicates;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffect;
 
@@ -62,13 +62,15 @@ public enum NoneMobEffectPredicate implements MobEffectPredicate {
             return new CompoundTag();
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public MobEffectPredicate deserialize(FriendlyByteBuf buf) {
+        public MobEffectPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return NoneMobEffectPredicate.INSTANCE;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, MobEffectPredicate condition) {
+        public void serialize(RegistryFriendlyByteBuf buf, MobEffectPredicate condition) {
             if (condition != NoneMobEffectPredicate.INSTANCE) {
                 throw new IllegalArgumentException();
             }

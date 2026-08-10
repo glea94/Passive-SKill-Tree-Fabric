@@ -7,14 +7,15 @@ import daripher.skilltree.data.serializers.SerializationHelper;
 import daripher.skilltree.init.predicate.PSTItemPredicates;
 import daripher.skilltree.network.NetworkHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -41,8 +42,16 @@ public final class PotionStackPredicate implements ItemStackPredicate {
     }
 
     public static boolean hasEffects(ItemStack stack, MobEffectCategory category) {
-        return PotionUtils.getAllEffects(stack.getOrCreateTag()).stream().map(MobEffectInstance::getEffect)
-                .anyMatch(effect -> effect.getCategory() == category);
+        PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
+        if (contents == null) {
+            return false;
+        }
+        for (MobEffectInstance instance : contents.getAllEffects()) {
+            if (instance.getEffect().value().getCategory() == category) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -83,7 +92,6 @@ public final class PotionStackPredicate implements ItemStackPredicate {
         public Component getFormattedName() {
             return Component.literal(getName().substring(0, 1).toUpperCase(Locale.ROOT) + getName().substring(1));
         }
-
         public static Type byName(String name) {
             for (Type type : values()) {
                 if (type.name.equals(name)) {
@@ -104,7 +112,7 @@ public final class PotionStackPredicate implements ItemStackPredicate {
         editor.addLabel(0, 0, "Type", ChatFormatting.GREEN);
         editor.increaseHeight(19);
         editor.addSelection(0, 0, 190, 1, type).setNameGetter(PotionStackPredicate.Type::getFormattedName)
-                .setResponder(type -> selectPotionType(consumer, type));
+                .setResponder(potionType -> selectPotionType(consumer, potionType));
         editor.increaseHeight(29);
     }
 
@@ -146,13 +154,15 @@ public final class PotionStackPredicate implements ItemStackPredicate {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ItemStackPredicate deserialize(FriendlyByteBuf buf) {
+        public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new PotionStackPredicate(NetworkHelper.readEnum(buf, Type.class));
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, ItemStackPredicate condition) {
+        public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof PotionStackPredicate aCondition)) {
                 throw new IllegalArgumentException();
             }

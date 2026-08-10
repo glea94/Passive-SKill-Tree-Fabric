@@ -10,7 +10,7 @@ import daripher.skilltree.network.NetworkHelper;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.player.OutgoingDamageBonus;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -82,12 +82,11 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
 
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<EquipmentBonus> consumer) {
-        skillBonus.addEditorWidgets(editor, skillBonus -> {
-            setSkillBonus(skillBonus);
+        skillBonus.addEditorWidgets(editor, bonus -> {
+            setSkillBonus(bonus);
             consumer.accept(this.copy());
         });
     }
-
     public SkillBonus<?> getSkillBonus() {
         return skillBonus;
     }
@@ -105,7 +104,6 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
     public String toString() {
         return "EquipmentBonus[" + "skillBonus=" + skillBonus + ']';
     }
-
 
     public static class Serializer implements ItemBonus.Serializer {
         @Override
@@ -129,9 +127,15 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
 
         @Override
         public ItemBonus<?> deserialize(CompoundTag tag) {
+<<<<<<< Updated upstream
             CompoundTag skillBonusTag = tag.getCompound("skill_bonus");
             String type = skillBonusTag.getString("type");
             ResourceLocation serializerId = new ResourceLocation(type);
+=======
+            CompoundTag skillBonusTag = tag.getCompound("skill_bonus").orElseThrow();
+            String type = skillBonusTag.getString("type").orElseThrow();
+            ResourceLocation serializerId = ResourceLocation.parse(type);
+>>>>>>> Stashed changes
             SkillBonus.Serializer serializer = PSTRegistries.SKILL_BONUSES.get().getValue(serializerId);
             Objects.requireNonNull(serializer, "Unknown skill bonus: " + serializerId);
             SkillBonus<?> skillBonus = serializer.deserialize(skillBonusTag);
@@ -154,13 +158,15 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ItemBonus<?> deserialize(FriendlyByteBuf buf) {
+        public ItemBonus<?> deserialize(RegistryFriendlyByteBuf buf) {
             return new EquipmentBonus(NetworkHelper.readSkillBonus(buf));
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, ItemBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, ItemBonus<?> bonus) {
             if (!(bonus instanceof EquipmentBonus aBonus)) {
                 throw new IllegalArgumentException();
             }
@@ -169,7 +175,7 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
 
         @Override
         public ItemBonus<?> createDefaultInstance() {
-            return new EquipmentBonus(new OutgoingDamageBonus(0.1f, AttributeModifier.Operation.MULTIPLY_BASE));
+            return new EquipmentBonus(new OutgoingDamageBonus(0.1f, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         }
     }
 }

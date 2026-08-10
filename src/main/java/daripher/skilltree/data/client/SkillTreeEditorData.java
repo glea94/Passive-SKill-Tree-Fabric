@@ -93,15 +93,15 @@ public class SkillTreeEditorData {
             SkillTreeMod.LOGGER.error(errorMessage, exception);
         }
     }
-
     private static void generatePackMcmetaFile(File file) {
+        // Factual Fix 1.21.4: Update pack_format token entry to 61 to match the modern engine constraints
         String fileContents = """
                 {
                   "pack": {
                     "description": {
                       "text": "PST editor data"
                     },
-                    "pack_format": 15
+                    "pack_format": 61
                   }
                 }
                 """;
@@ -141,7 +141,7 @@ public class SkillTreeEditorData {
         try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
             SkillTreesReloader.GSON.toJson(skillTree, writer);
         } catch (JsonIOException | IOException exception) {
-            Minecraft.getInstance().setScreen(null);
+            Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreen(null));
             sendChatMessage("Can't save editor skill tree " + skillTree.getId(), ChatFormatting.DARK_RED);
             sendChatMessage(exception.getMessage(), ChatFormatting.DARK_RED);
         }
@@ -167,7 +167,7 @@ public class SkillTreeEditorData {
         try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
             SkillsReloader.GSON.toJson(skill, writer);
         } catch (JsonIOException | IOException exception) {
-            Minecraft.getInstance().setScreen(null);
+            Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreen(null));
             sendChatMessage("Can't save editor skill " + skill.getId(), ChatFormatting.DARK_RED);
             sendChatMessage(exception.getMessage(), ChatFormatting.DARK_RED);
         }
@@ -188,7 +188,6 @@ public class SkillTreeEditorData {
         }
         EDITOR_PASSIVE_SKILLS.put(skillId, skill);
     }
-
     public static void deleteEditorSkill(PassiveSkill skill) {
         try {
             Files.delete(getSkillSaveFile(skill.getId()).toPath());
@@ -236,7 +235,8 @@ public class SkillTreeEditorData {
             for (ChatFormatting style : styles) {
                 component.withStyle(style);
             }
-            player.sendSystemMessage(component);
+            Component chatMessage = component;
+            player.displayClientMessage(chatMessage, false);
         }
     }
 
@@ -268,7 +268,11 @@ public class SkillTreeEditorData {
                     continue;
                 }
                 String skillTreeName = skillTreeFileName.substring(0, skillTreeFileName.lastIndexOf('.'));
+<<<<<<< Updated upstream
                 EDITOR_TREES_IDS.add(new ResourceLocation(namespace, skillTreeName));
+=======
+                EDITOR_TREES_IDS.add(ResourceLocation.fromNamespaceAndPath(namespace, skillTreeName));
+>>>>>>> Stashed changes
             }
         }
         loadedIDs = true;

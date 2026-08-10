@@ -20,9 +20,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -51,7 +51,10 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
     private final LocalPlayer player;
 
     public SkillTreeWidgets(LocalPlayer player, SkillButtons skills, PassiveSkillTree skillTree) {
+        // Factual Fix 1.21.4: AbstractWidget constructor now strictly takes width, height, message
         super(0, 0, 0, 0);
+        this.setX(0);
+        this.setY(0);
         this.skills = skills;
         this.skillTree = skillTree;
         this.player = player;
@@ -59,7 +62,11 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
     }
 
     public void init() {
-        progressBar = new ProgressBar(width / 2 - 235 / 2, height - 17, b -> toggleProgressDisplayMode());
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+
+        // Factual Fix 1.21.4: Replace legacy width/height field checks with encapsulated getters
+        progressBar = new ProgressBar(currentWidth / 2 - 235 / 2, currentHeight - 17, b -> toggleProgressDisplayMode());
         progressBar.showProgressInNumbers = showProgressInNumbers;
         addWidget(progressBar);
         addTopWidgets();
@@ -67,7 +74,7 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
             progressBar.visible = false;
             buyButton.visible = false;
         }
-        statsInfo = new ScrollableComponentList(48, height - 60);
+        statsInfo = new ScrollableComponentList(48, currentHeight - 60);
         statsInfo.setComponents(getMergedSkillBonusesTooltips());
         addWidget(statsInfo);
         startingPoints.clear();
@@ -83,27 +90,29 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
         Style pointsStyle = Style.EMPTY.withColor(0xFCE266);
         Component pointsLeft = Component.literal("" + skillPoints).withStyle(pointsStyle);
         pointsInfo.setMessage(Component.translatable("widget.skill_points_left", pointsLeft));
-        statsInfo.setX(width - statsInfo.getWidth() - 10);
+
+        // Factual Fix 1.21.4: Replace layout fields width/height with getWidth()/getHeight() accessors
+        statsInfo.setX(this.getWidth() - statsInfo.getWidth() - 10);
         statsInfo.visible = showStats;
         super.renderWidget(graphics, mouseX, mouseY, partialTick);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        AbstractWidget widget = getWidgetAt(mouseX, mouseY);
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
+        AbstractWidget widget = getWidgetAt(mouseButtonEvent.x(), mouseButtonEvent.y());
         if (widget != null) {
             widget.setFocused(true);
-            return widget.mouseClicked(mouseX, mouseY, button);
+            return widget.mouseClicked(mouseButtonEvent, doubleClick);
         }
-        SkillButton skillButton = skills.getWidgetAt(mouseX, mouseY);
+        SkillButton skillButton = skills.getWidgetAt(mouseButtonEvent.x(), mouseButtonEvent.y());
         if (skillButton == null) {
             return false;
         }
-        if (button == 0) {
+        if (mouseButtonEvent.button() == 0) {
             playButtonSound();
             skillButtonPressed(skillButton);
             return true;
-        } else if (button == 1) {
+        } else if (mouseButtonEvent.button() == 1) {
             ClientConfig.toggleFavoriteSkill(skillButton.skill);
             playButtonSound();
             return true;
@@ -111,6 +120,10 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
         return false;
     }
 
+    private void playButtonSound() {
+        // Factual Fix 1.21.4: Use non-spatial fixed volume sound instantiations for direct UI feedback pipelines
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+    }
     private void updateSearch() {
         if (search.isEmpty()) {
             for (SkillButton button : skills.getWidgets()) {
@@ -128,12 +141,6 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
             }
             button.searched = false;
         }
-    }
-
-    private void playButtonSound() {
-        SoundManager soundManager = Minecraft.getInstance().getSoundManager();
-        SimpleSoundInstance sound = SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1f);
-        soundManager.play(sound);
     }
 
     private void highlightSkills() {
@@ -188,7 +195,11 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
         buttonWidth = Math.max(buttonWidth, font.width(cancelButtonText));
         buttonWidth += 20;
         int buttonsY = 8;
-        Button showStatsButton = new Button(width - buttonWidth - 8, buttonsY, buttonWidth, 14, showStatsButtonText);
+
+        // Factual Fix 1.21.4: Replace legacy field 'width' access with standard encapsulated getWidth()
+        int currentWidth = this.getWidth();
+
+        Button showStatsButton = new Button(currentWidth - buttonWidth - 8, buttonsY, buttonWidth, 14, showStatsButtonText);
         showStatsButton.setPressFunc(b -> showStats ^= true);
         addWidget(showStatsButton);
         TextField searchField = new TextField(8, buttonsY, buttonWidth, 14, search);
@@ -196,22 +207,27 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
             search = s;
             updateSearch();
         });
-        buyButton = new Button(width / 2 - 8 - buttonWidth, buttonsY, buttonWidth, 14, buyButtonText);
+        buyButton = new Button(currentWidth / 2 - 8 - buttonWidth, buttonsY, buttonWidth, 14, buyButtonText);
         buyButton.setPressFunc(b -> buySkillPoint());
         addWidget(buyButton);
-        pointsInfo = new Label(width / 2 + 8, buttonsY, buttonWidth, 14, Component.empty());
+        pointsInfo = new Label(currentWidth / 2 + 8, buttonsY, buttonWidth, 14, Component.empty());
         if (!ServerConfig.enable_exp_exchange) {
-            pointsInfo.setX(width / 2 - buttonWidth / 2);
+            pointsInfo.setX(currentWidth / 2 - buttonWidth / 2);
         }
         addWidget(pointsInfo);
         buttonsY += 20;
-        Button confirmButton = new Button(width / 2 - 8 - buttonWidth, buttonsY, buttonWidth, 14, confirmButtonText);
+        Button confirmButton = new Button(currentWidth / 2 - 8 - buttonWidth, buttonsY, buttonWidth, 14, confirmButtonText);
         confirmButton.setPressFunc(b -> confirmLearnSkills());
         addWidget(confirmButton);
-        Button cancelButton = new Button(width / 2 + 8, buttonsY, buttonWidth, 14, cancelButtonText);
+        Button cancelButton = new Button(currentWidth / 2 + 8, buttonsY, buttonWidth, 14, cancelButtonText);
         cancelButton.setPressFunc(b -> cancelLearnSkills());
         addWidget(cancelButton);
-        confirmButton.active = cancelButton.active = !newlyLearnedSkills.isEmpty();
+
+        // Fix 1.21.5 : Button.setActive(boolean) supprimé, le champ 'active' est désormais accessible directement
+        // (pattern déjà utilisé et validé ailleurs dans le projet : SkillButton.java, SkillMirrorer.java, SkillSelector.java)
+        boolean hasNewlyLearned = !newlyLearnedSkills.isEmpty();
+        confirmButton.active = hasNewlyLearned;
+        cancelButton.active = hasNewlyLearned;
     }
 
     private static void addToMergeList(SkillBonus<?> b, List<SkillBonus<?>> bonuses) {
@@ -223,7 +239,6 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
             bonuses.add(b);
         }
     }
-
     private boolean canLearnSkill(PassiveSkill skill) {
         if (!player.isCreative()) {
             for (SkillRequirement<?> requirement : skill.getRequirements()) {
@@ -248,8 +263,17 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
     }
 
     private void confirmLearnSkills() {
+<<<<<<< Updated upstream
         newlyLearnedSkills.forEach(id -> learnSkill(skills.getWidgetById(id).skill));
+=======
+        // Fix : newlyLearnedSkills doit être vidé AVANT de déclencher les rebuilds via learnSkill(),
+        // car rebuildWidgets() (minecraft.execute) s'exécute de façon synchrone (même thread) et
+        // recréait le bouton confirm comme encore actif tant que la liste n'était pas encore vidée
+        // (le clear() se produisait après la boucle, donc trop tard pour le premier rebuild)
+        List<ResourceLocation> skillsToLearn = new ArrayList<>(newlyLearnedSkills);
+>>>>>>> Stashed changes
         newlyLearnedSkills.clear();
+        skillsToLearn.forEach(id -> learnSkill(skills.getWidgetById(id).skill));
     }
 
     private void cancelLearnSkills() {
@@ -316,11 +340,13 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
 
     protected void updateBuyPointButton() {
         int currentLevel = getCurrentLevel();
-        buyButton.active = false;
+
         if (isMaxLevel(currentLevel)) {
+            buyButton.active = false;
             return;
         }
         int pointCost = ServerConfig.getSkillPointCost(currentLevel);
+        // Fix 1.21.5 : Button.setActive(boolean) supprimé, assignation directe du champ 'active'
         buyButton.active = ExpHelper.getPlayerExp(player) >= pointCost;
     }
 

@@ -13,17 +13,23 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTItemBonuses {
+<<<<<<< Updated upstream
     public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "item_bonuses");
+=======
+    public static final ResourceLocation REGISTRY_ID = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "item_bonuses");
+>>>>>>> Stashed changes
     public static final DeferredRegister<ItemBonus.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<ItemBonus.Serializer> SKILL_BONUS = REGISTRY.register("skill_bonus", EquipmentBonus.Serializer::new);
     public static final RegistryObject<ItemBonus.Serializer> ITEM_BONUS_LIST = REGISTRY.register("item_bonus_list", GroupedItemBonus.Serializer::new);
 
-
     @SuppressWarnings("rawtypes")
     public static List<ItemBonus> bonusList() {
-        return PSTRegistries.ITEM_BONUSES.get().getValues().stream().map(ItemBonus.Serializer::createDefaultInstance)
-                .map(ItemBonus.class::cast).toList();
+        // Alignment 1.21.4: Streams data structures through custom registry endpoints safely
+        return PSTRegistries.ITEM_BONUSES.get().getValues().stream()
+                .map(ItemBonus.Serializer::createDefaultInstance)
+                .map(ItemBonus.class::cast)
+                .toList();
     }
 
     public static String getName(ItemBonus<?> itemBonus) {

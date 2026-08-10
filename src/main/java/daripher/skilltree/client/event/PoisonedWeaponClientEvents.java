@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-/** Portage Fabric : logique identique, seule la souscription change. */
 public class PoisonedWeaponClientEvents {
     public static void register() {
         PSTEvents.ITEM_TOOLTIP.register(PoisonedWeaponClientEvents::addPoisonedWeaponTooltip);
@@ -42,7 +41,8 @@ public class PoisonedWeaponClientEvents {
         Style style = TooltipHelper.getSkillBonusStyle(true);
         Component effectNameTooltip = TooltipHelper.getEffectTooltip(mobEffectInstance);
         MutableComponent effectTooltip;
-        if (!mobEffectInstance.getEffect().isInstantenous()) {
+
+        if (!mobEffectInstance.getEffect().value().isInstantenous()) {
             int duration = mobEffectInstance.getDuration();
             Component durationTooltip = getDurationTooltip(duration);
             effectTooltip = Component.translatable("skilltree.poisoned_weapon.effect", effectNameTooltip, durationTooltip);

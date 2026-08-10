@@ -5,10 +5,9 @@ import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTDamagePredicates;
 import daripher.skilltree.init.PSTTags;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -35,8 +34,7 @@ public record MagicDamageCondition() implements DamageCondition {
 
     @Override
     public DamageSource createDamageSource(Player player) {
-        Registry<DamageType> damageTypes = player.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
-        Holder.Reference<DamageType> damageType = damageTypes.getHolderOrThrow(DamageTypes.MAGIC);
+        Holder<DamageType> damageType = player.level().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.MAGIC);
         return new DamageSource(damageType, null, player);
     }
 
@@ -77,12 +75,12 @@ public record MagicDamageCondition() implements DamageCondition {
         }
 
         @Override
-        public DamageCondition deserialize(FriendlyByteBuf buf) {
+        public DamageCondition deserialize(RegistryFriendlyByteBuf buf) {
             return new MagicDamageCondition();
         }
 
         @Override
-        public void serialize(FriendlyByteBuf buf, DamageCondition condition) {
+        public void serialize(RegistryFriendlyByteBuf buf, DamageCondition condition) {
             if (!(condition instanceof MagicDamageCondition)) {
                 throw new IllegalArgumentException();
             }

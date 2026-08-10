@@ -11,7 +11,7 @@ import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -97,7 +97,11 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
     public static class Serializer implements SkillRequirement.Serializer {
         @Override
         public SkillRequirement<?> deserialize(JsonObject json) throws JsonParseException {
+<<<<<<< Updated upstream
             ResourceLocation id = new ResourceLocation(json.get("skill_id").getAsString());
+=======
+            ResourceLocation id = ResourceLocation.parse(json.get("skill_id").getAsString());
+>>>>>>> Stashed changes
             return new LearnedSkillRequirement(id);
         }
 
@@ -110,7 +114,12 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
 
         @Override
         public SkillRequirement<?> deserialize(CompoundTag tag) {
+<<<<<<< Updated upstream
             ResourceLocation id = new ResourceLocation(tag.getString("skill_id"));
+=======
+            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            ResourceLocation id = ResourceLocation.parse(tag.getString("skill_id").orElse(""));
+>>>>>>> Stashed changes
             return new LearnedSkillRequirement(id);
         }
 
@@ -123,14 +132,21 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
+<<<<<<< Updated upstream
         public SkillRequirement<?> deserialize(FriendlyByteBuf buf) {
             ResourceLocation id = new ResourceLocation(buf.readUtf());
+=======
+        public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
+            ResourceLocation id = ResourceLocation.parse(buf.readUtf());
+>>>>>>> Stashed changes
             return new LearnedSkillRequirement(id);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillRequirement<?> requirement) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillRequirement<?> requirement) {
             if (requirement instanceof LearnedSkillRequirement aRequirement) {
                 buf.writeUtf(aRequirement.skillId.toString());
             }
@@ -138,7 +154,11 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
 
         @Override
         public SkillRequirement<?> createDefaultInstance() {
+<<<<<<< Updated upstream
             return new LearnedSkillRequirement(new ResourceLocation("skilltree:hunter_1"));
+=======
+            return new LearnedSkillRequirement(ResourceLocation.parse("skilltree:hunter_1"));
+>>>>>>> Stashed changes
         }
     }
 }

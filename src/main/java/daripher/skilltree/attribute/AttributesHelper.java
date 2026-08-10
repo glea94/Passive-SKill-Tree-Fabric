@@ -1,6 +1,10 @@
 package daripher.skilltree.attribute;
 
 import daripher.skilltree.SkillTreeMod;
+<<<<<<< Updated upstream
+=======
+import net.minecraft.core.Holder;
+>>>>>>> Stashed changes
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -18,7 +22,7 @@ public class AttributesHelper {
             return List.of();
         }
         AttributeSupplier attributeSupplier = DefaultAttributes.getSupplier(EntityType.PLAYER);
-        return com.google.common.collect.Lists.newArrayList(BuiltInRegistries.ATTRIBUTE).stream().filter(attributeSupplier::hasAttribute).toList();
+        return BuiltInRegistries.ATTRIBUTE.listElements().filter(attributeSupplier::hasAttribute).map(Holder.Reference::value).toList();
     }
 
     public static String getName(Attribute attribute) {

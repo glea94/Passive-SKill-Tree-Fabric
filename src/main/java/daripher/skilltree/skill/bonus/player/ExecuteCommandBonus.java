@@ -15,18 +15,21 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+<<<<<<< Updated upstream
+=======
+import net.minecraft.server.level.ServerPlayer;
+>>>>>>> Stashed changes
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -49,7 +52,7 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
         if (command.isEmpty()) {
             return;
         }
-        MinecraftServer server = player.getServer();
+        MinecraftServer server = player.level().getServer();
         if (server == null) {
             return;
         }
@@ -123,7 +126,7 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
         editor.addLabel(0, 0, "Event", ChatFormatting.GOLD);
         editor.increaseHeight(19);
         editor.addSelectionMenu(0, 0, 200, eventListener)
-                .setResponder(eventListener -> selectEventListener(editor, consumer, eventListener))
+                .setResponder(listener -> selectEventListener(editor, consumer, listener))
                 .setMenuInitFunc(() -> addEventListenerWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
@@ -132,7 +135,6 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
         setDescription(text);
         consumer.accept(this.copy());
     }
-
     private void selectCommand(Consumer<EventListenerBonus<ExecuteCommandBonus>> consumer, String text) {
         setCommand(text);
         consumer.accept(this.copy());
@@ -164,7 +166,11 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
     }
 
     private static CommandSourceStack createCommandSourceStack(Player player, ServerLevel level) {
+<<<<<<< Updated upstream
         return new CommandSourceStack(player, player.position(), player.getRotationVector(), level, 4, player.getName()
+=======
+        return new CommandSourceStack(((ServerPlayer) player).commandSource(), player.position(), player.getRotationVector(), level, 4, player.getName()
+>>>>>>> Stashed changes
                 .getString(), player.getDisplayName(), level.getServer(), player);
     }
 
@@ -189,8 +195,8 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
 
         @Override
         public ExecuteCommandBonus deserialize(CompoundTag tag) {
-            String command = tag.getString("command");
-            String description = tag.contains("description") ? tag.getString("description") : "";
+            String command = tag.getStringOr("command", "");
+            String description = tag.getStringOr("description", "");
             SkillEventListener eventListener;
             if (!tag.contains("event_listener")) {
                 eventListener = new SkillLearnedEventListener();
@@ -212,16 +218,18 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ExecuteCommandBonus deserialize(FriendlyByteBuf buf) {
+        public ExecuteCommandBonus deserialize(RegistryFriendlyByteBuf buf) {
             String command = buf.readUtf();
             String description = buf.readUtf();
             SkillEventListener eventListener = NetworkHelper.readEventListener(buf);
             return new ExecuteCommandBonus(command, description, eventListener);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ExecuteCommandBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

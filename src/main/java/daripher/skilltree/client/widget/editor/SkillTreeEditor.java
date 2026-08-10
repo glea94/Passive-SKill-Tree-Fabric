@@ -34,9 +34,14 @@ import daripher.skilltree.skill.requirement.StatRequirement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+<<<<<<< Updated upstream
+=======
+import net.minecraft.network.chat.Style;
+>>>>>>> Stashed changes
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.StatType;
 import net.minecraft.world.effect.MobEffect;
@@ -61,6 +66,7 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     private @NotNull EditorMenu selectedMenu = new MainEditorMenu(this);
 
     public SkillTreeEditor(SkillButtons skillButtons) {
+        // Factual Fix 1.21.4: WidgetGroup constructor strictly takes x, y, width, height
         super(0, 0, 0, 0);
         this.skillButtons = skillButtons;
         this.skillSelector = new SkillSelector(this, skillButtons);
@@ -78,19 +84,20 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         skillMirrorer.render(graphics, mouseX, mouseY, partialTick);
         skillDragger.render(graphics, mouseX, mouseY, partialTick);
-        if (height > 0) {
-            graphics.fill(getX(), getY(), getX() + width, getY() + height, 0xDD000000);
-        }
-        super.render(graphics, mouseX, mouseY, partialTick);
-    }
 
+        // Factual Fix 1.21.4: Replaced raw field access with encapsulated dimension getters
+        if (this.getHeight() > 0) {
+            graphics.fill(getX(), getY(), getX() + this.getWidth(), getY() + this.getHeight(), 0xDD000000);
+        }
+        super.renderWidget(graphics, mouseX, mouseY, partialTick);
+    }
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode != GLFW.GLFW_KEY_ESCAPE) {
-            return super.keyPressed(keyCode, scanCode, modifiers);
+    public boolean keyPressed(KeyEvent keyEvent) {
+        if (keyEvent.key() != GLFW.GLFW_KEY_ESCAPE) {
+            return super.keyPressed(keyEvent);
         }
         if (selectedMenu.previousMenu != null) {
             selectMenu(selectedMenu.previousMenu);
@@ -100,7 +107,7 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
             skillSelector.clearSelection();
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(keyEvent);
     }
 
     public void selectMenu(EditorMenu menu) {
@@ -115,7 +122,8 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     }
 
     public Button addButton(int x, int y, int width, int height, Component message) {
-        return addWidget(new Button(getWidgetsX(x), getWidgetsY(y), width, height, message));
+        // Factual Fix 1.21.4: Call your corrected custom button wrapper class directly without extraneous lambda parameters
+        return addWidget(new daripher.skilltree.client.widget.Button(getWidgetsX(x), getWidgetsY(y), width, height, message));
     }
 
     public ConfirmationButton addConfirmationButton(int x, int y, int width, int height, String message, String confirmationMessage) {
@@ -150,10 +158,15 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
 
     public TextureSelectionMenuButton addTextureSelectionMenu(int x, int y, int width, ResourceLocation currentValue, String folder) {
         Collection<ResourceLocation> values = SkillTexturesData.getTexturesInFolder(folder);
+<<<<<<< Updated upstream
         x = getWidgetsX(x);
         y = getWidgetsY(y);
+=======
+        int finalX = getWidgetsX(x);
+        int finalY = getWidgetsY(y);
+>>>>>>> Stashed changes
         String message = currentValue.toString();
-        TextureSelectionMenuButton button = (TextureSelectionMenuButton) new TextureSelectionMenuButton(this, x, y, width, message, folder, values).setValue(currentValue)
+        TextureSelectionMenuButton button = (TextureSelectionMenuButton) new TextureSelectionMenuButton(this, finalX, finalY, width, message, folder, values).setValue(currentValue)
                 .setElementNameGetter(TooltipHelper::getTextureName);
         return addWidget(button);
     }
@@ -179,18 +192,29 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     }
 
     private Collection<StatRequirement> getDefaultRequirementInstances() {
-        return com.google.common.collect.Lists.newArrayList(BuiltInRegistries.STAT_TYPE).stream().map(SkillTreeEditor::createDefaultRequirement).filter(Objects::nonNull)
+        return BuiltInRegistries.STAT_TYPE.stream()
+                .map(SkillTreeEditor::createDefaultRequirement)
+                .filter(Objects::nonNull)
                 .toList();
     }
 
     private static @Nullable <T> StatRequirement createDefaultRequirement(StatType<T> statType) {
         ResourceLocation statId = BuiltInRegistries.STAT_TYPE.getKey(statType);
         Registry<T> statRegistry = statType.getRegistry();
-        T stat = statRegistry.byId(0);
+
+        T stat = statRegistry.stream().findFirst().orElse(null);
         if (stat == null) {
             return null;
         }
+<<<<<<< Updated upstream
         return new StatRequirement(statId, statRegistry.getKey(stat), 1);
+=======
+        ResourceLocation entryId = statRegistry.getKey(stat);
+        if (entryId == null) {
+            return null;
+        }
+        return new StatRequirement(statId, entryId, 1);
+>>>>>>> Stashed changes
     }
 
     @SuppressWarnings("rawtypes")
@@ -238,7 +262,8 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     }
 
     public SelectionMenuButton<MobEffect> addSelectionMenu(int x, int y, int width, MobEffect defaultValue) {
-        Collection<MobEffect> values = com.google.common.collect.Lists.newArrayList(BuiltInRegistries.MOB_EFFECT);
+        // Aligned 1.21.4: Direct type-safe stream gathering from registries
+        Collection<MobEffect> values = BuiltInRegistries.MOB_EFFECT.stream().toList();
         return addSelectionMenu(x, y, width, values).setValue(defaultValue)
                 .setElementNameGetter(e -> Component.literal(e.getDescriptionId()));
     }
@@ -269,7 +294,6 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     public <T> SelectionMenuButton<T> addSelectionMenu(int x, int y, int width, Collection<T> values) {
         return addWidget(new SelectionMenuButton<>(this, getWidgetsX(x), getWidgetsY(y), width, values));
     }
-
     public <T> SelectionList<T> addSelection(int x, int y, int width, T defaultValue, Collection<T> values, int maxDisplayed) {
         SelectionList<T> widget = new TextSelectionList<>(getWidgetsX(x), getWidgetsY(y), width, 14, values).setRows(maxDisplayed)
                 .selectElement(defaultValue);
@@ -314,11 +338,11 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     }
 
     public int getWidgetsY(int y) {
-        return getHeight() + y;
+        return this.getHeight() + y;
     }
 
     public int getWidgetsX(int x) {
-        return getX() + 5 + x;
+        return this.getX() + 5 + x;
     }
 
     public float getScrollX() {
@@ -334,7 +358,7 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     }
 
     public void increaseHeight(int delta) {
-        ((AbstractWidgetAccessor) (Object) this).setHeight(getHeight() + delta);
+        ((AbstractWidgetAccessor) (Object) this).setHeight(this.getHeight() + delta);
     }
 
     public PassiveSkillTree getSkillTree() {
@@ -436,5 +460,9 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
 
     public SkillDragger getSkillDragger() {
         return skillDragger;
+    }
+
+    public SkillSelector getSelector() {
+        return skillSelector;
     }
 }

@@ -1,5 +1,6 @@
 package daripher.skilltree.init.client;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.screen.SkillTreeScreen;
 import daripher.skilltree.client.screen.SkillTreeSelectionScreen;
@@ -21,7 +22,12 @@ import org.lwjgl.glfw.GLFW;
  * Fabric pour la détection d'appui sur une touche, remplace l'event par touche individuelle).
  */
 public class PSTKeybinds {
+<<<<<<< Updated upstream
     private static final KeyMapping SKILL_TREE_KEY = new KeyMapping("key.display_skill_tree", GLFW.GLFW_KEY_O, "key.categories." + SkillTreeMod.MOD_ID);
+=======
+    private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "main"));
+    private static final KeyMapping SKILL_TREE_KEY = new KeyMapping("key.display_skill_tree", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, CATEGORY);
+>>>>>>> Stashed changes
 
     public static void register() {
         KeyBindingHelper.registerKeyBinding(SKILL_TREE_KEY);

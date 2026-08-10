@@ -16,7 +16,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -94,7 +94,6 @@ public final class CritDamageBonus implements SkillBonus<CritDamageBonus> {
         }
         return Objects.equals(otherBonus.targetCondition, this.targetCondition);
     }
-
     @Override
     public SkillBonus<CritDamageBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof CritDamageBonus otherBonus)) {
@@ -111,7 +110,7 @@ public final class CritDamageBonus implements SkillBonus<CritDamageBonus> {
 
     @Override
     public MutableComponent getSimpleTooltip() {
-        AttributeModifier.Operation operation = AttributeModifier.Operation.MULTIPLY_BASE;
+        AttributeModifier.Operation operation = AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
         MutableComponent tooltip;
         if (damageCondition == NoneDamageCondition.INSTANCE) {
             tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), amount, operation);
@@ -171,7 +170,6 @@ public final class CritDamageBonus implements SkillBonus<CritDamageBonus> {
             consumer.accept(this.copy());
         });
     }
-
     private void selectTargetMultiplier(SkillTreeEditor editor, Consumer<CritDamageBonus> consumer, LivingMultiplier multiplier) {
         setEnemyMultiplier(multiplier);
         consumer.accept(this.copy());
@@ -241,7 +239,6 @@ public final class CritDamageBonus implements SkillBonus<CritDamageBonus> {
         this.targetCondition = condition;
         return this;
     }
-
     public SkillBonus<?> setPlayerMultiplier(LivingMultiplier multiplier) {
         this.playerMultiplier = multiplier;
         return this;
@@ -284,7 +281,7 @@ public final class CritDamageBonus implements SkillBonus<CritDamageBonus> {
 
         @Override
         public CritDamageBonus deserialize(CompoundTag tag) {
-            float amount = tag.getFloat("amount");
+            float amount = tag.getFloatOr("amount", 0f);
             CritDamageBonus bonus = new CritDamageBonus(amount);
             bonus.playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             bonus.targetMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "enemy_multiplier");
@@ -302,15 +299,17 @@ public final class CritDamageBonus implements SkillBonus<CritDamageBonus> {
             CompoundTag tag = new CompoundTag();
             tag.putFloat("amount", aBonus.amount);
             SerializationHelper.serializeLivingMultiplier(tag, aBonus.playerMultiplier, "player_multiplier");
-            SerializationHelper.serializeLivingMultiplier(tag, aBonus.playerMultiplier, "enemy_multiplier");
+            // Factual Fix: Corrected typo where playerMultiplier was serialized into enemy_multiplier
+            SerializationHelper.serializeLivingMultiplier(tag, aBonus.targetMultiplier, "enemy_multiplier");
             SerializationHelper.serializeLivingCondition(tag, aBonus.playerCondition, "player_condition");
             SerializationHelper.serializeDamageCondition(tag, aBonus.damageCondition);
             SerializationHelper.serializeLivingCondition(tag, aBonus.targetCondition, "target_condition");
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public CritDamageBonus deserialize(FriendlyByteBuf buf) {
+        public CritDamageBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
             CritDamageBonus bonus = new CritDamageBonus(amount);
             bonus.playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
@@ -321,8 +320,9 @@ public final class CritDamageBonus implements SkillBonus<CritDamageBonus> {
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof CritDamageBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

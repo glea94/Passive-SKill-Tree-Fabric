@@ -32,9 +32,10 @@ public class IncomingDamageBonusHandler {
         float baseDamageMultiplier = 1f;
         float totalDamageMultiplier = 1f;
         for (IncomingDamageBonus bonus : skillBonuses) {
-            flatDamageBonus += bonus.getDamageModifier(AttributeModifier.Operation.ADDITION, damageSource, player, attacker);
-            baseDamageMultiplier += bonus.getDamageModifier(AttributeModifier.Operation.MULTIPLY_BASE, damageSource, player, attacker);
-            totalDamageMultiplier *= 1f + bonus.getDamageModifier(AttributeModifier.Operation.MULTIPLY_TOTAL, damageSource, player, attacker);
+            // Aligned 1.21.4: Retain modern vanilla naming structures for dynamic attribute operations
+            flatDamageBonus += bonus.getDamageModifier(AttributeModifier.Operation.ADD_VALUE, damageSource, player, attacker);
+            baseDamageMultiplier += bonus.getDamageModifier(AttributeModifier.Operation.ADD_MULTIPLIED_BASE, damageSource, player, attacker);
+            totalDamageMultiplier *= 1f + bonus.getDamageModifier(AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL, damageSource, player, attacker);
         }
         float amount = event.getAmount();
         amount += flatDamageBonus;

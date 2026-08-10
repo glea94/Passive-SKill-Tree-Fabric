@@ -7,24 +7,31 @@ import daripher.skilltree.data.reloader.SkillsReloader;
 import daripher.skilltree.exp.ExpHelper;
 import daripher.skilltree.network.message.GainSkillPointMessage;
 import daripher.skilltree.network.message.LearnSkillMessage;
+import daripher.skilltree.network.message.OpenSkillTreeEditorMessage;
 import daripher.skilltree.network.message.SyncPlayerSkillsMessage;
 import daripher.skilltree.network.message.SyncServerDataMessage;
+import daripher.skilltree.network.message.SyncWorkbenchRecipesMessage;
 import daripher.skilltree.skill.PassiveSkill;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+<<<<<<< Updated upstream
 import net.minecraft.network.FriendlyByteBuf;
+=======
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+>>>>>>> Stashed changes
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Objects;
 
 public class ServerNetworking {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.LEARN_SKILL, (server, player, handler, buf, responseSender) -> {
-            LearnSkillMessage message = LearnSkillMessage.decode(buf);
-            server.execute(() -> handleLearnSkill(player, message));
+        // Aligned 1.21.4: Registers server listeners targeting global custom network types
+        ServerPlayNetworking.registerGlobalReceiver(LearnSkillMessage.TYPE, (message, context) -> {
+            context.server().execute(() -> handleLearnSkill(context.player(), message));
         });
-        ServerPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.GAIN_SKILL_POINT, (server, player, handler, buf, responseSender) -> {
-            server.execute(() -> handleGainSkillPoint(player));
+
+        ServerPlayNetworking.registerGlobalReceiver(GainSkillPointMessage.TYPE, (message, context) -> {
+            context.server().execute(() -> handleGainSkillPoint(context.player()));
         });
     }
 
@@ -34,7 +41,7 @@ public class ServerNetworking {
         Objects.requireNonNull(skill);
         if (capability.learnSkill(skill)) {
             skill.learn(player, true);
-            // SYNCHRONISATION UNIQUE : Écrit sur le disque dur et met à jour l'écran du joueur proprement
+            // SYNCHRONISATION UNIQUE: Écrit sur le disque dur et met à jour l'écran du joueur proprement
             PlayerSkillsProvider.KEY.sync(player);
         }
     }
@@ -53,21 +60,30 @@ public class ServerNetworking {
         }
         player.giveExperiencePoints(-cost);
         capability.grantSkillPoints(1);
-        // SYNCHRONISATION UNIQUE : Sauvegarde le point et stabilise l'affichage des points restants
+        // SYNCHRONISATION UNIQUE: Sauvegarde le point et stabilise l'affichage des points restants
         PlayerSkillsProvider.KEY.sync(player);
     }
 
     public static void sendSyncPlayerSkills(ServerPlayer player) {
-        SyncPlayerSkillsMessage message = new SyncPlayerSkillsMessage(player);
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        message.encode(buf);
-        ServerPlayNetworking.send(player, PSTNetworkChannels.SYNC_PLAYER_SKILLS, buf);
+        ServerPlayNetworking.send(player, new SyncPlayerSkillsMessage(player));
     }
 
     public static void sendSyncServerData(ServerPlayer player) {
-        SyncServerDataMessage message = new SyncServerDataMessage();
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        message.encode(buf);
-        ServerPlayNetworking.send(player, PSTNetworkChannels.SYNC_SERVER_DATA, buf);
+        // Factual Fix 1.21.4: Pass a null context to allow standard data reloading serializers to populate the outcoming buffer
+        ServerPlayNetworking.send(player, new SyncServerDataMessage(null));
+    }
+<<<<<<< Updated upstream
+}
+=======
+
+    public static void sendSyncWorkbenchRecipes(ServerPlayer player) {
+        MinecraftServer server = player.level().getServer();
+        Objects.requireNonNull(server);
+        ServerPlayNetworking.send(player, new SyncWorkbenchRecipesMessage(server));
+    }
+
+    public static void sendOpenSkillTreeEditor(ServerPlayer player, ResourceLocation treeId) {
+        ServerPlayNetworking.send(player, new OpenSkillTreeEditorMessage(treeId));
     }
 }
+>>>>>>> Stashed changes

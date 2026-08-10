@@ -12,7 +12,7 @@ import daripher.skilltree.skill.bonus.predicate.item.EquipmentPredicate;
 import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -165,7 +165,7 @@ public final class ItemUpgradeLimitBonusesBonus implements SkillBonus<ItemUpgrad
         @Override
         public ItemUpgradeLimitBonusesBonus deserialize(CompoundTag tag) {
             ItemStackPredicate condition = SerializationHelper.deserializeItemPredicate(tag);
-            int amount = tag.getInt("amount");
+            int amount = tag.getInt("amount").orElseThrow();
             return new ItemUpgradeLimitBonusesBonus(condition, amount);
         }
 
@@ -180,13 +180,15 @@ public final class ItemUpgradeLimitBonusesBonus implements SkillBonus<ItemUpgrad
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ItemUpgradeLimitBonusesBonus deserialize(FriendlyByteBuf buf) {
+        public ItemUpgradeLimitBonusesBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new ItemUpgradeLimitBonusesBonus(NetworkHelper.readItemPredicate(buf), buf.readInt());
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemUpgradeLimitBonusesBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

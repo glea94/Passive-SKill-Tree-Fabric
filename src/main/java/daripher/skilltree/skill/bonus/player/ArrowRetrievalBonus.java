@@ -9,7 +9,7 @@ import daripher.skilltree.init.PSTSkillBonuses;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
@@ -53,7 +53,7 @@ public final class ArrowRetrievalBonus implements SkillBonus<ArrowRetrievalBonus
 
     @Override
     public MutableComponent getSimpleTooltip() {
-        return TooltipHelper.getSkillBonusTooltip(getDescriptionId(), chance, AttributeModifier.Operation.MULTIPLY_BASE)
+        return TooltipHelper.getSkillBonusTooltip(getDescriptionId(), chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
                 .withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
 
@@ -94,7 +94,6 @@ public final class ArrowRetrievalBonus implements SkillBonus<ArrowRetrievalBonus
         ArrowRetrievalBonus that = (ArrowRetrievalBonus) obj;
         return Float.floatToIntBits(this.chance) == Float.floatToIntBits(that.chance);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(chance);
@@ -117,7 +116,7 @@ public final class ArrowRetrievalBonus implements SkillBonus<ArrowRetrievalBonus
 
         @Override
         public ArrowRetrievalBonus deserialize(CompoundTag tag) {
-            float chance = tag.getFloat("chance");
+            float chance = tag.getFloatOr("chance", 0f);
             return new ArrowRetrievalBonus(chance);
         }
 
@@ -131,13 +130,15 @@ public final class ArrowRetrievalBonus implements SkillBonus<ArrowRetrievalBonus
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ArrowRetrievalBonus deserialize(FriendlyByteBuf buf) {
+        public ArrowRetrievalBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new ArrowRetrievalBonus(buf.readFloat());
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ArrowRetrievalBonus aBonus)) {
                 throw new IllegalArgumentException();
             }
