@@ -1,4 +1,4 @@
-# 🌳 Passive Skill Tree — Fabric Port (1.20.1, 1.21.1, 1.21.4, 1.21.5, 1.21.8, 1.21.9)
+# 🌳 Passive Skill Tree — Fabric Port (1.20.1, 1.21.1, 1.21.4, 1.21.5, 1.21.8, 1.21.9, 1.21.10, 1.21.11)
 
 
 This project is an unofficial port for **Fabric 1.20.1** of the popular passive skill tree mod. It allows players to unlock unique statistical bonuses as they progress through the game using a fully custom visual user interface.
