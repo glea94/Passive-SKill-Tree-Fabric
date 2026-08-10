@@ -2,22 +2,19 @@ package daripher.skilltree.skill.bonus.player;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import daripher.skilltree.client.network.ClientWorkbenchRecipeCache;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
-import daripher.skilltree.init.PSTRecipeTypes;
+import daripher.skilltree.recipe.workbench.AbstractWorkbenchRecipe;
 import daripher.skilltree.init.PSTSkillBonuses;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeManager;
 
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
@@ -83,10 +80,8 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<RecipeUnlockBonus> consumer) {
         editor.addLabel(0, 0, "Recipe ID", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-        ClientLevel clientLevel = Minecraft.getInstance().level;
-        Objects.requireNonNull(clientLevel);
-        RecipeManager recipesManager = clientLevel.getRecipeManager();
-        List<ResourceLocation> artisanRecipes = recipesManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH).stream().map(Recipe::getId)
+        List<ResourceLocation> artisanRecipes = ClientWorkbenchRecipeCache.getAll().stream()
+                .map(AbstractWorkbenchRecipe::getId)
                 .toList();
         editor.addSelectionMenu(0, 0, 200, artisanRecipes).setValue(recipeId).setResponder(id -> selectRecipeId(editor, consumer, id));
         editor.increaseHeight(19);
@@ -127,7 +122,7 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public RecipeUnlockBonus deserialize(JsonObject json) throws JsonParseException {
-            ResourceLocation recipeId = new ResourceLocation(json.get("recipe_id").getAsString());
+            ResourceLocation recipeId = ResourceLocation.parse(json.get("recipe_id").getAsString());
             return new RecipeUnlockBonus(recipeId);
         }
 
@@ -141,7 +136,7 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
 
         @Override
         public RecipeUnlockBonus deserialize(CompoundTag tag) {
-            ResourceLocation recipeId = new ResourceLocation(tag.getString("recipe_id"));
+            ResourceLocation recipeId = ResourceLocation.parse(tag.getString("recipe_id").orElseThrow());
             return new RecipeUnlockBonus(recipeId);
         }
 
@@ -155,14 +150,16 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public RecipeUnlockBonus deserialize(FriendlyByteBuf buf) {
-            ResourceLocation recipeId = new ResourceLocation(buf.readUtf());
+        public RecipeUnlockBonus deserialize(RegistryFriendlyByteBuf buf) {
+            ResourceLocation recipeId = ResourceLocation.parse(buf.readUtf());
             return new RecipeUnlockBonus(recipeId);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RecipeUnlockBonus aBonus)) {
                 throw new IllegalArgumentException();
             }
@@ -171,7 +168,7 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
-            return new RecipeUnlockBonus(new ResourceLocation("unknown_recipe"));
+            return new RecipeUnlockBonus(ResourceLocation.parse("unknown_recipe"));
         }
     }
 }

@@ -5,7 +5,7 @@ import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTLivingEntityPredicates;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -49,13 +49,15 @@ public enum NoneLivingEntityPredicate implements LivingEntityPredicate {
             return new CompoundTag();
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public LivingEntityPredicate deserialize(FriendlyByteBuf buf) {
+        public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return NoneLivingEntityPredicate.INSTANCE;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, LivingEntityPredicate predicate) {
+        public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             validatePredicate(predicate);
         }
 

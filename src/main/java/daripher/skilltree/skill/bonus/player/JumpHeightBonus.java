@@ -12,7 +12,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -75,7 +75,7 @@ public final class JumpHeightBonus implements SkillBonus<JumpHeightBonus> {
 
     @Override
     public MutableComponent getSimpleTooltip() {
-        MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), multiplier, AttributeModifier.Operation.MULTIPLY_BASE);
+        MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), multiplier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         tooltip = playerCondition.getTooltip(tooltip, Target.PLAYER);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
@@ -168,7 +168,7 @@ public final class JumpHeightBonus implements SkillBonus<JumpHeightBonus> {
         @Override
         public JumpHeightBonus deserialize(CompoundTag tag) {
             LivingEntityPredicate condition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
-            float multiplier = tag.getFloat("multiplier");
+            float multiplier = tag.getFloatOr("multiplier", 0f);
             return new JumpHeightBonus(condition, multiplier);
         }
 
@@ -183,13 +183,15 @@ public final class JumpHeightBonus implements SkillBonus<JumpHeightBonus> {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public JumpHeightBonus deserialize(FriendlyByteBuf buf) {
+        public JumpHeightBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new JumpHeightBonus(NetworkHelper.readLivingCondition(buf), buf.readFloat());
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof JumpHeightBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

@@ -16,7 +16,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
@@ -75,7 +75,6 @@ public class ItemUseEventListener implements SkillEventListener {
     public int hashCode() {
         return Objects.hash(playerCondition, playerMultiplier, itemStackPredicate);
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         editor.addLabel(0, 0, "Player Condition", ChatFormatting.GREEN);
@@ -151,7 +150,6 @@ public class ItemUseEventListener implements SkillEventListener {
     public void setItemCondition(ItemStackPredicate itemStackPredicate) {
         this.itemStackPredicate = itemStackPredicate;
     }
-
     public static class Serializer implements SkillEventListener.Serializer {
         @Override
         public SkillEventListener deserialize(JsonObject json) throws JsonParseException {
@@ -193,8 +191,9 @@ public class ItemUseEventListener implements SkillEventListener {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Updated signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public SkillEventListener deserialize(FriendlyByteBuf buf) {
+        public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             ItemUseEventListener listener = new ItemUseEventListener(itemStackPredicate);
             listener.setPlayerCondition(NetworkHelper.readLivingCondition(buf));
@@ -202,8 +201,9 @@ public class ItemUseEventListener implements SkillEventListener {
             return listener;
         }
 
+        // Factual Fix 1.21.4: Updated signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillEventListener listener) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof ItemUseEventListener aListener)) {
                 throw new IllegalArgumentException();
             }

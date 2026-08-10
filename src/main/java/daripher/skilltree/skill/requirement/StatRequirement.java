@@ -6,8 +6,9 @@ import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.init.PSTSkillRequirements;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -39,7 +40,8 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
 
     @Override
     public boolean test(Player player) {
-        StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(statTypeId);
+        // Factual Fix 1.21.4: Registry get() returns an Optional<Holder.Reference<T>>, unwrap with map()
+        StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(statTypeId).map(Holder::value).orElse(null);
         Objects.requireNonNull(statType);
         int statValue = getStatValue(player, statType);
         return statValue >= minValue;
@@ -47,12 +49,13 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
 
     @Override
     public MutableComponent getTooltip() {
-        StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(statTypeId);
+        // Factual Fix 1.21.4: Registry get() returns an Optional<Holder.Reference<T>>, unwrap with map()
+        StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(statTypeId).map(Holder::value).orElse(null);
         if (statType == null) {
-            return Component.literal("Unknown stat type: " + statTypeId).withStyle(ChatFormatting.RED);
+            return Component.translatable("Unknown stat type: " + statTypeId).withStyle(ChatFormatting.RED);
         }
         if (statType == Stats.CUSTOM) {
-            ResourceLocation originalStatId = Stats.CUSTOM.getRegistry().get(statId);
+            ResourceLocation originalStatId = Stats.CUSTOM.getRegistry().get(statId).map(Holder::value).orElse(null);
             if (originalStatId == null) {
                 return Component.literal("Unknown stat: " + statId).withStyle(ChatFormatting.RED);
             }
@@ -63,7 +66,7 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
             return Component.literal(statName.getString() + ": " + formattedMinValue);
         }
         if (statType == Stats.ENTITY_KILLED) {
-            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(statId);
+            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(statId).map(Holder::value).orElse(null);
             if (entityType == null) {
                 return Component.literal("Unknown entity: " + statId).withStyle(ChatFormatting.RED);
             }
@@ -71,18 +74,18 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
             return Component.translatable(getDescriptionId() + ".killed", minValue, entityName);
         }
         if (statType == Stats.ENTITY_KILLED_BY) {
-            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(statId);
+            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(statId).map(Holder::value).orElse(null);
             if (entityType == null) {
                 return Component.literal("Unknown entity: " + statId).withStyle(ChatFormatting.RED);
             }
             Component entityName = entityType.getDescription();
             return Component.translatable(getDescriptionId() + ".killed_by", entityName, minValue);
         } else {
-            Item item = BuiltInRegistries.ITEM.get(statId);
+            Item item = BuiltInRegistries.ITEM.get(statId).map(Holder::value).orElse(null);
             if (item == null) {
                 return Component.literal("Unknown item: " + statId).withStyle(ChatFormatting.RED);
             }
-            Component itemName = item.getDescription();
+            Component itemName = Component.translatable(item.getDescriptionId());
             return Component.literal(statType.getDisplayName().getString() + " " + itemName.getString() + ": " + minValue);
         }
     }
@@ -91,13 +94,13 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         StatsCounter playerStats = getPlayerStats(player);
         int statValue;
         if (statType == Stats.CUSTOM) {
-            ResourceLocation originalStatId = Stats.CUSTOM.getRegistry().get(statId);
+            ResourceLocation originalStatId = Stats.CUSTOM.getRegistry().get(statId).map(Holder::value).orElse(null);
             if (originalStatId == null) {
                 return 0;
             }
             statValue = playerStats.getValue(Stats.CUSTOM, originalStatId);
         } else {
-            T stat = statType.getRegistry().get(statId);
+            T stat = statType.getRegistry().get(statId).map(Holder::value).orElse(null);
             Objects.requireNonNull(stat);
             statValue = playerStats.getValue(statType, stat);
         }
@@ -105,7 +108,8 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
     }
 
     private StatsCounter getPlayerStats(Player player) {
-        if (player.level().isClientSide) {
+        // Fix 1.21.9 : isClientSide champ private, méthode isClientSide() confirmée par décompilation
+        if (player.level().isClientSide()) {
             return getClientPlayerStats(player);
         }
         return ((ServerPlayer) player).getStats();
@@ -125,7 +129,8 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Stat", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-        StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(getStatTypeId());
+
+        StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(getStatTypeId()).map(Holder::value).orElse(null);
         Objects.requireNonNull(statType);
         Set<ResourceLocation> statIds = statType.getRegistry().keySet();
         editor.addSelectionMenu(0, 0, 200, statIds).setValue(getStatId()).setElementNameGetter(v -> Component.literal(v.toString()))
@@ -137,24 +142,23 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
                 .setNumericResponder(value -> selectMinValue(consumer, value));
         editor.increaseHeight(19);
     }
-
     private void selectMinValue(Consumer<StatRequirement> consumer, Double value) {
         setMinValue(value.intValue());
-        consumer.accept(this);
+        consumer.accept(this.copy());
     }
 
     private void selectStat(Consumer<StatRequirement> consumer, ResourceLocation statId) {
         setStatId(statId);
-        consumer.accept(this);
+        consumer.accept(this.copy());
     }
 
     private void selectStatType(Consumer<StatRequirement> consumer, ResourceLocation statTypeId) {
         setStatTypeId(statTypeId);
-        StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(getStatTypeId());
+        StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(getStatTypeId()).map(Holder::value).orElse(null);
         Objects.requireNonNull(statType);
         Set<ResourceLocation> statIds = statType.getRegistry().keySet();
         statIds.stream().findFirst().ifPresent(this::setStatId);
-        consumer.accept(this);
+        consumer.accept(this.copy());
     }
 
     public void setStatId(ResourceLocation statId) {
@@ -207,8 +211,8 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
     public static class Serializer implements SkillRequirement.Serializer {
         @Override
         public SkillRequirement<?> deserialize(JsonObject json) throws JsonParseException {
-            ResourceLocation statTypeId = new ResourceLocation(json.get("statTypeId").getAsString());
-            ResourceLocation statId = new ResourceLocation(json.get("statId").getAsString());
+            ResourceLocation statTypeId = ResourceLocation.parse(json.get("statTypeId").getAsString());
+            ResourceLocation statId = ResourceLocation.parse(json.get("statId").getAsString());
             int minValue = json.get("minValue").getAsInt();
             return new StatRequirement(statTypeId, statId, minValue);
         }
@@ -224,9 +228,10 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
 
         @Override
         public SkillRequirement<?> deserialize(CompoundTag tag) {
-            ResourceLocation statTypeId = new ResourceLocation(tag.getString("statTypeId"));
-            ResourceLocation statId = new ResourceLocation(tag.getString("statId"));
-            int minValue = tag.getInt("minValue");
+            // Factual Fix 1.21.5: getString/getInt renvoient désormais Optional<T>
+            ResourceLocation statTypeId = ResourceLocation.parse(tag.getString("statTypeId").orElse(""));
+            ResourceLocation statId = ResourceLocation.parse(tag.getString("statId").orElse(""));
+            int minValue = tag.getInt("minValue").orElse(0);
             return new StatRequirement(statTypeId, statId, minValue);
         }
 
@@ -242,15 +247,15 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         }
 
         @Override
-        public SkillRequirement<?> deserialize(FriendlyByteBuf buf) {
-            ResourceLocation statTypeId = new ResourceLocation(buf.readUtf());
-            ResourceLocation statId = new ResourceLocation(buf.readUtf());
+        public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
+            ResourceLocation statTypeId = ResourceLocation.parse(buf.readUtf());
+            ResourceLocation statId = ResourceLocation.parse(buf.readUtf());
             int minValue = buf.readInt();
             return new StatRequirement(statTypeId, statId, minValue);
         }
 
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillRequirement<?> requirement) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillRequirement<?> requirement) {
             if (requirement instanceof StatRequirement aRequirement) {
                 buf.writeUtf(aRequirement.statTypeId.toString());
                 buf.writeUtf(aRequirement.statId.toString());
@@ -260,7 +265,9 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
 
         @Override
         public SkillRequirement<?> createDefaultInstance() {
-            return new StatRequirement(BuiltInRegistries.STAT_TYPE.getKey(Stats.CUSTOM), Stats.DEATHS, 1);
+            // Factual Fix 1.21.4: Resolve custom stat type using its direct official registry identifier location to fix argument mismatch
+            ResourceLocation customStatType = Stats.CUSTOM.getRegistry().key().location();
+            return new StatRequirement(customStatType, Stats.DEATHS, 1);
         }
     }
 }

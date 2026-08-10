@@ -10,7 +10,6 @@ import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -27,10 +26,11 @@ import java.util.List;
  *   n'ajoute qu'un simple Component texte - simplification légitime, sans perte pour ce cas).
  */
 public class ItemUsagePreventionBonusHandler {
-    // recursion protection, identique à l'original
+    // Recursion protection, identique à l'original
     private static boolean isProcessingRejection;
 
     public static void register() {
+        // Aligned 1.21.4: Direct registration of interaction overrides targeting the native Fabric pipeline
         AttackEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
             ItemStack mainHandItem = player.getMainHandItem();
             if (shouldPreventItemUsage(player, mainHandItem)) {
@@ -38,13 +38,15 @@ public class ItemUsagePreventionBonusHandler {
             }
             return InteractionResult.PASS;
         });
+
         UseItemCallback.EVENT.register((player, level, hand) -> {
             ItemStack itemStack = player.getItemInHand(hand);
             if (shouldPreventItemUsage(player, itemStack)) {
-                return InteractionResultHolder.fail(itemStack);
+                return InteractionResult.FAIL;
             }
-            return InteractionResultHolder.pass(itemStack);
+            return InteractionResult.PASS;
         });
+
         PSTEvents.LIVING_EQUIPMENT_CHANGE.register(ItemUsagePreventionBonusHandler::preventItemEquipping);
         PSTEvents.ITEM_TOOLTIP.register(ItemUsagePreventionBonusHandler::addPreventedUsageTooltip);
     }

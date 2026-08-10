@@ -13,9 +13,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 
 public class PSTRussianTranslationProvider extends PSTTranslationProvider {
-    public PSTRussianTranslationProvider(FabricDataOutput dataOutput) {
-        super(dataOutput, "ru_ru");
+    public PSTRussianTranslationProvider(FabricDataOutput dataOutput, java.util.concurrent.CompletableFuture<net.minecraft.core.HolderLookup.Provider> registryLookup) {
+        super(dataOutput, "ru_ru", registryLookup);
     }
+
 
     @Override
     protected void addTranslations() {
@@ -614,9 +615,11 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         add(PSTRecipeSerializers.WORKBENCH_WEAPON_POISONING.get(), "custom_skill_description", "Вы можете отравлять оружие используя продвинутый рабочий стол");
     }
 
-    protected void add(Potion potion, String name) {
-        add(potion.getName(Items.POTION.getDescriptionId() + ".effect."), "Зелье " + name);
-        add(potion.getName(Items.SPLASH_POTION.getDescriptionId() + ".effect."), "Взрывное зелье " + name);
-        add(potion.getName(Items.LINGERING_POTION.getDescriptionId() + ".effect."), "Туманное зелье " + name);
+    public void add(net.minecraft.world.item.alchemy.Potion potion, String name) {
+        String effectId = potion.name();
+
+        add(net.minecraft.world.item.Items.POTION.getDescriptionId() + ".effect." + effectId, "Зелье " + name);
+        add(net.minecraft.world.item.Items.SPLASH_POTION.getDescriptionId() + ".effect." + effectId, "Взрывное зелье " + name);
+        add(net.minecraft.world.item.Items.LINGERING_POTION.getDescriptionId() + ".effect." + effectId, "Туманное зелье " + name);
     }
 }

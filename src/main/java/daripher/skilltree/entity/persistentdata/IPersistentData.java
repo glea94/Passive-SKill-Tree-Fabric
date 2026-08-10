@@ -1,9 +1,8 @@
 package daripher.skilltree.entity.persistentdata;
 
-import dev.onyxstudios.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.ComponentV3;
 import net.minecraft.nbt.CompoundTag;
 
-/** Portage Fabric de Entity.getPersistentData() (Forge). Voir PersistentDataHelper pour l'accès. */
-public interface IPersistentData extends Component {
+public interface IPersistentData extends ComponentV3 {
     CompoundTag getTag();
 }

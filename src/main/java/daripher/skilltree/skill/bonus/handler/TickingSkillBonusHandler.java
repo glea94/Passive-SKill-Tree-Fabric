@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class TickingSkillBonusHandler {
     public static void register() {
+        // Aligned 1.21.4: Continuously loops player rosters on the server main thread to execute ticking skill multipliers
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                 tickSkillBonuses(player);

@@ -3,6 +3,14 @@
     "description": {
       "text": "${mod_id} resources"
     },
+<<<<<<< Updated upstream
     "pack_format": 15
+=======
+    "pack_format": 69,
+    "supported_formats": {
+      "min_inclusive": 69,
+      "max_inclusive": 81
+    }
+>>>>>>> Stashed changes
   }
 }

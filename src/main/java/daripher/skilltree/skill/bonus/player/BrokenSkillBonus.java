@@ -7,7 +7,7 @@ import daripher.skilltree.init.PSTSkillBonuses;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -57,6 +57,7 @@ public class BrokenSkillBonus implements SkillBonus<BrokenSkillBonus> {
 
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<BrokenSkillBonus> consumer) {
+        // Safe placeholder for error tracking definitions
     }
 
     public static class Serializer implements SkillBonus.Serializer {
@@ -74,7 +75,7 @@ public class BrokenSkillBonus implements SkillBonus<BrokenSkillBonus> {
 
         @Override
         public BrokenSkillBonus deserialize(CompoundTag tag) {
-            String errorMessage = tag.getString("error_message");
+            String errorMessage = tag.getString("error_message").orElseThrow();
             return new BrokenSkillBonus(errorMessage);
         }
 
@@ -86,14 +87,16 @@ public class BrokenSkillBonus implements SkillBonus<BrokenSkillBonus> {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public BrokenSkillBonus deserialize(FriendlyByteBuf buf) {
+        public BrokenSkillBonus deserialize(RegistryFriendlyByteBuf buf) {
             String errorMessage = buf.readUtf();
             return new BrokenSkillBonus(errorMessage);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             BrokenSkillBonus validBonus = validateBonus(bonus);
             buf.writeUtf(validBonus.errorMessage);
         }

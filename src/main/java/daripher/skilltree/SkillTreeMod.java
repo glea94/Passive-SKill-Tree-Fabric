@@ -7,6 +7,7 @@ import daripher.skilltree.data.reloader.SkillTreesReloader;
 import daripher.skilltree.data.reloader.SkillsReloader;
 import daripher.skilltree.init.*;
 import daripher.skilltree.init.predicate.*;
+import daripher.skilltree.network.PSTNetworkChannels;
 import daripher.skilltree.network.ServerNetworking;
 import daripher.skilltree.skill.bonus.handler.*;
 import daripher.skilltree.skill.bonus.item.ItemBonusHandler;
@@ -15,10 +16,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/**
- * Portage Fabric de la classe principale du mod (remplace @Mod + le constructeur
- * FMLJavaModLoadingContext de Forge par ModInitializer.onInitialize()).
- */
 public class SkillTreeMod implements ModInitializer {
     public static final String MOD_ID = "skilltree";
     public static final Logger LOGGER = LogManager.getLogger(SkillTreeMod.MOD_ID);
@@ -33,14 +30,9 @@ public class SkillTreeMod implements ModInitializer {
         registerCompatibilities();
     }
 
-    /**
-     * Sous Forge, chaque DeferredRegister s'enregistrait sur l'event bus. Sous Fabric,
-     * l'enregistrement de chaque registry se fait dès le chargement de sa classe (voir
-     * daripher.skilltree.util.registry.DeferredRegister) : il suffit donc de "toucher" chaque
-     * classe PSTxxx pour déclencher son initialisation statique, dans le même ordre que
-     * l'original pour rester lisible.
-     */
     private static void registerModRegistries() {
+        touch(PSTRegistries.class);
+
         touch(PSTItems.class);
         touch(PSTBlocks.class);
         touch(PSTMobEffects.class);
@@ -63,7 +55,7 @@ public class SkillTreeMod implements ModInitializer {
         touch(PSTFloatFunctions.class);
         touch(PSTSkillRequirements.class);
         touch(PSTItemBonuses.class);
-        touch(PSTRegistries.class);
+
         PSTBrewingRecipes.addRecipes();
         PSTLootModifiers.register();
         SkillsReloader.register();
@@ -74,10 +66,6 @@ public class SkillTreeMod implements ModInitializer {
         ServerConfig.load();
     }
 
-    /**
-     * Tous les handlers qui utilisaient @Mod.EventBusSubscriber côté Forge s'enregistrent ici
-     * explicitement (voir chaque handler pour le détail de son portage individuel, étape 5).
-     */
     private static void registerEventHandlers() {
         OutgoingDamageBonusHandler.register();
         IncomingDamageBonusHandler.register();
@@ -107,6 +95,7 @@ public class SkillTreeMod implements ModInitializer {
         GrindstoneBonusHandler.register();
         RepairEfficiencyBonusHandler.register();
         ItemUsageSpeedBonusHandler.register();
+        daripher.skilltree.event.PlayerJoinEventHandler.register();
     }
 
     private static void registerCommands() {
@@ -114,6 +103,7 @@ public class SkillTreeMod implements ModInitializer {
     }
 
     private static void registerNetwork() {
+        PSTNetworkChannels.register();
         ServerNetworking.register();
     }
 
@@ -121,9 +111,6 @@ public class SkillTreeMod implements ModInitializer {
         if (FabricLoader.getInstance().isModLoaded("trinkets")) {
             LOGGER.info("Trinkets detected, enabling accessory slot compatibility");
         }
-        // Inconditionnel, comme côté Forge où PSTSkillBonuses.REGISTRY.register("curio_slots", ...)
-        // s'exécutait toujours : le bonus existe dans le registre même sans Trinkets installé,
-        // il ne fait simplement rien de spécial dans ce cas.
         touch(TrinketsCompatibility.class);
     }
 
@@ -131,7 +118,7 @@ public class SkillTreeMod implements ModInitializer {
         try {
             Class.forName(clazz.getName(), true, clazz.getClassLoader());
         } catch (ClassNotFoundException exception) {
-            LOGGER.error("Couldn't initialize {}", clazz.getName(), exception);
+            LOGGER.error("Couldn't initialize class {}", clazz.getName(), exception);
         }
     }
 }

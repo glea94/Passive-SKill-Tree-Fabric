@@ -6,18 +6,16 @@ import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.init.PSTSkillRequirements;
 import daripher.skilltree.mixin.ClientAdvancementsAccessor;
 import net.minecraft.ChatFormatting;
-import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementNode;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientAdvancements;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.ServerAdvancementManager;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public final class AdvancementRequirement implements SkillRequirement<AdvancementRequirement> {
+public class AdvancementRequirement implements SkillRequirement<AdvancementRequirement> {
     private ResourceLocation advancementId;
 
     public AdvancementRequirement(ResourceLocation advancementId) {
@@ -36,61 +34,69 @@ public final class AdvancementRequirement implements SkillRequirement<Advancemen
 
     @Override
     public boolean test(Player player) {
-        if (player.level().isClientSide) {
-            LocalPlayer localPlayer = (LocalPlayer) player;
-            ClientAdvancements advancements = localPlayer.connection.getAdvancements();
-            ClientAdvancementsAccessor advancementsAccessor = (ClientAdvancementsAccessor) advancements;
-            Advancement advancement = advancements.getAdvancements().get(advancementId);
-            AdvancementProgress progress = advancementsAccessor.getProgress().get(advancement);
-            if (progress == null) {
-                return false;
-            }
-            return progress.getPercent() >= 1f;
-        } else {
-            ServerPlayer serverPlayer = (ServerPlayer) player;
-            MinecraftServer server = serverPlayer.level().getServer();
-            if (server == null) {
-                return false;
-            }
-            ServerAdvancementManager advancementManager = server.getAdvancements();
-            PlayerAdvancements advancements = serverPlayer.getAdvancements();
-            Advancement advancement = advancementManager.getAdvancement(advancementId);
-            if (advancement == null) {
-                return false;
-            }
-            return advancements.getOrStartProgress(advancement).getPercent() >= 1f;
+        if (player instanceof ServerPlayer serverPlayer) {
+            return testServer(serverPlayer);
         }
+<<<<<<< Updated upstream
+=======
+        return testClient();
+    }
+
+    private boolean testServer(ServerPlayer player) {
+        // Factual Fix 1.21.8 : champ ServerPlayer#server devenu private. Pattern player.level().getServer()
+        // confirmé par décompilation de ServerPlayer lui-même (utilisé en interne, ex. loadAndSpawnEnderPearl :
+        // "this.level().getServer().getLevel(...)"), et ServerPlayer#level() renvoie bien ServerLevel.
+        ServerAdvancementManager manager = player.level().getServer().getAdvancements();
+        AdvancementHolder advancement = manager.get(advancementId);
+        if (advancement == null) return false;
+        PlayerAdvancements playerAdvancements = player.getAdvancements();
+        return playerAdvancements.getOrStartProgress(advancement).isDone();
+    }
+
+    private boolean testClient() {
+        ClientAdvancements advancements = Minecraft.getInstance().getConnection().getAdvancements();
+        AdvancementHolder advancement = advancements.get(advancementId);
+        if (advancement == null) return false;
+        AdvancementProgress progress = ((ClientAdvancementsAccessor) advancements).getProgress().get(advancement);
+        return progress != null && progress.isDone();
+    }
+
+    public static List<ResourceLocation> getAdvancementIds() {
+        ClientAdvancements advancements = Minecraft.getInstance().getConnection().getAdvancements();
+        return advancements.getTree().nodes().stream()
+                .map(AdvancementNode::holder)
+                .map(AdvancementHolder::id)
+                .toList();
+>>>>>>> Stashed changes
     }
 
     @Override
     public MutableComponent getTooltip() {
-        String advancementPath = advancementId.getPath().replaceAll("/", ".");
-        String advancamentDescriptionId = "advancements.%s.title".formatted(advancementPath);
-        Component advancementTooltip = Component.translatable(advancamentDescriptionId).withStyle(Style.EMPTY.withColor(0xFFD75F));
-        return Component.translatable(getDescriptionId(), advancementTooltip);
+        return Component.translatable(getDescriptionId(), Component.literal(advancementId.toString()));
     }
 
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<AdvancementRequirement> consumer) {
-        LocalPlayer localPlayer = Minecraft.getInstance().player;
-        Objects.requireNonNull(localPlayer);
-        ClientAdvancements advancements = localPlayer.connection.getAdvancements();
-        editor.addLabel(0, 0, "Advancement ID", ChatFormatting.GOLD);
+        editor.addLabel(0, 0, "Advancement", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-        List<ResourceLocation> advancementIds = advancements.getAdvancements().getAllAdvancements().stream().map(Advancement::getId)
-                .toList();
-        editor.addSelectionMenu(0, 0, 200, advancementIds).setValue(getAdvancementId())
-                .setElementNameGetter(v -> Component.literal(v.toString())).setResponder(v -> selectAdvancementId(consumer, v));
+        List<ResourceLocation> advancementIds = getAdvancementIds();
+        editor.addSelectionMenu(0, 0, 200, advancementIds).setValue(advancementId)
+                .setElementNameGetter(v -> Component.literal(v.toString()))
+                .setResponder(v -> selectAdvancementId(consumer, v));
         editor.increaseHeight(19);
     }
 
     private void selectAdvancementId(Consumer<AdvancementRequirement> consumer, ResourceLocation id) {
         setAdvancementId(id);
-        consumer.accept(this);
+        consumer.accept(this.copy());
     }
 
     public void setAdvancementId(ResourceLocation advancementId) {
         this.advancementId = advancementId;
+    }
+
+    public ResourceLocation getAdvancementId() {
+        return advancementId;
     }
 
     @Override
@@ -115,10 +121,6 @@ public final class AdvancementRequirement implements SkillRequirement<Advancemen
         return Objects.hash(advancementId);
     }
 
-    public ResourceLocation getAdvancementId() {
-        return advancementId;
-    }
-
     @Override
     public SkillRequirement.Serializer getSerializer() {
         return PSTSkillRequirements.ADVANCEMENT.get();
@@ -127,7 +129,7 @@ public final class AdvancementRequirement implements SkillRequirement<Advancemen
     public static class Serializer implements SkillRequirement.Serializer {
         @Override
         public SkillRequirement<?> deserialize(JsonObject json) throws JsonParseException {
-            ResourceLocation id = new ResourceLocation(json.get("advancement").getAsString());
+            ResourceLocation id = ResourceLocation.parse(json.get("advancement").getAsString());
             return new AdvancementRequirement(id);
         }
 
@@ -140,7 +142,8 @@ public final class AdvancementRequirement implements SkillRequirement<Advancemen
 
         @Override
         public SkillRequirement<?> deserialize(CompoundTag tag) {
-            ResourceLocation id = new ResourceLocation(tag.getString("advancement"));
+            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            ResourceLocation id = ResourceLocation.parse(tag.getString("advancement").orElse(""));
             return new AdvancementRequirement(id);
         }
 
@@ -153,14 +156,16 @@ public final class AdvancementRequirement implements SkillRequirement<Advancemen
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public SkillRequirement<?> deserialize(FriendlyByteBuf buf) {
-            ResourceLocation id = new ResourceLocation(buf.readUtf());
+        public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
+            ResourceLocation id = ResourceLocation.parse(buf.readUtf());
             return new AdvancementRequirement(id);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillRequirement<?> requirement) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillRequirement<?> requirement) {
             if (requirement instanceof AdvancementRequirement aRequirement) {
                 buf.writeUtf(aRequirement.advancementId.toString());
             }
@@ -168,7 +173,7 @@ public final class AdvancementRequirement implements SkillRequirement<Advancemen
 
         @Override
         public SkillRequirement<?> createDefaultInstance() {
-            return new AdvancementRequirement(new ResourceLocation("minecraft:adventure/hero_of_the_village"));
+            return new AdvancementRequirement(ResourceLocation.withDefaultNamespace("story/mine_stone"));
         }
     }
 }

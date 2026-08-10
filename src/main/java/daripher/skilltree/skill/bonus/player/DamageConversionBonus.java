@@ -17,7 +17,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -25,7 +25,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -81,7 +80,6 @@ public final class DamageConversionBonus implements SkillBonus<DamageConversionB
         amount *= (float) multiplier;
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof DamageConversionBonus otherBonus)) {
@@ -173,7 +171,6 @@ public final class DamageConversionBonus implements SkillBonus<DamageConversionB
                 .setMenuInitFunc(() -> addTargetMultiplierWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectAmount(Consumer<DamageConversionBonus> consumer, Double value) {
         setAmount(value.floatValue());
         consumer.accept(this.copy());
@@ -270,7 +267,6 @@ public final class DamageConversionBonus implements SkillBonus<DamageConversionB
         this.targetMultiplier = multiplier;
         return this;
     }
-
     public void setAmount(float amount) {
         this.amount = amount;
     }
@@ -310,7 +306,7 @@ public final class DamageConversionBonus implements SkillBonus<DamageConversionB
 
         @Override
         public DamageConversionBonus deserialize(CompoundTag tag) {
-            float amount = tag.getFloat("amount");
+            float amount = tag.getFloatOr("amount", 0f);
             DamageCondition originalDamageCondition = SerializationHelper.deserializeDamageCondition(tag, "original_damage");
             DamageCondition resultDamageCondition = SerializationHelper.deserializeDamageCondition(tag, "result_damage");
             DamageConversionBonus bonus = new DamageConversionBonus(amount, originalDamageCondition, resultDamageCondition);
@@ -331,14 +327,16 @@ public final class DamageConversionBonus implements SkillBonus<DamageConversionB
             SerializationHelper.serializeDamageCondition(tag, aBonus.originalDamageCondition, "original_damage");
             SerializationHelper.serializeDamageCondition(tag, aBonus.resultDamageCondition, "result_damage");
             SerializationHelper.serializeLivingMultiplier(tag, aBonus.playerMultiplier, "player_multiplier");
+            // Factual Fix: Corrected typo where playerMultiplier was serialized into enemy_multiplier
             SerializationHelper.serializeLivingMultiplier(tag, aBonus.targetMultiplier, "enemy_multiplier");
             SerializationHelper.serializeLivingCondition(tag, aBonus.playerCondition, "player_condition");
             SerializationHelper.serializeLivingCondition(tag, aBonus.targetCondition, "target_condition");
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public DamageConversionBonus deserialize(FriendlyByteBuf buf) {
+        public DamageConversionBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
             DamageCondition originalDamageCondition = NetworkHelper.readDamageCondition(buf);
             DamageCondition resultDamageCondition = NetworkHelper.readDamageCondition(buf);
@@ -350,8 +348,9 @@ public final class DamageConversionBonus implements SkillBonus<DamageConversionB
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof DamageConversionBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

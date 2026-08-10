@@ -6,7 +6,7 @@ import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.init.predicate.PSTItemPredicates;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.ItemTags;
@@ -59,13 +59,13 @@ public class ItemTagPredicate implements ItemStackPredicate {
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<ItemStackPredicate> consumer) {
         editor.addLabel(0, 0, "Tag", ChatFormatting.GREEN);
         editor.increaseHeight(19);
-        editor.addTextField(0, 0, 200, 14, tagId.toString()).setSoftFilter(ResourceLocation::isValidResourceLocation)
+        editor.addTextField(0, 0, 200, 14, tagId.toString()).setSoftFilter(text -> ResourceLocation.tryParse(text) != null)
                 .setResponder(text -> selectTagId(consumer, text));
         editor.increaseHeight(19);
     }
 
     private void selectTagId(Consumer<ItemStackPredicate> consumer, String text) {
-        setTagId(new ResourceLocation(text));
+        setTagId(ResourceLocation.parse(text));
         consumer.accept(this);
     }
 
@@ -76,7 +76,7 @@ public class ItemTagPredicate implements ItemStackPredicate {
     public static class Serializer implements ItemStackPredicate.Serializer {
         @Override
         public ItemStackPredicate deserialize(JsonObject json) throws JsonParseException {
-            ResourceLocation tagId = new ResourceLocation(json.get("tag_id").getAsString());
+            ResourceLocation tagId = ResourceLocation.parse(json.get("tag_id").getAsString());
             return new ItemTagPredicate(tagId);
         }
 
@@ -90,7 +90,8 @@ public class ItemTagPredicate implements ItemStackPredicate {
 
         @Override
         public ItemStackPredicate deserialize(CompoundTag tag) {
-            ResourceLocation tagId = new ResourceLocation(tag.getString("tag_id"));
+            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            ResourceLocation tagId = ResourceLocation.parse(tag.getString("tag_id").orElse(""));
             return new ItemTagPredicate(tagId);
         }
 
@@ -104,14 +105,16 @@ public class ItemTagPredicate implements ItemStackPredicate {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ItemStackPredicate deserialize(FriendlyByteBuf buf) {
-            ResourceLocation tagId = new ResourceLocation(buf.readUtf());
+        public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
+            ResourceLocation tagId = ResourceLocation.parse(buf.readUtf());
             return new ItemTagPredicate(tagId);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, ItemStackPredicate condition) {
+        public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof ItemTagPredicate aCondition)) {
                 throw new IllegalArgumentException();
             }

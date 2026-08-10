@@ -1,11 +1,9 @@
 package daripher.skilltree.effect;
 
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -20,22 +18,15 @@ public class LiquidFireEffect extends MobEffect {
     }
 
     @Override
-    public boolean isInstantenous() {
-        return true;
-    }
-
-    @Override
-    public void applyInstantenousEffect(@Nullable Entity source, @Nullable Entity indirectSource, @NotNull LivingEntity target, int amplifier, double health) {
-        float damage = (int) (health * (double) (6 << amplifier) + 0.5);
+    public void applyInstantenousEffect(@NotNull ServerLevel serverLevel, @Nullable Entity source, @Nullable Entity indirectSource, @NotNull LivingEntity target, int amplifier, double fraction) {
+        float damage = (float) (fraction * (double) (6 << amplifier) + 0.5);
         DamageSources damageSources = target.damageSources();
         if (source == null) {
             target.hurt(damageSources.onFire(), damage);
         } else {
-            Registry<DamageType> damageTypes = target.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
-            Holder.Reference<DamageType> damageType = damageTypes.getHolderOrThrow(DamageTypes.ON_FIRE);
-            DamageSource damageSource = new DamageSource(damageType, source, indirectSource);
+            DamageSource damageSource = damageSources.source(DamageTypes.ON_FIRE, source, indirectSource);
             target.hurt(damageSource, damage);
         }
-        target.setSecondsOnFire((int) damage / 2);
+        target.igniteForSeconds(damage / 2.0F);
     }
 }

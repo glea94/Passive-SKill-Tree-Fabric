@@ -21,7 +21,10 @@ public class SkillButtons extends ScrollableZoomableWidgetGroup<SkillButton> {
     private final Supplier<Float> animationFunc;
 
     public SkillButtons(PassiveSkillTree skillTree, Supplier<Float> animationFunc) {
+        // Factual Fix 1.21.4: Align super dimensions and isolate coordinate initialization sets
         super(0, 0, 0, 0);
+        this.setX(0);
+        this.setY(0);
         this.skillTree = skillTree;
         this.animationFunc = animationFunc;
     }
@@ -72,7 +75,8 @@ public class SkillButtons extends ScrollableZoomableWidgetGroup<SkillButton> {
         if (skill == null) {
             return;
         }
-        ScreenHelper.renderSkillTooltip(skillTree, skill, graphics, tooltipX, tooltipY, width, height);
+        // Factual Fix 1.21.4: Replace legacy field 'width' and 'height' access with standard encapsulated getters
+        ScreenHelper.renderSkillTooltip(skillTree, skill, graphics, tooltipX, tooltipY, this.getWidth(), this.getHeight());
     }
 
     public PassiveSkillTree getSkillTree() {
@@ -83,8 +87,9 @@ public class SkillButtons extends ScrollableZoomableWidgetGroup<SkillButton> {
         float skillX = skill.getPositionX();
         float skillY = skill.getPositionY();
         int skillSize = skill.getSkillSize();
-        float buttonX = skillX - skillSize / 2F + width / 2F + skillX * (getZoom() - 1);
-        float buttonY = skillY - skillSize / 2F + height / 2F + skillY * (getZoom() - 1);
+        // Factual Fix 1.21.4: Replace legacy field 'width' and 'height' access with standard encapsulated getters
+        float buttonX = skillX - skillSize / 2F + this.getWidth() / 2F + skillX * (getZoom() - 1);
+        float buttonY = skillY - skillSize / 2F + this.getHeight() / 2F + skillY * (getZoom() - 1);
         SkillButton button = new SkillButton(animationFunc, buttonX, buttonY, skill);
         return addWidget(button);
     }

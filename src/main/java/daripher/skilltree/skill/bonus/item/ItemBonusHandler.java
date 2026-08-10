@@ -3,13 +3,12 @@ package daripher.skilltree.skill.bonus.item;
 import com.google.common.collect.ImmutableList;
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.tooltip.TooltipHelper;
-import daripher.skilltree.event.ItemTooltipPSTEvent;
-import daripher.skilltree.event.LivingEquipmentChangePSTEvent;
-import daripher.skilltree.event.PSTEvents;
+import daripher.skilltree.event.*;
 import daripher.skilltree.init.PSTRegistries;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.AttributeBonus;
 import daripher.skilltree.skill.bonus.player.ItemUpgradeLimitBonusesBonus;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -21,6 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,9 +30,19 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Portage Fabric.
- * - addEquipmentAttributeBonuses (LivingEquipmentChangeEvent) -> PSTEvents.LIVING_EQUIPMENT_CHANGE : porté.
- * - addItemBonusTooltips (ItemTooltipEvent) -> PSTEvents.ITEM_TOOLTIP : porté (débloqué par ItemStackMixin).
+ * Portage Fabric 1.21.4.
+ *
+ * Régression corrigée : une version précédente de ce fichier enregistrait ici un second
+ * abonnement à PSTEvents.ITEM_USE_FINISH (onPlayerConsumeItem) qui scannait TOUS les
+ * SkillBonus du joueur par réflexion, à la recherche d'une méthode nommée "itemEaten" ou
+ * "onItemEaten". Cette méthode n'existe nulle part dans le mod : ce bloc ne faisait donc
+ * strictement rien (à part avaler silencieusement une exception à chaque item consommé) et
+ * dupliquait, en le cassant, un mécanisme déjà porté correctement ailleurs. Le vrai système
+ * "chance d'obtenir un effet en mangeant" est ItemUseEventListener (skill.bonus.event), déclenché
+ * par EventListenerBonusHandler.triggerItemUsedEvents(...), lui-même déjà abonné à
+ * PSTEvents.ITEM_USE_FINISH. ItemBonusHandler n'a donc pas à s'abonner à cet event : son rôle se
+ * limite aux bonus PORTÉS PAR L'OBJET lui-même (bonus d'équipement, tooltips, bonus de craft/
+ * amélioration stockés sur l'ItemStack), pas aux bonus déclenchés par un évènement de gameplay.
  */
 public class ItemBonusHandler {
     public static final String UPGRADE_BONUSES_TAG_NAME = "UpgradeBonuses";
@@ -73,7 +83,8 @@ public class ItemBonusHandler {
             if (attributeInstance == null) {
                 continue;
             }
-            attributeInstance.removeModifier(attributeBonus.getModifier().getId());
+            // Aligned 1.21.4: Retain the clean .id() record evaluation contract
+            attributeInstance.removeModifier(attributeBonus.getModifier().id());
         }
         for (ItemBonus<?> itemBonus : getItemBonuses(event.getTo(), EquipmentBonus.class)) {
             EquipmentBonus bonus = (EquipmentBonus) itemBonus;
@@ -87,13 +98,12 @@ public class ItemBonusHandler {
             if (attributeInstance == null) {
                 continue;
             }
-            if (attributeInstance.hasModifier(attributeBonus.getModifier())) {
+            if (attributeInstance.hasModifier(attributeBonus.getModifier().id())) {
                 continue;
             }
             attributeInstance.addTransientModifier(attributeBonus.getModifier());
         }
     }
-
     public static void addCraftingBonuses(ItemStack itemStack, GroupedItemBonus itemBonuses) {
         List<ItemBonus<?>> craftingBonuses = getBonusesFromTag(itemStack, CRAFTING_BONUSES_TAG_NAME);
         craftingBonuses.add(itemBonuses);
@@ -101,7 +111,8 @@ public class ItemBonusHandler {
     }
 
     public static List<ItemBonus<?>> getItemBonuses(ItemStack itemStack) {
-        if (!itemStack.hasTag()) {
+        // Aligned 1.21.4: Direct presence evaluation for CustomData component layout elements
+        if (!itemStack.has(DataComponents.CUSTOM_DATA)) {
             return ImmutableList.of();
         }
         List<ItemBonus<?>> list = new ArrayList<>();
@@ -119,12 +130,13 @@ public class ItemBonusHandler {
     }
 
     private static List<ItemBonus<?>> getBonusesFromTag(ItemStack itemStack, String subTagName) {
-        CompoundTag stackTag = itemStack.getOrCreateTag();
+        CompoundTag stackTag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         List<ItemBonus<?>> itemBonuses = new ArrayList<>();
-        if (!stackTag.contains(subTagName, Tag.TAG_LIST)) {
+        Optional<ListTag> bonusesTagListOpt = stackTag.getList(subTagName);
+        if (bonusesTagListOpt.isEmpty()) {
             return new ArrayList<>();
         }
-        ListTag bonusesTagList = stackTag.getList(subTagName, Tag.TAG_COMPOUND);
+        ListTag bonusesTagList = bonusesTagListOpt.get();
         bonusesTagList.stream().map(CompoundTag.class::cast).forEach(bonusTag -> itemBonuses.add(deserializeBonus(bonusTag)));
         return itemBonuses;
     }
@@ -167,9 +179,9 @@ public class ItemBonusHandler {
         for (ItemBonus<?> itemBonus : bonuses) {
             bonusesTagList.add(serializeBonus(itemBonus));
         }
-        stack.getOrCreateTag().put(tagName, bonusesTagList);
+        // Updates the CustomData component mapping layer securely without allocating raw outer tags
+        CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.put(tagName, bonusesTagList));
     }
-
     private static CompoundTag serializeBonus(ItemBonus<? extends ItemBonus<?>> bonus) {
         ItemBonus.Serializer serializer = bonus.getSerializer();
         CompoundTag bonusTag = serializer.serialize(bonus);
@@ -182,7 +194,8 @@ public class ItemBonusHandler {
         if (!tag.contains("type")) {
             return null;
         }
-        ResourceLocation id = new ResourceLocation(tag.getString("type"));
+        // Aligned 1.21.4: Using type-safe ResourceLocation parsing matching modern Mojang conventions
+        ResourceLocation id = ResourceLocation.parse(tag.getString("type").orElseThrow());
         ItemBonus.Serializer serializer = PSTRegistries.ITEM_BONUSES.get().getValue(id);
         if (serializer == null) {
             return null;
@@ -212,7 +225,11 @@ public class ItemBonusHandler {
         List<T> mergedBonuses = new ArrayList<>();
         for (T bonus : bonuses) {
             ItemBonus itemBonus = (ItemBonus) bonus;
-            Optional<ItemBonus> mergeTarget = mergedBonuses.stream().map(ItemBonus.class::cast).filter(itemBonus::canMerge).findAny();
+            Optional<ItemBonus> mergeTarget = mergedBonuses.stream()
+                    .map(ItemBonus.class::cast)
+                    .filter(itemBonus::canMerge)
+                    .findAny();
+
             if (mergeTarget.isPresent()) {
                 mergedBonuses.remove(mergeTarget.get());
                 mergedBonuses.add((T) mergeTarget.get().copy().merge(itemBonus));

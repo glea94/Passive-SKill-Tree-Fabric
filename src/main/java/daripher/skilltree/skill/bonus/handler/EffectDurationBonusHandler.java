@@ -6,6 +6,7 @@ import daripher.skilltree.mixin.MobEffectInstanceAccessor;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.player.EffectDurationBonus;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,7 +23,7 @@ public class EffectDurationBonusHandler {
 
     private static void applyEffectDurationBonuses(MobEffectAddedPSTEvent event) {
         LivingEntity target = event.getEntity();
-        if (target.level().isClientSide) {
+        if (target.level().isClientSide()) {
             return;
         }
         Player playerEffectSource = null;
@@ -34,8 +35,12 @@ public class EffectDurationBonusHandler {
         }
         float durationMultiplier = 1f;
         MobEffectInstance effectInstance = event.getEffectInstance();
-        MobEffect mobEffect = effectInstance.getEffect();
-        // outgoing effects, inflicted by players
+
+        // Aligned 1.21.4: Map status effect holders down cleanly using value() to evaluate bonus layers
+        Holder<MobEffect> mobEffectHolder = effectInstance.getEffect();
+        MobEffect mobEffect = mobEffectHolder.value();
+
+        // Outgoing effects, inflicted by players
         if (playerEffectSource != null) {
             List<EffectDurationBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(playerEffectSource, EffectDurationBonus.class);
             for (EffectDurationBonus skillBonus : skillBonuses) {
@@ -44,7 +49,7 @@ public class EffectDurationBonusHandler {
                 }
             }
         }
-        // incoming effects, inflicted onto players
+        // Incoming effects, inflicted onto players
         if (target instanceof Player playerTarget) {
             List<EffectDurationBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(playerTarget, EffectDurationBonus.class);
             for (EffectDurationBonus skillBonus : skillBonuses) {

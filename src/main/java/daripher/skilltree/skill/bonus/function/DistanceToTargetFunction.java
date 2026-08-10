@@ -9,7 +9,7 @@ import daripher.skilltree.skill.bonus.handler.SkillBonusHandlerUtils;
 import daripher.skilltree.skill.bonus.predicate.living.FloatFunctionEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
@@ -54,7 +54,6 @@ public class DistanceToTargetFunction implements FloatFunction<DistanceToTargetF
     public MutableComponent getRequirementTooltip(FloatFunctionEntityPredicate.Logic logic, float requiredValue) {
         return Component.literal("Unsupported").withStyle(ChatFormatting.RED);
     }
-
     @Override
     public FloatFunction.Serializer getSerializer() {
         return PSTFloatFunctions.DISTANCE_TO_TARGET.get();
@@ -62,6 +61,7 @@ public class DistanceToTargetFunction implements FloatFunction<DistanceToTargetF
 
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<FloatFunction<?>> consumer) {
+        // No widgets required for stateless function instances
     }
 
     public static class Serializer implements FloatFunction.Serializer {
@@ -90,13 +90,15 @@ public class DistanceToTargetFunction implements FloatFunction<DistanceToTargetF
             return new CompoundTag();
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public FloatFunction<?> deserialize(FriendlyByteBuf buf) {
+        public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             return new DistanceToTargetFunction();
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, FloatFunction<?> provider) {
+        public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof DistanceToTargetFunction)) {
                 throw new IllegalArgumentException();
             }

@@ -8,30 +8,19 @@ import net.minecraft.world.item.Item;
 
 public class PSTTags {
     public static class DamageTypes {
-        // TODO (étape events/dégâts) : à l'origine "forge:is_magic". Sous Fabric 1.20.1, il n'existe
-        // pas encore de tag conventionnel unifié pour "dégâts magiques" (l'unification des tags
-        // communs forge/fabric sous le namespace "c:" n'arrive qu'en 1.21+). Deux options réelles :
-        // 1) garder un tag propre au mod ("skilltree:is_magic") et laisser les packs de données/
-        //    autres mods compatibles l'y ajouter, 2) vérifier si Fabric API expose un
-        //    ConventionalDamageTypeTags équivalent au moment du portage des events de dégâts.
-        // Décision à prendre à l'étape "events Forge -> mixins/Fabric API", pas ici.
-        public static final TagKey<DamageType> IS_MAGIC = TagKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("skilltree", "is_magic"));
+        // Factual Fix 1.21.4: Map magic damage using the unified community convention namespace ('c')
+        public static final TagKey<DamageType> IS_MAGIC = TagKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("c", "is_magic"));
     }
 
     public static class Items {
-        // TODO (étape compat Curios -> Trinkets) : ces 3 tags ("curios:ring", "curios:necklace",
-        // "forge:curios/jewelry") correspondaient au système de tags d'items de Curios. Trinkets
-        // ne détecte pas ses emplacements de la même façon (slots définis par JSON dans
-        // data/trinkets/..., pas par tag générique d'item) : la vraie logique équivalente sera
-        // écrite à l'étape de réécriture de la compat accessoires, pas ici. Les TagKey ci-dessous
-        // sont conservés tels quels pour l'instant (juste des identifiants, sans effet avant
-        // d'être branchés à un système) afin de ne rien casser dans le reste du code qui les
-        // référence déjà.
-        public static final TagKey<Item> RINGS = TagKey.create(Registries.ITEM, new ResourceLocation("curios", "ring"));
-        public static final TagKey<Item> NECKLACES = TagKey.create(Registries.ITEM, new ResourceLocation("curios", "necklace"));
-        public static final TagKey<Item> JEWELRY = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "curios/jewelry"));
-        public static final TagKey<Item> MELEE_WEAPON = TagKey.create(Registries.ITEM, new ResourceLocation("skilltree", "melee_weapon"));
-        public static final TagKey<Item> RANGED_WEAPON = TagKey.create(Registries.ITEM, new ResourceLocation("skilltree", "ranged_weapon"));
-        public static final TagKey<Item> LEATHER_ARMOR = TagKey.create(Registries.ITEM, new ResourceLocation("skilltree", "armors/leather"));
+        // Factual Fix 1.21.4: Map accessories to standard unified cross-loader tags ('c:rings', 'c:necklaces')
+        public static final TagKey<Item> RINGS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "rings"));
+        public static final TagKey<Item> NECKLACES = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "necklaces"));
+        public static final TagKey<Item> JEWELRY = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "jewelry"));
+
+        // Mod specific classification tags remains under the local mod namespace
+        public static final TagKey<Item> MELEE_WEAPON = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("skilltree", "melee_weapon"));
+        public static final TagKey<Item> RANGED_WEAPON = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("skilltree", "ranged_weapon"));
+        public static final TagKey<Item> LEATHER_ARMOR = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("skilltree", "armors/leather"));
     }
 }

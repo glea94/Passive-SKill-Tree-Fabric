@@ -16,7 +16,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -99,7 +99,7 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
         MutableComponent tooltip;
         if (chance < 1f) {
             tooltip = Component.translatable(getDescriptionId() + ".chance", itemStackPredicate.getTooltip());
-            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.MULTIPLY_BASE);
+            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         } else {
             tooltip = Component.translatable(getDescriptionId(), itemStackPredicate.getTooltip());
         }
@@ -136,7 +136,6 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
                 .setMenuInitFunc(() -> addPlayerMultiplierWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectChance(Consumer<ItemDurabilityLossPreventionBonus> consumer, Double value) {
         setChance(value.floatValue());
         consumer.accept(this.copy());
@@ -224,7 +223,7 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
 
         @Override
         public ItemDurabilityLossPreventionBonus deserialize(CompoundTag tag) {
-            float chance = tag.getFloat("chance");
+            float chance = tag.getFloatOr("chance", 0f);
             ItemDurabilityLossPreventionBonus bonus = new ItemDurabilityLossPreventionBonus(chance);
             bonus.playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
@@ -245,8 +244,9 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ItemDurabilityLossPreventionBonus deserialize(FriendlyByteBuf buf) {
+        public ItemDurabilityLossPreventionBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
             ItemDurabilityLossPreventionBonus bonus = new ItemDurabilityLossPreventionBonus(chance);
             bonus.playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
@@ -255,8 +255,9 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemDurabilityLossPreventionBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

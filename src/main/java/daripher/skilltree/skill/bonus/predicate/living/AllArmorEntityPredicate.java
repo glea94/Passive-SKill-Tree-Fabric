@@ -12,13 +12,12 @@ import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
 import daripher.skilltree.skill.bonus.predicate.item.NoneItemStackPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -122,13 +121,15 @@ public final class AllArmorEntityPredicate implements LivingEntityPredicate {
             return validPredicate;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public LivingEntityPredicate deserialize(FriendlyByteBuf buf) {
+        public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new AllArmorEntityPredicate(NetworkHelper.readItemPredicate(buf));
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, LivingEntityPredicate predicate) {
+        public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             AllArmorEntityPredicate validPredicate = validatePredicate(predicate);
             NetworkHelper.writeItemPredicate(buf, validPredicate.itemStackPredicate);
         }

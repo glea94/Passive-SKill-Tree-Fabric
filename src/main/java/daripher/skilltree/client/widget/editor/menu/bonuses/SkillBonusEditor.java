@@ -20,7 +20,14 @@ public class SkillBonusEditor extends EditorMenu {
     @Override
     public void init() {
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
-        editor.addConfirmationButton(110, 0, 90, 14, "Remove", "Confirm").setPressFunc(button -> changesListener.accept(null));
+
+        // Factual Fix 1.21.4: Safely step out to the previous menu after deletion
+        // to avoid widget tree rendering failures on a null object state.
+        editor.addConfirmationButton(110, 0, 90, 14, "Remove", "Confirm").setPressFunc(button -> {
+            changesListener.accept(null);
+            editor.selectMenu(previousMenu);
+        });
+
         editor.increaseHeight(29);
         SkillBonus<?> skillBonus = selectedValueProvider.get();
         if (skillBonus == null) {

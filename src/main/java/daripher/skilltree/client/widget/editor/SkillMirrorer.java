@@ -1,7 +1,10 @@
 package daripher.skilltree.client.widget.editor;
 
+<<<<<<< Updated upstream
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
+=======
+>>>>>>> Stashed changes
 import daripher.skilltree.client.screen.ScreenHelper;
 import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.ChatFormatting;
@@ -11,7 +14,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
-
 import org.jetbrains.annotations.Nullable;
 
 public class SkillMirrorer extends AbstractWidget {
@@ -22,16 +24,18 @@ public class SkillMirrorer extends AbstractWidget {
     private int mirrorSides = 2;
 
     public SkillMirrorer(SkillTreeEditor editor) {
+        // Factual Fix 1.21.4: AbstractWidget constructor strictly requires x, y, width, height, and message
         super(0, 0, 0, 0, Component.empty());
         this.editor = editor;
+        // Factual Fix 1.21.4: Directly apply vanilla active field state to block method conflicts
         this.active = false;
     }
 
     public void init() {
         editor.addLabel(19, 0, "Mirror", ChatFormatting.GOLD);
-        editor.addCheckBox(0, 0, active).setResponder(v -> setActive(editor, v));
+        editor.addCheckBox(0, 0, this.active).setResponder(v -> updateMirrorActive(editor, v));
         editor.increaseHeight(19);
-        if (!active) {
+        if (!this.active) {
             return;
         }
         editor.addLabel(0, 0, "Sectors", ChatFormatting.GOLD);
@@ -53,7 +57,7 @@ public class SkillMirrorer extends AbstractWidget {
 
     @Override
     protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        if (!active) {
+        if (!this.active) {
             return;
         }
         graphics.pose().pushPose();
@@ -68,13 +72,19 @@ public class SkillMirrorer extends AbstractWidget {
             graphics.fill(-1, -1, 1, width * 2, 0x55CFCFCF);
         }
         ScreenHelper.drawRectangle(graphics, -4, -4, 8, 8, 0x55CFCFCF);
+<<<<<<< Updated upstream
         graphics.pose().popPose();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
+=======
+        graphics.pose().popMatrix();
+>>>>>>> Stashed changes
     }
 
-    private void setActive(SkillTreeEditor editor, boolean active) {
+    // Factual Fix 1.21.4: Renamed from setActive to updateMirrorActive to prevent overloading conflict errors
+    private void updateMirrorActive(SkillTreeEditor editor, boolean active) {
         this.active = active;
+        editor.clearWidgets();
         editor.rebuildWidgets();
     }
 
@@ -85,6 +95,7 @@ public class SkillMirrorer extends AbstractWidget {
         }
         mirrorCenterX = selectedSkill.getPositionX();
         mirrorCenterY = selectedSkill.getPositionY();
+        editor.clearWidgets();
         editor.rebuildWidgets();
     }
 
@@ -104,7 +115,7 @@ public class SkillMirrorer extends AbstractWidget {
     }
 
     public void createSkills(float angle, float distance, SkillFactory skillFactory) {
-        if (!active) {
+        if (!this.active) {
             return;
         }
         float sectorSize = 360f / mirrorSides;
@@ -141,4 +152,13 @@ public class SkillMirrorer extends AbstractWidget {
     @Override
     protected void updateWidgetNarration(@NotNull NarrationElementOutput output) {
     }
+<<<<<<< Updated upstream
 }
+=======
+
+    @FunctionalInterface
+    public interface SkillFactory {
+        void accept(float x, float y, PassiveSkill skill);
+    }
+}
+>>>>>>> Stashed changes

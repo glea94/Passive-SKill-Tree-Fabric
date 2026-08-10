@@ -16,6 +16,9 @@ import java.util.List;
  * en attente (menu Forge complexe, cf. étape 8 - pas assez de certitude sans jar décompilé pour
  * cibler la bonne méthode sans risque). Ce handler ne fera donc rien tant que ce mixin n'existe
  * pas, mais compile et s'enregistre proprement, prêt à fonctionner dès que l'event sera câblé.
+ * <p>
+ * NOTE DE MISE À JOUR 1.21.4 : Une fois 'genSources' exécuté, l'implémentation propre se fera
+ * via un @Mixin ciblant la méthode updateResult() d'AnvilMenu pour déclencher l'event maison.
  */
 public class RepairEfficiencyBonusHandler {
     public static void register() {

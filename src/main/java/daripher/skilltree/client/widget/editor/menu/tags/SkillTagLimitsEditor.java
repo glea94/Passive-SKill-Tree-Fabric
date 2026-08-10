@@ -46,6 +46,9 @@ public class SkillTagLimitsEditor extends EditorMenu {
             limitEditor.setNumericFilter(d -> d >= 0).setNumericResponder(v -> {
                 saveFunc.run();
                 if (v == 0) {
+                    // Factual Fix 1.21.4: Clear widgets tracking layouts before telling the screen to rebuild
+                    // to prevent duplicate widget reference states during the input tick cycle.
+                    editor.clearWidgets();
                     editor.rebuildWidgets();
                 }
             });

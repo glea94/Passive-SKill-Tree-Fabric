@@ -12,7 +12,7 @@ import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
 import daripher.skilltree.skill.bonus.predicate.item.NoneItemStackPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -50,7 +50,7 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
 
     @Override
     public RepairEfficiencyBonus multiply(double multiplier) {
-        return new RepairEfficiencyBonus(itemStackPredicate, (float) (multiplier * multiplier));
+        return new RepairEfficiencyBonus(itemStackPredicate, (float) (this.multiplier * multiplier));
     }
 
     @Override
@@ -72,7 +72,7 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
     @Override
     public MutableComponent getSimpleTooltip() {
         Component itemDescription = itemStackPredicate.getTooltip("plural.type");
-        AttributeModifier.Operation operation = AttributeModifier.Operation.MULTIPLY_BASE;
+        AttributeModifier.Operation operation = AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
         Component bonusDescription = Component.translatable(getDescriptionId() + ".bonus");
         bonusDescription = TooltipHelper.getSkillBonusTooltip(bonusDescription, multiplier, operation)
                 .withStyle(TooltipHelper.getSkillBonusSecondStyle(isPositive()));
@@ -97,7 +97,6 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
                 .setMenuInitFunc(() -> addItemConditionWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addItemConditionWidgets(SkillTreeEditor editor, Consumer<RepairEfficiencyBonus> consumer) {
         itemStackPredicate.addEditorWidgets(editor, condition -> {
             setItemCondition(condition);
@@ -173,7 +172,7 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
         @Override
         public RepairEfficiencyBonus deserialize(CompoundTag tag) {
             ItemStackPredicate condition = SerializationHelper.deserializeItemPredicate(tag);
-            float multiplier = tag.getFloat("multiplier");
+            float multiplier = tag.getFloatOr("multiplier", 0f);
             return new RepairEfficiencyBonus(condition, multiplier);
         }
 
@@ -188,13 +187,15 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public RepairEfficiencyBonus deserialize(FriendlyByteBuf buf) {
+        public RepairEfficiencyBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new RepairEfficiencyBonus(NetworkHelper.readItemPredicate(buf), buf.readFloat());
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RepairEfficiencyBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

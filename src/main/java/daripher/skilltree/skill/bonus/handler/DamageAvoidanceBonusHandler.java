@@ -36,6 +36,7 @@ public class DamageAvoidanceBonusHandler {
             avoidanceChance += skillBonus.getChance(damageSource, player, attacker);
         }
         if (player.getRandom().nextFloat() < avoidanceChance) {
+            // Cancels the incoming damage sequence safely on the event pipeline
             event.setCanceled(true);
             EventListenerBonusHandler.triggerEvent(player, EvasionEventListener.class, (eventListener, skillBonus) -> {
                 eventListener.onEvent(player, attacker, skillBonus);

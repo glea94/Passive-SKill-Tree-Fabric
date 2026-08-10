@@ -1,18 +1,13 @@
 package daripher.skilltree.capability.skill;
 
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerPlayer;
 
-/**
- * Portage Fabric : remplace net.minecraftforge.common.util.INBTSerializable<CompoundTag>.
- * Cardinal Components utilise Component (readFromNbt/writeToNbt, méthodes void qui mutent le
- * tag passé en paramètre) au lieu de serializeNBT()/deserializeNBT() de Forge (qui retournait
- * un nouveau tag). @AutoRegisterCapability disparaît : l'enregistrement se fait explicitement
- * dans PSTComponents, pas par annotation scannée au chargement.
- */
-public interface IPlayerSkills extends AutoSyncedComponent  {
+// Ajout explicite de Component en plus de AutoSyncedComponent pour la robustesse de l'API V6
+public interface IPlayerSkills extends Component, AutoSyncedComponent {
     NonNullList<PassiveSkill> getPlayerSkills();
 
     boolean learnSkill(PassiveSkill passiveSkill);

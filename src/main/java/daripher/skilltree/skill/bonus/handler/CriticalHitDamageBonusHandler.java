@@ -22,7 +22,8 @@ public class CriticalHitDamageBonusHandler {
 
     private static void applyCritBonuses(CriticalHitPSTEvent event) {
         Player player = event.getEntity();
-        if (player.level().isClientSide) {
+        // Fix 1.21.9 : isClientSide champ private, méthode isClientSide() confirmée par décompilation
+        if (player.level().isClientSide()) {
             return;
         }
         if (!(event.getTarget() instanceof LivingEntity hurtEntity)) {
@@ -39,7 +40,7 @@ public class CriticalHitDamageBonusHandler {
     private static void applyIndirectHitCritDamage(LivingHurtPSTEvent event) {
         DamageSource damageSource = event.getSource();
         Entity directDamagingEntity = damageSource.getDirectEntity();
-        // dégâts directs, gérés par la méthode au-dessus, on ignore ici
+        // Dégâts directs, gérés par la méthode au-dessus, on ignore ici
         if (directDamagingEntity instanceof Player) {
             return;
         }

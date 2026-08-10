@@ -3,18 +3,21 @@ package daripher.skilltree.skill.bonus.predicate.item;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTItemPredicates;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 
 public record FoodStackPredicate() implements ItemStackPredicate {
     @Override
     public boolean test(ItemStack stack) {
-        return stack.getItem().getFoodProperties() != null;
+        // Aligned 1.21.4: Direct native check using modern component infrastructure
+        return stack.has(DataComponents.FOOD);
     }
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == null) return false;
         return obj.getClass() == this.getClass();
     }
 
@@ -54,13 +57,15 @@ public record FoodStackPredicate() implements ItemStackPredicate {
             return new CompoundTag();
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ItemStackPredicate deserialize(FriendlyByteBuf buf) {
+        public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new FoodStackPredicate();
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, ItemStackPredicate condition) {
+        public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof FoodStackPredicate)) {
                 throw new IllegalArgumentException();
             }

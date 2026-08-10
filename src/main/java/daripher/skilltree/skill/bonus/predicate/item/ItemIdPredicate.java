@@ -5,9 +5,10 @@ import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.init.predicate.PSTItemPredicates;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,12 +26,13 @@ public final class ItemIdPredicate implements ItemStackPredicate {
 
     @Override
     public boolean test(ItemStack stack) {
-        return BuiltInRegistries.ITEM.get(id) == stack.getItem();
+        Item item = BuiltInRegistries.ITEM.get(id).map(Holder::value).orElse(null);
+        return item == stack.getItem();
     }
 
     @Override
     public String getDescriptionId() {
-        Item item = BuiltInRegistries.ITEM.get(id);
+        Item item = BuiltInRegistries.ITEM.get(id).map(Holder::value).orElse(null);
         if (item != null) {
             return item.getDescriptionId();
         }
@@ -69,15 +71,15 @@ public final class ItemIdPredicate implements ItemStackPredicate {
     }
 
     private void selectItemId(Consumer<ItemStackPredicate> consumer, String text) {
-        setId(new ResourceLocation(text));
+        setId(ResourceLocation.parse(text));
         consumer.accept(this);
     }
 
     private static boolean isItemId(String text) {
-        if (!ResourceLocation.isValidResourceLocation(text)) {
+        if (ResourceLocation.tryParse(text) == null) {
             return false;
         }
-        return BuiltInRegistries.ITEM.containsKey(new ResourceLocation(text));
+        return BuiltInRegistries.ITEM.containsKey(ResourceLocation.parse(text));
     }
 
     public void setId(ResourceLocation id) {
@@ -87,7 +89,7 @@ public final class ItemIdPredicate implements ItemStackPredicate {
     public static class Serializer implements ItemStackPredicate.Serializer {
         @Override
         public ItemStackPredicate deserialize(JsonObject json) throws JsonParseException {
-            ResourceLocation id = new ResourceLocation(json.get("id").getAsString());
+            ResourceLocation id = ResourceLocation.parse(json.get("id").getAsString());
             return new ItemIdPredicate(id);
         }
 
@@ -103,7 +105,8 @@ public final class ItemIdPredicate implements ItemStackPredicate {
         public ItemStackPredicate deserialize(CompoundTag tag) {
             Tag idTag = tag.get("id");
             Objects.requireNonNull(idTag);
-            ResourceLocation id = new ResourceLocation(idTag.getAsString());
+            // Fix 1.21.5 : Tag.getAsString() renommé Tag.asString(), retourne Optional<String>
+            ResourceLocation id = ResourceLocation.parse(idTag.asString().orElseThrow());
             return new ItemIdPredicate(id);
         }
 
@@ -118,12 +121,12 @@ public final class ItemIdPredicate implements ItemStackPredicate {
         }
 
         @Override
-        public ItemStackPredicate deserialize(FriendlyByteBuf buf) {
-            return new ItemIdPredicate(new ResourceLocation(buf.readUtf()));
+        public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
+            return new ItemIdPredicate(ResourceLocation.parse(buf.readUtf()));
         }
 
         @Override
-        public void serialize(FriendlyByteBuf buf, ItemStackPredicate condition) {
+        public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof ItemIdPredicate aCondition)) {
                 throw new IllegalArgumentException();
             }
@@ -132,7 +135,7 @@ public final class ItemIdPredicate implements ItemStackPredicate {
 
         @Override
         public ItemStackPredicate createDefaultInstance() {
-            return new ItemIdPredicate(new ResourceLocation("minecraft:shield"));
+            return new ItemIdPredicate(ResourceLocation.parse("minecraft:shield"));
         }
     }
 }

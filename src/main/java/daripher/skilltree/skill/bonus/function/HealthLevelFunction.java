@@ -8,7 +8,7 @@ import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.predicate.living.FloatFunctionEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
@@ -79,7 +79,6 @@ public class HealthLevelFunction implements FloatFunction<HealthLevelFunction> {
         Component logicDescription = logic.getTooltip("health_level", valueDescription);
         return Component.translatable(key, bonusTooltip, logicDescription, pointsDescription);
     }
-
     @Override
     public MutableComponent getRequirementTooltip(FloatFunctionEntityPredicate.Logic logic, float requiredValue) {
         String key = "%s.requirement".formatted(getDescriptionId());
@@ -146,7 +145,6 @@ public class HealthLevelFunction implements FloatFunction<HealthLevelFunction> {
         HealthLevelFunction that = (HealthLevelFunction) o;
         return percentage == that.percentage && missing == that.missing;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(percentage, missing);
@@ -179,8 +177,9 @@ public class HealthLevelFunction implements FloatFunction<HealthLevelFunction> {
 
         @Override
         public FloatFunction<?> deserialize(CompoundTag tag) {
-            boolean percentage = tag.getBoolean("percentage");
-            boolean missing = tag.getBoolean("missing");
+            // Factual Fix 1.21.5 (confirmé par décompilation de CompoundTag) : getBoolean(String) retourne désormais Optional<Boolean> ; getBooleanOr(String, boolean) retrouve l'ancien comportement (false par défaut si absent)
+            boolean percentage = tag.getBooleanOr("percentage", false);
+            boolean missing = tag.getBooleanOr("missing", false);
             return new HealthLevelFunction(percentage, missing);
         }
 
@@ -195,15 +194,17 @@ public class HealthLevelFunction implements FloatFunction<HealthLevelFunction> {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public FloatFunction<?> deserialize(FriendlyByteBuf buf) {
+        public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             boolean percentage = buf.readBoolean();
             boolean missing = buf.readBoolean();
             return new HealthLevelFunction(percentage, missing);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, FloatFunction<?> provider) {
+        public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof HealthLevelFunction aProvider)) {
                 throw new IllegalArgumentException();
             }
