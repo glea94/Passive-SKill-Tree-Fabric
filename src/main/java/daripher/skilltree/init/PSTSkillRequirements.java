@@ -3,7 +3,7 @@ package daripher.skilltree.init;
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.skill.requirement.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import daripher.skilltree.util.registry.DeferredRegister;
 import daripher.skilltree.util.registry.RegistryObject;
 
@@ -11,7 +11,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTSkillRequirements {
+<<<<<<< Updated upstream
     public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "skill_requirements");
+=======
+    public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_requirements");
+>>>>>>> Stashed changes
     public static final DeferredRegister<SkillRequirement.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<SkillRequirement.Serializer> STAT_VALUE = REGISTRY.register("stat_value", StatRequirement.Serializer::new);
@@ -26,7 +30,7 @@ public class PSTSkillRequirements {
     }
 
     public static String getName(SkillRequirement<?> bonus) {
-        ResourceLocation id = PSTRegistries.SKILL_REQUIREMENTS.get().getKey(bonus.getSerializer());
+        Identifier id = PSTRegistries.SKILL_REQUIREMENTS.get().getKey(bonus.getSerializer());
         return TooltipHelper.idToName(Objects.requireNonNull(id).getPath());
     }
 }

@@ -42,28 +42,28 @@ public class SkillSelector extends AbstractWidget {
     }
 
     private void renderSelectedSkillsHighlight(@NotNull GuiGraphics graphics) {
-        graphics.pose().pushPose();
-        graphics.pose().translate(skillButtons.getScrollX(), skillButtons.getScrollY(), 0);
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(skillButtons.getScrollX(), skillButtons.getScrollY());
         float zoom = skillButtons.getZoom();
         for (SkillButton widget : getSelectedButtons()) {
             renderSkillSelection(graphics, widget, zoom);
         }
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 
     private void renderSkillSelection(@NotNull GuiGraphics graphics, SkillButton widget, float zoom) {
-        graphics.pose().pushPose();
-        double widgetCenterX = widget.getX() + widget.getWidth() / 2f;
-        double widgetCenterY = widget.getY() + widget.getHeight() / 2f;
-        graphics.pose().translate(widgetCenterX, widgetCenterY, 0F);
-        graphics.pose().scale(zoom, zoom, 1F);
-        graphics.pose().translate(-widgetCenterX, -widgetCenterY, 0F);
+        graphics.pose().pushMatrix();
+        float widgetCenterX = widget.getX() + widget.getWidth() / 2f;
+        float widgetCenterY = widget.getY() + widget.getHeight() / 2f;
+        graphics.pose().translate(widgetCenterX, widgetCenterY);
+        graphics.pose().scale(zoom, zoom);
+        graphics.pose().translate(-widgetCenterX, -widgetCenterY);
         int x = widget.getX() - 1;
         int y = widget.getY() - 1;
         int width = widget.getWidth() + 2;
         int height = widget.getHeight() + 2;
         ScreenHelper.drawRectangle(graphics, x, y, width, height, SELECTION_COLOR);
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 
     private void renderSelectionArea(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {

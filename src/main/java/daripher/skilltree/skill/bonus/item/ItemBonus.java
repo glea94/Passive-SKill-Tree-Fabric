@@ -3,7 +3,7 @@ package daripher.skilltree.skill.bonus.item;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.init.PSTRegistries;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,7 +21,7 @@ public interface ItemBonus<T extends ItemBonus<T>> {
     ItemBonus.Serializer getSerializer();
 
     default String getDescriptionId() {
-        ResourceLocation id = PSTRegistries.ITEM_BONUSES.get().getKey(getSerializer());
+        Identifier id = PSTRegistries.ITEM_BONUSES.get().getKey(getSerializer());
         Objects.requireNonNull(id);
         return "item_bonus.%s.%s".formatted(id.getNamespace(), id.getPath());
     }

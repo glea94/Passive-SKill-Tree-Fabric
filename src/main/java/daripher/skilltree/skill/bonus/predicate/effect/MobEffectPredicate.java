@@ -4,7 +4,7 @@ import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.init.PSTRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 
 import java.util.Objects;
@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 
 public interface MobEffectPredicate extends Predicate<MobEffect> {
     default String getDescriptionId() {
-        ResourceLocation id = PSTRegistries.MOB_EFFECT_PREDICATES.get().getKey(getSerializer());
+        Identifier id = PSTRegistries.MOB_EFFECT_PREDICATES.get().getKey(getSerializer());
         Objects.requireNonNull(id);
         return "mob_effect_predicate.%s.%s".formatted(id.getNamespace(), id.getPath());
     }

@@ -11,11 +11,11 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,8 +30,13 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
+<<<<<<< Updated upstream
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/gui/container/workbench.png");
     private static final ResourceLocation RECIPES_TEXTURE = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/gui/container/workbench_recipes.png");
+=======
+    private static final Identifier BACKGROUND_TEXTURE = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/gui/container/workbench.png");
+    private static final Identifier RECIPES_TEXTURE = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/gui/container/workbench_recipes.png");
+>>>>>>> Stashed changes
     private static final int SCROLLER_WIDTH = 12;
     private static final int SCROLLER_HEIGHT = 15;
     private static final int SCROLLER_FULL_HEIGHT = 90;
@@ -52,12 +57,17 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
 
     @Override
     protected void init() {
+        // Fix 1.21.11 : Screen n'expose plus de resize(Minecraft,int,int) séparé - init() est réappelée directement
+        // par le framework à l'ouverture ET au redimensionnement, donc la préservation du texte de recherche
+        // (auparavant faite dans resize()) est désormais faite ici, avant que clearWidgets() ne détruise l'ancien searchBox
+        String previousSearch = searchBox != null ? searchBox.getValue() : "";
         super.init();
         clearWidgets();
         searchBox = new EditBox(font, leftPos + 36, topPos + 9, 102, 10, Component.empty());
         searchBox.setMaxLength(57);
         searchBox.setBordered(false);
         searchBox.setTextColor(0xffffff);
+<<<<<<< Updated upstream
         addRenderableWidget(searchBox);
     }
 
@@ -67,14 +77,23 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
         init(minecraft, width, height);
         searchBox.setValue(search);
         if (!searchBox.getValue().isEmpty()) {
+=======
+        this.addRenderableWidget(searchBox);
+        if (!previousSearch.isEmpty()) {
+            searchBox.setValue(previousSearch);
+>>>>>>> Stashed changes
             refreshSearchResults();
         }
     }
 
     @Override
     protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
+<<<<<<< Updated upstream
         renderBackground(guiGraphics);
         guiGraphics.blit(BACKGROUND_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+=======
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0F, 0F, this.imageWidth, this.imageHeight, 256, 256);
+>>>>>>> Stashed changes
         renderScroll(guiGraphics);
         renderRecipes(guiGraphics, mouseX, mouseY);
         if (searchBox.getValue().isEmpty()) {
@@ -87,8 +106,15 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
         int scrollerIconIndex = (isScrollBarActive() ? 2 : 1);
         int scrollerX = leftPos + 156;
         float scrollOffset = (float) amountScrolled / getMaxScroll();
+<<<<<<< Updated upstream
         int scrollerY = (int) (topPos + 24 + (SCROLLER_FULL_HEIGHT - SCROLLER_HEIGHT) * scrollOffset);
         guiGraphics.blit(BACKGROUND_TEXTURE, scrollerX, scrollerY, -SCROLLER_WIDTH * scrollerIconIndex, 0, SCROLLER_WIDTH, SCROLLER_HEIGHT);
+=======
+        int scrollerY = (int) (this.topPos + 24 + (SCROLLER_FULL_HEIGHT - SCROLLER_HEIGHT) * scrollOffset);
+
+        int uOffset = 256 - (SCROLLER_WIDTH * scrollerIconIndex);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, scrollerX, scrollerY, (float) uOffset, 0F, SCROLLER_WIDTH, SCROLLER_HEIGHT, 256, 256);
+>>>>>>> Stashed changes
     }
 
     private void renderRecipes(GuiGraphics guiGraphics, double mouseX, double mouseY) {
@@ -98,8 +124,14 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
             int y = topPos + RECIPES_Y + i * RECIPE_HEIGHT;
             int recipeTexture = getRecipeTexture(mouseX, mouseY, recipeIndex, i);
             int vOffset = recipeTexture * RECIPE_HEIGHT;
+<<<<<<< Updated upstream
             guiGraphics.blit(RECIPES_TEXTURE, x, y, 0, vOffset, RECIPE_WIDTH, RECIPE_HEIGHT);
             AbstractWorkbenchRecipe recipe = getRecipeInSlot(i).getKey();
+=======
+
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, RECIPES_TEXTURE, x, y, 0F, (float) vOffset, RECIPE_WIDTH, RECIPE_HEIGHT, 256, 256);
+            AbstractWorkbenchRecipe recipe = getRecipeInSlot(i).getKey().value();
+>>>>>>> Stashed changes
             String tooltip = recipe.getShortDescription().getString();
             tooltip = TooltipHelper.getTrimmedString(font, tooltip, RECIPE_WIDTH - 4);
             guiGraphics.drawString(font, tooltip, x + 2, y + 5, 0xffffff);
@@ -272,15 +304,24 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
             if (!isMouseOverRecipe(i, mouseX, mouseY)) {
                 continue;
             }
+<<<<<<< Updated upstream
             AbstractWorkbenchRecipe recipe = getRecipeInSlot(i).getKey();
             guiGraphics.renderComponentTooltip(font, recipe.getFullDescription(), mouseX, mouseY);
+=======
+            AbstractWorkbenchRecipe recipe = getRecipeInSlot(i).getKey().value();
+            guiGraphics.setComponentTooltipForNextFrame(this.font, recipe.getFullDescription(), mouseX, mouseY);
+>>>>>>> Stashed changes
         }
     }
 
     private void renderItemTooltip(@NotNull GuiGraphics guiGraphics, int x, int y, ItemStack itemStack) {
         List<Component> tooltip = getTooltipFromContainerItem(itemStack);
         Optional<TooltipComponent> tooltipImage = itemStack.getTooltipImage();
+<<<<<<< Updated upstream
         guiGraphics.renderTooltip(font, tooltip, tooltipImage, x, y);
+=======
+        guiGraphics.setTooltipForNextFrame(this.font, tooltip, tooltipImage, x, y);
+>>>>>>> Stashed changes
     }
 
     private void renderMissingItemStack(GuiGraphics guiGraphics, int itemX, int itemY, ItemStack itemStack) {

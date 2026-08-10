@@ -8,7 +8,13 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+<<<<<<< Updated upstream
 import net.minecraft.resources.ResourceLocation;
+=======
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.context.ContextMap;
+>>>>>>> Stashed changes
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,14 +29,44 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
+<<<<<<< Updated upstream
+=======
+    private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_vanilla_crafting_recipe");
+
+>>>>>>> Stashed changes
     private @Nullable Pair<Ingredient, Integer> baseIngredient;
     private Map<Ingredient, Integer> additionalIngredients;
     private final ItemStack result;
 
+<<<<<<< Updated upstream
     public WorkbenchVanillaCraftingRecipe(CraftingRecipe vanillaRecipe, RegistryAccess registryAccess) {
         super(vanillaRecipe.getId(), true);
         this.result = vanillaRecipe.getResultItem(registryAccess);
         additionalIngredients = getIngredientsFromCraftingRecipe(vanillaRecipe);
+=======
+    public WorkbenchVanillaCraftingRecipe(RecipeHolder<CraftingRecipe> vanillaRecipeHolder, HolderLookup.Provider registryAccess) {
+        // Factual Fix 1.21.4: Extracted raw Identifier path out of the RecipeHolder's ResourceKey handle
+        super(vanillaRecipeHolder.id().identifier(), true);
+        CraftingRecipe vanillaRecipe = vanillaRecipeHolder.value();
+        // Factual Fix 1.21.5 : CraftingRecipe#getResultItem(HolderLookup.Provider) a été retiré de l'interface Recipe<T>,
+        // remplacé par le système RecipeDisplay (confirmé par décompilation Fernflower de Recipe<T>, RecipeDisplay et
+        // SlotDisplay) : Recipe#display() -> List<RecipeDisplay>, RecipeDisplay#result() -> SlotDisplay,
+        // SlotDisplay#resolveForFirstStack(ContextMap) -> ItemStack. Ici on n'a qu'un HolderLookup.Provider (pas un
+        // Level), donc le ContextMap ne peut pas être construit via SlotDisplayContext.fromLevel(Level) comme dans
+        // WorkbenchMenu.java ; il est construit à la main avec la même API (ContextMap.Builder#withParameter/#create,
+        // confirmée par le corps décompilé de SlotDisplayContext.fromLevel) en ne renseignant que REGISTRIES, seule clé
+        // utilisée par les CraftingRecipe vanilla standards (FUEL_VALUES ne concerne que les recettes de fourneau).
+        List<RecipeDisplay> vanillaDisplays = vanillaRecipe.display();
+        ItemStack resolvedResult = ItemStack.EMPTY;
+        if (!vanillaDisplays.isEmpty()) {
+            ContextMap resolveContext = new ContextMap.Builder()
+                    .withParameter(SlotDisplayContext.REGISTRIES, registryAccess)
+                    .create(SlotDisplayContext.CONTEXT);
+            resolvedResult = vanillaDisplays.get(0).result().resolveForFirstStack(resolveContext);
+        }
+        this.result = resolvedResult;
+        this.additionalIngredients = getIngredientsFromCraftingRecipe(vanillaRecipe, registryAccess);
+>>>>>>> Stashed changes
         List<Pair<Ingredient, Integer>> ingredients = new ArrayList<>(additionalIngredients.entrySet().stream().map(Pair::of).toList());
         if (!ingredients.isEmpty()) {
             this.baseIngredient = ingredients.remove(0);
@@ -38,7 +74,7 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
         }
     }
 
-    private WorkbenchVanillaCraftingRecipe(@NotNull ResourceLocation id, @Nullable Pair<Ingredient, Integer> baseIngredient, Map<Ingredient, Integer> additionalIngredients, ItemStack result) {
+    private WorkbenchVanillaCraftingRecipe(@NotNull Identifier id, @Nullable Pair<Ingredient, Integer> baseIngredient, Map<Ingredient, Integer> additionalIngredients, ItemStack result) {
         super(id, true);
         this.result = result;
         this.baseIngredient = baseIngredient;

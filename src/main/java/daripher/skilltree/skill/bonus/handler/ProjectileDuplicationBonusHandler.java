@@ -3,6 +3,7 @@ package daripher.skilltree.skill.bonus.handler;
 import daripher.skilltree.entity.persistentdata.PersistentDataProvider;
 import daripher.skilltree.event.LivingHurtPSTEvent;
 import daripher.skilltree.event.PSTEvents;
+import daripher.skilltree.mixin.AbstractArrowAccessor;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.ProjectileDuplicationBonus;
 import daripher.skilltree.util.event.EntityLoadHelper;
@@ -15,7 +16,12 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+<<<<<<< Updated upstream
 import net.minecraft.world.entity.projectile.AbstractArrow;
+=======
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.AbstractThrownPotion;
+>>>>>>> Stashed changes
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.phys.Vec3;
@@ -98,11 +104,23 @@ public class ProjectileDuplicationBonusHandler {
         if (duplicate instanceof AbstractArrow duplicateArrow) {
             AbstractArrow originalArrow = (AbstractArrow) original;
             duplicateArrow.pickup = AbstractArrow.Pickup.DISALLOWED;
+<<<<<<< Updated upstream
             float velocity = (float) movementVector.length();
             duplicateArrow.setEnchantmentEffectsFromEntity(player, velocity);
             duplicateArrow.setBaseDamage(originalArrow.getBaseDamage());
         } else if (duplicate instanceof ThrownPotion potion) {
             ThrownPotion originalPotion = (ThrownPotion) original;
+=======
+            ItemStack weaponItem = originalArrow.getWeaponItem();
+
+            // Aligned 1.21.4: Map the item context safely over the native EnchantmentHelper initialization logic
+            EnchantmentHelper.onProjectileSpawned(level, weaponItem != null ? weaponItem : ItemStack.EMPTY, duplicateArrow, item -> {});
+
+            AbstractArrowAccessor originalArrowAccessor = (AbstractArrowAccessor) originalArrow;
+            duplicateArrow.setBaseDamage(originalArrowAccessor.getBaseDamage());
+        } else if (duplicate instanceof AbstractThrownPotion potion) {
+            AbstractThrownPotion originalPotion = (AbstractThrownPotion) original;
+>>>>>>> Stashed changes
             potion.setItem(originalPotion.getItem());
         }
         level.addFreshEntity(duplicate);

@@ -26,7 +26,7 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,8 +36,8 @@ import java.util.function.Supplier;
 public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
     private final SkillButtons skills;
     private final PassiveSkillTree skillTree;
-    private final List<ResourceLocation> learnedSkills = new ArrayList<>();
-    public final List<ResourceLocation> newlyLearnedSkills = new ArrayList<>();
+    private final List<Identifier> learnedSkills = new ArrayList<>();
+    public final List<Identifier> newlyLearnedSkills = new ArrayList<>();
     private final List<SkillButton> startingPoints = new ArrayList<>();
     private final List<SkillButton> alwaysStartingPoints = new ArrayList<>();
     private Button buyButton;
@@ -148,7 +148,7 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
             return;
         }
         alwaysStartingPoints.stream().filter(button -> canLearnSkill(button.skill)).forEach(skillButton -> {
-            ResourceLocation skillId = skillButton.skill.getId();
+            Identifier skillId = skillButton.skill.getId();
             if (!newlyLearnedSkills.contains(skillId) && !learnedSkills.contains(skillId)) {
                 skillButton.setCanLearn();
             }
@@ -172,7 +172,7 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
         });
     }
 
-    private List<ResourceLocation> getLearnedSkillsOnTree() {
+    private List<Identifier> getLearnedSkillsOnTree() {
         return learnedSkills.stream().filter(skillTree.getSkillIds()::contains).toList();
     }
 
@@ -248,7 +248,15 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
     }
 
     private void confirmLearnSkills() {
+<<<<<<< Updated upstream
         newlyLearnedSkills.forEach(id -> learnSkill(skills.getWidgetById(id).skill));
+=======
+        // Fix : newlyLearnedSkills doit être vidé AVANT de déclencher les rebuilds via learnSkill(),
+        // car rebuildWidgets() (minecraft.execute) s'exécute de façon synchrone (même thread) et
+        // recréait le bouton confirm comme encore actif tant que la liste n'était pas encore vidée
+        // (le clear() se produisait après la boucle, donc trop tard pour le premier rebuild)
+        List<Identifier> skillsToLearn = new ArrayList<>(newlyLearnedSkills);
+>>>>>>> Stashed changes
         newlyLearnedSkills.clear();
     }
 

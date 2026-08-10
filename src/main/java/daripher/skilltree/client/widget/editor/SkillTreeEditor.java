@@ -37,7 +37,12 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+<<<<<<< Updated upstream
 import net.minecraft.resources.ResourceLocation;
+=======
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 import net.minecraft.stats.StatType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -148,10 +153,17 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
         return addWidget(new CheckBox(getWidgetsX(x), getWidgetsY(y), value));
     }
 
+<<<<<<< Updated upstream
     public TextureSelectionMenuButton addTextureSelectionMenu(int x, int y, int width, ResourceLocation currentValue, String folder) {
         Collection<ResourceLocation> values = SkillTexturesData.getTexturesInFolder(folder);
         x = getWidgetsX(x);
         y = getWidgetsY(y);
+=======
+    public TextureSelectionMenuButton addTextureSelectionMenu(int x, int y, int width, Identifier currentValue, String folder) {
+        Collection<Identifier> values = SkillTexturesData.getTexturesInFolder(folder);
+        int finalX = getWidgetsX(x);
+        int finalY = getWidgetsY(y);
+>>>>>>> Stashed changes
         String message = currentValue.toString();
         TextureSelectionMenuButton button = (TextureSelectionMenuButton) new TextureSelectionMenuButton(this, x, y, width, message, folder, values).setValue(currentValue)
                 .setElementNameGetter(TooltipHelper::getTextureName);
@@ -184,13 +196,21 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     }
 
     private static @Nullable <T> StatRequirement createDefaultRequirement(StatType<T> statType) {
-        ResourceLocation statId = BuiltInRegistries.STAT_TYPE.getKey(statType);
+        Identifier statId = BuiltInRegistries.STAT_TYPE.getKey(statType);
         Registry<T> statRegistry = statType.getRegistry();
         T stat = statRegistry.byId(0);
         if (stat == null) {
             return null;
         }
+<<<<<<< Updated upstream
         return new StatRequirement(statId, statRegistry.getKey(stat), 1);
+=======
+        Identifier entryId = statRegistry.getKey(stat);
+        if (entryId == null) {
+            return null;
+        }
+        return new StatRequirement(statId, entryId, 1);
+>>>>>>> Stashed changes
     }
 
     @SuppressWarnings("rawtypes")
@@ -372,7 +392,7 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
         skillButtons.getWidgets().removeIf(button -> button.skill == skill);
     }
 
-    public SkillButton getSkillButton(ResourceLocation skillId) {
+    public SkillButton getSkillButton(Identifier skillId) {
         return skillButtons.getWidgetById(skillId);
     }
 

@@ -3,7 +3,7 @@ package daripher.skilltree.client.widget.editor.menu;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.skill.SkillConnection;
 import daripher.skilltree.skill.PassiveSkill;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
@@ -72,7 +72,7 @@ public class SkillConnectionsEditor extends EditorMenu {
         PassiveSkill[] selectedSkills = editor.getSelectedSkills().toArray(new PassiveSkill[0]);
         for (int i = 0; i < selectedSkills.length - 1; i++) {
             PassiveSkill skill = selectedSkills[i];
-            List<ResourceLocation> connections = switch (connectionType) {
+            List<Identifier> connections = switch (connectionType) {
                 case DIRECT -> skill.getDirectConnections();
                 case LONG -> skill.getLongConnections();
                 case ONE_WAY -> skill.getOneWayConnections();

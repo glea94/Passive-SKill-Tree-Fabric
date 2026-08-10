@@ -4,7 +4,7 @@ import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.init.PSTRegistries;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Objects;
@@ -16,7 +16,7 @@ public interface LivingMultiplier {
     Serializer getSerializer();
 
     default String getDescriptionId() {
-        ResourceLocation id = PSTRegistries.LIVING_MULTIPLIERS.get().getKey(getSerializer());
+        Identifier id = PSTRegistries.LIVING_MULTIPLIERS.get().getKey(getSerializer());
         Objects.requireNonNull(id);
         return "skill_bonus_multiplier.%s.%s".formatted(id.getNamespace(), id.getPath());
     }

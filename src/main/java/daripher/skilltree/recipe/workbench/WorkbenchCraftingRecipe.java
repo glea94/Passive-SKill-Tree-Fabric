@@ -8,7 +8,12 @@ import daripher.skilltree.inventory.menu.WorkbenchContainer;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+<<<<<<< Updated upstream
 import net.minecraft.resources.ResourceLocation;
+=======
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -21,11 +26,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WorkbenchCraftingRecipe extends AbstractWorkbenchRecipe {
+<<<<<<< Updated upstream
+=======
+    // CORRECTION 1.21.1 : codec() et streamCodec() (voir la classe Serializer plus bas) ne reçoivent plus
+    // l'identifiant de la recette en cours de chargement : celui-ci vit désormais uniquement dans le
+    // RecipeHolder<T> construit par le RecipeManager (id = chemin du fichier JSON), et n'est plus transmis
+    // au Codec/StreamCodec de contenu de la recette elle-même (contrairement à l'ancien fromJson(id, json)
+    // et fromNetwork(id, buf) qui recevaient id directement). Le champ id "maison" d'AbstractWorkbenchRecipe
+    // est donc temporairement rempli avec cette valeur placeholder quand une recette est reconstruite via
+    // codec()/streamCodec() : getId() renverra ce placeholder tant que le code de chargement des recettes du
+    // mod (WorkbenchMenu, RecipeUnlockBonus, VanillaRecipeUnlockBonus, TooltipHelper...) n'aura pas été mis à
+    // jour pour réinjecter le vrai id (celui du RecipeHolder) après le chargement. Cf. l'explication détaillée
+    // envoyée avec ce fichier.
+    private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_crafting_recipe");
+
+>>>>>>> Stashed changes
     private final @Nullable Pair<Ingredient, Integer> baseIngredient;
     private final Map<Ingredient, Integer> additionalIngredients;
     private final ItemStack result;
 
-    public WorkbenchCraftingRecipe(ResourceLocation id, @Nullable Pair<Ingredient, Integer> baseIngredient, Map<Ingredient, Integer> additionalIngredients, boolean requiresPassiveSkill, ItemStack result) {
+    public WorkbenchCraftingRecipe(Identifier id, @Nullable Pair<Ingredient, Integer> baseIngredient, Map<Ingredient, Integer> additionalIngredients, boolean requiresPassiveSkill, ItemStack result) {
         super(id, requiresPassiveSkill);
         this.result = result;
         this.baseIngredient = baseIngredient;

@@ -18,6 +18,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
+<<<<<<< Updated upstream
+=======
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -49,8 +53,20 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
 
     @Override
     public void onSkillRemoved(ServerPlayer player) {
+<<<<<<< Updated upstream
         AttributesHelper.playerAttributesList().stream().map(player::getAttribute).filter(Objects::nonNull).filter(a -> !a.hasModifier(modifier))
                 .forEach(a -> a.removeModifier(modifier.getId()));
+=======
+        // Aligned 1.21.4: Direct modifier isolation and removal utilizing Identifier id keys
+        AttributesHelper.playerAttributesList().stream()
+                .map(attr -> player.getAttribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attr)))
+                .filter(Objects::nonNull)
+                .forEach(a -> {
+                    if (a.hasModifier(modifier.id())) {
+                        a.removeModifier(modifier.id());
+                    }
+                });
+>>>>>>> Stashed changes
     }
 
     @Override
@@ -105,7 +121,16 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
 
     @Override
     public AllAttributesBonus copy() {
+<<<<<<< Updated upstream
         AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), this.modifier.getName(), this.modifier.getAmount(), this.modifier.getOperation());
+=======
+        // Aligned 1.21.4: Safely spawn a new random resource-keyed identifier path on copy instantiation
+        AttributeModifier modifier = new AttributeModifier(
+                Identifier.fromNamespaceAndPath("skilltree", "modifier_" + UUID.randomUUID()),
+                this.modifier.amount(),
+                this.modifier.operation()
+        );
+>>>>>>> Stashed changes
         AllAttributesBonus bonus = new AllAttributesBonus(modifier);
         bonus.playerMultiplier = this.playerMultiplier;
         bonus.playerCondition = this.playerCondition;
@@ -294,7 +319,15 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
+<<<<<<< Updated upstream
             return new AllAttributesBonus(new AttributeModifier(UUID.randomUUID(), "Skill", 0.05, AttributeModifier.Operation.MULTIPLY_BASE));
+=======
+            return new AllAttributesBonus(new AttributeModifier(
+                    Identifier.fromNamespaceAndPath("skilltree", "default_all_attributes_bonus"),
+                    0.05,
+                    AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+            ));
+>>>>>>> Stashed changes
         }
     }
 }

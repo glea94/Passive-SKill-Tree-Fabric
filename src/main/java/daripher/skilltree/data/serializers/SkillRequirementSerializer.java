@@ -4,7 +4,7 @@ import com.google.gson.*;
 import daripher.skilltree.init.PSTRegistries;
 import daripher.skilltree.init.PSTSkillRequirements;
 import daripher.skilltree.skill.requirement.SkillRequirement;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -15,12 +15,18 @@ public class SkillRequirementSerializer implements JsonSerializer<SkillRequireme
         JsonObject jsonObj = (JsonObject) json;
         String type;
         if (!jsonObj.has("type")) {
-            ResourceLocation defaultRequirementType = PSTRegistries.SKILL_REQUIREMENTS.get().getKey(PSTSkillRequirements.STAT_VALUE.get());
+            Identifier defaultRequirementType = PSTRegistries.SKILL_REQUIREMENTS.get().getKey(PSTSkillRequirements.STAT_VALUE.get());
             type = Objects.requireNonNull(defaultRequirementType).toString();
         } else {
             type = jsonObj.get("type").getAsString();
         }
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(type);
+=======
+
+        // Aligned 1.21.4: Using Identifier.parse is standard and clean for handling full asset string IDs
+        Identifier serializerId = Identifier.parse(type);
+>>>>>>> Stashed changes
         SkillRequirement.Serializer serializer = PSTRegistries.SKILL_REQUIREMENTS.get().getValue(serializerId);
         Objects.requireNonNull(serializer, "Unknown skill requirement: " + serializerId);
         return serializer.deserialize(jsonObj);
@@ -29,7 +35,7 @@ public class SkillRequirementSerializer implements JsonSerializer<SkillRequireme
     @Override
     public JsonElement serialize(SkillRequirement<?> src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject json = new JsonObject();
-        ResourceLocation serializerId = PSTRegistries.SKILL_REQUIREMENTS.get().getKey(src.getSerializer());
+        Identifier serializerId = PSTRegistries.SKILL_REQUIREMENTS.get().getKey(src.getSerializer());
         Objects.requireNonNull(serializerId);
         json.addProperty("type", serializerId.toString());
         src.getSerializer().serialize(json, src);

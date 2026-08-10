@@ -4,7 +4,7 @@ import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.init.PSTRegistries;
 import daripher.skilltree.skill.bonus.predicate.item.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import daripher.skilltree.util.registry.DeferredRegister;
 import daripher.skilltree.util.registry.RegistryObject;
 
@@ -12,7 +12,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTItemPredicates {
+<<<<<<< Updated upstream
     public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "item_conditions");
+=======
+    public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "item_conditions");
+>>>>>>> Stashed changes
     public static final DeferredRegister<ItemStackPredicate.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<ItemStackPredicate.Serializer> NONE = REGISTRY.register("none", NoneItemStackPredicate.Serializer::new);
@@ -28,7 +32,7 @@ public class PSTItemPredicates {
     }
 
     public static String getName(ItemStackPredicate condition) {
-        ResourceLocation id = PSTRegistries.ITEM_CONDITIONS.get().getKey(condition.getSerializer());
+        Identifier id = PSTRegistries.ITEM_CONDITIONS.get().getKey(condition.getSerializer());
         return TooltipHelper.idToName(Objects.requireNonNull(id).getPath());
     }
 }

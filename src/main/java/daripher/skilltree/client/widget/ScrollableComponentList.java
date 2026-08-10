@@ -42,7 +42,9 @@ public class ScrollableComponentList extends AbstractWidget {
             Component component = components.get(i);
             int x = getX() + 5;
             int y = getY() + 5 + (i - scroll) * (font.lineHeight + 3);
-            graphics.drawString(font, component, x, y, 0x7B7BE5);
+            // Fix 1.21.8 : alpha explicite ajouté (0xFF) — sans canal alpha, le texte peut être rendu
+            // transparent depuis la refonte du pipeline de rendu (retrait de la Material API en 1.21.6-8).
+            graphics.drawString(font, component, x, y, 0xFF7B7BE5);
         }
     }
 

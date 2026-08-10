@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class LootAmountModifierBonusHandler {
-    public static @NotNull ObjectArrayList<ItemStack> modifyLoot(ObjectArrayList<ItemStack> defaultLoot, LootContext lootContext, net.minecraft.resources.ResourceLocation lootTableId) {
+    public static @NotNull ObjectArrayList<ItemStack> modifyLoot(ObjectArrayList<ItemStack> defaultLoot, LootContext lootContext, net.minecraft.resources.Identifier lootTableId) {
         Player player = null;
         float lootAmountModifier = 0f;
         for (LootAmountModifierBonus.LootType lootType : LootAmountModifierBonus.LootType.values()) {

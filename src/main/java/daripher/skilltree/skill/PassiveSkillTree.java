@@ -1,6 +1,6 @@
 package daripher.skilltree.skill;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
@@ -9,19 +9,19 @@ import java.util.List;
 import java.util.Map;
 
 public class PassiveSkillTree {
-    private final List<ResourceLocation> skillIds = new ArrayList<>();
-    private final ResourceLocation id;
+    private final List<Identifier> skillIds = new ArrayList<>();
+    private final Identifier id;
     private @Nullable Map<String, Integer> skillLimitations;
 
-    public PassiveSkillTree(ResourceLocation id) {
+    public PassiveSkillTree(Identifier id) {
         this.id = id;
     }
 
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return id;
     }
 
-    public List<ResourceLocation> getSkillIds() {
+    public List<Identifier> getSkillIds() {
         return skillIds;
     }
 

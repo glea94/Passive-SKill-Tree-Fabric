@@ -12,7 +12,7 @@ import daripher.skilltree.skill.bonus.player.OutgoingDamageBonus;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 import java.util.List;
@@ -120,7 +120,7 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
             }
             JsonObject skillBonusJson = new JsonObject();
             SkillBonus<?> skillBonus = aBonus.skillBonus;
-            ResourceLocation serializerId = PSTRegistries.SKILL_BONUSES.get().getKey(skillBonus.getSerializer());
+            Identifier serializerId = PSTRegistries.SKILL_BONUSES.get().getKey(skillBonus.getSerializer());
             Objects.requireNonNull(serializerId);
             skillBonusJson.addProperty("type", serializerId.toString());
             skillBonus.getSerializer().serialize(skillBonusJson, skillBonus);
@@ -129,9 +129,15 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
 
         @Override
         public ItemBonus<?> deserialize(CompoundTag tag) {
+<<<<<<< Updated upstream
             CompoundTag skillBonusTag = tag.getCompound("skill_bonus");
             String type = skillBonusTag.getString("type");
             ResourceLocation serializerId = new ResourceLocation(type);
+=======
+            CompoundTag skillBonusTag = tag.getCompound("skill_bonus").orElseThrow();
+            String type = skillBonusTag.getString("type").orElseThrow();
+            Identifier serializerId = Identifier.parse(type);
+>>>>>>> Stashed changes
             SkillBonus.Serializer serializer = PSTRegistries.SKILL_BONUSES.get().getValue(serializerId);
             Objects.requireNonNull(serializer, "Unknown skill bonus: " + serializerId);
             SkillBonus<?> skillBonus = serializer.deserialize(skillBonusTag);
@@ -146,7 +152,7 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
             CompoundTag tag = new CompoundTag();
             SkillBonus<?> skillBonus = aBonus.getSkillBonus();
             SkillBonus.Serializer serializer = skillBonus.getSerializer();
-            ResourceLocation serializerId = PSTRegistries.SKILL_BONUSES.get().getKey(serializer);
+            Identifier serializerId = PSTRegistries.SKILL_BONUSES.get().getKey(serializer);
             Objects.requireNonNull(serializerId);
             CompoundTag skillBonusTag = serializer.serialize(skillBonus);
             skillBonusTag.putString("type", serializerId.toString());

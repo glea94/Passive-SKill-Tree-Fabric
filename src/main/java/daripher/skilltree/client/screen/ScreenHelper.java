@@ -1,7 +1,5 @@
 package daripher.skilltree.client.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.math.Axis;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.client.widget.skill.SkillButton;
 import daripher.skilltree.client.widget.skill.SkillConnection;
@@ -10,8 +8,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
+>>>>>>> Stashed changes
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 
 import java.util.ArrayList;
@@ -21,11 +25,15 @@ public class ScreenHelper {
     public static void drawCenteredOutlinedText(GuiGraphics graphics, String text, int x, int y, int color) {
         Font font = Minecraft.getInstance().font;
         x -= font.width(text) / 2;
-        graphics.drawString(font, text, x + 1, y, 0, false);
-        graphics.drawString(font, text, x - 1, y, 0, false);
-        graphics.drawString(font, text, x, y + 1, 0, false);
-        graphics.drawString(font, text, x, y - 1, 0, false);
-        graphics.drawString(font, text, x, y, color, false);
+        // Fix 1.21.8 : couleur ARGB au lieu de RGB depuis 1.21.6 - 0 (contour) et color (texte) sans octet alpha
+        // étaient auto-corrigés en opaque avant, maintenant ils rendent en transparent (invisible). ARGB.opaque() force l'alpha à FF.
+        int outlineColor = ARGB.opaque(0);
+        int textColor = ARGB.opaque(color);
+        graphics.drawString(font, text, x + 1, y, outlineColor, false);
+        graphics.drawString(font, text, x - 1, y, outlineColor, false);
+        graphics.drawString(font, text, x, y + 1, outlineColor, false);
+        graphics.drawString(font, text, x, y - 1, outlineColor, false);
+        graphics.drawString(font, text, x, y, textColor, false);
     }
 
     public static void drawRectangle(GuiGraphics graphics, int x, int y, int width, int height, int color) {
@@ -89,6 +97,7 @@ public class ScreenHelper {
         if (tooltipY < 5) {
             tooltipY = 5;
         }
+<<<<<<< Updated upstream
         graphics.pose().pushPose();
         graphics.pose().translate(tooltipX, tooltipY, 10);
         graphics.fill(1, 4, tooltipWidth - 1, tooltipHeight + 4, 0xDD000000);
@@ -102,20 +111,47 @@ public class ScreenHelper {
         while (centerWidth > 0) {
             int partWidth = Math.min(centerWidth, 68);
             graphics.blit(texture, centerX, -4, 21, 0, partWidth, 20, 110, 20);
+=======
+        graphics.pose().pushMatrix();
+        // Fix 1.21.8 : Matrix3x2fStack est purement 2D, plus de translation Z possible (l'ancien 3e paramètre "10" n'a pas d'équivalent direct)
+        graphics.pose().translate(tooltipX, tooltipY);
+        graphics.fill(1, 4, (int) (tooltipWidth - 1), tooltipHeight + 4, 0xDD000000);
+        int textX = 5;
+        int textY = 2;
+        Identifier texture = button.skill.getTooltipFrameTexture();
+        // Fix 1.21.8 : blit(RenderType::guiTextured, ...) supprimé, remplacé par blit(RenderPipeline, ...) (RenderPipelines.GUI_TEXTURED)
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, -4, -4, 0F, 0F, 21, 20, 110, 20);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (int) (tooltipWidth + 4 - 21), -4, 89F, 0F, 21, 20, 110, 20);
+        int centerWidth = (int) (tooltipWidth + 8 - 42);
+        int centerX = -4 + 21;
+        while (centerWidth > 0) {
+            int partWidth = Math.min(centerWidth, 68);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, centerX, -4, 21F, 0F, partWidth, 20, 110, 20);
+>>>>>>> Stashed changes
             centerX += partWidth;
             centerWidth -= partWidth;
         }
         MutableComponent title = tooltip.remove(0);
+<<<<<<< Updated upstream
         graphics.drawCenteredString(font, title, tooltipWidth / 2, textY, 0xFFFFFF);
         textY += 19;
         for (MutableComponent component : tooltip) {
             graphics.drawString(font, component, textX, textY, 0xFFFFFF);
+=======
+        // Fix 1.21.8 : depuis 1.21.6 la couleur du texte est en ARGB et non plus RGB - une couleur sans octet alpha (0xFFFFFF)
+        // n'est plus auto-corrigée en opaque et rend le texte totalement transparent (invisible). ARGB.opaque() force l'alpha à FF.
+        graphics.drawCenteredString(font, title, (int) (tooltipWidth / 2), textY, ARGB.opaque(0xFFFFFF));
+        textY += 19;
+        for (MutableComponent component : tooltip) {
+            graphics.drawString(font, component, textX, textY, ARGB.opaque(0xFFFFFF), false);
+>>>>>>> Stashed changes
             textY += font.lineHeight + 2;
         }
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 
     public static void renderGatewayConnection(GuiGraphics graphics, SkillConnection connection, boolean highlighted, float zoom, float animation) {
+<<<<<<< Updated upstream
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/long_connection.png");
         graphics.pose().pushPose();
         SkillButton button1 = connection.getFirstButton();
@@ -123,9 +159,22 @@ public class ScreenHelper {
         double connectionX = button1.x + button1.getWidth() / 2F;
         double connectionY = button1.y + button1.getHeight() / 2F;
         graphics.pose().translate(connectionX, connectionY, 0);
+=======
+        Identifier texture = Identifier.parse("skilltree:textures/screen/long_connection.png");
+        graphics.pose().pushMatrix();
+        SkillButton button1 = connection.getFirstButton();
+        SkillButton button2 = connection.getSecondButton();
+
+        double connectionX = button1.getX() + button1.getWidth() / 2F;
+        double connectionY = button1.getY() + button1.getHeight() / 2F;
+        // Fix 1.21.8 : translate(x, y, z) supprimé, remplacé par translate(x, y) en float (Matrix3x2fStack 2D)
+        graphics.pose().translate((float) connectionX, (float) connectionY);
+>>>>>>> Stashed changes
         float rotation = ScreenHelper.getAngleBetweenButtons(button1, button2);
-        graphics.pose().mulPose(Axis.ZP.rotation(rotation));
+        // Fix 1.21.8 : mulPose(Axis.ZP.rotation(angle)) supprimé, remplacé par rotate(angle) (rotation 2D directe)
+        graphics.pose().rotate(rotation);
         int length = (int) (ScreenHelper.getDistanceBetweenButtons(button1, button2) / zoom);
+<<<<<<< Updated upstream
         graphics.pose().scale(zoom, zoom, 1F);
         graphics.blit(texture, 0, -8, length, 6, -animation, highlighted ? 0 : 6, length, 6, 30, 12);
         graphics.blit(texture, 0, 2, length, 6, animation, highlighted ? 0 : 6, length, 6, -30, 12);
@@ -140,9 +189,29 @@ public class ScreenHelper {
         double connectionX = button1.x + button1.getWidth() / 2F;
         double connectionY = button1.y + button1.getHeight() / 2F;
         graphics.pose().translate(connectionX, connectionY, 0);
+=======
+        // Fix 1.21.8 : scale(x, y, z) supprimé, remplacé par scale(x, y)
+        graphics.pose().scale(zoom, zoom);
+
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, -8, -animation, highlighted ? 0F : 6F, length, 6, 30, 12);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 2, animation, highlighted ? 0F : 6F, length, 6, 30, 12);
+        graphics.pose().popMatrix();
+    }
+
+    public static void renderOneWayConnection(GuiGraphics graphics, SkillConnection connection, boolean highlighted, float zoom, float animation) {
+        Identifier texture = Identifier.parse("skilltree:textures/screen/one_way_connection.png");
+        graphics.pose().pushMatrix();
+        SkillButton button1 = connection.getFirstButton();
+        SkillButton button2 = connection.getSecondButton();
+
+        double connectionX = button1.getX() + button1.getWidth() / 2F;
+        double connectionY = button1.getY() + button1.getHeight() / 2F;
+        graphics.pose().translate((float) connectionX, (float) connectionY);
+>>>>>>> Stashed changes
         float rotation = ScreenHelper.getAngleBetweenButtons(button1, button2);
-        graphics.pose().mulPose(Axis.ZP.rotation(rotation));
+        graphics.pose().rotate(rotation);
         int length = (int) (ScreenHelper.getDistanceBetweenButtons(button1, button2) / zoom);
+<<<<<<< Updated upstream
         graphics.pose().scale(zoom, zoom, 1F);
         graphics.blit(texture, 0, -3, length, 6, -animation, highlighted ? 0 : 6, length, 6, 30, 12);
         graphics.pose().popPose();
@@ -156,10 +225,28 @@ public class ScreenHelper {
         double connectionX = button1.x + button1.getWidth() / 2F;
         double connectionY = button1.y + button1.getHeight() / 2F;
         graphics.pose().translate(connectionX, connectionY, 0);
+=======
+        graphics.pose().scale(zoom, zoom);
+
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, -3, -animation, highlighted ? 0F : 6F, length, 6, 30, 12);
+        graphics.pose().popMatrix();
+    }
+
+    public static void renderConnection(GuiGraphics graphics, SkillConnection connection, float zoom, float animation) {
+        Identifier texture = Identifier.parse("skilltree:textures/screen/direct_connection.png");
+        graphics.pose().pushMatrix();
+        SkillButton button1 = connection.getFirstButton();
+        SkillButton button2 = connection.getSecondButton();
+
+        double connectionX = button1.getX() + button1.getWidth() / 2F;
+        double connectionY = button1.getY() + button1.getHeight() / 2F;
+        graphics.pose().translate((float) connectionX, (float) connectionY);
+>>>>>>> Stashed changes
         float rotation = ScreenHelper.getAngleBetweenButtons(button1, button2);
-        graphics.pose().mulPose(Axis.ZP.rotation(rotation));
+        graphics.pose().rotate(rotation);
         int length = (int) ScreenHelper.getDistanceBetweenButtons(button1, button2);
         boolean highlighted = button1.skillLearned && button2.skillLearned;
+<<<<<<< Updated upstream
         graphics.pose().scale(1F, zoom, 1F);
         graphics.blit(texture, 0, -3, length, 6, 0, highlighted ? 0 : 6, length, 6, 50, 12);
         boolean shouldAnimate = button1.skillLearned && button2.canLearn || button2.skillLearned && button1.canLearn;
@@ -167,7 +254,17 @@ public class ScreenHelper {
             RenderSystem.setShaderColor(1F, 1F, 1F, (Mth.sin(animation / 3F) + 1) / 2);
             graphics.blit(texture, 0, -3, length, 6, 0, 0, length, 6, 50, 12);
             RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+=======
+        graphics.pose().scale(1F, zoom);
+
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, -3, 0F, highlighted ? 0F : 6F, length, 6, 50, 12);
+        boolean shouldAnimate = button1.skillLearned && button2.canLearn || button2.skillLearned && button1.canLearn;
+        if (!highlighted && shouldAnimate) {
+            // Fix 1.21.8 : RenderSystem.setShaderColor(...) supprimé, la teinte alpha se passe désormais directement en dernier paramètre de blit(...) via ARGB.color(alpha, rgb) (pattern confirmé par décompilation de GuiGraphics.blitSprite)
+            int tintColor = ARGB.color((Mth.sin(animation / 3F) + 1) / 2, -1);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, -3, 0F, 0F, length, 6, 50, 12, tintColor);
+>>>>>>> Stashed changes
         }
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 }

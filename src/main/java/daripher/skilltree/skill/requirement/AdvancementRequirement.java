@@ -15,9 +15,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+<<<<<<< Updated upstream
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+=======
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 import net.minecraft.server.PlayerAdvancements;
 import net.minecraft.server.ServerAdvancementManager;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,10 +31,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+<<<<<<< Updated upstream
 public final class AdvancementRequirement implements SkillRequirement<AdvancementRequirement> {
     private ResourceLocation advancementId;
+=======
+public class AdvancementRequirement implements SkillRequirement<AdvancementRequirement> {
+    private Identifier advancementId;
+>>>>>>> Stashed changes
 
-    public AdvancementRequirement(ResourceLocation advancementId) {
+    public AdvancementRequirement(Identifier advancementId) {
         this.advancementId = advancementId;
     }
 
@@ -60,6 +69,37 @@ public final class AdvancementRequirement implements SkillRequirement<Advancemen
             }
             return advancements.getOrStartProgress(advancement).getPercent() >= 1f;
         }
+<<<<<<< Updated upstream
+=======
+        return testClient();
+    }
+
+    private boolean testServer(ServerPlayer player) {
+        // Factual Fix 1.21.8 : champ ServerPlayer#server devenu private. Pattern player.level().getServer()
+        // confirmé par décompilation de ServerPlayer lui-même (utilisé en interne, ex. loadAndSpawnEnderPearl :
+        // "this.level().getServer().getLevel(...)"), et ServerPlayer#level() renvoie bien ServerLevel.
+        ServerAdvancementManager manager = player.level().getServer().getAdvancements();
+        AdvancementHolder advancement = manager.get(advancementId);
+        if (advancement == null) return false;
+        PlayerAdvancements playerAdvancements = player.getAdvancements();
+        return playerAdvancements.getOrStartProgress(advancement).isDone();
+    }
+
+    private boolean testClient() {
+        ClientAdvancements advancements = Minecraft.getInstance().getConnection().getAdvancements();
+        AdvancementHolder advancement = advancements.get(advancementId);
+        if (advancement == null) return false;
+        AdvancementProgress progress = ((ClientAdvancementsAccessor) advancements).getProgress().get(advancement);
+        return progress != null && progress.isDone();
+    }
+
+    public static List<Identifier> getAdvancementIds() {
+        ClientAdvancements advancements = Minecraft.getInstance().getConnection().getAdvancements();
+        return advancements.getTree().nodes().stream()
+                .map(AdvancementNode::holder)
+                .map(AdvancementHolder::id)
+                .toList();
+>>>>>>> Stashed changes
     }
 
     @Override
@@ -77,22 +117,36 @@ public final class AdvancementRequirement implements SkillRequirement<Advancemen
         ClientAdvancements advancements = localPlayer.connection.getAdvancements();
         editor.addLabel(0, 0, "Advancement ID", ChatFormatting.GOLD);
         editor.increaseHeight(19);
+<<<<<<< Updated upstream
         List<ResourceLocation> advancementIds = advancements.getAdvancements().getAllAdvancements().stream().map(Advancement::getId)
                 .toList();
         editor.addSelectionMenu(0, 0, 200, advancementIds).setValue(getAdvancementId())
                 .setElementNameGetter(v -> Component.literal(v.toString())).setResponder(v -> selectAdvancementId(consumer, v));
+=======
+        List<Identifier> advancementIds = getAdvancementIds();
+        editor.addSelectionMenu(0, 0, 200, advancementIds).setValue(advancementId)
+                .setElementNameGetter(v -> Component.literal(v.toString()))
+                .setResponder(v -> selectAdvancementId(consumer, v));
+>>>>>>> Stashed changes
         editor.increaseHeight(19);
     }
 
-    private void selectAdvancementId(Consumer<AdvancementRequirement> consumer, ResourceLocation id) {
+    private void selectAdvancementId(Consumer<AdvancementRequirement> consumer, Identifier id) {
         setAdvancementId(id);
         consumer.accept(this);
     }
 
-    public void setAdvancementId(ResourceLocation advancementId) {
+    public void setAdvancementId(Identifier advancementId) {
         this.advancementId = advancementId;
     }
 
+<<<<<<< Updated upstream
+=======
+    public Identifier getAdvancementId() {
+        return advancementId;
+    }
+
+>>>>>>> Stashed changes
     @Override
     public AdvancementRequirement copy() {
         return new AdvancementRequirement(advancementId);
@@ -127,7 +181,11 @@ public final class AdvancementRequirement implements SkillRequirement<Advancemen
     public static class Serializer implements SkillRequirement.Serializer {
         @Override
         public SkillRequirement<?> deserialize(JsonObject json) throws JsonParseException {
+<<<<<<< Updated upstream
             ResourceLocation id = new ResourceLocation(json.get("advancement").getAsString());
+=======
+            Identifier id = Identifier.parse(json.get("advancement").getAsString());
+>>>>>>> Stashed changes
             return new AdvancementRequirement(id);
         }
 
@@ -140,7 +198,12 @@ public final class AdvancementRequirement implements SkillRequirement<Advancemen
 
         @Override
         public SkillRequirement<?> deserialize(CompoundTag tag) {
+<<<<<<< Updated upstream
             ResourceLocation id = new ResourceLocation(tag.getString("advancement"));
+=======
+            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            Identifier id = Identifier.parse(tag.getString("advancement").orElse(""));
+>>>>>>> Stashed changes
             return new AdvancementRequirement(id);
         }
 
@@ -154,8 +217,13 @@ public final class AdvancementRequirement implements SkillRequirement<Advancemen
         }
 
         @Override
+<<<<<<< Updated upstream
         public SkillRequirement<?> deserialize(FriendlyByteBuf buf) {
             ResourceLocation id = new ResourceLocation(buf.readUtf());
+=======
+        public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
+            Identifier id = Identifier.parse(buf.readUtf());
+>>>>>>> Stashed changes
             return new AdvancementRequirement(id);
         }
 
@@ -168,7 +236,11 @@ public final class AdvancementRequirement implements SkillRequirement<Advancemen
 
         @Override
         public SkillRequirement<?> createDefaultInstance() {
+<<<<<<< Updated upstream
             return new AdvancementRequirement(new ResourceLocation("minecraft:adventure/hero_of_the_village"));
+=======
+            return new AdvancementRequirement(Identifier.withDefaultNamespace("story/mine_stone"));
+>>>>>>> Stashed changes
         }
     }
 }
