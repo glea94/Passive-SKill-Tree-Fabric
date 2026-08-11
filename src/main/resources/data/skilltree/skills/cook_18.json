@@ -3,7 +3,7 @@
   "bonuses": [
     {
       "type": "skilltree:attribute",
-      "attribute": "minecraft:generic.max_health",
+      "attribute": "minecraft:max_health",
       "id": "d2d155a4-aa9f-4afa-9fed-180c86e934e2",
       "name": "Skill",
       "amount": 3.0,

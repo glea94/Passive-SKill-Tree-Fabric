@@ -19,7 +19,7 @@ import daripher.skilltree.skill.bonus.player.AttributeBonus;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -93,13 +93,12 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
         GroupedItemBonus that = (GroupedItemBonus) o;
         return Objects.equals(innerBonuses, that.innerBonuses);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(innerBonuses);
     }
 
-    @SuppressWarnings({"rawtypes"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<GroupedItemBonus> consumer) {
         ItemBonus<?> defaultBonus = PSTItemBonuses.SKILL_BONUS.get().createDefaultInstance();
@@ -141,7 +140,7 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
         }
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void addItemBonus(SkillTreeEditor editor, ItemBonus<?> itemBonus) {
         final EditorMenu previousMenu = editor.getSelectedMenu().previousMenu;
         if (itemBonus instanceof EquipmentBonus equipmentBonus) {
@@ -167,8 +166,6 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
     public String toString() {
         return "GroupedItemBonus[" + "innerBonuses=" + innerBonuses + ']';
     }
-
-
     public static class Serializer implements ItemBonus.Serializer {
         @Override
         public ItemBonus<?> deserialize(JsonObject json) throws JsonParseException {
@@ -177,7 +174,11 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             for (int i = 0; i < innerBonusesJson.size(); i++) {
                 JsonObject innerBonusTag = innerBonusesJson.get(i).getAsJsonObject();
                 String serializerIdString = innerBonusTag.get("type").getAsString();
+<<<<<<< Updated upstream
                 ResourceLocation serializerId = new ResourceLocation(serializerIdString);
+=======
+                Identifier serializerId = Identifier.parse(serializerIdString);
+>>>>>>> Stashed changes
                 ItemBonus.Serializer serializer = PSTRegistries.ITEM_BONUSES.get().getValue(serializerId);
                 Objects.requireNonNull(serializer, "Unknown item bonus: " + serializerId);
                 ItemBonus<?> innerBonus = serializer.deserialize(innerBonusTag);
@@ -208,11 +209,16 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
         @Override
         public ItemBonus<?> deserialize(CompoundTag tag) {
             ArrayList<ItemBonus<?>> innerBonuses = new ArrayList<>();
-            ListTag innerBonusesTag = tag.getList("inner_bonuses", Tag.TAG_COMPOUND);
+            ListTag innerBonusesTag = tag.getList("inner_bonuses").orElseGet(ListTag::new);
             for (Tag value : innerBonusesTag) {
                 CompoundTag innerBonusTag = (CompoundTag) value;
+<<<<<<< Updated upstream
                 String type = innerBonusTag.getString("type");
                 ResourceLocation serializerId = new ResourceLocation(type);
+=======
+                String type = innerBonusTag.getString("type").orElseThrow();
+                Identifier serializerId = Identifier.parse(type);
+>>>>>>> Stashed changes
                 ItemBonus.Serializer serializer = PSTRegistries.ITEM_BONUSES.get().getValue(serializerId);
                 Objects.requireNonNull(serializer, "Unknown item bonus: " + serializerId);
                 innerBonuses.add(serializer.deserialize(innerBonusTag));
@@ -240,8 +246,9 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ItemBonus<?> deserialize(FriendlyByteBuf buf) {
+        public ItemBonus<?> deserialize(RegistryFriendlyByteBuf buf) {
             ArrayList<ItemBonus<?>> innerBonuses = new ArrayList<>();
             int size = buf.readInt();
             for (int i = 0; i < size; i++) {
@@ -250,8 +257,9 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             return new GroupedItemBonus(innerBonuses);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, ItemBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, ItemBonus<?> bonus) {
             if (!(bonus instanceof GroupedItemBonus aBonus)) {
                 throw new IllegalArgumentException();
             }
@@ -263,7 +271,13 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
 
         @Override
         public ItemBonus<?> createDefaultInstance() {
+<<<<<<< Updated upstream
             AttributeModifier defaultModifier = new AttributeModifier("Default Modifier", 1, AttributeModifier.Operation.ADDITION);
+=======
+            // Aligned 1.21.4: Explicit clean resource-keyed declaration matching modern Mojang attribute modifier conventions
+            AttributeModifier defaultModifier = new AttributeModifier(Identifier.parse("skilltree:default_modifier"), 1, AttributeModifier.Operation.ADD_VALUE);
+
+>>>>>>> Stashed changes
             ItemBonus<?> bonus1 = new EquipmentBonus(new AttributeBonus(Attributes.ARMOR, defaultModifier));
             ItemBonus<?> bonus2 = new EquipmentBonus(new AttributeBonus(Attributes.ARMOR_TOUGHNESS, defaultModifier));
             ArrayList<ItemBonus<?>> bonuses = new ArrayList<>();

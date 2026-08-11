@@ -1,5 +1,6 @@
 package daripher.skilltree.client.widget;
 
+import net.minecraft.client.input.KeyEvent;
 import org.jetbrains.annotations.NotNull;
 
 import org.jetbrains.annotations.Nullable;
@@ -37,8 +38,8 @@ public class NumericTextField extends TextField {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        boolean pressed = super.keyPressed(keyCode, scanCode, modifiers);
+    public boolean keyPressed(KeyEvent keyEvent) {
+        boolean pressed = super.keyPressed(keyEvent);
         onNumericValueChange();
         return pressed;
     }
@@ -71,7 +72,13 @@ public class NumericTextField extends TextField {
     }
 
     private Predicate<String> createNumericFilter(Predicate<Double> filter) {
-        return s -> filter.test(Double.parseDouble(s));
+        return s -> {
+            try {
+                return filter.test(Double.parseDouble(s));
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        };
     }
 
     private static String formatDefaultValue(double defaultValue) {

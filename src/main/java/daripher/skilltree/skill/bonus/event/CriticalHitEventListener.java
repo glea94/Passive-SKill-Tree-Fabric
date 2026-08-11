@@ -15,7 +15,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,9 +40,9 @@ public class CriticalHitEventListener implements SkillEventListener {
         if (!enemyCondition.test(enemy)) {
             return;
         }
-        LivingEntity target = this.target == SkillBonus.Target.PLAYER ? player : enemy;
+        LivingEntity targetEntity = this.target == SkillBonus.Target.PLAYER ? player : enemy;
         float effectMultiplier = playerMultiplier.getValue(player) * enemyMultiplier.getValue(enemy);
-        skill.copy().multiply(effectMultiplier).applyEffect(target, player);
+        skill.copy().multiply(effectMultiplier).applyEffect(targetEntity, player);
     }
 
     @Override
@@ -77,7 +77,6 @@ public class CriticalHitEventListener implements SkillEventListener {
     public int hashCode() {
         return Objects.hash(playerCondition, enemyCondition, playerMultiplier, enemyMultiplier, target);
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         editor.addLabel(0, 0, "Player Condition", ChatFormatting.GREEN);
@@ -115,7 +114,8 @@ public class CriticalHitEventListener implements SkillEventListener {
 
     private void addTargetMultiplierWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         enemyMultiplier.addEditorWidgets(editor, multiplier -> {
-            setPlayerMultiplier(multiplier);
+            // Factual Fix 1.21.4: Corrected copy-paste target mapping error to set the enemy multiplier field
+            setEnemyMultiplier(multiplier);
             consumer.accept(this);
         });
     }
@@ -164,7 +164,6 @@ public class CriticalHitEventListener implements SkillEventListener {
         consumer.accept(this);
         editor.rebuildWidgets();
     }
-
     @Override
     public SkillBonus.Target getTarget() {
         return target;
@@ -226,7 +225,8 @@ public class CriticalHitEventListener implements SkillEventListener {
             listener.setPlayerCondition(SerializationHelper.deserializeLivingCondition(tag, "player_condition"));
             listener.setEnemyMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "enemy_multiplier"));
             listener.setPlayerMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier"));
-            listener.setTarget(SkillBonus.Target.valueOf(tag.getString("target").toUpperCase(Locale.ROOT)));
+            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            listener.setTarget(SkillBonus.Target.valueOf(tag.getString("target").orElse("").toUpperCase(Locale.ROOT)));
             return listener;
         }
 
@@ -244,8 +244,9 @@ public class CriticalHitEventListener implements SkillEventListener {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Transition from FriendlyByteBuf to mandatory RegistryFriendlyByteBuf
         @Override
-        public SkillEventListener deserialize(FriendlyByteBuf buf) {
+        public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             CriticalHitEventListener listener = new CriticalHitEventListener();
             listener.setEnemyCondition(NetworkHelper.readLivingCondition(buf));
             listener.setPlayerCondition(NetworkHelper.readLivingCondition(buf));
@@ -255,8 +256,9 @@ public class CriticalHitEventListener implements SkillEventListener {
             return listener;
         }
 
+        // Factual Fix 1.21.4: Transition from FriendlyByteBuf to mandatory RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillEventListener listener) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof CriticalHitEventListener aListener)) {
                 throw new IllegalArgumentException();
             }

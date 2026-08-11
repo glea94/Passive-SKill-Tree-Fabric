@@ -7,7 +7,7 @@
       "operation": 1,
       "player_multiplier": {
         "value_provider": {
-          "attribute": "minecraft:generic.max_health",
+          "attribute": "minecraft:max_health",
           "type": "skilltree:attribute_value"
         },
         "divisor": 2.0,

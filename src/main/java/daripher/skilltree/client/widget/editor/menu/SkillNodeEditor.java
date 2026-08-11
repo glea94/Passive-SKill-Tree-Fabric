@@ -5,6 +5,7 @@ import daripher.skilltree.data.client.SkillTreeEditorData;
 import daripher.skilltree.client.widget.NumericTextField;
 import daripher.skilltree.client.widget.editor.SkillFactory;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
+import daripher.skilltree.client.widget.editor.SkillMirrorer;
 import daripher.skilltree.skill.PassiveSkill;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.requirement.SkillRequirement;
@@ -57,7 +58,11 @@ public class SkillNodeEditor extends EditorMenu {
 
     private void createSkills(float angle, float distance, SkillFactory skillFactory) {
         editor.getSelectedSkills().forEach(skill -> createSkill(distance, angle, skill, skillFactory));
-        editor.getSkillMirrorer().createSkills(angle, distance, skillFactory);
+
+        // Factual Fix 1.21.4: Map structural SkillFactory footprints to match SkillMirrorer's updated inner interface type
+        editor.getSkillMirrorer().createSkills(angle, distance, skillFactory::accept);
+
+        editor.clearWidgets();
         editor.rebuildWidgets();
     }
 
@@ -91,10 +96,17 @@ public class SkillNodeEditor extends EditorMenu {
     }
 
     private void createNewSkill(float x, float y, @Nullable PassiveSkill original) {
+<<<<<<< Updated upstream
         ResourceLocation background = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/icons/background/lesser.png");
         ResourceLocation icon = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/icons/void.png");
         ResourceLocation border = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/tooltip/lesser.png");
         ResourceLocation skillTreeId = editor.getSkillTree().getId();
+=======
+        Identifier background = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/icons/background/lesser.png");
+        Identifier icon = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/icons/void.png");
+        Identifier border = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/tooltip/lesser.png");
+        Identifier skillTreeId = editor.getSkillTree().getId();
+>>>>>>> Stashed changes
         PassiveSkill skill = new PassiveSkill(createNewSkillId(skillTreeId), 16, background, icon, border, false);
         skill.setPosition(x, y);
         if (original != null && shouldConnect) {
@@ -110,13 +122,18 @@ public class SkillNodeEditor extends EditorMenu {
         ResourceLocation id;
         int counter = 1;
         do {
+<<<<<<< Updated upstream
             id = new ResourceLocation("skilltree", skillTreeId.getPath() + "_" + counter++);
+=======
+            id = Identifier.fromNamespaceAndPath("skilltree", skillTreeId.getPath() + "_" + counter++);
+>>>>>>> Stashed changes
         } while (SkillTreeEditorData.getEditorSkill(id) != null);
         return id;
     }
 
     public void setConnect(SkillTreeEditor editor, boolean connect) {
         this.shouldConnect = connect;
+        editor.clearWidgets();
         editor.rebuildWidgets();
     }
 }

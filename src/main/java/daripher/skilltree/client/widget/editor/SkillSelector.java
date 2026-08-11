@@ -7,7 +7,7 @@ import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,15 +27,23 @@ public class SkillSelector extends AbstractWidget {
     private int selectionStartY;
 
     public SkillSelector(SkillTreeEditor editor, SkillButtons skillButtons) {
+        // Factual Fix 1.21.4: AbstractWidget constructor strictly requires x, y, width, height, and message
         super(0, 0, 0, 0, Component.empty());
         this.skillButtons = skillButtons;
         this.editor = editor;
+        // Factual Fix 1.21.4: Directly apply vanilla active field state to block method conflicts
         this.active = false;
     }
 
     @Override
+<<<<<<< Updated upstream
     protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         if (active) {
+=======
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        // Factual Fix 1.21.4: Use direct active field lookup
+        if (this.active) {
+>>>>>>> Stashed changes
             renderSelectionArea(graphics, mouseX, mouseY);
         }
         renderSelectedSkillsHighlight(graphics);
@@ -71,25 +79,26 @@ public class SkillSelector extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button != GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
+        if (mouseButtonEvent.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             return false;
         }
-        if (editor.getArea().contains(mouseX, mouseY)) {
+        if (editor.getArea().contains(mouseButtonEvent.x(), mouseButtonEvent.y())) {
             return false;
         }
-        if (Screen.hasControlDown()) {
+        if (mouseButtonEvent.hasControlDown()) {
             return false;
         }
-        if (Screen.hasShiftDown()) {
-            active = true;
-            selectionStartX = (int) mouseX;
-            selectionStartY = (int) mouseY;
+        if (mouseButtonEvent.hasShiftDown()) {
+            // Factual Fix 1.21.4: Update interactive state via active field configuration
+            this.active = true;
+            selectionStartX = (int) mouseButtonEvent.x();
+            selectionStartY = (int) mouseButtonEvent.y();
         } else {
             if (!selectedSkills.isEmpty()) {
                 clearSelection();
             }
-            SkillButton clickedWidget = skillButtons.getWidgetAt(mouseX, mouseY);
+            SkillButton clickedWidget = skillButtons.getWidgetAt(mouseButtonEvent.x(), mouseButtonEvent.y());
             if (clickedWidget == null) {
                 return false;
             }
@@ -99,16 +108,19 @@ public class SkillSelector extends AbstractWidget {
             } else {
                 selectedSkills.add(clickedSkill);
             }
+            editor.clearWidgets();
             editor.rebuildWidgets();
         }
         return true;
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (active) {
-            addSelectedSkills(mouseX, mouseY);
-            active = false;
+    public boolean mouseReleased(MouseButtonEvent mouseButtonEvent) {
+        // Factual Fix 1.21.4: Use direct active field lookup
+        if (this.active) {
+            addSelectedSkills(mouseButtonEvent.x(), mouseButtonEvent.y());
+            this.active = false;
+            editor.clearWidgets();
             editor.rebuildWidgets();
             return true;
         }
@@ -123,6 +135,7 @@ public class SkillSelector extends AbstractWidget {
                 selectedSkills.add(skillButton.skill);
             }
         }
+        editor.clearWidgets();
         editor.rebuildWidgets();
     }
 
@@ -138,8 +151,8 @@ public class SkillSelector extends AbstractWidget {
     @NotNull
     private Rectangle2D getSkillArea(SkillButton skill) {
         double skillSize = skill.skill.getSkillSize() * skillButtons.getZoom();
-        double skillX = skill.x + skill.getWidth() / 2d - skillSize / 2;
-        double skillY = skill.y + skill.getHeight() / 2d - skillSize / 2;
+        double skillX = skill.getX() + skill.getWidth() / 2d - skillSize / 2;
+        double skillY = skill.getY() + skill.getHeight() / 2d - skillSize / 2;
         return new Rectangle2D.Double(skillX, skillY, skillSize, skillSize);
     }
 
@@ -149,6 +162,7 @@ public class SkillSelector extends AbstractWidget {
 
     public void clearSelection() {
         selectedSkills.clear();
+        editor.clearWidgets();
         editor.rebuildWidgets();
     }
 

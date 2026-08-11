@@ -17,7 +17,8 @@ public class CriticalHitChanceBonusHandler {
 
     private static void applyDirectHitCritChance(CriticalHitPSTEvent event) {
         Player player = event.getEntity();
-        if (player.level().isClientSide) {
+        // Fix 1.21.9 : isClientSide champ private, méthode isClientSide() confirmée par décompilation
+        if (player.level().isClientSide()) {
             return;
         }
         if (!(event.getTarget() instanceof LivingEntity hurtEntity)) {
@@ -31,6 +32,7 @@ public class CriticalHitChanceBonusHandler {
             return;
         }
         if (!isVanillaCrit) {
+            // Forces critical calculation on the current attack instance, bypassing vanilla jump bounds
             event.setForcedCrit(true);
         }
     }

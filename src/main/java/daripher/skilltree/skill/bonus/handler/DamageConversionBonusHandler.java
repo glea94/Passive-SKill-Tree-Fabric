@@ -16,7 +16,7 @@ import java.util.Map;
 
 /** Portage Fabric : priorité LOWEST reproduite via EventPriority.LOWEST de notre bus maison. */
 public class DamageConversionBonusHandler {
-    private static boolean isProcessingConversion; // protection anti-récursion, identique à l'original
+    private static boolean isProcessingConversion; // Protection anti-récursion, identique à l'original
 
     public static void register() {
         PSTEvents.LIVING_HURT.register(EventPriority.LOWEST, DamageConversionBonusHandler::dealConvertedDamage);

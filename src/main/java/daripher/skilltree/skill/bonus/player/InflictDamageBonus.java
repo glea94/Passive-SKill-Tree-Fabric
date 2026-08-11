@@ -16,7 +16,7 @@ import daripher.skilltree.skill.bonus.predicate.damage.DamageCondition;
 import daripher.skilltree.skill.bonus.predicate.damage.MagicDamageCondition;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
@@ -106,7 +106,7 @@ public final class InflictDamageBonus implements EventListenerBonus<InflictDamag
         }
         MutableComponent tooltip = Component.translatable(key, damageDescription, damageTypeDescription);
         if (chance < 1) {
-            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.MULTIPLY_BASE);
+            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         }
         tooltip = eventListener.getTooltip(tooltip);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
@@ -136,19 +136,18 @@ public final class InflictDamageBonus implements EventListenerBonus<InflictDamag
                 .toList();
         editor.addSelectionMenu(0, 0, 200, damageTypes).setValue(damageType)
                 .setElementNameGetter(c -> Component.translatable(PSTDamagePredicates.getName(c)))
-                .setResponder(damageType -> selectDamageType(editor, consumer, damageType));
+                .setResponder(type -> selectDamageType(editor, consumer, type));
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Event", ChatFormatting.GOLD);
         editor.increaseHeight(19);
         editor.addSelectionMenu(0, 0, 200, eventListener)
-                .setResponder(eventListener -> selectEventListener(editor, consumer, eventListener))
+                .setResponder(listener -> selectEventListener(editor, consumer, listener))
                 .setMenuInitFunc(() -> addEventListenerWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addEventListenerWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<InflictDamageBonus>> consumer) {
-        eventListener.addEditorWidgets(editor, eventListener -> {
-            setEventListener(eventListener);
+        eventListener.addEditorWidgets(editor, listener -> {
+            setEventListener(listener);
             consumer.accept(this.copy());
         });
     }
@@ -217,8 +216,8 @@ public final class InflictDamageBonus implements EventListenerBonus<InflictDamag
 
         @Override
         public InflictDamageBonus deserialize(CompoundTag tag) {
-            float chance = tag.getFloat("chance");
-            float damage = tag.getFloat("damage");
+            float chance = tag.getFloatOr("chance", 0f);
+            float damage = tag.getFloatOr("damage", 0f);
             InflictDamageBonus bonus = new InflictDamageBonus(chance, damage);
             bonus.eventListener = SerializationHelper.deserializeEventListener(tag);
             if (tag.contains("damage_type")) {
@@ -240,8 +239,9 @@ public final class InflictDamageBonus implements EventListenerBonus<InflictDamag
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public InflictDamageBonus deserialize(FriendlyByteBuf buf) {
+        public InflictDamageBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
             float damage = buf.readFloat();
             InflictDamageBonus bonus = new InflictDamageBonus(amount, damage);
@@ -250,8 +250,9 @@ public final class InflictDamageBonus implements EventListenerBonus<InflictDamag
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof InflictDamageBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

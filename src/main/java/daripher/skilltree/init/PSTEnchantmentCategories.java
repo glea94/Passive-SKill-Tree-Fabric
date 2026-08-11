@@ -1,12 +1,10 @@
 package daripher.skilltree.init;
 
 /**
- * Portage Fabric : les 2 catégories custom (SHIELD, POTION) reposaient sur
- * EnchantmentCategory.create(), un hack Forge (extension d'enum via ASM) impossible à reproduire
- * proprement sur Fabric (les enums vanilla restent fermés, pas d'équivalent Fabric à cette
- * astuce Forge). Vérifié : ces 2 champs n'étaient référencés nulle part ailleurs dans le mod
- * (aucun Enchantment custom ne les utilisait) - code mort supprimé, pas une perte de
- * fonctionnalité réelle.
+ * Factual Fix 1.21.4: Legacy EnchantmentCategory has been completely removed by Mojang.
+ * Enchantment item validity is now handled exclusively via item tags (e.g. #minecraft:enchantable/weapon).
+ * This class is preserved as an empty placeholder to maintain reference integrity across dependent packages.
  */
 public class PSTEnchantmentCategories {
+    // Legacy categories are obsolete. Map any custom weapon/armor criteria to your tags under data packs.
 }

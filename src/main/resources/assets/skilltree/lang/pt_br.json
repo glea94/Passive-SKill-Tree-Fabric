@@ -114,7 +114,7 @@
   "item_tag.forge:curios/jewelry": "Joias",
   "item_tag.skilltree:armors/leather": "Armadura de Couro",
   "item_tag.skilltree:armors/leather.plural": "Armaduras de Couro",
-  "key.categories.skilltree": "Árvore de Habilidades Passivas",
+  "key.category.skilltree.main": "Árvore de Habilidades Passivas",
   "key.display_skill_tree": "Abrir Árvore de Habilidades",
   "living_condition.skilltree.all_armor": "%s %s %s",
   "living_condition.skilltree.all_armor.target.enemy": "se toda a armadura do alvo for",

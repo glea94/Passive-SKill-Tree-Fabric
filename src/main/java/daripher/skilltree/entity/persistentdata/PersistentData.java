@@ -11,6 +11,7 @@ public class PersistentData implements IPersistentData {
     }
 
     @Override
+<<<<<<< Updated upstream
     public void readFromNbt(CompoundTag nbt) {
         tag = nbt.copy();
     }
@@ -20,3 +21,14 @@ public class PersistentData implements IPersistentData {
         nbt.merge(tag);
     }
 }
+=======
+    public void readData(ValueInput readView) {
+        this.tag = readView.read("Data", CompoundTag.CODEC).orElseGet(CompoundTag::new);
+    }
+
+    @Override
+    public void writeData(ValueOutput writeView) {
+        writeView.store("Data", CompoundTag.CODEC, this.tag);
+    }
+}
+>>>>>>> Stashed changes

@@ -11,7 +11,7 @@ import daripher.skilltree.skill.bonus.function.AttributeValueFunction;
 import daripher.skilltree.skill.bonus.function.FloatFunction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -126,11 +126,10 @@ public final class FloatFunctionMultiplier implements LivingMultiplier {
             SerializationHelper.serializeValueProvider(json, aMultiplier.floatFunction);
             json.addProperty("divisor", aMultiplier.divisor);
         }
-
         @Override
         public LivingMultiplier deserialize(CompoundTag tag) {
             FloatFunction<?> valueProvider = SerializationHelper.deserializeValueProvider(tag);
-            float divisor = !tag.contains("divisor") ? 1f : tag.getFloat("divisor");
+            float divisor = tag.getFloatOr("divisor", 1f);
             return new FloatFunctionMultiplier(valueProvider, divisor);
         }
 
@@ -145,15 +144,17 @@ public final class FloatFunctionMultiplier implements LivingMultiplier {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public LivingMultiplier deserialize(FriendlyByteBuf buf) {
+        public LivingMultiplier deserialize(RegistryFriendlyByteBuf buf) {
             FloatFunction<?> valueProvider = NetworkHelper.readValueProvider(buf);
             float divisor = buf.readFloat();
             return new FloatFunctionMultiplier(valueProvider, divisor);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, LivingMultiplier multiplier) {
+        public void serialize(RegistryFriendlyByteBuf buf, LivingMultiplier multiplier) {
             if (!(multiplier instanceof FloatFunctionMultiplier aMultiplier)) {
                 throw new IllegalArgumentException();
             }
@@ -163,6 +164,7 @@ public final class FloatFunctionMultiplier implements LivingMultiplier {
 
         @Override
         public LivingMultiplier createDefaultInstance() {
+            // Aligned 1.21.4: Constructor cleanly maps the vanilla reference as a default instance parameter
             return new FloatFunctionMultiplier(new AttributeValueFunction(Attributes.MAX_HEALTH), 5f);
         }
     }

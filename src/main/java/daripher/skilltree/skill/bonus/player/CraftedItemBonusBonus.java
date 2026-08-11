@@ -16,13 +16,14 @@ import daripher.skilltree.skill.bonus.predicate.item.EquipmentPredicate;
 import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
+
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -112,12 +113,11 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
     }
 
     private void addItemBonusWidgets(SkillTreeEditor editor, Consumer<CraftedItemBonusBonus> consumer) {
-        itemBonuses.addEditorWidgets(editor, itemBonuses -> {
-            selectItemBonuses(consumer, itemBonuses);
+        itemBonuses.addEditorWidgets(editor, groupedItemBonuses -> {
+            selectItemBonuses(consumer, groupedItemBonuses);
             consumer.accept(this.copy());
         });
     }
-
     private void selectItemBonuses(Consumer<CraftedItemBonusBonus> consumer, GroupedItemBonus itemBonuses) {
         setItemBonuses(itemBonuses);
         consumer.accept(this.copy());
@@ -202,8 +202,9 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public CraftedItemBonusBonus deserialize(FriendlyByteBuf buf) {
+        public CraftedItemBonusBonus deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             ItemBonus<?> itemBonus = NetworkHelper.readItemBonus(buf);
             if (!(itemBonus instanceof GroupedItemBonus itemBonuses)) {
@@ -212,8 +213,9 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             return new CraftedItemBonusBonus(itemStackPredicate, itemBonuses);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof CraftedItemBonusBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

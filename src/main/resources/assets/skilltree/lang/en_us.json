@@ -117,7 +117,7 @@
   "item_tag.forge:curios/jewelry": "Jewelry",
   "item_tag.skilltree:armors/leather": "Leather Armor",
   "item_tag.skilltree:armors/leather.plural": "Leather Armor",
-  "key.categories.skilltree": "Passive Skill Tree",
+  "key.category.skilltree.main": "Passive Skill Tree",
   "key.display_skill_tree": "Open Skill Tree",
   "living_condition.skilltree.all_armor": "%s %s %s",
   "living_condition.skilltree.all_armor.target.enemy": "if all target's armor is",

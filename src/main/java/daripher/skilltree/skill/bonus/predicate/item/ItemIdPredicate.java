@@ -5,10 +5,16 @@ import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.init.predicate.PSTItemPredicates;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+<<<<<<< Updated upstream
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+=======
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -25,12 +31,13 @@ public final class ItemIdPredicate implements ItemStackPredicate {
 
     @Override
     public boolean test(ItemStack stack) {
-        return BuiltInRegistries.ITEM.get(id) == stack.getItem();
+        Item item = BuiltInRegistries.ITEM.get(id).map(Holder::value).orElse(null);
+        return item == stack.getItem();
     }
 
     @Override
     public String getDescriptionId() {
-        Item item = BuiltInRegistries.ITEM.get(id);
+        Item item = BuiltInRegistries.ITEM.get(id).map(Holder::value).orElse(null);
         if (item != null) {
             return item.getDescriptionId();
         }
@@ -69,15 +76,26 @@ public final class ItemIdPredicate implements ItemStackPredicate {
     }
 
     private void selectItemId(Consumer<ItemStackPredicate> consumer, String text) {
+<<<<<<< Updated upstream
         setId(new ResourceLocation(text));
+=======
+        setId(Identifier.parse(text));
+>>>>>>> Stashed changes
         consumer.accept(this);
     }
 
     private static boolean isItemId(String text) {
+<<<<<<< Updated upstream
         if (!ResourceLocation.isValidResourceLocation(text)) {
             return false;
         }
         return BuiltInRegistries.ITEM.containsKey(new ResourceLocation(text));
+=======
+        if (Identifier.tryParse(text) == null) {
+            return false;
+        }
+        return BuiltInRegistries.ITEM.containsKey(Identifier.parse(text));
+>>>>>>> Stashed changes
     }
 
     public void setId(ResourceLocation id) {
@@ -87,7 +105,11 @@ public final class ItemIdPredicate implements ItemStackPredicate {
     public static class Serializer implements ItemStackPredicate.Serializer {
         @Override
         public ItemStackPredicate deserialize(JsonObject json) throws JsonParseException {
+<<<<<<< Updated upstream
             ResourceLocation id = new ResourceLocation(json.get("id").getAsString());
+=======
+            Identifier id = Identifier.parse(json.get("id").getAsString());
+>>>>>>> Stashed changes
             return new ItemIdPredicate(id);
         }
 
@@ -103,7 +125,12 @@ public final class ItemIdPredicate implements ItemStackPredicate {
         public ItemStackPredicate deserialize(CompoundTag tag) {
             Tag idTag = tag.get("id");
             Objects.requireNonNull(idTag);
+<<<<<<< Updated upstream
             ResourceLocation id = new ResourceLocation(idTag.getAsString());
+=======
+            // Fix 1.21.5 : Tag.getAsString() renommé Tag.asString(), retourne Optional<String>
+            Identifier id = Identifier.parse(idTag.asString().orElseThrow());
+>>>>>>> Stashed changes
             return new ItemIdPredicate(id);
         }
 
@@ -118,12 +145,17 @@ public final class ItemIdPredicate implements ItemStackPredicate {
         }
 
         @Override
+<<<<<<< Updated upstream
         public ItemStackPredicate deserialize(FriendlyByteBuf buf) {
             return new ItemIdPredicate(new ResourceLocation(buf.readUtf()));
+=======
+        public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
+            return new ItemIdPredicate(Identifier.parse(buf.readUtf()));
+>>>>>>> Stashed changes
         }
 
         @Override
-        public void serialize(FriendlyByteBuf buf, ItemStackPredicate condition) {
+        public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof ItemIdPredicate aCondition)) {
                 throw new IllegalArgumentException();
             }
@@ -132,7 +164,11 @@ public final class ItemIdPredicate implements ItemStackPredicate {
 
         @Override
         public ItemStackPredicate createDefaultInstance() {
+<<<<<<< Updated upstream
             return new ItemIdPredicate(new ResourceLocation("minecraft:shield"));
+=======
+            return new ItemIdPredicate(Identifier.parse("minecraft:shield"));
+>>>>>>> Stashed changes
         }
     }
 }

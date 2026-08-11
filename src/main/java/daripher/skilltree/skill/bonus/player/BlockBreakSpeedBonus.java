@@ -14,12 +14,14 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
+
+
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -77,7 +79,7 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
 
     @Override
     public MutableComponent getSimpleTooltip() {
-        MutableComponent bonusTooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), multiplier, AttributeModifier.Operation.MULTIPLY_BASE);
+        MutableComponent bonusTooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), multiplier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         bonusTooltip = playerCondition.getTooltip(bonusTooltip, Target.PLAYER);
         bonusTooltip = playerMultiplier.getTooltip(bonusTooltip, Target.PLAYER);
         return bonusTooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
@@ -106,7 +108,6 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
                 .setMenuInitFunc(() -> addPlayerMultiplierWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<BlockBreakSpeedBonus> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this.copy());
@@ -183,7 +184,6 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
             LivingMultiplier playerMultiplier = SerializationHelper.deserializeLivingMultiplier(json, "player_multiplier");
             return new BlockBreakSpeedBonus(multiplier).setPlayerCondition(playerCondition).setPlayerMultiplier(playerMultiplier);
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof BlockBreakSpeedBonus aBonus)) {
@@ -196,7 +196,7 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
 
         @Override
         public BlockBreakSpeedBonus deserialize(CompoundTag tag) {
-            float multiplier = tag.getFloat("multiplier");
+            float multiplier = tag.getFloatOr("multiplier", 0f);
             LivingEntityPredicate playerCondition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
             LivingMultiplier playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             return new BlockBreakSpeedBonus(multiplier).setPlayerCondition(playerCondition).setPlayerMultiplier(playerMultiplier);
@@ -214,15 +214,17 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public BlockBreakSpeedBonus deserialize(FriendlyByteBuf buf) {
+        public BlockBreakSpeedBonus deserialize(RegistryFriendlyByteBuf buf) {
             LivingEntityPredicate playerCondition = NetworkHelper.readLivingCondition(buf);
             LivingMultiplier playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
             return new BlockBreakSpeedBonus(buf.readFloat()).setPlayerCondition(playerCondition).setPlayerMultiplier(playerMultiplier);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof BlockBreakSpeedBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

@@ -31,6 +31,7 @@ public class JumpHeightBonusHandler {
         if (multiplier <= 1) {
             return;
         }
+        // Safely updates the fall trajectory threshold on the event capsule pipeline
         event.setDistance(event.getDistance() / multiplier);
     }
 }

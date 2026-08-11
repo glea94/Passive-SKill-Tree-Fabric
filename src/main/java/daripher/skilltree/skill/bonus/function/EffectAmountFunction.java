@@ -8,8 +8,9 @@ import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.predicate.effect.MobEffectType;
 import daripher.skilltree.skill.bonus.predicate.living.FloatFunctionEntityPredicate;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffect;
@@ -29,12 +30,13 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
 
     @Override
     public float apply(LivingEntity entity) {
-        List<MobEffect> effects = entity.getActiveEffects().stream().map(MobEffectInstance::getEffect).toList();
+        // Aligned 1.21.4: Map the active active status instances down to registry Holders
+        List<Holder<MobEffect>> effects = entity.getActiveEffects().stream().map(MobEffectInstance::getEffect).toList();
         return switch (effectType) {
             case ANY -> effects.size();
-            case NEUTRAL -> effects.stream().filter(e -> e.getCategory() == MobEffectCategory.NEUTRAL).count();
-            case HARMFUL -> effects.stream().filter(e -> e.getCategory() == MobEffectCategory.HARMFUL).count();
-            case BENEFICIAL -> effects.stream().filter(e -> e.getCategory() == MobEffectCategory.BENEFICIAL).count();
+            case NEUTRAL -> effects.stream().filter(e -> e.value().getCategory() == MobEffectCategory.NEUTRAL).count();
+            case HARMFUL -> effects.stream().filter(e -> e.value().getCategory() == MobEffectCategory.HARMFUL).count();
+            case BENEFICIAL -> effects.stream().filter(e -> e.value().getCategory() == MobEffectCategory.BENEFICIAL).count();
         };
     }
 
@@ -104,8 +106,8 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<FloatFunction<?>> consumer) {
         editor.addLabel(0, 0, "Effect Type", ChatFormatting.GREEN);
         editor.increaseHeight(19);
-        editor.addSelectionMenu(0, 0, 200, effectType).setElementNameGetter(effectType -> Component.literal(effectType.name()))
-                .setResponder(effectType -> selectEffectType(consumer, effectType));
+        editor.addSelectionMenu(0, 0, 200, effectType).setElementNameGetter(type -> Component.literal(type.name()))
+                .setResponder(type -> selectEffectType(consumer, type));
         editor.increaseHeight(19);
     }
 
@@ -135,7 +137,8 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
 
         @Override
         public FloatFunction<?> deserialize(CompoundTag tag) {
-            MobEffectType type = MobEffectType.fromName(tag.getString("effect_type"));
+            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            MobEffectType type = MobEffectType.fromName(tag.getString("effect_type").orElse(""));
             return new EffectAmountFunction(type);
         }
 
@@ -149,14 +152,16 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public FloatFunction<?> deserialize(FriendlyByteBuf buf) {
+        public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectType type = MobEffectType.values()[buf.readInt()];
             return new EffectAmountFunction(type);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, FloatFunction<?> provider) {
+        public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof EffectAmountFunction aProvider)) {
                 throw new IllegalArgumentException();
             }

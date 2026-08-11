@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTItemPredicates;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 
 public enum NoneItemStackPredicate implements ItemStackPredicate {
@@ -46,13 +46,15 @@ public enum NoneItemStackPredicate implements ItemStackPredicate {
             return new CompoundTag();
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ItemStackPredicate deserialize(FriendlyByteBuf buf) {
+        public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return NoneItemStackPredicate.INSTANCE;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, ItemStackPredicate condition) {
+        public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (condition != NoneItemStackPredicate.INSTANCE) {
                 throw new IllegalArgumentException();
             }

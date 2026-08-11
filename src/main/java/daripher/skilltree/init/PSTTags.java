@@ -8,6 +8,7 @@ import net.minecraft.world.item.Item;
 
 public class PSTTags {
     public static class DamageTypes {
+<<<<<<< Updated upstream
         // TODO (étape events/dégâts) : à l'origine "forge:is_magic". Sous Fabric 1.20.1, il n'existe
         // pas encore de tag conventionnel unifié pour "dégâts magiques" (l'unification des tags
         // communs forge/fabric sous le namespace "c:" n'arrive qu'en 1.21+). Deux options réelles :
@@ -33,5 +34,21 @@ public class PSTTags {
         public static final TagKey<Item> MELEE_WEAPON = TagKey.create(Registries.ITEM, new ResourceLocation("skilltree", "melee_weapon"));
         public static final TagKey<Item> RANGED_WEAPON = TagKey.create(Registries.ITEM, new ResourceLocation("skilltree", "ranged_weapon"));
         public static final TagKey<Item> LEATHER_ARMOR = TagKey.create(Registries.ITEM, new ResourceLocation("skilltree", "armors/leather"));
+=======
+        // Factual Fix 1.21.4: Map magic damage using the unified community convention namespace ('c')
+        public static final TagKey<DamageType> IS_MAGIC = TagKey.create(Registries.DAMAGE_TYPE, Identifier.fromNamespaceAndPath("c", "is_magic"));
+    }
+
+    public static class Items {
+        // Factual Fix 1.21.4: Map accessories to standard unified cross-loader tags ('c:rings', 'c:necklaces')
+        public static final TagKey<Item> RINGS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "rings"));
+        public static final TagKey<Item> NECKLACES = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "necklaces"));
+        public static final TagKey<Item> JEWELRY = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "jewelry"));
+
+        // Mod specific classification tags remains under the local mod namespace
+        public static final TagKey<Item> MELEE_WEAPON = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("skilltree", "melee_weapon"));
+        public static final TagKey<Item> RANGED_WEAPON = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("skilltree", "ranged_weapon"));
+        public static final TagKey<Item> LEATHER_ARMOR = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("skilltree", "armors/leather"));
+>>>>>>> Stashed changes
     }
 }

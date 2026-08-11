@@ -7,20 +7,25 @@ import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.editor.menu.selection.SelectionList;
 import daripher.skilltree.data.serializers.SerializationHelper;
 import daripher.skilltree.init.PSTSkillBonuses;
+import daripher.skilltree.network.NetworkHelper;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+<<<<<<< Updated upstream
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
+=======
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+
+// Factual Fix 1.21.4: Added missing structural imports to resolve compiler symbols
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+>>>>>>> Stashed changes
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -84,13 +89,13 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
         } else if (multiplier == -1) {
             multiplierDescription = Component.translatable(descriptionId + ".none");
         } else {
-            String formattedMultiplier = ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(multiplier * 100);
+            String formattedMultiplier = new java.text.DecimalFormat("#.##").format(multiplier * 100);
             multiplierDescription = Component.translatable(descriptionId + ".multiplier", formattedMultiplier);
         }
         MutableComponent bonusDescription;
         if (chance < 1) {
             bonusDescription = Component.translatable(descriptionId, multiplierDescription, lootDescription);
-            bonusDescription = TooltipHelper.getSkillBonusTooltip(bonusDescription, chance, AttributeModifier.Operation.MULTIPLY_BASE);
+            bonusDescription = TooltipHelper.getSkillBonusTooltip(bonusDescription, chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         } else {
             descriptionId += ".guaranteed";
             if (multiplier == -1) {
@@ -118,7 +123,7 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
         editor.addLabel(0, 0, "Loot Type", ChatFormatting.GOLD);
         editor.increaseHeight(19);
         SelectionList<LootType> lootTypeSelection = editor.addSelection(0, 0, 190, 6, lootType)
-                .setNameGetter(LootType::getFormattedName).setResponder(lootType -> selectLootType(consumer, lootType));
+                .setNameGetter(LootType::getFormattedName).setResponder(type -> selectLootType(consumer, type));
         editor.increaseHeight(lootTypeSelection.getHeight() + 10);
     }
 
@@ -136,7 +141,6 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
         setChance(value.floatValue());
         consumer.accept(this.copy());
     }
-
     public void setChance(float chance) {
         this.chance = chance;
     }
@@ -163,20 +167,10 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         LootAmountModifierBonus that = (LootAmountModifierBonus) o;
-        if (Float.compare(multiplier, that.multiplier) != 0) {
-            return false;
-        }
-        if (Float.compare(chance, that.chance) != 0) {
-            return false;
-        }
-        return lootType == that.lootType;
+        return Float.compare(multiplier, that.multiplier) == 0 && Float.compare(chance, that.chance) == 0 && lootType == that.lootType;
     }
 
     @Override
@@ -187,12 +181,19 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
     public enum LootType {
         MOBS("mobs"), FISHING("fishing"), GEMS("gems"), CHESTS("chests"), ORE("ore"), ARCHAEOLOGY("archaeology");
 
+<<<<<<< Updated upstream
         public boolean canAffect(LootContext lootContext, ResourceLocation lootTableId) {
             LootContextParam<Entity> playerLootContextParam = getPlayerLootContextParam();
             if (!lootContext.hasParam(playerLootContextParam)) {
+=======
+        public boolean canAffect(LootContext lootContext, Identifier lootTableId) {
+            net.minecraft.util.context.ContextKey<Entity> playerLootContextParam = getPlayerLootContextParam();
+            // Factual Fix 1.21.5 (confirmé par décompilation LootContext) : hasParam/getParam renommés hasParameter/getParameter
+            if (!lootContext.hasParameter(playerLootContextParam)) {
+>>>>>>> Stashed changes
                 return false;
             }
-            if (!(lootContext.getParam(playerLootContextParam) instanceof Player)) {
+            if (!(lootContext.getParameter(playerLootContextParam) instanceof Player)) {
                 return false;
             }
             String lootTableName = lootTableId.toString();
@@ -206,9 +207,9 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
             };
         }
 
-        public LootContextParam<Entity> getPlayerLootContextParam() {
+        public net.minecraft.util.context.ContextKey<Entity> getPlayerLootContextParam() {
             return switch (this) {
-                case MOBS, FISHING -> LootContextParams.KILLER_ENTITY;
+                case MOBS, FISHING -> LootContextParams.ATTACKING_ENTITY;
                 case GEMS, CHESTS, ORE, ARCHAEOLOGY -> LootContextParams.THIS_ENTITY;
             };
         }
@@ -263,9 +264,10 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
 
         @Override
         public LootAmountModifierBonus deserialize(CompoundTag tag) {
-            float chance = tag.getFloat("chance");
-            float multiplier = tag.getFloat("multiplier");
-            LootType lootType = LootType.byName(tag.getString("loot_type"));
+            float chance = tag.getFloatOr("chance", 0f);
+            float multiplier = tag.getFloatOr("multiplier", 0f);
+            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            LootType lootType = LootType.byName(tag.getString("loot_type").orElse(""));
             return new LootAmountModifierBonus(chance, multiplier, lootType);
         }
 
@@ -282,12 +284,12 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
         }
 
         @Override
-        public LootAmountModifierBonus deserialize(FriendlyByteBuf buf) {
+        public LootAmountModifierBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new LootAmountModifierBonus(buf.readFloat(), buf.readFloat(), LootType.byName(buf.readUtf()));
         }
 
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof LootAmountModifierBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

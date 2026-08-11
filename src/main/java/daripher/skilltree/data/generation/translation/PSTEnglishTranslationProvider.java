@@ -13,9 +13,15 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 
 public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
+<<<<<<< Updated upstream
     public PSTEnglishTranslationProvider(FabricDataOutput dataOutput) {
         super(dataOutput, "en_us");
+=======
+    public PSTEnglishTranslationProvider(FabricPackOutput dataOutput, java.util.concurrent.CompletableFuture<net.minecraft.core.HolderLookup.Provider> registryLookup) {
+        super(dataOutput, "en_us", registryLookup);
+>>>>>>> Stashed changes
     }
+
 
     @Override
     protected void addTranslations() {
@@ -544,9 +550,11 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         add(PSTRecipeSerializers.WORKBENCH_WEAPON_POISONING.get(), "custom_skill_description", "You can apply poisons to weapons using advanced workbench");
     }
 
-    protected void add(Potion potion, String name) {
-        add(potion.getName(Items.POTION.getDescriptionId() + ".effect."), "Potion of " + name);
-        add(potion.getName(Items.SPLASH_POTION.getDescriptionId() + ".effect."), "Splash Potion of " + name);
-        add(potion.getName(Items.LINGERING_POTION.getDescriptionId() + ".effect."), "Lingering Potion of " + name);
+    public void add(net.minecraft.world.item.alchemy.Potion potion, String name) {
+        String effectId = potion.name();
+
+        add(net.minecraft.world.item.Items.POTION.getDescriptionId() + ".effect." + effectId, "Potion of " + name);
+        add(net.minecraft.world.item.Items.SPLASH_POTION.getDescriptionId() + ".effect." + effectId, "Splash Potion of " + name);
+        add(net.minecraft.world.item.Items.LINGERING_POTION.getDescriptionId() + ".effect." + effectId, "Lingering Potion of " + name);
     }
 }

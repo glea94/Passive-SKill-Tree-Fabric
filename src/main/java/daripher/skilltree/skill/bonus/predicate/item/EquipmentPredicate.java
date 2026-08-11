@@ -7,13 +7,13 @@ import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.init.predicate.PSTItemPredicates;
 import daripher.skilltree.init.PSTTags;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 
 import java.util.Locale;
@@ -65,7 +65,7 @@ public class EquipmentPredicate implements ItemStackPredicate {
     }
 
     public static boolean isLeggings(ItemStack stack) {
-        return stack.getItem() instanceof ArmorItem armor && armor.getEquipmentSlot() == EquipmentSlot.LEGS;
+        return stack.is(ItemTags.LEG_ARMOR);
     }
 
     public static boolean isTrident(ItemStack stack) {
@@ -77,7 +77,7 @@ public class EquipmentPredicate implements ItemStackPredicate {
     }
 
     public static boolean isPickaxe(ItemStack stack) {
-        return stack.getItem() instanceof PickaxeItem || stack.is(ItemTags.PICKAXES);
+        return stack.is(ItemTags.PICKAXES);
     }
 
     public static boolean isCrossbow(ItemStack stack) {
@@ -97,7 +97,7 @@ public class EquipmentPredicate implements ItemStackPredicate {
     }
 
     public static boolean isChestplate(ItemStack stack) {
-        return stack.getItem() instanceof ArmorItem armor && armor.getEquipmentSlot() == EquipmentSlot.CHEST;
+        return stack.is(ItemTags.CHEST_ARMOR);
     }
 
     public static boolean isShovel(ItemStack stack) {
@@ -111,9 +111,8 @@ public class EquipmentPredicate implements ItemStackPredicate {
         }
         return stack.getItem() instanceof ShieldItem;
     }
-
     public static boolean isHelmet(ItemStack stack) {
-        return stack.getItem() instanceof ArmorItem armor && armor.getEquipmentSlot() == EquipmentSlot.HEAD;
+        return stack.is(ItemTags.HEAD_ARMOR);
     }
 
     public static boolean isSword(ItemStack stack) {
@@ -121,11 +120,11 @@ public class EquipmentPredicate implements ItemStackPredicate {
         if (Objects.requireNonNull(id).toString().equals("tetra:modular_sword")) {
             return true;
         }
-        return stack.getItem() instanceof SwordItem || stack.is(ItemTags.SWORDS);
+        return stack.is(ItemTags.SWORDS);
     }
 
     public static boolean isTool(ItemStack stack) {
-        return stack.getItem() instanceof DiggerItem;
+        return stack.has(DataComponents.TOOL);
     }
 
     public static boolean isHoe(ItemStack stack) {
@@ -141,7 +140,7 @@ public class EquipmentPredicate implements ItemStackPredicate {
     }
 
     public static boolean isBoots(ItemStack stack) {
-        return stack.getItem() instanceof ArmorItem armor && armor.getEquipmentSlot() == EquipmentSlot.FEET;
+        return stack.is(ItemTags.FOOT_ARMOR);
     }
 
     public static boolean isAxe(ItemStack stack) {
@@ -183,7 +182,7 @@ public class EquipmentPredicate implements ItemStackPredicate {
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<ItemStackPredicate> consumer) {
         editor.addLabel(0, 0, "Type", ChatFormatting.GREEN);
         editor.increaseHeight(19);
-        editor.addSelectionMenu(0, 0, 200, type).setResponder(type -> selectEquipmentType(consumer, type))
+        editor.addSelectionMenu(0, 0, 200, type).setResponder(t -> selectEquipmentType(consumer, t))
                 .setElementNameGetter(Type::getName);
         editor.increaseHeight(19);
     }
@@ -222,7 +221,7 @@ public class EquipmentPredicate implements ItemStackPredicate {
 
         @Override
         public ItemStackPredicate deserialize(CompoundTag tag) {
-            Type type = Type.valueOf(tag.getString("equipment_type").toUpperCase(Locale.ROOT));
+            Type type = Type.valueOf(tag.getString("equipment_type").orElse("").toUpperCase(Locale.ROOT));
             return new EquipmentPredicate(type);
         }
 
@@ -237,12 +236,12 @@ public class EquipmentPredicate implements ItemStackPredicate {
         }
 
         @Override
-        public ItemStackPredicate deserialize(FriendlyByteBuf buf) {
+        public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new EquipmentPredicate(Type.values()[buf.readInt()]);
         }
 
         @Override
-        public void serialize(FriendlyByteBuf buf, ItemStackPredicate condition) {
+        public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof EquipmentPredicate aCondition)) {
                 throw new IllegalArgumentException();
             }

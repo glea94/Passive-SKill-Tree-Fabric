@@ -198,7 +198,7 @@
   "item_tag.forge:curios/jewelry.where": "Бижутерии",
   "item_tag.skilltree:armors/leather": "Кожаная броня",
   "item_tag.skilltree:armors/leather.plural": "Кожаная броня",
-  "key.categories.skilltree": "Древо пассивных умений",
+  "key.category.skilltree.main": "Древо пассивных умений",
   "key.display_skill_tree": "Открыть древо пассивных умений",
   "living_condition.skilltree.all_armor": "%s %s %s",
   "living_condition.skilltree.all_armor.target.enemy": "если вся броня цели - ",

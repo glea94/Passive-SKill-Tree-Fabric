@@ -16,7 +16,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -24,6 +24,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import org.jetbrains.annotations.NotNull;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -99,7 +100,7 @@ public final class EnchantingExperienceRefundBonus implements SkillBonus<Enchant
         MutableComponent tooltip;
         if (chance < 1f) {
             tooltip = Component.translatable(getDescriptionId() + ".chance", itemStackPredicate.getTooltip());
-            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.MULTIPLY_BASE);
+            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         } else {
             tooltip = Component.translatable(getDescriptionId(), itemStackPredicate.getTooltip("plural"));
         }
@@ -136,7 +137,6 @@ public final class EnchantingExperienceRefundBonus implements SkillBonus<Enchant
                 .setMenuInitFunc(() -> addPlayerMultiplierWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectChance(Consumer<EnchantingExperienceRefundBonus> consumer, Double value) {
         setChance(value.floatValue());
         consumer.accept(this.copy());
@@ -224,7 +224,7 @@ public final class EnchantingExperienceRefundBonus implements SkillBonus<Enchant
 
         @Override
         public EnchantingExperienceRefundBonus deserialize(CompoundTag tag) {
-            float chance = tag.getFloat("chance");
+            float chance = tag.getFloatOr("chance", 0f);
             EnchantingExperienceRefundBonus bonus = new EnchantingExperienceRefundBonus(chance);
             bonus.playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
@@ -245,8 +245,9 @@ public final class EnchantingExperienceRefundBonus implements SkillBonus<Enchant
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public EnchantingExperienceRefundBonus deserialize(FriendlyByteBuf buf) {
+        public EnchantingExperienceRefundBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
             EnchantingExperienceRefundBonus bonus = new EnchantingExperienceRefundBonus(chance);
             bonus.playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
@@ -255,8 +256,9 @@ public final class EnchantingExperienceRefundBonus implements SkillBonus<Enchant
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof EnchantingExperienceRefundBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

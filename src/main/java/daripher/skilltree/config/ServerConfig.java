@@ -13,13 +13,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Portage Fabric : remplace net.minecraftforge.common.ForgeConfigSpec (pas d'équivalent direct
- * sur Fabric, pas de "config API" officielle) par un simple fichier JSON dans le dossier de
- * config, lu/écrit avec Gson (déjà fourni par Minecraft, aucune dépendance supplémentaire).
- * Mêmes noms de champs statiques publics que la version Forge (max_skill_points,
- * first_skill_cost, etc.) : tout le reste du mod qui les référence déjà n'a rien à changer.
- */
 public class ServerConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve(SkillTreeMod.MOD_ID + "-server.json");
@@ -70,7 +63,7 @@ public class ServerConfig {
     }
 
     private static void applyData(Data data) {
-        max_skill_points = data.max_skill_points;
+        max_skill_points = data.max_skill_points <= 0 ? DEFAULT_MAX_SKILLS : data.max_skill_points;
         first_skill_cost = data.first_skill_cost;
         last_skill_cost = data.last_skill_cost;
         use_skill_points_array = data.use_skill_points_array;
@@ -106,11 +99,16 @@ public class ServerConfig {
 
     public static int getSkillPointCost(int level) {
         if (use_skill_points_array) {
+            if (skill_points_costs == null || skill_points_costs.isEmpty()) {
+                return 15;
+            }
             if (level >= skill_points_costs.size()) {
                 return skill_points_costs.get(skill_points_costs.size() - 1);
             }
             return skill_points_costs.get(level);
         }
-        return first_skill_cost + (last_skill_cost - first_skill_cost) * level / max_skill_points;
+        // Factual Fix 1.21.4: Secure calculations against divide-by-zero scenarios on malformed configs
+        int totalPoints = max_skill_points <= 0 ? DEFAULT_MAX_SKILLS : max_skill_points;
+        return first_skill_cost + (last_skill_cost - first_skill_cost) * level / totalPoints;
     }
 }

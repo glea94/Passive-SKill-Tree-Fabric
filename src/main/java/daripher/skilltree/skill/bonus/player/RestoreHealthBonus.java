@@ -13,7 +13,7 @@ import daripher.skilltree.skill.bonus.event.OutgoingDamageEventListener;
 import daripher.skilltree.skill.bonus.event.SkillEventListener;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
@@ -116,7 +116,7 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
         }
         MutableComponent tooltip = Component.translatable(bonusDescription, amountDescription);
         if (chance < 1) {
-            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.MULTIPLY_BASE);
+            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         }
         tooltip = eventListener.getTooltip(tooltip);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
@@ -131,7 +131,6 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
     public SkillEventListener getEventListener() {
         return eventListener;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<RestoreHealthBonus>> consumer) {
         editor.addLabel(0, 0, "Chance", ChatFormatting.GOLD);
@@ -147,14 +146,14 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
         editor.addLabel(0, 0, "Event", ChatFormatting.GOLD);
         editor.increaseHeight(19);
         editor.addSelectionMenu(0, 0, 200, eventListener)
-                .setResponder(eventListener -> selectEventListener(editor, consumer, eventListener))
+                .setResponder(listener -> selectEventListener(editor, consumer, listener))
                 .setMenuInitFunc(() -> addEventListenerWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
 
     private void addEventListenerWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<RestoreHealthBonus>> consumer) {
-        eventListener.addEditorWidgets(editor, eventListener -> {
-            setEventListener(eventListener);
+        eventListener.addEditorWidgets(editor, listener -> {
+            setEventListener(listener);
             consumer.accept(this.copy());
         });
     }
@@ -223,12 +222,12 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
 
         @Override
         public RestoreHealthBonus deserialize(CompoundTag tag) {
-            float chance = tag.getFloat("chance");
-            float amount = tag.getFloat("amount");
+            float chance = tag.getFloatOr("chance", 0f);
+            float amount = tag.getFloatOr("amount", 0f);
             RestoreHealthBonus bonus = new RestoreHealthBonus(chance, amount);
             bonus.eventListener = SerializationHelper.deserializeEventListener(tag);
             if (tag.contains("percentage_healing")) {
-                bonus.setPercentageHealing(tag.getBoolean("percentage_healing"));
+                bonus.setPercentageHealing(tag.getBoolean("percentage_healing").orElse(false));
             }
             return bonus;
         }
@@ -246,8 +245,9 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public RestoreHealthBonus deserialize(FriendlyByteBuf buf) {
+        public RestoreHealthBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
             float amount = buf.readFloat();
             RestoreHealthBonus bonus = new RestoreHealthBonus(chance, amount);
@@ -256,8 +256,9 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RestoreHealthBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

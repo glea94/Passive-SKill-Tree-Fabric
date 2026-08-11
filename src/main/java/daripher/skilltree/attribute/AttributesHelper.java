@@ -1,8 +1,14 @@
 package daripher.skilltree.attribute;
 
 import daripher.skilltree.SkillTreeMod;
+<<<<<<< Updated upstream
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+=======
+import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.EntityTypes;
+>>>>>>> Stashed changes
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
@@ -13,12 +19,12 @@ import java.util.List;
 
 public class AttributesHelper {
     public static Collection<Attribute> playerAttributesList() {
-        if (!DefaultAttributes.hasSupplier(EntityType.PLAYER)) {
+        if (!DefaultAttributes.hasSupplier(EntityTypes.PLAYER)) {
             SkillTreeMod.LOGGER.error("Can not find player attribute supplier!");
             return List.of();
         }
-        AttributeSupplier attributeSupplier = DefaultAttributes.getSupplier(EntityType.PLAYER);
-        return com.google.common.collect.Lists.newArrayList(BuiltInRegistries.ATTRIBUTE).stream().filter(attributeSupplier::hasAttribute).toList();
+        AttributeSupplier attributeSupplier = DefaultAttributes.getSupplier(EntityTypes.PLAYER);
+        return BuiltInRegistries.ATTRIBUTE.listElements().filter(attributeSupplier::hasAttribute).map(Holder.Reference::value).toList();
     }
 
     public static String getName(Attribute attribute) {

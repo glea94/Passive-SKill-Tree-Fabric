@@ -13,7 +13,7 @@ import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.FloatFunctionEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
@@ -144,14 +144,16 @@ public class EquipmentDurabilityFunction implements FloatFunction<EquipmentDurab
             return tag;
         }
 
+        // Factual Fix 1.21.4 : Utilisation obligatoire de RegistryFriendlyByteBuf
         @Override
-        public FloatFunction<?> deserialize(FriendlyByteBuf buf) {
+        public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return new EquipmentDurabilityFunction(itemStackPredicate);
         }
 
+        // Factual Fix 1.21.4 : Utilisation obligatoire de RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, FloatFunction<?> provider) {
+        public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof EquipmentDurabilityFunction aProvider)) {
                 throw new IllegalArgumentException();
             }

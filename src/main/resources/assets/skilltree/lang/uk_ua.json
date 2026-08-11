@@ -108,7 +108,7 @@
   "item.skilltree.vacucite.tooltip": "Поглинає самоцвіти із предмета",
   "item.skilltree.wisdom_scroll": "Сувій мудрості",
   "item.skilltree.wisdom_scroll.tooltip": "Дарує одне очко пасивних вміннь",
-  "key.categories.skilltree": "Дерево пасивних вміннь",
+  "key.category.skilltree.main": "Дерево пасивних вміннь",
   "key.display_skill_tree": "Відкрити дерево пасивних вміннь",
   "player.armor_per_evasion_bonus": "Броня за шанс ухилення",
   "player.armor_per_gem_in_chestplate": "Броня за самоцвіт в нагруднику",

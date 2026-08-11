@@ -14,7 +14,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
@@ -108,7 +108,6 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
         tooltip = enemyCondition.getTooltip(tooltip, Target.ENEMY);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return amount > 0;
@@ -193,7 +192,6 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<StealthBonus> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this.copy());
@@ -250,7 +248,7 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
 
         @Override
         public StealthBonus deserialize(CompoundTag tag) {
-            float amount = tag.getFloat("amount");
+            float amount = tag.getFloatOr("amount", 0f);
             StealthBonus bonus = new StealthBonus(amount);
             bonus.playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             bonus.enemyMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "enemy_multiplier");
@@ -273,8 +271,9 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public StealthBonus deserialize(FriendlyByteBuf buf) {
+        public StealthBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
             StealthBonus bonus = new StealthBonus(amount);
             bonus.playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
@@ -284,8 +283,9 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof StealthBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

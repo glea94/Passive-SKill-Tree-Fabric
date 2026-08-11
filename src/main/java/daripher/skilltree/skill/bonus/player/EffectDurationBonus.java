@@ -17,7 +17,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffect;
@@ -126,7 +126,7 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
         Component effectTypeDescription = effectPredicate.getTooltip("plural");
         String key = getDescriptionId() + "." + target.getName();
         MutableComponent tooltip = Component.translatable(key, effectTypeDescription);
-        tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, duration, AttributeModifier.Operation.MULTIPLY_BASE);
+        tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, duration, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         tooltip = playerMultiplier.getTooltip(tooltip, target);
         tooltip = playerCondition.getTooltip(tooltip, target);
         tooltip = enemyMultiplier.getTooltip(tooltip, target);
@@ -326,8 +326,8 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
         @Override
         public EffectDurationBonus deserialize(CompoundTag tag) {
             MobEffectPredicate effectPredicate = SerializationHelper.deserializeMobEffectCondition(tag, "effect_predicate");
-            float duration = tag.getFloat("duration");
-            SkillBonus.Target target = Target.fromName(tag.getString("target"));
+            float duration = tag.getFloatOr("duration", 0f);
+            SkillBonus.Target target = Target.fromName(tag.getString("target").orElseThrow());
             EffectDurationBonus bonus = new EffectDurationBonus(effectPredicate, duration, target);
             bonus.playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
@@ -353,10 +353,10 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
         }
 
         @Override
-        public EffectDurationBonus deserialize(FriendlyByteBuf buf) {
+        public EffectDurationBonus deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectPredicate effectPredicate = NetworkHelper.readMobEffectCondition(buf);
             float duration = buf.readFloat();
-            SkillBonus.Target target = Target.values()[buf.readInt()];
+            SkillBonus.Target target = NetworkHelper.readEnum(buf, SkillBonus.Target.class);
             EffectDurationBonus bonus = new EffectDurationBonus(effectPredicate, duration, target);
             bonus.playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
             bonus.playerCondition = NetworkHelper.readLivingCondition(buf);
@@ -365,19 +365,21 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored network signature from FriendlyByteBuf to RegistryFriendlyByteBuf to fulfill global interface requirements
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof EffectDurationBonus aBonus)) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Expected EffectDurationBonus instance");
             }
             NetworkHelper.writeMobEffectCondition(buf, aBonus.effectPredicate);
             buf.writeFloat(aBonus.duration);
-            buf.writeInt(aBonus.target.ordinal());
+            NetworkHelper.writeEnum(buf, aBonus.target);
             NetworkHelper.writeLivingMultiplier(buf, aBonus.playerMultiplier);
             NetworkHelper.writeLivingCondition(buf, aBonus.playerCondition);
             NetworkHelper.writeLivingMultiplier(buf, aBonus.enemyMultiplier);
             NetworkHelper.writeLivingCondition(buf, aBonus.enemyCondition);
         }
+
 
         @Override
         public SkillBonus<?> createDefaultInstance() {

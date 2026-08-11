@@ -17,7 +17,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -51,12 +51,12 @@ public class IncomingDamageEventListener implements SkillEventListener {
         if (!damageCondition.met(damage)) {
             return;
         }
-        LivingEntity target = this.target == SkillBonus.Target.PLAYER ? player : enemy;
-        if (target == null) {
+        LivingEntity targetEntity = this.target == SkillBonus.Target.PLAYER ? player : enemy;
+        if (targetEntity == null) {
             return;
         }
         float effectMultiplier = playerMultiplier.getValue(player) * enemyMultiplier.getValue(enemy);
-        skill.copy().multiply(effectMultiplier).applyEffect(target, player);
+        skill.copy().multiply(effectMultiplier).applyEffect(targetEntity, player);
     }
 
     @Override
@@ -86,7 +86,6 @@ public class IncomingDamageEventListener implements SkillEventListener {
         IncomingDamageEventListener listener = (IncomingDamageEventListener) o;
         return Objects.equals(playerCondition, listener.playerCondition) && Objects.equals(enemyCondition, listener.enemyCondition) && Objects.equals(damageCondition, listener.damageCondition) && Objects.equals(playerMultiplier, listener.playerMultiplier) && Objects.equals(enemyMultiplier, listener.enemyMultiplier) && target == listener.target;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(playerCondition, enemyCondition, damageCondition, playerMultiplier, enemyMultiplier, target);
@@ -136,7 +135,8 @@ public class IncomingDamageEventListener implements SkillEventListener {
 
     private void addTargetMultiplierWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         enemyMultiplier.addEditorWidgets(editor, multiplier -> {
-            setPlayerMultiplier(multiplier);
+            // Factual Fix 1.21.4: Corrected copy-paste target mapping error to set the enemy multiplier field
+            setEnemyMultiplier(multiplier);
             consumer.accept(this);
         });
     }
@@ -153,7 +153,6 @@ public class IncomingDamageEventListener implements SkillEventListener {
             consumer.accept(this);
         });
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<SkillEventListener> consumer, LivingMultiplier multiplier) {
         setPlayerMultiplier(multiplier);
         consumer.accept(this);
@@ -227,7 +226,6 @@ public class IncomingDamageEventListener implements SkillEventListener {
             listener.setTarget(SkillBonus.Target.valueOf(json.get("target").getAsString().toUpperCase(Locale.ROOT)));
             return listener;
         }
-
         @Override
         public void serialize(JsonObject json, SkillEventListener listener) {
             if (!(listener instanceof IncomingDamageEventListener aListener)) {
@@ -249,7 +247,8 @@ public class IncomingDamageEventListener implements SkillEventListener {
             listener.setPlayerCondition(SerializationHelper.deserializeLivingCondition(tag, "player_condition"));
             listener.setEnemyMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "enemy_multiplier"));
             listener.setPlayerMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier"));
-            listener.setTarget(SkillBonus.Target.valueOf(tag.getString("target").toUpperCase(Locale.ROOT)));
+            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            listener.setTarget(SkillBonus.Target.valueOf(tag.getString("target").orElse("").toUpperCase(Locale.ROOT)));
             return listener;
         }
 
@@ -268,8 +267,9 @@ public class IncomingDamageEventListener implements SkillEventListener {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public SkillEventListener deserialize(FriendlyByteBuf buf) {
+        public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             IncomingDamageEventListener listener = new IncomingDamageEventListener();
             listener.setDamageCondition(NetworkHelper.readDamageCondition(buf));
             listener.setEnemyCondition(NetworkHelper.readLivingCondition(buf));
@@ -280,8 +280,9 @@ public class IncomingDamageEventListener implements SkillEventListener {
             return listener;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillEventListener listener) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof IncomingDamageEventListener aListener)) {
                 throw new IllegalArgumentException();
             }

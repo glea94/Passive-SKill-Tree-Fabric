@@ -15,7 +15,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTMobEffectPredicates {
+<<<<<<< Updated upstream
     public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "mob_effect_conditions");
+=======
+    public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "mob_effect_conditions");
+>>>>>>> Stashed changes
     public static final DeferredRegister<MobEffectPredicate.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<MobEffectPredicate.Serializer> NONE = REGISTRY.register("none", NoneMobEffectPredicate.Serializer::new);
@@ -23,7 +27,9 @@ public class PSTMobEffectPredicates {
     public static final RegistryObject<MobEffectPredicate.Serializer> EFFECT_ID = REGISTRY.register("effect_id", MobEffectIdPredicate.Serializer::new);
 
     public static List<MobEffectPredicate> defaultInstances() {
-        return PSTRegistries.MOB_EFFECT_PREDICATES.get().getValues().stream().map(MobEffectPredicate.Serializer::createDefaultInstance)
+        // Alignment 1.21.4: Streams data structures through custom registry endpoints safely
+        return PSTRegistries.MOB_EFFECT_PREDICATES.get().getValues().stream()
+                .map(MobEffectPredicate.Serializer::createDefaultInstance)
                 .toList();
     }
 

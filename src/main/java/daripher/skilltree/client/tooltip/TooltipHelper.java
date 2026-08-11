@@ -2,7 +2,7 @@ package daripher.skilltree.client.tooltip;
 
 import daripher.skilltree.data.reloader.SkillsReloader;
 import daripher.skilltree.effect.SkillBonusEffect;
-import daripher.skilltree.init.PSTRecipeTypes;
+import daripher.skilltree.client.network.ClientWorkbenchRecipeCache;
 import daripher.skilltree.recipe.workbench.AbstractWorkbenchRecipe;
 import daripher.skilltree.skill.PassiveSkill;
 import daripher.skilltree.skill.bonus.SkillBonus;
@@ -16,10 +16,10 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -40,12 +40,14 @@ public class TooltipHelper {
     private static final Style KEYSTONE_TITLE_STYLE = Style.EMPTY.withColor(0xEB7530);
     private static final Style GATEWAY_TITLE_STYLE = Style.EMPTY.withColor(0x849696);
 
+    private static final DecimalFormat ATTRIBUTE_MODIFIER_FORMAT = new DecimalFormat("#.##", DecimalFormatSymbols.getInstance(Locale.ROOT));
+
     public static Component getEffectTooltip(MobEffectInstance effect) {
         Component effectDescription;
-        if (effect.getEffect() instanceof SkillBonusEffect skillEffect) {
+        if (effect.getEffect().value() instanceof SkillBonusEffect skillEffect) {
             effectDescription = skillEffect.getBonus().copy().multiply(effect.getAmplifier() + 1).getSimpleTooltip().setStyle(Style.EMPTY);
         } else {
-            effectDescription = effect.getEffect().getDisplayName();
+            effectDescription = effect.getEffect().value().getDisplayName();
             if (effect.getAmplifier() == 0) {
                 return effectDescription;
             }
@@ -57,9 +59,9 @@ public class TooltipHelper {
 
     public static Component getOperationName(AttributeModifier.Operation operation) {
         return Component.literal(switch (operation) {
-            case ADDITION -> "Addition";
-            case MULTIPLY_BASE -> "Multiply Base";
-            case MULTIPLY_TOTAL -> "Multiply Total";
+            case ADD_VALUE -> "Addition";
+            case ADD_MULTIPLIED_BASE -> "Multiply Base";
+            case ADD_MULTIPLIED_TOTAL -> "Multiply Total";
         });
     }
 
@@ -81,7 +83,7 @@ public class TooltipHelper {
 
     public static MutableComponent getSkillBonusTooltip(Component bonusDescription, double amount, AttributeModifier.Operation operation) {
         float multiplier = 1;
-        if (operation != AttributeModifier.Operation.ADDITION) {
+        if (operation != AttributeModifier.Operation.ADD_VALUE) {
             multiplier = 100;
         }
         double visibleAmount = amount * multiplier;
@@ -89,13 +91,19 @@ public class TooltipHelper {
             visibleAmount *= -1;
         }
         String operationDescription = amount > 0 ? "plus" : "take";
-        operationDescription = "attribute.modifier." + operationDescription + "." + operation.ordinal();
+
+        int operationId = switch (operation) {
+            case ADD_VALUE -> 0;
+            case ADD_MULTIPLIED_BASE -> 1;
+            case ADD_MULTIPLIED_TOTAL -> 2;
+        };
+        operationDescription = "attribute.modifier." + operationDescription + "." + operationId;
+
         String multiplierDescription = formatNumber(visibleAmount);
         return Component.translatable(operationDescription, multiplierDescription, bonusDescription);
     }
-
     public static String formatNumber(double number) {
-        String formatted = ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(number);
+        String formatted = ATTRIBUTE_MODIFIER_FORMAT.format(number);
         if (formatted.endsWith(".0")) {
             formatted = formatted.substring(0, formatted.length() - 2);
         }
@@ -164,13 +172,13 @@ public class TooltipHelper {
         for (int i = 1; i < split.length; i++) {
             String next = line + " " + split[i];
             if (font.width(next) > maxWidth) {
-                components.add(Component.translatable(line).withStyle(component.getStyle()));
+                components.add(Component.literal(line).withStyle(component.getStyle()));
                 line = "  " + split[i];
                 continue;
             }
             line = next;
         }
-        components.add(Component.translatable(line).withStyle(component.getStyle()));
+        components.add(Component.literal(line).withStyle(component.getStyle()));
         return components;
     }
 
@@ -189,7 +197,6 @@ public class TooltipHelper {
     public static String getTrimmedString(String message, int maxWidth) {
         return getTrimmedString(Minecraft.getInstance().font, message, maxWidth);
     }
-
     public static Component getSlotTooltip(String slotName, String type) {
         return Component.translatable("curio.slot.%s.%s".formatted(slotName, type));
     }
@@ -241,24 +248,34 @@ public class TooltipHelper {
         return recipe.getShortDescription();
     }
 
+<<<<<<< Updated upstream
     public static Component getRecipeTooltip(ResourceLocation recipeId) {
         ClientLevel level = Minecraft.getInstance().level;
         Objects.requireNonNull(level);
         RecipeManager recipeManager = level.getRecipeManager();
         List<AbstractWorkbenchRecipe> recipes = recipeManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH);
         AbstractWorkbenchRecipe recipe = recipes.stream().filter(r -> r.getId().equals(recipeId)).findAny().orElse(null);
+=======
+    public static Component getRecipeTooltip(Identifier recipeId) {
+        AbstractWorkbenchRecipe recipe = ClientWorkbenchRecipeCache.getById(recipeId).orElse(null);
+>>>>>>> Stashed changes
         if (recipe == null) {
             return Component.literal("Unknown Recipe: " + recipeId.toString()).withStyle(ChatFormatting.RED);
         }
         return getRecipeTooltip(recipe);
     }
 
+<<<<<<< Updated upstream
     public static String getRecipeDescriptionId(ResourceLocation recipeId) {
         ClientLevel level = Minecraft.getInstance().level;
         Objects.requireNonNull(level);
         RecipeManager recipeManager = level.getRecipeManager();
         List<AbstractWorkbenchRecipe> recipes = recipeManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH);
         AbstractWorkbenchRecipe recipe = recipes.stream().filter(r -> r.getId().equals(recipeId)).findAny().orElse(null);
+=======
+    public static String getRecipeDescriptionId(Identifier recipeId) {
+        AbstractWorkbenchRecipe recipe = ClientWorkbenchRecipeCache.getById(recipeId).orElse(null);
+>>>>>>> Stashed changes
         if (recipe == null) {
             return "Unknown Recipe: " + recipeId.toString();
         }

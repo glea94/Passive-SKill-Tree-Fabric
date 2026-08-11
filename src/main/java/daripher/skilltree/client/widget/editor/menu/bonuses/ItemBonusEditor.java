@@ -19,17 +19,21 @@ public class ItemBonusEditor extends EditorMenu {
 
     @Override
     public void init() {
+        // En 1.21.4, les boutons personnalisés créés via l'éditeur s'enregistrent proprement
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
         editor.addConfirmationButton(110, 0, 90, 14, "Remove", "Confirm").setPressFunc(b -> {
             changesListener.accept(null);
             editor.selectMenu(previousMenu);
         });
+
         editor.increaseHeight(29);
         ItemBonus<?> itemBonus = selectedValueProvider.get();
         if (itemBonus == null) {
             editor.selectMenu(previousMenu);
             return;
         }
+
+        // Délègue la création des widgets enfants en passant le listener de modification réactif
         itemBonus.addEditorWidgets(editor, changesListener::accept);
     }
 }

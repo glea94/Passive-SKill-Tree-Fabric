@@ -8,8 +8,10 @@ import daripher.skilltree.init.predicate.PSTLivingEntityPredicates;
 import daripher.skilltree.network.NetworkHelper;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffect;
@@ -18,19 +20,18 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 public final class HasEffectEntityPredicate implements LivingEntityPredicate {
-    private MobEffect effect;
+    private Holder<MobEffect> effect;
     private int amplifier;
 
-    public HasEffectEntityPredicate(@NotNull MobEffect effect) {
+    public HasEffectEntityPredicate(@NotNull Holder<MobEffect> effect) {
         this(effect, 0);
     }
 
-    public HasEffectEntityPredicate(@NotNull MobEffect effect, int amplifier) {
+    public HasEffectEntityPredicate(@NotNull Holder<MobEffect> effect, int amplifier) {
         this.effect = effect;
         this.amplifier = amplifier;
     }
@@ -40,15 +41,15 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
         if (amplifier == 0) {
             return living.hasEffect(this.effect);
         }
-        MobEffectInstance effect = living.getEffect(this.effect);
-        return effect != null && effect.getAmplifier() >= this.amplifier;
+        MobEffectInstance activeEffect = living.getEffect(this.effect);
+        return activeEffect != null && activeEffect.getAmplifier() >= this.amplifier;
     }
 
     @Override
     public MutableComponent getTooltip(MutableComponent bonusTooltip, SkillBonus.Target target) {
         String key = getDescriptionId();
         Component targetDescription = Component.translatable("%s.target.%s".formatted(key, target.getName()));
-        Component effectDescription = effect.getDisplayName();
+        Component effectDescription = effect.value().getDisplayName();
         if (amplifier == 0) {
             return Component.translatable(key, bonusTooltip, targetDescription, effectDescription);
         }
@@ -62,12 +63,13 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
         return PSTLivingEntityPredicates.HAS_EFFECT.get();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer) {
         editor.addLabel(0, 0, "Effect", ChatFormatting.GREEN);
         editor.addLabel(150, 0, "Level", ChatFormatting.GREEN);
         editor.increaseHeight(19);
-        editor.addSelectionMenu(0, 0, 145, effect).setResponder(effect -> selectEffect(consumer, effect));
+        editor.addSelectionMenu(0, 0, 145, effect).setResponder(h -> selectEffect(consumer, h));
         editor.addNumericTextField(150, 0, 50, 14, amplifier).setNumericFilter(value -> value >= 0 && value == value.intValue())
                 .setNumericResponder(value -> selectAmplifier(consumer, value));
         editor.increaseHeight(19);
@@ -75,12 +77,11 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
 
     private void selectAmplifier(Consumer<LivingEntityPredicate> consumer, Double value) {
         setAmplifier(value.intValue());
-        consumer.accept(this);
+        consumer.accept(this.copy());
     }
-
-    private void selectEffect(Consumer<LivingEntityPredicate> consumer, MobEffect effect) {
+    private void selectEffect(Consumer<LivingEntityPredicate> consumer, Holder<MobEffect> effect) {
         setEffect(effect);
-        consumer.accept(this);
+        consumer.accept(this.copy());
     }
 
     @Override
@@ -100,7 +101,7 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
         return Objects.hash(effect, amplifier);
     }
 
-    public void setEffect(MobEffect effect) {
+    public void setEffect(Holder<MobEffect> effect) {
         this.effect = effect;
     }
 
@@ -108,27 +109,33 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
         this.amplifier = amplifier;
     }
 
+    public HasEffectEntityPredicate copy() {
+        return new HasEffectEntityPredicate(effect, amplifier);
+    }
+
     public static class Serializer implements LivingEntityPredicate.Serializer {
         @Override
         public LivingEntityPredicate deserialize(JsonObject json) throws JsonParseException {
-            MobEffect effect = SerializationHelper.deserializeMobEffect(json);
+            MobEffect rawEffect = SerializationHelper.deserializeMobEffect(json);
             int amplifier = !json.has("amplifier") ? 0 : json.get("amplifier").getAsInt();
-            Objects.requireNonNull(effect);
+            Objects.requireNonNull(rawEffect);
+            Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(rawEffect);
             return new HasEffectEntityPredicate(effect, amplifier);
         }
 
         @Override
         public void serialize(JsonObject json, LivingEntityPredicate predicate) {
             HasEffectEntityPredicate validPredicate = validatePredicate(predicate);
-            SerializationHelper.serializeMobEffect(json, validPredicate.effect);
+            SerializationHelper.serializeMobEffect(json, validPredicate.effect.value());
             json.addProperty("amplifier", validPredicate.amplifier);
         }
 
         @Override
         public LivingEntityPredicate deserialize(CompoundTag tag) {
-            MobEffect effect = SerializationHelper.deserializeMobEffect(tag);
-            int amplifier = !tag.contains("amplifier") ? 0 : tag.getInt("amplifier");
-            Objects.requireNonNull(effect);
+            MobEffect rawEffect = SerializationHelper.deserializeMobEffect(tag);
+            int amplifier = tag.getInt("amplifier").orElse(0);
+            Objects.requireNonNull(rawEffect);
+            Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(rawEffect);
             return new HasEffectEntityPredicate(effect, amplifier);
         }
 
@@ -136,22 +143,23 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
         public CompoundTag serialize(LivingEntityPredicate predicate) {
             HasEffectEntityPredicate validPredicate = validatePredicate(predicate);
             CompoundTag tag = new CompoundTag();
-            SerializationHelper.serializeMobEffect(tag, validPredicate.effect);
+            SerializationHelper.serializeMobEffect(tag, validPredicate.effect.value());
             tag.putInt("amplifier", validPredicate.amplifier);
             return tag;
         }
 
         @Override
-        public LivingEntityPredicate deserialize(FriendlyByteBuf buf) {
-            MobEffect effect = NetworkHelper.readMobEffect(buf);
-            Objects.requireNonNull(effect);
+        public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
+            MobEffect rawEffect = NetworkHelper.readMobEffect(buf);
+            Objects.requireNonNull(rawEffect);
+            Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(rawEffect);
             return new HasEffectEntityPredicate(effect, buf.readInt());
         }
 
         @Override
-        public void serialize(FriendlyByteBuf buf, LivingEntityPredicate predicate) {
+        public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             HasEffectEntityPredicate validPredicate = validatePredicate(predicate);
-            NetworkHelper.writeMobEffect(buf, validPredicate.effect);
+            NetworkHelper.writeMobEffect(buf, validPredicate.effect.value());
             buf.writeInt(validPredicate.amplifier);
         }
 

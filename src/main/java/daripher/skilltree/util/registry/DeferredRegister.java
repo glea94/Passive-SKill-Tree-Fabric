@@ -50,9 +50,37 @@ public class DeferredRegister<T> {
         return new DeferredRegister<>(null, modId);
     }
 
+<<<<<<< Updated upstream
     public <I extends T> RegistryObject<I> register(String name, Supplier<I> supplier) {
         ResourceLocation id = new ResourceLocation(modId, name);
         I value = supplier.get();
+=======
+    private static final ThreadLocal<Identifier> CURRENT_ID = new ThreadLocal<>();
+
+    /**
+     * Id en cours d'enregistrement, disponible le temps de l'appel à supplier.get() dans
+     * register(). Nécessaire depuis 1.21.5 : Item.Properties exige désormais que l'id soit
+     * connu avant la construction de l'Item (Objects.requireNonNull(this.id, "Item id not set")).
+     */
+    public static Identifier currentId() {
+        return CURRENT_ID.get();
+    }
+
+    public <I extends T> RegistryObject<I> register(String name, Supplier<I> supplier) {
+        Identifier id = Identifier.fromNamespaceAndPath(modId, name);
+        Identifier previousId = CURRENT_ID.get();
+        CURRENT_ID.set(id);
+        I value;
+        try {
+            value = supplier.get();
+        } finally {
+            if (previousId != null) {
+                CURRENT_ID.set(previousId);
+            } else {
+                CURRENT_ID.remove();
+            }
+        }
+>>>>>>> Stashed changes
         if (backingRegistry != null) {
             value = Registry.register(backingRegistry, id, value);
         }

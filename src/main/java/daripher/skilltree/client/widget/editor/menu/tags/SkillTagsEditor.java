@@ -51,12 +51,16 @@ public class SkillTagsEditor extends EditorMenu {
             String finalName = name;
             editor.getSelectedSkills().forEach(s -> s.getTags().add(finalName));
             editor.saveSelectedSkills();
+            // Factual Fix 1.21.4: Clear widgets tracking layouts before telling the screen to rebuild
+            editor.clearWidgets();
             editor.rebuildWidgets();
         });
         if (!tags.isEmpty()) {
             editor.addButton(110, 0, 90, 14, "Remove").setPressFunc(b -> {
                 editor.getSelectedSkills().forEach(s -> s.getTags().remove(tags.size() - 1));
                 editor.saveSelectedSkills();
+                // Factual Fix 1.21.4: Reset screen reference arrays before reconstruction
+                editor.clearWidgets();
                 editor.rebuildWidgets();
             });
         }
@@ -70,6 +74,8 @@ public class SkillTagsEditor extends EditorMenu {
                 name += "1";
             }
             limitations.put(name, 1);
+            // Factual Fix 1.21.4: Isolate UI reconstruction pipeline steps
+            editor.clearWidgets();
             editor.rebuildWidgets();
             SkillTreeEditorData.saveEditorSkillTree(skillTree);
         });

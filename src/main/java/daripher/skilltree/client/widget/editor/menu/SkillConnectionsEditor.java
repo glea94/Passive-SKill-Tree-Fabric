@@ -65,6 +65,10 @@ public class SkillConnectionsEditor extends EditorMenu {
             skill2.getOneWayConnections().remove(skill1.getId());
         }
         editor.saveSelectedSkills();
+
+        // Factual Fix 1.21.4: Clear widgets tracking layouts before telling the screen to rebuild
+        // to prevent duplicate widget reference states during the input tick cycle.
+        editor.clearWidgets();
         editor.rebuildWidgets();
     }
 
@@ -80,6 +84,9 @@ public class SkillConnectionsEditor extends EditorMenu {
             connections.add(selectedSkills[i + 1].getId());
         }
         editor.saveSelectedSkills();
+
+        // Factual Fix 1.21.4: Reset screen reference arrays before reconstruction
+        editor.clearWidgets();
         editor.rebuildWidgets();
     }
 }

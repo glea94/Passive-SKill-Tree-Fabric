@@ -4,6 +4,7 @@ import daripher.skilltree.inventory.menu.WorkbenchContainer;
 import daripher.skilltree.recipe.workbench.AbstractWorkbenchRecipe;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
 public class WorkbenchBaseSlot extends Slot {
@@ -16,10 +17,11 @@ public class WorkbenchBaseSlot extends Slot {
 
     @Override
     public boolean mayPlace(@NotNull ItemStack itemStack) {
-        AbstractWorkbenchRecipe selectedRecipe = container.menu.getSelectedRecipe();
-        if (selectedRecipe == null) {
+        // Factual Fix 1.21.4: Adapt to the updated holder-centric menu lookup model
+        RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder = container.menu.getSelectedRecipeHolder();
+        if (selectedRecipeHolder == null) {
             return true;
         }
-        return selectedRecipe.isValidBaseItem(itemStack);
+        return selectedRecipeHolder.value().isValidBaseItem(itemStack);
     }
 }
