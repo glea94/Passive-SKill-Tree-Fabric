@@ -13,7 +13,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
@@ -122,7 +122,7 @@ public class TooltipHelper {
         return ITEM_UPGRADE_STYLE;
     }
 
-    public static MutableComponent getTextureName(ResourceLocation location) {
+    public static MutableComponent getTextureName(Identifier location) {
         String texture = location.getPath();
         texture = texture.substring(texture.lastIndexOf("/") + 1);
         texture = texture.replace(".png", "");
@@ -201,7 +201,7 @@ public class TooltipHelper {
     public static MutableComponent getSkillTitle(@NotNull PassiveSkill skill) {
         MutableComponent title;
         if (skill.getTitle().isEmpty()) {
-            ResourceLocation skillId = skill.getId();
+            Identifier skillId = skill.getId();
             String descriptionId = "skill." + skillId.getNamespace() + "." + skillId.getPath() + ".name";
             title = Component.translatable(descriptionId);
         } else {
@@ -210,7 +210,7 @@ public class TooltipHelper {
         return title.withStyle(getSkillTitleStyle(skill));
     }
 
-    public static MutableComponent getSkillTitle(ResourceLocation skillId) {
+    public static MutableComponent getSkillTitle(Identifier skillId) {
         PassiveSkill skill = SkillsReloader.getSkillById(skillId);
         if (skill == null) {
             return Component.literal("Unknown Skill: " + skillId.toString()).withStyle(ChatFormatting.RED);
@@ -241,24 +241,34 @@ public class TooltipHelper {
         return recipe.getShortDescription();
     }
 
+<<<<<<< Updated upstream
     public static Component getRecipeTooltip(ResourceLocation recipeId) {
         ClientLevel level = Minecraft.getInstance().level;
         Objects.requireNonNull(level);
         RecipeManager recipeManager = level.getRecipeManager();
         List<AbstractWorkbenchRecipe> recipes = recipeManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH);
         AbstractWorkbenchRecipe recipe = recipes.stream().filter(r -> r.getId().equals(recipeId)).findAny().orElse(null);
+=======
+    public static Component getRecipeTooltip(Identifier recipeId) {
+        AbstractWorkbenchRecipe recipe = ClientWorkbenchRecipeCache.getById(recipeId).orElse(null);
+>>>>>>> Stashed changes
         if (recipe == null) {
             return Component.literal("Unknown Recipe: " + recipeId.toString()).withStyle(ChatFormatting.RED);
         }
         return getRecipeTooltip(recipe);
     }
 
+<<<<<<< Updated upstream
     public static String getRecipeDescriptionId(ResourceLocation recipeId) {
         ClientLevel level = Minecraft.getInstance().level;
         Objects.requireNonNull(level);
         RecipeManager recipeManager = level.getRecipeManager();
         List<AbstractWorkbenchRecipe> recipes = recipeManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH);
         AbstractWorkbenchRecipe recipe = recipes.stream().filter(r -> r.getId().equals(recipeId)).findAny().orElse(null);
+=======
+    public static String getRecipeDescriptionId(Identifier recipeId) {
+        AbstractWorkbenchRecipe recipe = ClientWorkbenchRecipeCache.getById(recipeId).orElse(null);
+>>>>>>> Stashed changes
         if (recipe == null) {
             return "Unknown Recipe: " + recipeId.toString();
         }

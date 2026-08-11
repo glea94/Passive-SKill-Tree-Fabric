@@ -5,7 +5,7 @@ import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -28,10 +28,10 @@ public class SkillTexturesEditor extends EditorMenu {
         addTextureEditorButton("Icon Texture", this::setIconTextures, PassiveSkill::getIconTexture, 10, 10, 19, 19, 16, 16);
     }
 
-    private void addTextureEditorButton(String label, Consumer<ResourceLocation> setTextureFunction, Function<PassiveSkill, ResourceLocation> textureProvider, int rows, int columns, int elementWidth, int elementHeight, int elementTextureWidth, int elementTextureHeight) {
+    private void addTextureEditorButton(String label, Consumer<Identifier> setTextureFunction, Function<PassiveSkill, Identifier> textureProvider, int rows, int columns, int elementWidth, int elementHeight, int elementTextureWidth, int elementTextureHeight) {
         if (editor.canEdit(textureProvider)) {
             PassiveSkill selectedSkill = editor.getFirstSelectedSkill();
-            ResourceLocation texture = textureProvider.apply(selectedSkill);
+            Identifier texture = textureProvider.apply(selectedSkill);
             editor.addLabel(0, 0, label, ChatFormatting.GOLD);
             editor.increaseHeight(19);
             String textureFolder = SkillTexturesData.getTextureFolder(texture);
@@ -43,17 +43,17 @@ public class SkillTexturesEditor extends EditorMenu {
         }
     }
 
-    private void setFrameTextures(ResourceLocation value) {
+    private void setFrameTextures(Identifier value) {
         editor.getSelectedSkills().forEach(s -> s.setBackgroundTexture(value));
         editor.saveSelectedSkills();
     }
 
-    private void setTooltipFrameTextures(ResourceLocation value) {
+    private void setTooltipFrameTextures(Identifier value) {
         editor.getSelectedSkills().forEach(s -> s.setBorderTexture(value));
         editor.saveSelectedSkills();
     }
 
-    private void setIconTextures(ResourceLocation value) {
+    private void setIconTextures(Identifier value) {
         editor.getSelectedSkills().forEach(s -> s.setIconTexture(value));
         editor.saveSelectedSkills();
     }

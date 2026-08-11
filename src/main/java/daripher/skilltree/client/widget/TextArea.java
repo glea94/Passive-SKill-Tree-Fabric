@@ -9,8 +9,15 @@ import java.util.function.Consumer;
 
 public class TextArea extends MultiLineEditBox implements TickingWidget {
     public TextArea(int x, int y, int width, int height, String defaultValue) {
+<<<<<<< Updated upstream
         super(Minecraft.getInstance().font, x, y, width, height, Component.empty(), Component.empty());
         setValue(defaultValue);
+=======
+        // Fix 1.21.8 : constructeur à 12 paramètres confirmé par décompilation (Font,x,y,w,h,placeholder,message,textColor,textShadow,cursorColor,showBackground,showDecorations)
+        // Valeurs textColor/textShadow/cursorColor/showBackground/showDecorations reprises des défauts de MultiLineEditBox.Builder
+        super(Minecraft.getInstance().font, x, y, width, height, Component.empty(), Component.empty(), -2039584, true, -3092272, true, true);
+        this.setValue(defaultValue);
+>>>>>>> Stashed changes
     }
 
     @Override

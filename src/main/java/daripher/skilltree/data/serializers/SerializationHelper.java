@@ -21,7 +21,7 @@ import daripher.skilltree.skill.bonus.predicate.item.PotionStackPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -37,9 +37,17 @@ import java.util.UUID;
 public class SerializationHelper {
     @NotNull
     public static Attribute deserializeAttribute(JsonObject json) {
+<<<<<<< Updated upstream
         ResourceLocation attributeId = new ResourceLocation(json.get("attribute").getAsString());
         Attribute attribute;
         attribute = BuiltInRegistries.ATTRIBUTE.get(attributeId);
+=======
+        Identifier attributeId = Identifier.parse(json.get("attribute").getAsString());
+        // Factual Fix 1.21.4: Registry get() returns Optional<Holder.Reference<Attribute>>, unwrap with map()
+        Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(attributeId)
+                .map(net.minecraft.core.Holder::value)
+                .orElse(null);
+>>>>>>> Stashed changes
         if (attribute == null) {
             throw new RuntimeException("Attribute " + attributeId + " doesn't exist!");
         }
@@ -47,16 +55,25 @@ public class SerializationHelper {
     }
 
     public static void serializeAttribute(JsonObject json, Attribute attribute) {
+<<<<<<< Updated upstream
         ResourceLocation attributeId;
         attributeId = BuiltInRegistries.ATTRIBUTE.getKey(attribute);
+=======
+        // Factual Fix 1.21.4: Use official ResourceKey formatting matching safe registry hooks
+        Identifier attributeId = BuiltInRegistries.ATTRIBUTE.getKey(attribute);
+>>>>>>> Stashed changes
         Objects.requireNonNull(attributeId);
         json.addProperty("attribute", attributeId.toString());
     }
 
     @NotNull
     public static AttributeModifier deserializeAttributeModifier(JsonObject json) {
+<<<<<<< Updated upstream
         UUID id = UUID.fromString(json.get("id").getAsString());
         String name = json.get("name").getAsString();
+=======
+        Identifier id = Identifier.parse(json.get("id").getAsString());
+>>>>>>> Stashed changes
         double amount = json.get("amount").getAsDouble();
         AttributeModifier.Operation operation = deserializeOperation(json);
         return new AttributeModifier(id, name, amount, operation);
@@ -83,7 +100,11 @@ public class SerializationHelper {
             return NoneLivingMultiplier.INSTANCE;
         }
         JsonObject multiplierJson = json.getAsJsonObject(name);
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(multiplierJson.get("type").getAsString());
+=======
+        Identifier serializerId = Identifier.parse(multiplierJson.get("type").getAsString());
+>>>>>>> Stashed changes
         LivingMultiplier.Serializer serializer = PSTRegistries.LIVING_MULTIPLIERS.get().getValue(serializerId);
         String errorMessage = "Unknown living multiplier: " + serializerId;
         return deserializeObject(serializer, multiplierJson, errorMessage);
@@ -96,7 +117,7 @@ public class SerializationHelper {
         JsonObject multiplierJson = new JsonObject();
         LivingMultiplier.Serializer serializer = multiplier.getSerializer();
         serializer.serialize(multiplierJson, multiplier);
-        ResourceLocation serializerId = PSTRegistries.LIVING_MULTIPLIERS.get().getKey(serializer);
+        Identifier serializerId = PSTRegistries.LIVING_MULTIPLIERS.get().getKey(serializer);
         Objects.requireNonNull(serializerId);
         multiplierJson.addProperty("type", serializerId.toString());
         json.add(name, multiplierJson);
@@ -107,7 +128,11 @@ public class SerializationHelper {
             return NoneLivingEntityPredicate.INSTANCE;
         }
         JsonObject conditionJson = json.getAsJsonObject(name);
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(conditionJson.get("type").getAsString());
+=======
+        Identifier serializerId = Identifier.parse(conditionJson.get("type").getAsString());
+>>>>>>> Stashed changes
         LivingEntityPredicate.Serializer serializer = PSTRegistries.LIVING_CONDITIONS.get().getValue(serializerId);
         String errorMessage = "Unknown living condition: " + serializerId;
         return deserializeObject(serializer, conditionJson, errorMessage);
@@ -120,7 +145,7 @@ public class SerializationHelper {
         JsonObject conditionJson = new JsonObject();
         LivingEntityPredicate.Serializer serializer = condition.getSerializer();
         serializer.serialize(conditionJson, condition);
-        ResourceLocation serializerId = PSTRegistries.LIVING_CONDITIONS.get().getKey(serializer);
+        Identifier serializerId = PSTRegistries.LIVING_CONDITIONS.get().getKey(serializer);
         Objects.requireNonNull(serializerId);
         conditionJson.addProperty("type", serializerId.toString());
         json.add(name, conditionJson);
@@ -136,7 +161,11 @@ public class SerializationHelper {
             return NoneMobEffectPredicate.INSTANCE;
         }
         JsonObject conditionJson = json.getAsJsonObject(name);
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(conditionJson.get("type").getAsString());
+=======
+        Identifier serializerId = Identifier.parse(conditionJson.get("type").getAsString());
+>>>>>>> Stashed changes
         MobEffectPredicate.Serializer serializer = PSTRegistries.MOB_EFFECT_PREDICATES.get().getValue(serializerId);
         String errorMessage = "Unknown living condition: " + serializerId;
         return deserializeObject(serializer, conditionJson, errorMessage);
@@ -149,7 +178,7 @@ public class SerializationHelper {
         JsonObject conditionJson = new JsonObject();
         MobEffectPredicate.Serializer serializer = condition.getSerializer();
         serializer.serialize(conditionJson, condition);
-        ResourceLocation serializerId = PSTRegistries.MOB_EFFECT_PREDICATES.get().getKey(serializer);
+        Identifier serializerId = PSTRegistries.MOB_EFFECT_PREDICATES.get().getKey(serializer);
         Objects.requireNonNull(serializerId);
         conditionJson.addProperty("type", serializerId.toString());
         json.add(name, conditionJson);
@@ -166,7 +195,11 @@ public class SerializationHelper {
             return NoneDamageCondition.INSTANCE;
         }
         JsonObject conditionJson = json.getAsJsonObject(name);
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(conditionJson.get("type").getAsString());
+=======
+        Identifier serializerId = Identifier.parse(conditionJson.get("type").getAsString());
+>>>>>>> Stashed changes
         DamageCondition.Serializer serializer = PSTRegistries.DAMAGE_CONDITIONS.get().getValue(serializerId);
         String errorMessage = "Unknown damage condition: " + serializerId;
         return deserializeObject(serializer, conditionJson, errorMessage);
@@ -180,7 +213,7 @@ public class SerializationHelper {
         JsonObject conditionJson = new JsonObject();
         DamageCondition.Serializer serializer = condition.getSerializer();
         serializer.serialize(conditionJson, condition);
-        ResourceLocation serializerId = PSTRegistries.DAMAGE_CONDITIONS.get().getKey(serializer);
+        Identifier serializerId = PSTRegistries.DAMAGE_CONDITIONS.get().getKey(serializer);
         conditionJson.addProperty("type", Objects.requireNonNull(serializerId).toString());
         json.add(name, conditionJson);
     }
@@ -194,7 +227,11 @@ public class SerializationHelper {
             return NoneItemStackPredicate.INSTANCE;
         }
         JsonObject conditionJson = json.getAsJsonObject(name);
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(conditionJson.get("type").getAsString());
+=======
+        Identifier serializerId = Identifier.parse(conditionJson.get("type").getAsString());
+>>>>>>> Stashed changes
         ItemStackPredicate.Serializer serializer = PSTRegistries.ITEM_CONDITIONS.get().getValue(serializerId);
         String errorMessage = "Unknown item condition: " + serializerId;
         return deserializeObject(serializer, conditionJson, errorMessage);
@@ -211,14 +248,18 @@ public class SerializationHelper {
         JsonObject conditionJson = new JsonObject();
         ItemStackPredicate.Serializer serializer = condition.getSerializer();
         serializer.serialize(conditionJson, condition);
-        ResourceLocation serializerId = PSTRegistries.ITEM_CONDITIONS.get().getKey(serializer);
+        Identifier serializerId = PSTRegistries.ITEM_CONDITIONS.get().getKey(serializer);
         conditionJson.addProperty("type", Objects.requireNonNull(serializerId).toString());
         json.add(name, conditionJson);
     }
 
     public static @NotNull SkillEventListener deserializeEventListener(JsonObject json) {
         JsonObject eventJson = json.getAsJsonObject("event_listener");
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(eventJson.get("type").getAsString());
+=======
+        Identifier serializerId = Identifier.parse(eventJson.get("type").getAsString());
+>>>>>>> Stashed changes
         SkillEventListener.Serializer serializer = PSTRegistries.EVENT_LISTENERS.get().getValue(serializerId);
         String errorMessage = "Unknown event listener: " + serializerId;
         return deserializeObject(serializer, eventJson, errorMessage);
@@ -228,7 +269,7 @@ public class SerializationHelper {
         JsonObject conditionJson = new JsonObject();
         SkillEventListener.Serializer serializer = condition.getSerializer();
         serializer.serialize(conditionJson, condition);
-        ResourceLocation serializerId = PSTRegistries.EVENT_LISTENERS.get().getKey(serializer);
+        Identifier serializerId = PSTRegistries.EVENT_LISTENERS.get().getKey(serializer);
         conditionJson.addProperty("type", Objects.requireNonNull(serializerId).toString());
         json.add("event_listener", conditionJson);
     }
@@ -237,12 +278,20 @@ public class SerializationHelper {
         if (!json.has("effect")) {
             return null;
         }
+<<<<<<< Updated upstream
         ResourceLocation effectId = new ResourceLocation(json.get("effect").getAsString());
         return BuiltInRegistries.MOB_EFFECT.get(effectId);
+=======
+        Identifier effectId = Identifier.parse(json.get("effect").getAsString());
+        // Factual Fix 1.21.4: Registry get() returns Optional<Holder.Reference<MobEffect>>, unwrap with map()
+        return BuiltInRegistries.MOB_EFFECT.get(effectId)
+                .map(net.minecraft.core.Holder::value)
+                .orElse(null);
+>>>>>>> Stashed changes
     }
 
     public static void serializeMobEffect(JsonObject json, MobEffect effect) {
-        ResourceLocation effectId = BuiltInRegistries.MOB_EFFECT.getKey(effect);
+        Identifier effectId = BuiltInRegistries.MOB_EFFECT.getKey(effect);
         json.addProperty("effect", Objects.requireNonNull(effectId).toString());
     }
 
@@ -270,14 +319,18 @@ public class SerializationHelper {
     public static FloatFunction<?> deserializeValueProvider(JsonObject json) {
         JsonObject providerJson = json.getAsJsonObject("value_provider");
         String type = providerJson.get("type").getAsString();
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(type);
+=======
+        Identifier serializerId = Identifier.parse(type);
+>>>>>>> Stashed changes
         FloatFunction.Serializer serializer = PSTRegistries.FLOAT_FUNCTIONS.get().getValue(serializerId);
         String errorMessage = "Unknown value provider: " + serializerId;
         return deserializeObject(serializer, providerJson, errorMessage);
     }
 
     public static void serializeValueProvider(JsonObject json, FloatFunction<?> provider) {
-        ResourceLocation serializerId = PSTRegistries.FLOAT_FUNCTIONS.get().getKey(provider.getSerializer());
+        Identifier serializerId = PSTRegistries.FLOAT_FUNCTIONS.get().getKey(provider.getSerializer());
         JsonObject bonusJson = new JsonObject();
         provider.getSerializer().serialize(bonusJson, provider);
         bonusJson.addProperty("type", Objects.requireNonNull(serializerId).toString());
@@ -286,8 +339,17 @@ public class SerializationHelper {
 
     @Nullable
     public static Attribute deserializeAttribute(CompoundTag tag) {
+<<<<<<< Updated upstream
         ResourceLocation attributeId = new ResourceLocation(tag.getString("attribute"));
         Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(attributeId);
+=======
+        // Factual Fix 1.21.5: CompoundTag#getString renvoie désormais Optional<String>
+        Identifier attributeId = Identifier.parse(tag.getString("attribute").orElse(""));
+        // Factual Fix 1.21.4: Registry get() returns Optional<Holder.Reference<Attribute>>, unwrap with map()
+        Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(attributeId)
+                .map(net.minecraft.core.Holder::value)
+                .orElse(null);
+>>>>>>> Stashed changes
         if (attribute == null) {
             SkillTreeMod.LOGGER.error("Attribute {} doesn't exist!", attributeId);
         }
@@ -295,16 +357,22 @@ public class SerializationHelper {
     }
 
     public static void serializeAttribute(CompoundTag tag, Attribute attribute) {
-        ResourceLocation attributeId = BuiltInRegistries.ATTRIBUTE.getKey(attribute);
+        Identifier attributeId = BuiltInRegistries.ATTRIBUTE.getKey(attribute);
         Objects.requireNonNull(attributeId);
         tag.putString("attribute", attributeId.toString());
     }
 
     @NotNull
     public static AttributeModifier deserializeAttributeModifier(CompoundTag tag) {
+<<<<<<< Updated upstream
         UUID modifierId = UUID.fromString(tag.getString("id"));
         String name = tag.getString("name");
         double amount = tag.getDouble("amount");
+=======
+        // Factual Fix 1.21.5: getString/getDouble renvoient désormais Optional<T>
+        Identifier id = Identifier.parse(tag.getString("id").orElse(""));
+        double amount = tag.getDouble("amount").orElse(0.0);
+>>>>>>> Stashed changes
         AttributeModifier.Operation operation = deserializeOperation(tag);
         return new AttributeModifier(modifierId, name, amount, operation);
     }
@@ -329,8 +397,14 @@ public class SerializationHelper {
         if (!tag.contains(name)) {
             return NoneLivingMultiplier.INSTANCE;
         }
+<<<<<<< Updated upstream
         CompoundTag multiplierTag = tag.getCompound(name);
         ResourceLocation serializerId = new ResourceLocation(multiplierTag.getString("type"));
+=======
+        // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
+        CompoundTag multiplierTag = tag.getCompound(name).orElse(new CompoundTag());
+        Identifier serializerId = Identifier.parse(multiplierTag.getString("type").orElse(""));
+>>>>>>> Stashed changes
         LivingMultiplier.Serializer serializer = PSTRegistries.LIVING_MULTIPLIERS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(multiplierTag);
     }
@@ -338,14 +412,20 @@ public class SerializationHelper {
     public static void serializeLivingMultiplier(CompoundTag tag, @NotNull LivingMultiplier multiplier, String name) {
         LivingMultiplier.Serializer serializer = multiplier.getSerializer();
         CompoundTag multiplierTag = serializer.serialize(multiplier);
-        ResourceLocation serializerId = PSTRegistries.LIVING_MULTIPLIERS.get().getKey(serializer);
+        Identifier serializerId = PSTRegistries.LIVING_MULTIPLIERS.get().getKey(serializer);
         multiplierTag.putString("type", Objects.requireNonNull(serializerId).toString());
         tag.put(name, multiplierTag);
     }
 
     public static @NotNull LivingEntityPredicate deserializeLivingCondition(CompoundTag tag, String name) {
+<<<<<<< Updated upstream
         CompoundTag conditionTag = tag.getCompound(name);
         ResourceLocation serializerId = new ResourceLocation(conditionTag.getString("type"));
+=======
+        // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
+        CompoundTag conditionTag = tag.getCompound(name).orElse(new CompoundTag());
+        Identifier serializerId = Identifier.parse(conditionTag.getString("type").orElse(""));
+>>>>>>> Stashed changes
         LivingEntityPredicate.Serializer serializer = PSTRegistries.LIVING_CONDITIONS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(conditionTag);
     }
@@ -353,15 +433,21 @@ public class SerializationHelper {
     public static void serializeLivingCondition(CompoundTag tag, @NotNull LivingEntityPredicate condition, String name) {
         LivingEntityPredicate.Serializer serializer = condition.getSerializer();
         CompoundTag conditionTag = serializer.serialize(condition);
-        ResourceLocation serializerId = PSTRegistries.LIVING_CONDITIONS.get().getKey(serializer);
+        Identifier serializerId = PSTRegistries.LIVING_CONDITIONS.get().getKey(serializer);
         Objects.requireNonNull(serializerId);
         conditionTag.putString("type", serializerId.toString());
         tag.put(name, conditionTag);
     }
 
     public static @NotNull MobEffectPredicate deserializeMobEffectCondition(CompoundTag tag, String name) {
+<<<<<<< Updated upstream
         CompoundTag conditionTag = tag.getCompound(name);
         ResourceLocation serializerId = new ResourceLocation(conditionTag.getString("type"));
+=======
+        // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
+        CompoundTag conditionTag = tag.getCompound(name).orElse(new CompoundTag());
+        Identifier serializerId = Identifier.parse(conditionTag.getString("type").orElse(""));
+>>>>>>> Stashed changes
         MobEffectPredicate.Serializer serializer = PSTRegistries.MOB_EFFECT_PREDICATES.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(conditionTag);
     }
@@ -369,7 +455,7 @@ public class SerializationHelper {
     public static void serializeMobEffectCondition(CompoundTag tag, @NotNull MobEffectPredicate condition, String name) {
         MobEffectPredicate.Serializer serializer = condition.getSerializer();
         CompoundTag conditionTag = serializer.serialize(condition);
-        ResourceLocation serializerId = PSTRegistries.MOB_EFFECT_PREDICATES.get().getKey(serializer);
+        Identifier serializerId = PSTRegistries.MOB_EFFECT_PREDICATES.get().getKey(serializer);
         Objects.requireNonNull(serializerId);
         conditionTag.putString("type", serializerId.toString());
         tag.put(name, conditionTag);
@@ -380,8 +466,14 @@ public class SerializationHelper {
     }
 
     public static @NotNull DamageCondition deserializeDamageCondition(CompoundTag tag, String name) {
+<<<<<<< Updated upstream
         CompoundTag conditionTag = tag.getCompound(name);
         ResourceLocation serializerId = new ResourceLocation(conditionTag.getString("type"));
+=======
+        // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
+        CompoundTag conditionTag = tag.getCompound(name).orElse(new CompoundTag());
+        Identifier serializerId = Identifier.parse(conditionTag.getString("type").orElse(""));
+>>>>>>> Stashed changes
         DamageCondition.Serializer serializer = PSTRegistries.DAMAGE_CONDITIONS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(conditionTag);
     }
@@ -393,14 +485,20 @@ public class SerializationHelper {
     public static void serializeDamageCondition(CompoundTag tag, @NotNull DamageCondition condition, String name) {
         DamageCondition.Serializer serializer = condition.getSerializer();
         CompoundTag conditionTag = serializer.serialize(condition);
-        ResourceLocation serializerId = PSTRegistries.DAMAGE_CONDITIONS.get().getKey(serializer);
+        Identifier serializerId = PSTRegistries.DAMAGE_CONDITIONS.get().getKey(serializer);
         conditionTag.putString("type", Objects.requireNonNull(serializerId).toString());
         tag.put(name, conditionTag);
     }
 
     public static @NotNull ItemStackPredicate deserializeItemPredicate(CompoundTag tag) {
+<<<<<<< Updated upstream
         CompoundTag conditionTag = tag.getCompound("item_condition");
         ResourceLocation serializerId = new ResourceLocation(conditionTag.getString("type"));
+=======
+        // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
+        CompoundTag conditionTag = tag.getCompound("item_condition").orElse(new CompoundTag());
+        Identifier serializerId = Identifier.parse(conditionTag.getString("type").orElse(""));
+>>>>>>> Stashed changes
         ItemStackPredicate.Serializer serializer = PSTRegistries.ITEM_CONDITIONS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(conditionTag);
     }
@@ -408,14 +506,20 @@ public class SerializationHelper {
     public static void serializeItemPredicate(CompoundTag tag, @NotNull ItemStackPredicate condition) {
         ItemStackPredicate.Serializer serializer = condition.getSerializer();
         CompoundTag conditionTag = serializer.serialize(condition);
-        ResourceLocation serializerId = PSTRegistries.ITEM_CONDITIONS.get().getKey(serializer);
+        Identifier serializerId = PSTRegistries.ITEM_CONDITIONS.get().getKey(serializer);
         conditionTag.putString("type", Objects.requireNonNull(serializerId).toString());
         tag.put("item_condition", conditionTag);
     }
 
     public static @NotNull SkillEventListener deserializeEventListener(CompoundTag tag) {
+<<<<<<< Updated upstream
         CompoundTag conditionTag = tag.getCompound("event_listener");
         ResourceLocation serializerId = new ResourceLocation(conditionTag.getString("type"));
+=======
+        // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
+        CompoundTag conditionTag = tag.getCompound("event_listener").orElse(new CompoundTag());
+        Identifier serializerId = Identifier.parse(conditionTag.getString("type").orElse(""));
+>>>>>>> Stashed changes
         SkillEventListener.Serializer serializer = PSTRegistries.EVENT_LISTENERS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(conditionTag);
     }
@@ -423,7 +527,7 @@ public class SerializationHelper {
     public static void serializeEventListener(CompoundTag tag, @NotNull SkillEventListener condition) {
         SkillEventListener.Serializer serializer = condition.getSerializer();
         CompoundTag conditionTag = serializer.serialize(condition);
-        ResourceLocation serializerId = PSTRegistries.EVENT_LISTENERS.get().getKey(serializer);
+        Identifier serializerId = PSTRegistries.EVENT_LISTENERS.get().getKey(serializer);
         conditionTag.putString("type", Objects.requireNonNull(serializerId).toString());
         tag.put("event_listener", conditionTag);
     }
@@ -433,12 +537,21 @@ public class SerializationHelper {
         if (!tag.contains("effect")) {
             return null;
         }
+<<<<<<< Updated upstream
         ResourceLocation effectId = new ResourceLocation(tag.getString("effect"));
         return BuiltInRegistries.MOB_EFFECT.get(effectId);
+=======
+        // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+        Identifier effectId = Identifier.parse(tag.getString("effect").orElse(""));
+        // Factual Fix 1.21.4: Registry get() returns Optional<Holder.Reference<MobEffect>>, unwrap with map()
+        return BuiltInRegistries.MOB_EFFECT.get(effectId)
+                .map(net.minecraft.core.Holder::value)
+                .orElse(null);
+>>>>>>> Stashed changes
     }
 
     public static void serializeMobEffect(CompoundTag tag, MobEffect effect) {
-        ResourceLocation effectId = BuiltInRegistries.MOB_EFFECT.getKey(effect);
+        Identifier effectId = BuiltInRegistries.MOB_EFFECT.getKey(effect);
         tag.putString("effect", Objects.requireNonNull(effectId).toString());
     }
 
@@ -464,15 +577,22 @@ public class SerializationHelper {
     }
 
     public static FloatFunction<?> deserializeValueProvider(CompoundTag tag) {
+<<<<<<< Updated upstream
         CompoundTag providerTag = tag.getCompound("value_provider");
         String type = providerTag.getString("type");
         ResourceLocation serializerId = new ResourceLocation(type);
+=======
+        // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
+        CompoundTag providerTag = tag.getCompound("value_provider").orElse(new CompoundTag());
+        String type = providerTag.getString("type").orElse("");
+        Identifier serializerId = Identifier.parse(type);
+>>>>>>> Stashed changes
         FloatFunction.Serializer serializer = PSTRegistries.FLOAT_FUNCTIONS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(providerTag);
     }
 
     public static void serializeValueProvider(CompoundTag tag, FloatFunction<?> provider) {
-        ResourceLocation serializerId = PSTRegistries.FLOAT_FUNCTIONS.get().getKey(provider.getSerializer());
+        Identifier serializerId = PSTRegistries.FLOAT_FUNCTIONS.get().getKey(provider.getSerializer());
         CompoundTag providerTag = provider.getSerializer().serialize(provider);
         providerTag.putString("type", Objects.requireNonNull(serializerId).toString());
         tag.put("value_provider", providerTag);
@@ -490,7 +610,7 @@ public class SerializationHelper {
     public static void serializeItemBonus(JsonObject jsonObject, ItemBonus<?> itemBonus) {
         JsonObject itemBonusJson = new JsonObject();
         ItemBonus.Serializer itemBonusSerializer = itemBonus.getSerializer();
-        ResourceLocation itemBonusId = PSTRegistries.ITEM_BONUSES.get().getKey(itemBonusSerializer);
+        Identifier itemBonusId = PSTRegistries.ITEM_BONUSES.get().getKey(itemBonusSerializer);
         Objects.requireNonNull(itemBonusId);
         itemBonusJson.addProperty("type", itemBonusId.toString());
         itemBonusSerializer.serialize(itemBonusJson, itemBonus);
@@ -499,7 +619,11 @@ public class SerializationHelper {
 
     public static ItemBonus<?> deserializeItemBonus(JsonObject jsonObject) {
         JsonObject itemBonusJson = jsonObject.get("item_bonus").getAsJsonObject();
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(itemBonusJson.get("type").getAsString());
+=======
+        Identifier serializerId = Identifier.parse(itemBonusJson.get("type").getAsString());
+>>>>>>> Stashed changes
         ItemBonus.Serializer serializer = PSTRegistries.ITEM_BONUSES.get().getValue(serializerId);
         Objects.requireNonNull(serializer);
         return serializer.deserialize(itemBonusJson);
@@ -507,7 +631,7 @@ public class SerializationHelper {
 
     public static void serializeItemBonus(CompoundTag tag, ItemBonus<?> itemBonus) {
         ItemBonus.Serializer itemBonusSerializer = itemBonus.getSerializer();
-        ResourceLocation itemBonusId = PSTRegistries.ITEM_BONUSES.get().getKey(itemBonusSerializer);
+        Identifier itemBonusId = PSTRegistries.ITEM_BONUSES.get().getKey(itemBonusSerializer);
         Objects.requireNonNull(itemBonusId);
         CompoundTag itemBonusTag = itemBonusSerializer.serialize(itemBonus);
         itemBonusTag.putString("type", itemBonusId.toString());
@@ -515,8 +639,14 @@ public class SerializationHelper {
     }
 
     public static ItemBonus<?> deserializeItemBonus(CompoundTag tag) {
+<<<<<<< Updated upstream
         CompoundTag itemBonusTag = tag.getCompound("item_bonus");
         ResourceLocation serializerId = new ResourceLocation(itemBonusTag.getString("type"));
+=======
+        // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
+        CompoundTag itemBonusTag = tag.getCompound("item_bonus").orElse(new CompoundTag());
+        Identifier serializerId = Identifier.parse(itemBonusTag.getString("type").orElse(""));
+>>>>>>> Stashed changes
         ItemBonus.Serializer serializer = PSTRegistries.ITEM_BONUSES.get().getValue(serializerId);
         Objects.requireNonNull(serializer);
         return serializer.deserialize(itemBonusTag);

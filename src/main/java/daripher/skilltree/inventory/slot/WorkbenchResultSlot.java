@@ -65,7 +65,7 @@ public class WorkbenchResultSlot extends Slot {
             }
         }
         for (int i = 0; i < additionalCrafts; i++) {
-            player.addItem(selectedRecipe.assemble(workbenchContainer, player.level().registryAccess()));
+            player.addItem(selectedRecipe.assemble(workbenchContainer));
             consumeMaterials();
         }
     }

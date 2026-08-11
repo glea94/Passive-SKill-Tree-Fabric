@@ -15,7 +15,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Objects;
@@ -23,9 +23,9 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillRequirement> {
-    private ResourceLocation skillId;
+    private Identifier skillId;
 
-    public LearnedSkillRequirement(ResourceLocation skillId) {
+    public LearnedSkillRequirement(Identifier skillId) {
         this.skillId = skillId;
     }
 
@@ -48,18 +48,18 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<LearnedSkillRequirement> consumer) {
         editor.addLabel(0, 0, "Skill ID", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-        Set<ResourceLocation> skillIDs = SkillsReloader.getSkills().keySet();
+        Set<Identifier> skillIDs = SkillsReloader.getSkills().keySet();
         editor.addSelectionMenu(0, 0, 200, skillIDs).setValue(getSkillId()).setElementNameGetter(v -> Component.literal(v.toString()))
                 .setResponder(v -> selectSkillId(consumer, v));
         editor.increaseHeight(19);
     }
 
-    private void selectSkillId(Consumer<LearnedSkillRequirement> consumer, ResourceLocation id) {
+    private void selectSkillId(Consumer<LearnedSkillRequirement> consumer, Identifier id) {
         setSkillId(id);
         consumer.accept(this);
     }
 
-    public void setSkillId(ResourceLocation skillId) {
+    public void setSkillId(Identifier skillId) {
         this.skillId = skillId;
     }
 
@@ -85,7 +85,7 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
         return Objects.hash(skillId);
     }
 
-    public ResourceLocation getSkillId() {
+    public Identifier getSkillId() {
         return skillId;
     }
 
@@ -97,7 +97,11 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
     public static class Serializer implements SkillRequirement.Serializer {
         @Override
         public SkillRequirement<?> deserialize(JsonObject json) throws JsonParseException {
+<<<<<<< Updated upstream
             ResourceLocation id = new ResourceLocation(json.get("skill_id").getAsString());
+=======
+            Identifier id = Identifier.parse(json.get("skill_id").getAsString());
+>>>>>>> Stashed changes
             return new LearnedSkillRequirement(id);
         }
 
@@ -110,7 +114,12 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
 
         @Override
         public SkillRequirement<?> deserialize(CompoundTag tag) {
+<<<<<<< Updated upstream
             ResourceLocation id = new ResourceLocation(tag.getString("skill_id"));
+=======
+            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            Identifier id = Identifier.parse(tag.getString("skill_id").orElse(""));
+>>>>>>> Stashed changes
             return new LearnedSkillRequirement(id);
         }
 
@@ -124,8 +133,13 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
         }
 
         @Override
+<<<<<<< Updated upstream
         public SkillRequirement<?> deserialize(FriendlyByteBuf buf) {
             ResourceLocation id = new ResourceLocation(buf.readUtf());
+=======
+        public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
+            Identifier id = Identifier.parse(buf.readUtf());
+>>>>>>> Stashed changes
             return new LearnedSkillRequirement(id);
         }
 
@@ -138,7 +152,11 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
 
         @Override
         public SkillRequirement<?> createDefaultInstance() {
+<<<<<<< Updated upstream
             return new LearnedSkillRequirement(new ResourceLocation("skilltree:hunter_1"));
+=======
+            return new LearnedSkillRequirement(Identifier.parse("skilltree:hunter_1"));
+>>>>>>> Stashed changes
         }
     }
 }

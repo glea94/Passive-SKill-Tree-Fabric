@@ -16,7 +16,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
@@ -173,7 +173,7 @@ public class ItemBonusHandler {
     private static CompoundTag serializeBonus(ItemBonus<? extends ItemBonus<?>> bonus) {
         ItemBonus.Serializer serializer = bonus.getSerializer();
         CompoundTag bonusTag = serializer.serialize(bonus);
-        ResourceLocation id = PSTRegistries.ITEM_BONUSES.get().getKey(serializer);
+        Identifier id = PSTRegistries.ITEM_BONUSES.get().getKey(serializer);
         bonusTag.putString("type", Objects.requireNonNull(id).toString());
         return bonusTag;
     }
@@ -182,7 +182,12 @@ public class ItemBonusHandler {
         if (!tag.contains("type")) {
             return null;
         }
+<<<<<<< Updated upstream
         ResourceLocation id = new ResourceLocation(tag.getString("type"));
+=======
+        // Aligned 1.21.4: Using type-safe Identifier parsing matching modern Mojang conventions
+        Identifier id = Identifier.parse(tag.getString("type").orElseThrow());
+>>>>>>> Stashed changes
         ItemBonus.Serializer serializer = PSTRegistries.ITEM_BONUSES.get().getValue(id);
         if (serializer == null) {
             return null;

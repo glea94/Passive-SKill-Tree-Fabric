@@ -7,7 +7,7 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 
 /**
@@ -17,8 +17,14 @@ import net.minecraft.world.entity.Entity;
  * couvrir Entity.class directement évite d'avoir à enregistrer un composant par sous-type.
  */
 public class PersistentDataProvider implements EntityComponentInitializer {
+<<<<<<< Updated upstream
     public static final ComponentKey<IPersistentData> KEY = ComponentRegistry.getOrCreate(
             new ResourceLocation(SkillTreeMod.MOD_ID, "persistent_data"), IPersistentData.class);
+=======
+    // Aligned 1.21.4: Using Identifier.fromNamespaceAndPath is standard and type-safe for component capabilities
+    public static final ComponentKey<IPersistentData> KEY = ComponentRegistryV3.INSTANCE.getOrCreate(
+            Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "persistent_data"), IPersistentData.class);
+>>>>>>> Stashed changes
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {

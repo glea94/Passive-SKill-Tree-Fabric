@@ -3,7 +3,7 @@ package daripher.skilltree.skill.bonus.predicate.damage;
 import daripher.skilltree.init.PSTRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 
@@ -13,7 +13,7 @@ public interface DamageCondition {
     boolean met(DamageSource source);
 
     default String getDescriptionId() {
-        ResourceLocation id = PSTRegistries.DAMAGE_CONDITIONS.get().getKey(getSerializer());
+        Identifier id = PSTRegistries.DAMAGE_CONDITIONS.get().getKey(getSerializer());
         Objects.requireNonNull(id);
         return "damage_condition.%s.%s".formatted(id.getNamespace(), id.getPath());
     }

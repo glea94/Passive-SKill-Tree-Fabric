@@ -8,23 +8,28 @@ import daripher.skilltree.data.reloader.SkillTreesReloader;
 import daripher.skilltree.data.reloader.SkillsReloader;
 import daripher.skilltree.skill.PassiveSkillTree;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 /**
- * Portage Fabric : RegisterKeyMappingsEvent -> KeyBindingHelper.registerKeyBinding,
+ * Portage Fabric : RegisterKeyMappingsEvent -> KeyMappingHelper.registerKeyMapping,
  * InputEvent.Key -> boucle consumeClick() sur ClientTickEvents.END_CLIENT_TICK (idiome standard
  * Fabric pour la détection d'appui sur une touche, remplace l'event par touche individuelle).
  */
 public class PSTKeybinds {
+<<<<<<< Updated upstream
     private static final KeyMapping SKILL_TREE_KEY = new KeyMapping("key.display_skill_tree", GLFW.GLFW_KEY_O, "key.categories." + SkillTreeMod.MOD_ID);
+=======
+    private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "main"));
+    private static final KeyMapping SKILL_TREE_KEY = new KeyMapping("key.display_skill_tree", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, CATEGORY);
+>>>>>>> Stashed changes
 
     public static void register() {
-        KeyBindingHelper.registerKeyBinding(SKILL_TREE_KEY);
+        KeyMappingHelper.registerKeyMapping(SKILL_TREE_KEY);
         ClientTickEvents.END_CLIENT_TICK.register(PSTKeybinds::handleKeyPress);
     }
 
@@ -36,7 +41,7 @@ public class PSTKeybinds {
             if (minecraft.player == null) {
                 continue;
             }
-            ResourceLocation defaultTreeId = SkillTreesReloader.getDefaultSkillTreeId();
+            Identifier defaultTreeId = SkillTreesReloader.getDefaultSkillTreeId();
             if (defaultTreeId == null) {
                 SkillTreeEditorData.sendChatMessage("No skill trees found.", ChatFormatting.DARK_RED);
                 continue;
@@ -44,7 +49,7 @@ public class PSTKeybinds {
             if (SkillTreesReloader.getSkillTrees().size() == 1) {
                 PassiveSkillTree skillTree = SkillTreesReloader.getSkillTreeById(defaultTreeId);
                 boolean broken = false;
-                for (ResourceLocation skillId : skillTree.getSkillIds()) {
+                for (Identifier skillId : skillTree.getSkillIds()) {
                     if (SkillsReloader.getSkillById(skillId) == null) {
                         SkillTreeEditorData.sendChatMessage("This skill tree is broken.", ChatFormatting.DARK_RED);
                         SkillTreeEditorData.sendChatMessage("Open it in the editor to resolve issues.", ChatFormatting.RED);

@@ -5,14 +5,14 @@ import daripher.skilltree.mixin.AbstractWidgetAccessor;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.editor.menu.EditorMenu;
 import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
 public class TextureSelectionMenu extends EditorMenu {
-    private @NotNull Consumer<ResourceLocation> responder = v -> {
+    private @NotNull Consumer<Identifier> responder = v -> {
     };
     private final TextureSelectionList selectionList;
     private final Runnable onInit;
@@ -56,7 +56,7 @@ public class TextureSelectionMenu extends EditorMenu {
         onInit.run();
     }
 
-    public TextureSelectionMenu setResponder(@NotNull Consumer<ResourceLocation> responder) {
+    public TextureSelectionMenu setResponder(@NotNull Consumer<Identifier> responder) {
         this.responder = responder;
         return this;
     }

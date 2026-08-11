@@ -7,7 +7,7 @@ import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.predicate.living.FloatFunctionEntityPredicate;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.function.Consumer;
@@ -16,8 +16,13 @@ public interface FloatFunction<T> {
     float apply(LivingEntity entity);
 
     default String getDescriptionId() {
+<<<<<<< Updated upstream
         ResourceLocation id = PSTRegistries.FLOAT_FUNCTIONS.get().getKey(getSerializer());
         assert id != null;
+=======
+        Identifier id = PSTRegistries.FLOAT_FUNCTIONS.get().getKey(getSerializer());
+        Objects.requireNonNull(id);
+>>>>>>> Stashed changes
         return "value_provider.%s.%s".formatted(id.getNamespace(), id.getPath());
     }
 

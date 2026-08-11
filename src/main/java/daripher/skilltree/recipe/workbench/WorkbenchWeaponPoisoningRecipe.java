@@ -5,10 +5,18 @@ import daripher.skilltree.event.PoisonedWeaponEvents;
 import daripher.skilltree.init.PSTRecipeSerializers;
 import daripher.skilltree.inventory.menu.WorkbenchContainer;
 import daripher.skilltree.skill.bonus.predicate.item.EquipmentPredicate;
+<<<<<<< Updated upstream
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+=======
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.Item;
@@ -29,19 +37,30 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class WorkbenchWeaponPoisoningRecipe extends AbstractWorkbenchRecipe {
+<<<<<<< Updated upstream
+=======
+    // CORRECTION 1.21.1 : voir la javadoc d'AbstractWorkbenchRecipe — codec()/streamCodec() ne
+    // reçoivent plus l'id de la recette (contrairement à l'ancien fromJson(id, json)). Ce
+    // placeholder est utilisé le temps que l'appelant réinjecte le vrai id via setId(...).
+    private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_weapon_poisoning_recipe");
+
+>>>>>>> Stashed changes
     private final int maxUses;
 
-    public WorkbenchWeaponPoisoningRecipe(ResourceLocation id, boolean requiresPassiveSkill, int maxUses) {
+    public WorkbenchWeaponPoisoningRecipe(Identifier id, boolean requiresPassiveSkill, int maxUses) {
         super(id, requiresPassiveSkill);
         this.maxUses = maxUses;
     }
 
     @Override
+<<<<<<< Updated upstream
     public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container, @NotNull RegistryAccess registryAccess) {
         return getResult(container);
     }
 
     @Override
+=======
+>>>>>>> Stashed changes
     public boolean isValidBaseItem(ItemStack itemStack) {
         return EquipmentPredicate.isMeleeWeapon(itemStack);
     }
@@ -120,6 +139,7 @@ public class WorkbenchWeaponPoisoningRecipe extends AbstractWorkbenchRecipe {
         return PSTRecipeSerializers.WORKBENCH_WEAPON_POISONING.get();
     }
 
+<<<<<<< Updated upstream
     public static class Serializer implements RecipeSerializer<WorkbenchWeaponPoisoningRecipe> {
         @Override
         public @NotNull WorkbenchWeaponPoisoningRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject jsonObject) {
@@ -140,5 +160,34 @@ public class WorkbenchWeaponPoisoningRecipe extends AbstractWorkbenchRecipe {
             buf.writeBoolean(recipe.hasPassiveSkillRequirement());
             buf.writeInt(recipe.maxUses);
         }
+=======
+    public static final class Serializer {
+        // CORRECTION 26.1.2 : RecipeSerializer<T> est désormais un record final, impossible à
+        // implémenter via "implements". On construit une instance directe avec CODEC/STREAM_CODEC,
+        // exposée en INSTANCE et utilisée par PSTRecipeSerializers pour l'enregistrement.
+        // CORRECTION 1.21.1 : remplace fromJson(id, JsonObject). Recette à deux champs
+        // primitifs seulement, donc pas besoin du pont JSON_ELEMENT_CODEC utilisé dans
+        // WorkbenchUpgradeBonusRecipe : un simple RecordCodecBuilder.mapCodec suffit.
+        private static final MapCodec<WorkbenchWeaponPoisoningRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Codec.BOOL.fieldOf("requires_passive_skill").forGetter(AbstractWorkbenchRecipe::hasPassiveSkillRequirement),
+                Codec.INT.fieldOf("max_uses").forGetter(recipe -> recipe.maxUses)
+        ).apply(instance, (requiresPassiveSkill, maxUses) ->
+                // CORRECTION 1.21.1 : voir la remarque sur UNKNOWN_ID en haut du fichier.
+                new WorkbenchWeaponPoisoningRecipe(UNKNOWN_ID, requiresPassiveSkill, maxUses)
+        ));
+
+        // CORRECTION 1.21.1 : remplace fromNetwork(id, FriendlyByteBuf) / toNetwork(buf, recipe).
+        // RegistryFriendlyByteBuf est bien une FriendlyByteBuf, donc ByteBufCodecs.BOOL et
+        // ByteBufCodecs.VAR_INT suffisent ici (pas besoin de StreamCodec.of "à la main" puisqu'il
+        // n'y a que deux champs primitifs à composer).
+        private static final StreamCodec<RegistryFriendlyByteBuf, WorkbenchWeaponPoisoningRecipe> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.BOOL, AbstractWorkbenchRecipe::hasPassiveSkillRequirement,
+                ByteBufCodecs.VAR_INT, recipe -> recipe.maxUses,
+                // CORRECTION 1.21.1 : voir la remarque sur UNKNOWN_ID en haut du fichier.
+                (requiresPassiveSkill, maxUses) -> new WorkbenchWeaponPoisoningRecipe(UNKNOWN_ID, requiresPassiveSkill, maxUses)
+        );
+
+        public static final RecipeSerializer<WorkbenchWeaponPoisoningRecipe> INSTANCE = new RecipeSerializer<>(CODEC, STREAM_CODEC);
+>>>>>>> Stashed changes
     }
 }

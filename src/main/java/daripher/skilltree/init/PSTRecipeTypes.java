@@ -4,7 +4,7 @@ import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.recipe.workbench.AbstractWorkbenchRecipe;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 
@@ -17,6 +17,11 @@ public class PSTRecipeTypes {
                 return identifier;
             }
         };
+<<<<<<< Updated upstream
         return Registry.register(BuiltInRegistries.RECIPE_TYPE, new ResourceLocation(SkillTreeMod.MOD_ID, identifier), recipeType);
+=======
+        // Aligned 1.21.4: Direct type-safe static registration into the standard recipe type registry
+        return Registry.register(BuiltInRegistries.RECIPE_TYPE, Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, identifier), recipeType);
+>>>>>>> Stashed changes
     }
 }

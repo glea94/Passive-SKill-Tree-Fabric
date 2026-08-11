@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.skill.PassiveSkill;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -23,7 +23,7 @@ public class ClientConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve(SkillTreeMod.MOD_ID + "-client.json");
 
-    public static Set<ResourceLocation> favorite_skills;
+    public static Set<Identifier> favorite_skills;
     public static int favorite_color;
     public static boolean favorite_color_is_rainbow;
     public static boolean skill_tree_background_parallax;
@@ -54,8 +54,17 @@ public class ClientConfig {
     }
 
     private static void applyData(Data data) {
+<<<<<<< Updated upstream
         favorite_skills = data.favorite_skills.stream().map(ResourceLocation::new).collect(Collectors.toCollection(HashSet::new));
         favorite_color_is_rainbow = data.favorite_color_hex.equals("rainbow");
+=======
+        // En 1.21.4, Identifier.parse est parfaitement standard pour charger les clés d'identification
+        favorite_skills = data.favorite_skills.stream()
+                .map(Identifier::parse)
+                .collect(Collectors.toCollection(HashSet::new));
+
+        favorite_color_is_rainbow = "rainbow".equalsIgnoreCase(data.favorite_color_hex);
+>>>>>>> Stashed changes
         skill_tree_background_parallax = data.skill_tree_background_parallax;
         if (!favorite_color_is_rainbow) {
             favorite_color = Integer.decode(data.favorite_color_hex);
@@ -80,7 +89,7 @@ public class ClientConfig {
             favorite_skills.add(skill.getId());
         }
         Data data = new Data();
-        data.favorite_skills = favorite_skills.stream().map(ResourceLocation::toString).collect(Collectors.toList());
+        data.favorite_skills = favorite_skills.stream().map(Identifier::toString).collect(Collectors.toList());
         data.favorite_color_hex = favorite_color_is_rainbow ? "rainbow" : String.format("#%06X", favorite_color);
         data.skill_tree_background_parallax = skill_tree_background_parallax;
         save(data);

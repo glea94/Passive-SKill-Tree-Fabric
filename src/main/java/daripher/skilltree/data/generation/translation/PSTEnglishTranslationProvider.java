@@ -8,13 +8,18 @@ import daripher.skilltree.init.predicate.PSTItemPredicates;
 import daripher.skilltree.init.predicate.PSTLivingEntityPredicates;
 import daripher.skilltree.skill.bonus.player.ExperienceGainMultiplierBonus;
 import daripher.skilltree.skill.bonus.player.LootAmountModifierBonus;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 
 public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
+<<<<<<< Updated upstream
     public PSTEnglishTranslationProvider(FabricDataOutput dataOutput) {
         super(dataOutput, "en_us");
+=======
+    public PSTEnglishTranslationProvider(FabricPackOutput dataOutput, java.util.concurrent.CompletableFuture<net.minecraft.core.HolderLookup.Provider> registryLookup) {
+        super(dataOutput, "en_us", registryLookup);
+>>>>>>> Stashed changes
     }
 
     @Override

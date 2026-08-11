@@ -11,7 +11,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 
 /** Portage Fabric : logique identique, event.isCrit() remplace vanillaCritical||result==ALLOW. */
 public class CriticalHitDamageBonusHandler {

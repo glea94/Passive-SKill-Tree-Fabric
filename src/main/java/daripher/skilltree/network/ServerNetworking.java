@@ -12,7 +12,12 @@ import daripher.skilltree.network.message.SyncServerDataMessage;
 import daripher.skilltree.skill.PassiveSkill;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+<<<<<<< Updated upstream
 import net.minecraft.network.FriendlyByteBuf;
+=======
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.MinecraftServer;
+>>>>>>> Stashed changes
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Objects;
@@ -65,9 +70,26 @@ public class ServerNetworking {
     }
 
     public static void sendSyncServerData(ServerPlayer player) {
+<<<<<<< Updated upstream
         SyncServerDataMessage message = new SyncServerDataMessage();
         FriendlyByteBuf buf = PacketByteBufs.create();
         message.encode(buf);
         ServerPlayNetworking.send(player, PSTNetworkChannels.SYNC_SERVER_DATA, buf);
     }
 }
+=======
+        // Factual Fix 1.21.4: Pass a null context to allow standard data reloading serializers to populate the outcoming buffer
+        ServerPlayNetworking.send(player, new SyncServerDataMessage(null));
+    }
+
+    public static void sendSyncWorkbenchRecipes(ServerPlayer player) {
+        MinecraftServer server = player.level().getServer();
+        Objects.requireNonNull(server);
+        ServerPlayNetworking.send(player, new SyncWorkbenchRecipesMessage(server));
+    }
+
+    public static void sendOpenSkillTreeEditor(ServerPlayer player, Identifier treeId) {
+        ServerPlayNetworking.send(player, new OpenSkillTreeEditorMessage(treeId));
+    }
+}
+>>>>>>> Stashed changes

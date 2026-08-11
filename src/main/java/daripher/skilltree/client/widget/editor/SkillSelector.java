@@ -4,7 +4,7 @@ import daripher.skilltree.client.screen.ScreenHelper;
 import daripher.skilltree.client.widget.skill.SkillButton;
 import daripher.skilltree.client.widget.skill.SkillButtons;
 import daripher.skilltree.skill.PassiveSkill;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
@@ -34,39 +34,45 @@ public class SkillSelector extends AbstractWidget {
     }
 
     @Override
+<<<<<<< Updated upstream
     protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         if (active) {
+=======
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        // Factual Fix 1.21.4: Use direct active field lookup
+        if (this.active) {
+>>>>>>> Stashed changes
             renderSelectionArea(graphics, mouseX, mouseY);
         }
         renderSelectedSkillsHighlight(graphics);
     }
 
-    private void renderSelectedSkillsHighlight(@NotNull GuiGraphics graphics) {
-        graphics.pose().pushPose();
-        graphics.pose().translate(skillButtons.getScrollX(), skillButtons.getScrollY(), 0);
+    private void renderSelectedSkillsHighlight(@NotNull GuiGraphicsExtractor graphics) {
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(skillButtons.getScrollX(), skillButtons.getScrollY());
         float zoom = skillButtons.getZoom();
         for (SkillButton widget : getSelectedButtons()) {
             renderSkillSelection(graphics, widget, zoom);
         }
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 
-    private void renderSkillSelection(@NotNull GuiGraphics graphics, SkillButton widget, float zoom) {
-        graphics.pose().pushPose();
-        double widgetCenterX = widget.getX() + widget.getWidth() / 2f;
-        double widgetCenterY = widget.getY() + widget.getHeight() / 2f;
-        graphics.pose().translate(widgetCenterX, widgetCenterY, 0F);
-        graphics.pose().scale(zoom, zoom, 1F);
-        graphics.pose().translate(-widgetCenterX, -widgetCenterY, 0F);
+    private void renderSkillSelection(@NotNull GuiGraphicsExtractor graphics, SkillButton widget, float zoom) {
+        graphics.pose().pushMatrix();
+        float widgetCenterX = widget.getX() + widget.getWidth() / 2f;
+        float widgetCenterY = widget.getY() + widget.getHeight() / 2f;
+        graphics.pose().translate(widgetCenterX, widgetCenterY);
+        graphics.pose().scale(zoom, zoom);
+        graphics.pose().translate(-widgetCenterX, -widgetCenterY);
         int x = widget.getX() - 1;
         int y = widget.getY() - 1;
         int width = widget.getWidth() + 2;
         int height = widget.getHeight() + 2;
         ScreenHelper.drawRectangle(graphics, x, y, width, height, SELECTION_COLOR);
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 
-    private void renderSelectionArea(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+    private void renderSelectionArea(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         ScreenHelper.drawRectangle(graphics, selectionStartX, selectionStartY, mouseX - selectionStartX, mouseY - selectionStartY, SELECTION_COLOR);
     }
 

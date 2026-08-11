@@ -1,11 +1,19 @@
 package daripher.skilltree.recipe.builder;
 
+<<<<<<< Updated upstream
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import daripher.skilltree.init.PSTRecipeSerializers;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+=======
+import daripher.skilltree.recipe.workbench.WorkbenchCraftingRecipe;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -20,17 +28,17 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 public class WorkbenchCraftingRecipeBuilder {
-    private final ResourceLocation id;
+    private final Identifier id;
     private final Map<Ingredient, Integer> ingredients = new HashMap<>();
     private @Nullable Pair<Ingredient, Integer> baseIngredient;
     private boolean requiresPassiveSkill;
     private ItemStack result;
 
-    private WorkbenchCraftingRecipeBuilder(ResourceLocation id) {
+    private WorkbenchCraftingRecipeBuilder(Identifier id) {
         this.id = id;
     }
 
-    public static WorkbenchCraftingRecipeBuilder create(ResourceLocation id) {
+    public static WorkbenchCraftingRecipeBuilder create(Identifier id) {
         return new WorkbenchCraftingRecipeBuilder(id);
     }
 
@@ -56,7 +64,16 @@ public class WorkbenchCraftingRecipeBuilder {
 
     public void save(Consumer<FinishedRecipe> finishedRecipeConsumer) {
         validate();
+<<<<<<< Updated upstream
         finishedRecipeConsumer.accept(new Result(id, baseIngredient, ingredients, requiresPassiveSkill, result));
+=======
+        WorkbenchCraftingRecipe recipe =
+                new WorkbenchCraftingRecipe(id, baseIngredient, ingredients, requiresPassiveSkill, result);
+
+        // Factual Fix 1.21.4: Convert the Identifier into a modern type-safe ResourceKey for the recipe registry
+        ResourceKey<Recipe<?>> recipeKey = ResourceKey.create(Registries.RECIPE, id);
+        recipeOutput.accept(recipeKey, recipe, null);
+>>>>>>> Stashed changes
     }
 
     private void validate() {

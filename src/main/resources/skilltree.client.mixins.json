@@ -1,7 +1,11 @@
 {
   "required": true,
   "minVersion": "0.8",
+<<<<<<< Updated upstream
   "compatibilityLevel": "JAVA_17",
+=======
+  "compatibilityLevel": "JAVA_25",
+>>>>>>> Stashed changes
   "package": "daripher.skilltree.mixin",
   "mixins": [
     "EditBoxAccessor",

@@ -13,7 +13,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+<<<<<<< Updated upstream
 import net.minecraft.resources.ResourceLocation;
+=======
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+
+// Factual Fix 1.21.4: Added missing structural imports to resolve compiler symbols
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+>>>>>>> Stashed changes
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -187,9 +196,16 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
     public enum LootType {
         MOBS("mobs"), FISHING("fishing"), GEMS("gems"), CHESTS("chests"), ORE("ore"), ARCHAEOLOGY("archaeology");
 
+<<<<<<< Updated upstream
         public boolean canAffect(LootContext lootContext, ResourceLocation lootTableId) {
             LootContextParam<Entity> playerLootContextParam = getPlayerLootContextParam();
             if (!lootContext.hasParam(playerLootContextParam)) {
+=======
+        public boolean canAffect(LootContext lootContext, Identifier lootTableId) {
+            net.minecraft.util.context.ContextKey<Entity> playerLootContextParam = getPlayerLootContextParam();
+            // Factual Fix 1.21.5 (confirmé par décompilation LootContext) : hasParam/getParam renommés hasParameter/getParameter
+            if (!lootContext.hasParameter(playerLootContextParam)) {
+>>>>>>> Stashed changes
                 return false;
             }
             if (!(lootContext.getParam(playerLootContextParam) instanceof Player)) {

@@ -1,6 +1,13 @@
 package daripher.skilltree.init;
 
+<<<<<<< Updated upstream
 import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistry;
+=======
+import net.fabricmc.fabric.api.registry.FabricPotionBrewingBuilder;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.Items;
+>>>>>>> Stashed changes
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
@@ -25,9 +32,24 @@ public class PSTBrewingRecipes {
     private static boolean itemRecipesRegistered = false;
 
     public static void addRecipes() {
+<<<<<<< Updated upstream
         FabricBrewingRecipeRegistry.registerPotionRecipe(Potions.FIRE_RESISTANCE, Ingredient.of(Items.FERMENTED_SPIDER_EYE), PSTPotions.LIQUID_FIRE_1.get());
         FabricBrewingRecipeRegistry.registerPotionRecipe(PSTPotions.LIQUID_FIRE_1.get(), Ingredient.of(Items.GLOWSTONE_DUST), PSTPotions.LIQUID_FIRE_2.get());
         registerContainerConversions();
+=======
+        // Aligned 26.1.2: FabricBrewingRecipeRegistryBuilder renommé FabricPotionBrewingBuilder (mappings officiels)
+        FabricPotionBrewingBuilder.BUILD.register(builder -> {
+            builder.registerPotionRecipe(Potions.FIRE_RESISTANCE, Ingredient.of(Items.FERMENTED_SPIDER_EYE), wrapPotion(PSTPotions.LIQUID_FIRE_1.get()));
+            builder.registerPotionRecipe(wrapPotion(PSTPotions.LIQUID_FIRE_1.get()), Ingredient.of(Items.GLOWSTONE_DUST), wrapPotion(PSTPotions.LIQUID_FIRE_2.get()));
+
+            if (!itemRecipesRegistered) {
+                itemRecipesRegistered = true;
+                // Factual Fix 1.21.4: Cast potion item types to base Item to prevent ClassCastException on splash/lingering items
+                builder.registerItemRecipe((Item) Items.POTION, Ingredient.of(Items.GUNPOWDER), (Item) Items.SPLASH_POTION);
+                builder.registerItemRecipe((Item) Items.SPLASH_POTION, Ingredient.of(Items.DRAGON_BREATH), (Item) Items.LINGERING_POTION);
+            }
+        });
+>>>>>>> Stashed changes
     }
 
     // potion -> splash -> lingering : générique pour tout type de potion, à enregistrer une seule fois

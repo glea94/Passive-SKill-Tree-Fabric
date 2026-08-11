@@ -182,8 +182,14 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         if (!selectedRecipe.matches(workbenchContainer, level)) {
             resultSlots.setItem(0, ItemStack.EMPTY);
         } else {
+<<<<<<< Updated upstream
             if (!level.isClientSide) {
                 ItemStack craftResult = selectedRecipe.assemble(workbenchContainer, level.registryAccess());
+=======
+            // Fix 1.21.9 : isClientSide champ private, méthode isClientSide() confirmée par décompilation
+            if (!level.isClientSide()) {
+                ItemStack craftResult = recipe.assemble(workbenchContainer);
+>>>>>>> Stashed changes
                 addCraftingBonuses(craftResult);
                 resultSlots.setRecipeUsed(selectedRecipe);
                 resultSlots.setItem(0, craftResult);

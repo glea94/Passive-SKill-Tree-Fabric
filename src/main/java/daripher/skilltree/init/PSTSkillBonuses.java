@@ -4,7 +4,7 @@ import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.player.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import daripher.skilltree.util.registry.DeferredRegister;
 import daripher.skilltree.util.registry.RegistryObject;
 
@@ -12,7 +12,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTSkillBonuses {
+<<<<<<< Updated upstream
     public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "skill_bonuses");
+=======
+    public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_bonuses");
+>>>>>>> Stashed changes
     public static final DeferredRegister<SkillBonus.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<SkillBonus.Serializer> ATTRIBUTE = REGISTRY.register("attribute", AttributeBonus.Serializer::new);
@@ -65,7 +69,7 @@ public class PSTSkillBonuses {
     }
 
     public static String getName(SkillBonus<?> bonus) {
-        ResourceLocation id = PSTRegistries.SKILL_BONUSES.get().getKey(bonus.getSerializer());
+        Identifier id = PSTRegistries.SKILL_BONUSES.get().getKey(bonus.getSerializer());
         return TooltipHelper.idToName(Objects.requireNonNull(id).getPath());
     }
 }

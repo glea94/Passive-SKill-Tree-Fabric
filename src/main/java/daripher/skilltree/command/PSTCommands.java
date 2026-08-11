@@ -17,10 +17,10 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.commands.arguments.selector.EntitySelector;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,18 @@ import org.jetbrains.annotations.NotNull;
 import java.util.stream.Stream;
 
 public class PSTCommands {
+<<<<<<< Updated upstream
     public static final SuggestionProvider<CommandSourceStack> SKILL_ID_SUGGESTION = (ctx, builder) -> SharedSuggestionProvider.suggest(gatherSkillIds(), builder);
+=======
+    // Factual Fix 1.21.4: Use suggestResource directly with Identifier streams for perfect efficiency
+    public static final SuggestionProvider<CommandSourceStack> SKILL_ID_SUGGESTION = (ctx, builder) ->
+            SharedSuggestionProvider.suggestResource(SkillsReloader.getSkillIds().stream(), builder);
+
+    public static final SuggestionProvider<CommandSourceStack> SKILL_TREE_ID_SUGGESTION = (ctx, builder) ->
+            SharedSuggestionProvider.suggestResource(SkillTreesReloader.getSkillTrees().keySet().stream(), builder);
+
+    public static final Identifier DEFAULT_SKILL_TREE_ID = Identifier.fromNamespaceAndPath("skilltree", "tree");
+>>>>>>> Stashed changes
     public static final String AMOUNT_ARGUMENT_NAME = "amount";
     public static final String PLAYER_ARGUMENT_NAME = "player";
     public static final String SKILL_ID_ARGUMENT_NAME = "skill_id";
@@ -72,7 +83,7 @@ public class PSTCommands {
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> getRootCommand() {
-        return Commands.literal("skilltree").requires(PSTCommands::hasPermission);
+        return Commands.literal("skilltree").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
     }
 
     private static @NotNull RequiredArgumentBuilder<CommandSourceStack, EntitySelector> getPlayerArgument() {
@@ -83,10 +94,17 @@ public class PSTCommands {
         return Commands.argument(AMOUNT_ARGUMENT_NAME, IntegerArgumentType.integer());
     }
 
-    private static @NotNull RequiredArgumentBuilder<CommandSourceStack, ResourceLocation> getSkillArgument() {
-        return Commands.argument(SKILL_ID_ARGUMENT_NAME, ResourceLocationArgument.id()).suggests(SKILL_ID_SUGGESTION);
+    private static @NotNull RequiredArgumentBuilder<CommandSourceStack, Identifier> getSkillArgument() {
+        return Commands.argument(SKILL_ID_ARGUMENT_NAME, IdentifierArgument.id()).suggests(SKILL_ID_SUGGESTION);
     }
 
+<<<<<<< Updated upstream
+=======
+    private static @NotNull RequiredArgumentBuilder<CommandSourceStack, Identifier> getSkillTreeArgument() {
+        return Commands.argument(SKILL_TREE_ID_ARGUMENT_NAME, IdentifierArgument.id()).suggests(SKILL_TREE_ID_SUGGESTION);
+    }
+
+>>>>>>> Stashed changes
     private static int executeResetCommand(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = EntityArgument.getPlayer(ctx, PLAYER_ARGUMENT_NAME);
         IPlayerSkills skillsCapability = PlayerSkillsProvider.get(player);
@@ -115,9 +133,29 @@ public class PSTCommands {
         return 1;
     }
 
+<<<<<<< Updated upstream
     private static int executeGrantSkillCommand(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = EntityArgument.getPlayer(ctx, PLAYER_ARGUMENT_NAME);
         ResourceLocation skillId = ctx.getArgument(SKILL_ID_ARGUMENT_NAME, ResourceLocation.class);
+=======
+    private static int executeEditorCommand(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        Identifier treeId;
+        try {
+            // Factual Fix 1.21.4: Standardize resource key extractions via ResourceLocationArgument helper
+            treeId = IdentifierArgument.getId(ctx, SKILL_TREE_ID_ARGUMENT_NAME);
+        } catch (IllegalArgumentException e) {
+            treeId = DEFAULT_SKILL_TREE_ID;
+        }
+        ServerNetworking.sendOpenSkillTreeEditor(player, treeId);
+        return 1;
+    }
+
+    private static int executeGrantSkillCommand(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer player = EntityArgument.getPlayer(ctx, PLAYER_ARGUMENT_NAME);
+        // Factual Fix 1.21.4: Standardize resource key extractions via ResourceLocationArgument helper
+        Identifier skillId = IdentifierArgument.getId(ctx, SKILL_ID_ARGUMENT_NAME);
+>>>>>>> Stashed changes
         IPlayerSkills skillsCapability = PlayerSkillsProvider.get(player);
         if (skillsCapability.grantSkill(SkillsReloader.getSkillById(skillId))) {
             ServerNetworking.sendSyncPlayerSkills(player);
@@ -128,6 +166,7 @@ public class PSTCommands {
         return 1;
     }
 
+<<<<<<< Updated upstream
     private static boolean hasPermission(CommandSourceStack commandSourceStack) {
         return commandSourceStack.hasPermission(2);
     }
@@ -142,3 +181,6 @@ public class PSTCommands {
         return SkillsReloader.getSkills().keySet().stream().map(ResourceLocation::toString);
     }
 }
+=======
+}
+>>>>>>> Stashed changes

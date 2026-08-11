@@ -7,7 +7,7 @@ import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.RecipeUnlockBonus;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -24,10 +24,17 @@ import java.util.Map;
 import java.util.Objects;
 
 public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContainer>, SkillRequiringRecipe {
+<<<<<<< Updated upstream
     private final ResourceLocation id;
     private final boolean requiresPassiveSkill;
 
     public AbstractWorkbenchRecipe(ResourceLocation id, boolean requiresPassiveSkill) {
+=======
+    private Identifier id;
+    private final boolean requiresPassiveSkill;
+
+    protected AbstractWorkbenchRecipe(Identifier id, boolean requiresPassiveSkill) {
+>>>>>>> Stashed changes
         this.requiresPassiveSkill = requiresPassiveSkill;
         this.id = id;
     }
@@ -45,9 +52,15 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
     }
 
     public String getDescriptionId() {
+<<<<<<< Updated upstream
         ResourceLocation id = BuiltInRegistries.RECIPE_SERIALIZER.getKey(getSerializer());
         Objects.requireNonNull(id);
         return "recipe.%s.%s".formatted(id.getNamespace(), id.getPath());
+=======
+        Identifier serializerId = BuiltInRegistries.RECIPE_SERIALIZER.getKey(getSerializer());
+        Objects.requireNonNull(serializerId);
+        return "recipe.%s.%s".formatted(serializerId.getNamespace(), serializerId.getPath());
+>>>>>>> Stashed changes
     }
 
     public boolean isLockedFor(@NotNull Player player) {
@@ -68,6 +81,24 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
 
     public abstract @NotNull ItemStack getResult(WorkbenchContainer workbenchContainer);
 
+<<<<<<< Updated upstream
+=======
+    @Override
+    public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container) {
+        return getResult(container);
+    }
+
+    @Override
+    public boolean showNotification() {
+        return false;
+    }
+
+    @Override
+    public String group() {
+        return "";
+    }
+
+>>>>>>> Stashed changes
     public abstract int requiredBaseItemAmount();
 
     public abstract @Nullable Pair<Ingredient, Integer> getBaseIngredient();
@@ -88,11 +119,22 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
         return width == 5 && height == 2;
     }
 
+<<<<<<< Updated upstream
     @Override
     public @NotNull ResourceLocation getId() {
         return id;
     }
 
+=======
+    public @NotNull Identifier getId() {
+        return id;
+    }
+
+    public void setId(@NotNull Identifier id) {
+        this.id = id;
+    }
+
+>>>>>>> Stashed changes
     @Deprecated
     @Override
     public @NotNull ItemStack getResultItem(@NotNull RegistryAccess registryAccess) {

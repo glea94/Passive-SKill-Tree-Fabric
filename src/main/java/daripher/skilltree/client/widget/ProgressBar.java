@@ -1,16 +1,20 @@
 package daripher.skilltree.client.widget;
 
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 import daripher.skilltree.capability.skill.IPlayerSkills;
 import daripher.skilltree.capability.skill.PlayerSkillsProvider;
 import daripher.skilltree.client.screen.ScreenHelper;
 import daripher.skilltree.config.ServerConfig;
 import daripher.skilltree.exp.ExpHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -37,25 +41,34 @@ public class ProgressBar extends Button {
     }
 
     @Override
-    public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics);
         renderCurrentLevel(graphics);
         renderNextLevel(graphics);
         renderProgress(graphics);
     }
 
-    protected void renderBackground(GuiGraphics graphics) {
+    protected void renderBackground(GuiGraphicsExtractor graphics) {
         float experienceProgress = getExperienceProgress();
         int filledBarWidth = (int) (experienceProgress * 183);
+<<<<<<< Updated upstream
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/progress_bars.png");
         graphics.blit(texture, getX() + 26, getY() + 7, 0, 0, 182, 5);
         if (filledBarWidth == 0) {
             return;
         }
         graphics.blit(texture, getX() + 26, getY() + 7, 0, 5, filledBarWidth, 5);
+=======
+        Identifier texture = Identifier.parse("skilltree:textures/screen/progress_bars.png");
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX() + 26, getY() + 7, 0F, 0F, 182, 5, 256, 256);
+        if (filledBarWidth == 0) {
+            return;
+        }
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX() + 26, getY() + 7, 0F, 5F, filledBarWidth, 5, 256, 256);
+>>>>>>> Stashed changes
     }
 
-    protected void renderProgress(GuiGraphics graphics) {
+    protected void renderProgress(GuiGraphicsExtractor graphics) {
         if (showProgressInNumbers) {
             int cost = ServerConfig.getSkillPointCost(getCurrentLevel());
             LocalPlayer player = Minecraft.getInstance().player;
@@ -70,7 +83,7 @@ public class ProgressBar extends Button {
         }
     }
 
-    protected void renderNextLevel(GuiGraphics graphics) {
+    protected void renderNextLevel(GuiGraphicsExtractor graphics) {
         int currentLevel = getCurrentLevel();
         if (isMaxLevel(currentLevel)) {
             currentLevel--;
@@ -79,7 +92,7 @@ public class ProgressBar extends Button {
         ScreenHelper.drawCenteredOutlinedText(graphics, "" + nextLevel, getX() + width - 17, getTextY(), 0xFCE266);
     }
 
-    protected void renderCurrentLevel(GuiGraphics graphics) {
+    protected void renderCurrentLevel(GuiGraphicsExtractor graphics) {
         int currentLevel = getCurrentLevel();
         if (isMaxLevel(currentLevel)) {
             currentLevel--;

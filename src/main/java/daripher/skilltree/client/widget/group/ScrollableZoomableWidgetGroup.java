@@ -1,6 +1,6 @@
 package daripher.skilltree.client.widget.group;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
@@ -20,26 +20,26 @@ public class ScrollableZoomableWidgetGroup<T extends AbstractWidget> extends Wid
     }
 
     @Override
-    protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         graphics.enableScissor(getX(), getY(), getX() + getWidth(), getY() + getHeight());
-        graphics.pose().pushPose();
-        graphics.pose().translate(scrollX, scrollY, 0);
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(scrollX, scrollY);
         renderBackground(graphics, mouseX, mouseY, partialTick);
         for (T widget : widgets) {
-            graphics.pose().pushPose();
-            double widgetCenterX = widget.getX() + widget.getWidth() / 2f;
-            double widgetCenterY = widget.getY() + widget.getHeight() / 2f;
-            graphics.pose().translate(widgetCenterX, widgetCenterY, 0F);
-            graphics.pose().scale(zoom, zoom, 1F);
-            graphics.pose().translate(-widgetCenterX, -widgetCenterY, 0F);
-            widget.render(graphics, mouseX, mouseY, partialTick);
-            graphics.pose().popPose();
+            graphics.pose().pushMatrix();
+            float widgetCenterX = widget.getX() + widget.getWidth() / 2f;
+            float widgetCenterY = widget.getY() + widget.getHeight() / 2f;
+            graphics.pose().translate(widgetCenterX, widgetCenterY);
+            graphics.pose().scale(zoom, zoom);
+            graphics.pose().translate(-widgetCenterX, -widgetCenterY);
+            widget.extractRenderState(graphics, mouseX, mouseY, partialTick);
+            graphics.pose().popMatrix();
         }
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
         graphics.disableScissor();
     }
 
-    protected void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 
     }
 

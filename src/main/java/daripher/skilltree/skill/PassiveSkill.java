@@ -3,7 +3,7 @@ package daripher.skilltree.skill;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.requirement.SkillRequirement;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 import org.jetbrains.annotations.NotNull;
@@ -12,16 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PassiveSkill {
-    private final ResourceLocation id;
+    private final Identifier id;
     private final List<SkillBonus<?>> bonuses = new ArrayList<>();
     private @Nullable List<SkillRequirement<?>> requirements;
-    private @Nullable List<ResourceLocation> directConnections = new ArrayList<>();
-    private @Nullable List<ResourceLocation> longConnections = new ArrayList<>();
-    private @Nullable List<ResourceLocation> oneWayConnections = new ArrayList<>();
+    private @Nullable List<Identifier> directConnections = new ArrayList<>();
+    private @Nullable List<Identifier> longConnections = new ArrayList<>();
+    private @Nullable List<Identifier> oneWayConnections = new ArrayList<>();
     private @Nullable List<String> tags = new ArrayList<>();
-    private ResourceLocation backgroundTexture;
-    private ResourceLocation iconTexture;
-    private ResourceLocation borderTexture;
+    private Identifier backgroundTexture;
+    private Identifier iconTexture;
+    private Identifier borderTexture;
     private @Nullable String title;
     private @Nullable String titleColor;
     private float positionX, positionY;
@@ -30,7 +30,7 @@ public class PassiveSkill {
     private boolean isAlwaysStartingPoint;
     private @Nullable List<MutableComponent> description;
 
-    public PassiveSkill(ResourceLocation id, int buttonSize, ResourceLocation backgroundTexture, ResourceLocation iconTexture, ResourceLocation borderTexture, boolean isStartingPoint) {
+    public PassiveSkill(Identifier id, int buttonSize, Identifier backgroundTexture, Identifier iconTexture, Identifier borderTexture, boolean isStartingPoint) {
         this.id = id;
         this.backgroundTexture = backgroundTexture;
         this.iconTexture = iconTexture;
@@ -39,7 +39,7 @@ public class PassiveSkill {
         this.isStartingPoint = isStartingPoint;
     }
 
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return id;
     }
 
@@ -51,27 +51,27 @@ public class PassiveSkill {
         this.buttonSize = buttonSize;
     }
 
-    public ResourceLocation getFrameTexture() {
+    public Identifier getFrameTexture() {
         return backgroundTexture;
     }
 
-    public void setBackgroundTexture(ResourceLocation texture) {
+    public void setBackgroundTexture(Identifier texture) {
         this.backgroundTexture = texture;
     }
 
-    public ResourceLocation getIconTexture() {
+    public Identifier getIconTexture() {
         return iconTexture;
     }
 
-    public void setIconTexture(ResourceLocation texture) {
+    public void setIconTexture(Identifier texture) {
         this.iconTexture = texture;
     }
 
-    public ResourceLocation getTooltipFrameTexture() {
+    public Identifier getTooltipFrameTexture() {
         return borderTexture;
     }
 
-    public void setBorderTexture(ResourceLocation texture) {
+    public void setBorderTexture(Identifier texture) {
         this.borderTexture = texture;
     }
 
@@ -128,7 +128,7 @@ public class PassiveSkill {
     }
 
     @NotNull
-    public List<ResourceLocation> getDirectConnections() {
+    public List<Identifier> getDirectConnections() {
         if (directConnections == null) {
             return directConnections = new ArrayList<>();
         }
@@ -136,7 +136,7 @@ public class PassiveSkill {
     }
 
     @NotNull
-    public List<ResourceLocation> getLongConnections() {
+    public List<Identifier> getLongConnections() {
         if (longConnections == null) {
             return longConnections = new ArrayList<>();
         }
@@ -144,7 +144,7 @@ public class PassiveSkill {
     }
 
     @NotNull
-    public List<ResourceLocation> getOneWayConnections() {
+    public List<Identifier> getOneWayConnections() {
         if (oneWayConnections == null) {
             return oneWayConnections = new ArrayList<>();
         }

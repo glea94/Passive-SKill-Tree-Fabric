@@ -3,7 +3,7 @@ package daripher.skilltree.init;
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.skill.bonus.event.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import daripher.skilltree.util.registry.DeferredRegister;
 import daripher.skilltree.util.registry.RegistryObject;
 
@@ -11,7 +11,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTEventListeners {
+<<<<<<< Updated upstream
     public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "event_listeners");
+=======
+    public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "event_listeners");
+>>>>>>> Stashed changes
     public static final DeferredRegister<SkillEventListener.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<SkillEventListener.Serializer> ATTACK = REGISTRY.register("attack", OutgoingDamageEventListener.Serializer::new);
@@ -30,7 +34,7 @@ public class PSTEventListeners {
     }
 
     public static String getName(SkillEventListener eventType) {
-        ResourceLocation id = PSTRegistries.EVENT_LISTENERS.get().getKey(eventType.getSerializer());
+        Identifier id = PSTRegistries.EVENT_LISTENERS.get().getKey(eventType.getSerializer());
         return TooltipHelper.idToName(Objects.requireNonNull(id).getPath());
     }
 }

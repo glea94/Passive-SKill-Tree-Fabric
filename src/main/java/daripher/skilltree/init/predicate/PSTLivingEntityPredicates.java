@@ -4,7 +4,7 @@ import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.init.PSTRegistries;
 import daripher.skilltree.skill.bonus.predicate.living.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import daripher.skilltree.util.registry.DeferredRegister;
 import daripher.skilltree.util.registry.RegistryObject;
 
@@ -12,7 +12,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTLivingEntityPredicates {
+<<<<<<< Updated upstream
     public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "living_conditions");
+=======
+    public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "living_conditions");
+>>>>>>> Stashed changes
     public static final DeferredRegister<LivingEntityPredicate.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<LivingEntityPredicate.Serializer> NONE = REGISTRY.register("none", NoneLivingEntityPredicate.Serializer::new);
@@ -34,7 +38,7 @@ public class PSTLivingEntityPredicates {
     }
 
     public static String getName(LivingEntityPredicate condition) {
-        ResourceLocation id = PSTRegistries.LIVING_CONDITIONS.get().getKey(condition.getSerializer());
+        Identifier id = PSTRegistries.LIVING_CONDITIONS.get().getKey(condition.getSerializer());
         return TooltipHelper.idToName(Objects.requireNonNull(id).getPath());
     }
 }
