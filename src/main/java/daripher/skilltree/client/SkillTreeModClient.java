@@ -3,7 +3,6 @@ package daripher.skilltree.client;
 import daripher.skilltree.client.event.PoisonedWeaponClientEvents;
 import daripher.skilltree.client.network.ClientNetworking;
 import daripher.skilltree.client.screen.menu.WorkbenchScreen;
-import daripher.skilltree.command.client.PSTClientCommands;
 import daripher.skilltree.config.ClientConfig;
 import daripher.skilltree.data.client.SkillTexturesData;
 import daripher.skilltree.init.PSTMenuTypes;
@@ -23,7 +22,6 @@ public class SkillTreeModClient implements ClientModInitializer {
         MenuScreens.register(PSTMenuTypes.ARTISAN_WORKBENCH.get(), WorkbenchScreen::new);
         ClientNetworking.register();
         PoisonedWeaponClientEvents.register();
-        PSTClientCommands.register();
         ItemUseMovementSpeedBonusHandler.register();
         SkillTexturesData.register();
         PSTKeybinds.register();

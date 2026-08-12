@@ -73,7 +73,6 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
 
     @Override
     protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
         guiGraphics.blit(BACKGROUND_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         renderScroll(guiGraphics);
         renderRecipes(guiGraphics, mouseX, mouseY);

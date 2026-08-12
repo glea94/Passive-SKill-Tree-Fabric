@@ -2,10 +2,7 @@ package daripher.skilltree.network;
 
 import daripher.skilltree.network.message.GainSkillPointMessage;
 import daripher.skilltree.network.message.LearnSkillMessage;
-<<<<<<< Updated upstream
-=======
 import daripher.skilltree.network.message.OpenSkillTreeEditorMessage;
->>>>>>> Stashed changes
 import daripher.skilltree.network.message.SyncPlayerSkillsMessage;
 import daripher.skilltree.network.message.SyncServerDataMessage;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -23,9 +20,6 @@ public class PSTNetworkChannels {
         PayloadTypeRegistry.playS2C().register(SyncPlayerSkillsMessage.TYPE, SyncPlayerSkillsMessage.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(LearnSkillMessage.TYPE, LearnSkillMessage.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(GainSkillPointMessage.TYPE, GainSkillPointMessage.STREAM_CODEC);
-<<<<<<< Updated upstream
-=======
         PayloadTypeRegistry.playS2C().register(OpenSkillTreeEditorMessage.TYPE, OpenSkillTreeEditorMessage.STREAM_CODEC);
->>>>>>> Stashed changes
     }
 }
