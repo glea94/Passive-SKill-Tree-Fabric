@@ -37,7 +37,7 @@ public class Button extends net.minecraft.client.gui.components.Button {
     }
 
     protected void renderBackground(@NotNull GuiGraphics graphics) {
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/widgets.png");
+        ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("skilltree", "textures/screen/widgets.png");
         int v = getTextureVariant() * 14;
         graphics.blit(RenderType::guiTextured, texture, getX(), getY(), 0F, (float) v, width / 2, height, 256, 256);
         graphics.blit(RenderType::guiTextured, texture, getX() + width / 2, getY(), (float) (-width / 2), (float) v, width / 2, height, 256, 256);

@@ -269,7 +269,7 @@ public class SkillTreeEditorData {
                     continue;
                 }
                 String skillTreeName = skillTreeFileName.substring(0, skillTreeFileName.lastIndexOf('.'));
-                EDITOR_TREES_IDS.add(new ResourceLocation(namespace, skillTreeName));
+                EDITOR_TREES_IDS.add(ResourceLocation.fromNamespaceAndPath(namespace, skillTreeName));
             }
         }
         loadedIDs = true;

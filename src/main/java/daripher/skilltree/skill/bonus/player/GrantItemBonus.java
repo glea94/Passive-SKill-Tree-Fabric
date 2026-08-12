@@ -146,12 +146,8 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public GrantItemBonus deserialize(JsonObject json) throws JsonParseException {
-<<<<<<< Updated upstream
-            ResourceLocation itemId = new ResourceLocation(json.get("item_id").getAsString());
-=======
 
             ResourceLocation itemId = ResourceLocation.parse(json.get("item_id").getAsString());
->>>>>>> Stashed changes
             int amount = SerializationHelper.getElement(json, "amount").getAsInt();
             return new GrantItemBonus(itemId, amount);
         }
@@ -167,7 +163,7 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
 
         @Override
         public GrantItemBonus deserialize(CompoundTag tag) {
-            ResourceLocation itemId = new ResourceLocation(tag.getString("item_id"));
+            ResourceLocation itemId = ResourceLocation.parse(tag.getString("item_id"));
             int amount = tag.getInt("amount");
             return new GrantItemBonus(itemId, amount);
         }

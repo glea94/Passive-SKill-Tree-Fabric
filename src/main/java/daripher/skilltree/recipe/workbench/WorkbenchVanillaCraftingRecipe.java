@@ -1,18 +1,19 @@
 package daripher.skilltree.recipe.workbench;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.MapLike;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.RecordBuilder;
 import daripher.skilltree.inventory.menu.WorkbenchContainer;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.VanillaRecipeUnlockBonus;
-<<<<<<< Updated upstream
-import net.minecraft.core.NonNullList;
-=======
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
->>>>>>> Stashed changes
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -27,27 +29,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
-<<<<<<< Updated upstream
-=======
     private static final ResourceLocation UNKNOWN_ID = ResourceLocation.fromNamespaceAndPath("skilltree", "unknown_workbench_vanilla_crafting_recipe");
 
->>>>>>> Stashed changes
     private @Nullable Pair<Ingredient, Integer> baseIngredient;
     private Map<Ingredient, Integer> additionalIngredients;
     private final ItemStack result;
 
-<<<<<<< Updated upstream
-    public WorkbenchVanillaCraftingRecipe(CraftingRecipe vanillaRecipe, RegistryAccess registryAccess) {
-        super(vanillaRecipe.getId(), true);
-        this.result = vanillaRecipe.getResultItem(registryAccess);
-=======
     public WorkbenchVanillaCraftingRecipe(RecipeHolder<CraftingRecipe> vanillaRecipeHolder, RegistryAccess registryAccess) {
         super(vanillaRecipeHolder.id().location(), true);
         CraftingRecipe vanillaRecipe = vanillaRecipeHolder.value();
         this.result = assembleResult(vanillaRecipe, registryAccess);
->>>>>>> Stashed changes
         additionalIngredients = getIngredientsFromCraftingRecipe(vanillaRecipe);
         List<Pair<Ingredient, Integer>> ingredients = new ArrayList<>(additionalIngredients.entrySet().stream().map(Pair::of).toList());
         if (!ingredients.isEmpty()) {
@@ -100,7 +94,7 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container, @NotNull RegistryAccess registryAccess) {
+    public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container, HolderLookup.@NotNull Provider registries) {
         return getResult(container);
     }
 
@@ -165,8 +159,6 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<WorkbenchVanillaCraftingRecipe> {
-<<<<<<< Updated upstream
-=======
         private static final MapCodec<WorkbenchVanillaCraftingRecipe> CODEC = new MapCodec<>() {
             @Override
             public <T> DataResult<WorkbenchVanillaCraftingRecipe> decode(DynamicOps<T> ops, MapLike<T> input) {
@@ -188,60 +180,45 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
                 Serializer::toNetwork, Serializer::fromNetwork
         );
 
->>>>>>> Stashed changes
         @Override
-        public @NotNull WorkbenchVanillaCraftingRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject jsonObject) {
-            throw new UnsupportedOperationException("Attempted to load an invalid recipe type.");
+        public com.mojang.serialization.@NotNull MapCodec<WorkbenchVanillaCraftingRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public @Nullable WorkbenchVanillaCraftingRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, WorkbenchVanillaCraftingRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
+
+        private static @NotNull WorkbenchVanillaCraftingRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buf) {
             Map<Ingredient, Integer> ingredients = new HashMap<>();
             int ingredientsCount = buf.readInt();
             for (int i = 0; i < ingredientsCount; i++) {
-<<<<<<< Updated upstream
-                ingredients.put(Ingredient.fromNetwork(buf), buf.readInt());
-=======
                 ingredients.put(Ingredient.CONTENTS_STREAM_CODEC.decode(buf), buf.readInt());
->>>>>>> Stashed changes
             }
             Pair<Ingredient, Integer> baseIngredient = null;
             boolean hasBaseIngredient = buf.readBoolean();
             if (hasBaseIngredient) {
-                baseIngredient = Pair.of(Ingredient.fromNetwork(buf), buf.readInt());
+                baseIngredient = Pair.of(Ingredient.CONTENTS_STREAM_CODEC.decode(buf), buf.readInt());
             }
-<<<<<<< Updated upstream
-            ItemStack result = buf.readItem();
-            return new WorkbenchVanillaCraftingRecipe(id, baseIngredient, ingredients, result);
-=======
             ItemStack result = ItemStack.STREAM_CODEC.decode(buf);
             return new WorkbenchVanillaCraftingRecipe(UNKNOWN_ID, baseIngredient, ingredients, result);
->>>>>>> Stashed changes
         }
 
-        @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull WorkbenchVanillaCraftingRecipe recipe) {
+        private static void toNetwork(@NotNull RegistryFriendlyByteBuf buf, @NotNull WorkbenchVanillaCraftingRecipe recipe) {
             int ingredientsCount = recipe.getAdditionalIngredients().size();
             buf.writeInt(ingredientsCount);
             recipe.getAdditionalIngredients().forEach((ingredient, requiredAmount) -> {
-<<<<<<< Updated upstream
-                ingredient.toNetwork(buf);
-=======
                 Ingredient.CONTENTS_STREAM_CODEC.encode(buf, ingredient);
->>>>>>> Stashed changes
                 buf.writeInt(requiredAmount);
             });
             Pair<Ingredient, Integer> baseIngredient = recipe.baseIngredient;
             buf.writeBoolean(baseIngredient != null);
             if (baseIngredient != null) {
-                baseIngredient.getLeft().toNetwork(buf);
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buf, baseIngredient.getLeft());
                 buf.writeInt(baseIngredient.getRight());
             }
-<<<<<<< Updated upstream
-            buf.writeItem(recipe.result);
-=======
             ItemStack.STREAM_CODEC.encode(buf, recipe.result);
->>>>>>> Stashed changes
         }
     }
 }

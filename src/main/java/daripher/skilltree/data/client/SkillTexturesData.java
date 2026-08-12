@@ -24,7 +24,7 @@ public class SkillTexturesData implements IdentifiableResourceReloadListener {
 
     @Override
     public ResourceLocation getFabricId() {
-        return new ResourceLocation(SkillTreeMod.MOD_ID, "skill_textures_reloader");
+        return ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_textures_reloader");
     }
 
     @Override

@@ -19,35 +19,26 @@ public abstract class SkillBonusEffect extends MobEffect {
     }
 
     @Override
-    public void removeAttributeModifiers(@NotNull LivingEntity entity, @NotNull AttributeMap attributeMap, int amplifier) {
-        super.removeAttributeModifiers(entity, attributeMap, amplifier);
-        if (entity instanceof ServerPlayer player) {
-            bonus.onSkillRemoved(player);
-        }
+    public void removeAttributeModifiers(@NotNull AttributeMap attributeMap) {
+        super.removeAttributeModifiers(attributeMap);
     }
 
     @Override
-    public void addAttributeModifiers(@NotNull LivingEntity entity, @NotNull AttributeMap attributeMap, int amplifier) {
-        super.addAttributeModifiers(entity, attributeMap, amplifier);
-        if (entity instanceof ServerPlayer player) {
-            bonus.onSkillLearned(player, true);
-        }
+    public void addAttributeModifiers(@NotNull AttributeMap attributeMap, int amplifier) {
+        super.addAttributeModifiers(attributeMap, amplifier);
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int amplifier) {
         return bonus instanceof TickingSkillBonus;
     }
 
     @Override
-<<<<<<< Updated upstream
-    public void applyEffectTick(@NotNull LivingEntity entity, int amplifier) {
-=======
     public boolean applyEffectTick(ServerLevel serverLevel, @NotNull LivingEntity entity, int amplifier) {
->>>>>>> Stashed changes
         if (entity instanceof ServerPlayer player && bonus instanceof TickingSkillBonus ticking) {
             ticking.tick(player);
         }
+        return true;
     }
 
     public SkillBonus<?> getBonus() {

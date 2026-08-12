@@ -31,11 +31,7 @@ public class AmnesiaScrollItem extends Item {
     }
 
     @Override
-<<<<<<< Updated upstream
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
-=======
     public @NotNull InteractionResult use(Level level, Player player, @NotNull InteractionHand hand) {
->>>>>>> Stashed changes
         ItemStack scroll = player.getItemInHand(hand);
         IPlayerSkills skills = PlayerSkillsProvider.get(player);
         if (!player.getAbilities().instabuild) {
@@ -54,8 +50,9 @@ public class AmnesiaScrollItem extends Item {
         return InteractionResult.SUCCESS;
     }
 
+    // CORRECTION 1.21.1 : Le paramètre Level est remplacé par Item.TooltipContext
     @Override
-    public void appendHoverText(@NotNull ItemStack itemStack, Level level, List<Component> components, @NotNull TooltipFlag tooltipFlag) {
+    public void appendHoverText(@NotNull ItemStack itemStack, Item.TooltipContext context, List<Component> components, @NotNull TooltipFlag tooltipFlag) {
         components.add(Component.translatable(getDescriptionId() + ".tooltip").withStyle(ChatFormatting.GOLD));
         double penalty = ServerConfig.amnesia_scroll_penalty;
         if (penalty > 0) {

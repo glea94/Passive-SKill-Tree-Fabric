@@ -48,13 +48,8 @@ public class ProgressBar extends Button {
     protected void renderBackground(GuiGraphics graphics) {
         float experienceProgress = getExperienceProgress();
         int filledBarWidth = (int) (experienceProgress * 183);
-<<<<<<< Updated upstream
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/progress_bars.png");
-        graphics.blit(texture, getX() + 26, getY() + 7, 0, 0, 182, 5);
-=======
         ResourceLocation texture = ResourceLocation.parse("skilltree:textures/screen/progress_bars.png");
         graphics.blit(RenderType::guiTextured, texture, getX() + 26, getY() + 7, 0F, 0F, 182, 5, 256, 256);
->>>>>>> Stashed changes
         if (filledBarWidth == 0) {
             return;
         }

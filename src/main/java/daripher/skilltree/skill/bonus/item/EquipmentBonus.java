@@ -131,7 +131,10 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
         public ItemBonus<?> deserialize(CompoundTag tag) {
             CompoundTag skillBonusTag = tag.getCompound("skill_bonus");
             String type = skillBonusTag.getString("type");
-            ResourceLocation serializerId = new ResourceLocation(type);
+            // CORRECTION 1.21.1 : ResourceLocation.fromNamespaceAndPath(String) à un seul argument
+            // n'existe plus ; on utilise désormais ResourceLocation.parse(String) qui accepte le
+            // format "namespace:path" complet (identique à ce que produisait toString() ci-dessus).
+            ResourceLocation serializerId = ResourceLocation.parse(type);
             SkillBonus.Serializer serializer = PSTRegistries.SKILL_BONUSES.get().getValue(serializerId);
             Objects.requireNonNull(serializer, "Unknown skill bonus: " + serializerId);
             SkillBonus<?> skillBonus = serializer.deserialize(skillBonusTag);
@@ -169,7 +172,8 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
 
         @Override
         public ItemBonus<?> createDefaultInstance() {
-            return new EquipmentBonus(new OutgoingDamageBonus(0.1f, AttributeModifier.Operation.MULTIPLY_BASE));
+            // CORRECTION 1.21.1 : AttributeModifier.Operation.ADD_MULTIPLIED_BASE a été renommé ADD_MULTIPLIED_BASE.
+            return new EquipmentBonus(new OutgoingDamageBonus(0.1f, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         }
     }
 }

@@ -14,7 +14,10 @@ public class SkillBonusSerializer implements JsonSerializer<SkillBonus<?>>, Json
     public SkillBonus<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObj = (JsonObject) json;
         String type = jsonObj.get("type").getAsString();
-        ResourceLocation serializerId = new ResourceLocation(type);
+        // CORRECTION 1.21.1 : fromNamespaceAndPath(namespace, path) attend 2 arguments séparés.
+        // "type" contient déjà une ResourceLocation complète sous forme "namespace:path"
+        // (cf. serialize() ci-dessous qui écrit serializerId.toString()), donc on utilise parse().
+        ResourceLocation serializerId = ResourceLocation.parse(type);
         SkillBonus.Serializer serializer = PSTRegistries.SKILL_BONUSES.get().getValue(serializerId);
         if (serializer == null) {
             return new BrokenSkillBonus("Unknown skill bonus: " + serializerId);

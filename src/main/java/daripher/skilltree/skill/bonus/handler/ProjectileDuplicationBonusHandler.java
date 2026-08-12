@@ -19,6 +19,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
@@ -99,8 +101,8 @@ public class ProjectileDuplicationBonusHandler {
         if (duplicate instanceof AbstractArrow duplicateArrow) {
             AbstractArrow originalArrow = (AbstractArrow) original;
             duplicateArrow.pickup = AbstractArrow.Pickup.DISALLOWED;
-            float velocity = (float) movementVector.length();
-            duplicateArrow.setEnchantmentEffectsFromEntity(player, velocity);
+            ItemStack weaponItem = originalArrow.getWeaponItem();
+            EnchantmentHelper.onProjectileSpawned(level, weaponItem != null ? weaponItem : ItemStack.EMPTY, duplicateArrow, item -> {});
             duplicateArrow.setBaseDamage(originalArrow.getBaseDamage());
         } else if (duplicate instanceof ThrownPotion potion) {
             ThrownPotion originalPotion = (ThrownPotion) original;

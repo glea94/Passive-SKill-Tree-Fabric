@@ -15,14 +15,9 @@ import daripher.skilltree.network.message.SyncWorkbenchRecipesMessage;
 import daripher.skilltree.recipe.workbench.AbstractWorkbenchRecipe;
 import daripher.skilltree.recipe.workbench.WorkbenchVanillaCraftingRecipe;
 import daripher.skilltree.skill.PassiveSkill;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-<<<<<<< Updated upstream
-import net.minecraft.network.FriendlyByteBuf;
-=======
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
->>>>>>> Stashed changes
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -35,12 +30,11 @@ import java.util.Objects;
 
 public class ServerNetworking {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.LEARN_SKILL, (server, player, handler, buf, responseSender) -> {
-            LearnSkillMessage message = LearnSkillMessage.decode(buf);
-            server.execute(() -> handleLearnSkill(player, message));
+        ServerPlayNetworking.registerGlobalReceiver(LearnSkillMessage.TYPE, (message, context) -> {
+            context.player().server.execute(() -> handleLearnSkill(context.player(), message));
         });
-        ServerPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.GAIN_SKILL_POINT, (server, player, handler, buf, responseSender) -> {
-            server.execute(() -> handleGainSkillPoint(player));
+        ServerPlayNetworking.registerGlobalReceiver(GainSkillPointMessage.TYPE, (message, context) -> {
+            context.player().server.execute(() -> handleGainSkillPoint(context.player()));
         });
     }
 
@@ -74,21 +68,12 @@ public class ServerNetworking {
     }
 
     public static void sendSyncPlayerSkills(ServerPlayer player) {
-        SyncPlayerSkillsMessage message = new SyncPlayerSkillsMessage(player);
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        message.encode(buf);
-        ServerPlayNetworking.send(player, PSTNetworkChannels.SYNC_PLAYER_SKILLS, buf);
+        ServerPlayNetworking.send(player, new SyncPlayerSkillsMessage(player));
     }
 
     public static void sendSyncServerData(ServerPlayer player) {
-        SyncServerDataMessage message = new SyncServerDataMessage();
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        message.encode(buf);
-        ServerPlayNetworking.send(player, PSTNetworkChannels.SYNC_SERVER_DATA, buf);
+        ServerPlayNetworking.send(player, new SyncServerDataMessage());
     }
-<<<<<<< Updated upstream
-}
-=======
 
     public static void sendOpenSkillTreeEditor(ServerPlayer player, ResourceLocation treeId) {
         ServerPlayNetworking.send(player, new OpenSkillTreeEditorMessage(treeId));
@@ -121,4 +106,3 @@ public class ServerNetworking {
         ServerPlayNetworking.send(player, new SyncWorkbenchRecipesMessage(allRecipes));
     }
 }
->>>>>>> Stashed changes

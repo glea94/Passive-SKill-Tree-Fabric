@@ -5,14 +5,17 @@ import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTEnchantmentPredicates;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Objects;
 
 public class ArmorEnchantmentCondition implements EnchantmentCondition {
+
+    // CORRECTION 1.21.1 : L'ancienne méthode avec EnchantmentCategory est remplacée par la vérification d'ItemStack via les Tags
     @Override
-    public boolean met(EnchantmentCategory category) {
-        return category == EnchantmentCategory.ARMOR || category == EnchantmentCategory.ARMOR_CHEST || category == EnchantmentCategory.ARMOR_FEET || category == EnchantmentCategory.ARMOR_HEAD || category == EnchantmentCategory.ARMOR_LEGS;
+    public boolean met(ItemStack stack) {
+        return stack.is(ItemTags.ARMOR_ENCHANTABLE);
     }
 
     @Override

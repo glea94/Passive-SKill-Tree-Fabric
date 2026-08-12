@@ -54,7 +54,7 @@ public class ClientConfig {
     }
 
     private static void applyData(Data data) {
-        favorite_skills = data.favorite_skills.stream().map(ResourceLocation::new).collect(Collectors.toCollection(HashSet::new));
+        favorite_skills = data.favorite_skills.stream().map(ResourceLocation::parse).collect(Collectors.toCollection(HashSet::new));
         favorite_color_is_rainbow = data.favorite_color_hex.equals("rainbow");
         skill_tree_background_parallax = data.skill_tree_background_parallax;
         if (!favorite_color_is_rainbow) {

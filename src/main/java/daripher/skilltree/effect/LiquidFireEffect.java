@@ -35,10 +35,6 @@ public class LiquidFireEffect extends MobEffect {
             DamageSource damageSource = new DamageSource(damageType, source, indirectSource);
             target.hurt(damageSource, damage);
         }
-<<<<<<< Updated upstream
-        target.setSecondsOnFire((int) damage / 2);
-=======
         target.igniteForSeconds((int) damage / 2);
->>>>>>> Stashed changes
     }
 }

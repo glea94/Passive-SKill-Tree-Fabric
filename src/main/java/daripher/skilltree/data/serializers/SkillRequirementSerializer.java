@@ -20,7 +20,10 @@ public class SkillRequirementSerializer implements JsonSerializer<SkillRequireme
         } else {
             type = jsonObj.get("type").getAsString();
         }
-        ResourceLocation serializerId = new ResourceLocation(type);
+        // CORRECTION 1.21.1 : fromNamespaceAndPath(namespace, path) attend 2 arguments séparés.
+        // "type" contient déjà une ResourceLocation complète sous forme "namespace:path"
+        // (cf. serialize() ci-dessous qui écrit serializerId.toString()), donc on utilise parse().
+        ResourceLocation serializerId = ResourceLocation.parse(type);
         SkillRequirement.Serializer serializer = PSTRegistries.SKILL_REQUIREMENTS.get().getValue(serializerId);
         Objects.requireNonNull(serializer, "Unknown skill requirement: " + serializerId);
         return serializer.deserialize(jsonObj);

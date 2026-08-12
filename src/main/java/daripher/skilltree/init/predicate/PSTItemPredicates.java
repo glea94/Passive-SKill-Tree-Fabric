@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTItemPredicates {
-    public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "item_conditions");
+    public static final ResourceLocation REGISTRY_ID = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "item_conditions");
     public static final DeferredRegister<ItemStackPredicate.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<ItemStackPredicate.Serializer> NONE = REGISTRY.register("none", NoneItemStackPredicate.Serializer::new);

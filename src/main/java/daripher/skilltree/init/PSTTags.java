@@ -15,7 +15,7 @@ public class PSTTags {
         //    autres mods compatibles l'y ajouter, 2) vérifier si Fabric API expose un
         //    ConventionalDamageTypeTags équivalent au moment du portage des events de dégâts.
         // Décision à prendre à l'étape "events Forge -> mixins/Fabric API", pas ici.
-        public static final TagKey<DamageType> IS_MAGIC = TagKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("skilltree", "is_magic"));
+        public static final TagKey<DamageType> IS_MAGIC = TagKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("skilltree", "is_magic"));
     }
 
     public static class Items {
@@ -27,11 +27,11 @@ public class PSTTags {
         // sont conservés tels quels pour l'instant (juste des identifiants, sans effet avant
         // d'être branchés à un système) afin de ne rien casser dans le reste du code qui les
         // référence déjà.
-        public static final TagKey<Item> RINGS = TagKey.create(Registries.ITEM, new ResourceLocation("curios", "ring"));
-        public static final TagKey<Item> NECKLACES = TagKey.create(Registries.ITEM, new ResourceLocation("curios", "necklace"));
-        public static final TagKey<Item> JEWELRY = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "curios/jewelry"));
-        public static final TagKey<Item> MELEE_WEAPON = TagKey.create(Registries.ITEM, new ResourceLocation("skilltree", "melee_weapon"));
-        public static final TagKey<Item> RANGED_WEAPON = TagKey.create(Registries.ITEM, new ResourceLocation("skilltree", "ranged_weapon"));
-        public static final TagKey<Item> LEATHER_ARMOR = TagKey.create(Registries.ITEM, new ResourceLocation("skilltree", "armors/leather"));
+        public static final TagKey<Item> RINGS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("curios", "ring"));
+        public static final TagKey<Item> NECKLACES = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("curios", "necklace"));
+        public static final TagKey<Item> JEWELRY = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("forge", "curios/jewelry"));
+        public static final TagKey<Item> MELEE_WEAPON = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("skilltree", "melee_weapon"));
+        public static final TagKey<Item> RANGED_WEAPON = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("skilltree", "ranged_weapon"));
+        public static final TagKey<Item> LEATHER_ARMOR = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("skilltree", "armors/leather"));
     }
 }

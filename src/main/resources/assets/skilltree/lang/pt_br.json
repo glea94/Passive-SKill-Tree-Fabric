@@ -1,5 +1,6 @@
 {
   "block.skilltree.workbench": "Bancada",
+  "item.skilltree.workbench": "Bancada",
   "damage_condition.skilltree.fall": "Dano de Queda",
   "damage_condition.skilltree.fall.type": "Queda",
   "damage_condition.skilltree.fire": "Dano de Fogo",

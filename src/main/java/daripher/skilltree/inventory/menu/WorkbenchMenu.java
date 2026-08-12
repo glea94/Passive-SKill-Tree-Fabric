@@ -20,11 +20,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
-<<<<<<< Updated upstream
-=======
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
->>>>>>> Stashed changes
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -173,7 +170,7 @@ public class WorkbenchMenu extends AbstractContainerMenu {
             updateCraftingResult(selectedRecipe);
             return;
         }
-        if (!ItemStack.isSameItemSameTags(input, prevInput)) {
+        if (!ItemStack.isSameItemSameComponents(input, prevInput)) {
             setupRecipeList();
             prevInput = input.copy();
         }
@@ -194,11 +191,7 @@ public class WorkbenchMenu extends AbstractContainerMenu {
             if (!level.isClientSide) {
                 ItemStack craftResult = selectedRecipe.assemble(workbenchContainer, level.registryAccess());
                 addCraftingBonuses(craftResult);
-<<<<<<< Updated upstream
-                resultSlots.setRecipeUsed(selectedRecipe);
-=======
                 resultSlots.setRecipeUsed(new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, selectedRecipe.getId()), selectedRecipe));
->>>>>>> Stashed changes
                 resultSlots.setItem(0, craftResult);
             }
         }
@@ -219,11 +212,6 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         if (!WORKBENCH_RECIPE_CACHE.isEmpty()) {
             return WORKBENCH_RECIPE_CACHE;
         }
-<<<<<<< Updated upstream
-        List<CraftingRecipe> vanillaCraftingRecipes = level.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING).stream()
-                .filter(recipe -> !recipe.getResultItem(level.registryAccess()).isEmpty()).toList();
-        WORKBENCH_RECIPE_CACHE.addAll(level.getRecipeManager().getAllRecipesFor(PSTRecipeTypes.WORKBENCH));
-=======
         // Portage 1.21.4 : Level#getRecipeManager() a disparu (RecipeAccess ne fournit plus
         // d'énumération des recettes par type, cf. daripher.skilltree.network.message.SyncWorkbenchRecipesMessage).
         // Côté serveur : accès direct et frais via ServerLevel#recipeAccess(). Côté client : lecture
@@ -248,15 +236,10 @@ public class WorkbenchMenu extends AbstractContainerMenu {
                 .map(recipe -> (RecipeHolder<AbstractWorkbenchRecipe>) recipe)
                 .toList();
         WORKBENCH_RECIPE_CACHE.addAll(workbenchRecipes.stream().map(this::resolveWorkbenchRecipeId).toList());
->>>>>>> Stashed changes
         WORKBENCH_RECIPE_CACHE.addAll(vanillaCraftingRecipes.stream().map(this::convertVanillaRecipe).toList());
         return WORKBENCH_RECIPE_CACHE;
     }
 
-<<<<<<< Updated upstream
-    private AbstractWorkbenchRecipe convertVanillaRecipe(CraftingRecipe craftingRecipe) {
-        return new WorkbenchVanillaCraftingRecipe(craftingRecipe, level.registryAccess());
-=======
     private AbstractWorkbenchRecipe resolveWorkbenchRecipeId(RecipeHolder<AbstractWorkbenchRecipe> recipeHolder) {
         AbstractWorkbenchRecipe recipe = recipeHolder.value();
         recipe.setId(recipeHolder.id().location());
@@ -265,7 +248,6 @@ public class WorkbenchMenu extends AbstractContainerMenu {
 
     private AbstractWorkbenchRecipe convertVanillaRecipe(RecipeHolder<CraftingRecipe> craftingRecipeHolder) {
         return new WorkbenchVanillaCraftingRecipe(craftingRecipeHolder, level.registryAccess());
->>>>>>> Stashed changes
     }
 
     private boolean shouldDisplayRecipe(AbstractWorkbenchRecipe recipe) {

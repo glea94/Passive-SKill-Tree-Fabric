@@ -60,7 +60,7 @@ public class DeferredRegister<T> {
     }
 
     public <I extends T> RegistryObject<I> register(String name, Supplier<I> supplier) {
-        ResourceLocation id = new ResourceLocation(modId, name);
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modId, name);
         I value = supplier.get();
         if (backingRegistry != null) {
             value = Registry.register(backingRegistry, id, value);

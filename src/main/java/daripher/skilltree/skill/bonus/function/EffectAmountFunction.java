@@ -8,6 +8,7 @@ import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.predicate.effect.MobEffectType;
 import daripher.skilltree.skill.bonus.predicate.living.FloatFunctionEntityPredicate;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -29,12 +30,16 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
 
     @Override
     public float apply(LivingEntity entity) {
-        List<MobEffect> effects = entity.getActiveEffects().stream().map(MobEffectInstance::getEffect).toList();
+        // CORRECTION 1.21.1 : MobEffectInstance#getEffect() renvoie désormais un Holder<MobEffect>
+        // et non plus un MobEffect brut ; la liste doit donc accueillir des Holder<MobEffect>.
+        List<Holder<MobEffect>> effects = entity.getActiveEffects().stream().map(MobEffectInstance::getEffect).toList();
         return switch (effectType) {
             case ANY -> effects.size();
-            case NEUTRAL -> effects.stream().filter(e -> e.getCategory() == MobEffectCategory.NEUTRAL).count();
-            case HARMFUL -> effects.stream().filter(e -> e.getCategory() == MobEffectCategory.HARMFUL).count();
-            case BENEFICIAL -> effects.stream().filter(e -> e.getCategory() == MobEffectCategory.BENEFICIAL).count();
+            // CORRECTION 1.21.1 : Holder<MobEffect> n'expose pas getCategory() directement ; on
+            // déballe avec .value() avant de comparer la catégorie.
+            case NEUTRAL -> effects.stream().filter(e -> e.value().getCategory() == MobEffectCategory.NEUTRAL).count();
+            case HARMFUL -> effects.stream().filter(e -> e.value().getCategory() == MobEffectCategory.HARMFUL).count();
+            case BENEFICIAL -> effects.stream().filter(e -> e.value().getCategory() == MobEffectCategory.BENEFICIAL).count();
         };
     }
 

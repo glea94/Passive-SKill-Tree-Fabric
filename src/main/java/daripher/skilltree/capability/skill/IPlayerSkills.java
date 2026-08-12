@@ -1,6 +1,6 @@
 package daripher.skilltree.capability.skill;
 
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerPlayer;

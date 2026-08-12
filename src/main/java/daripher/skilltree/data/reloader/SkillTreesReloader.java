@@ -34,7 +34,7 @@ public class SkillTreesReloader extends SimplePreparableReloadListener<Map<Resou
 
     @Override
     public ResourceLocation getFabricId() {
-        return new ResourceLocation(SkillTreeMod.MOD_ID, "skill_trees_reloader");
+        return ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_trees_reloader");
     }
 
     public static void register() {

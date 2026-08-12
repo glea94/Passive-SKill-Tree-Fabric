@@ -60,13 +60,8 @@ public class SkillButton extends Button {
         graphics.pose().pushPose();
         graphics.pose().translate(x, y, 0);
         if (hasBrokenBonuses) {
-<<<<<<< Updated upstream
-            ResourceLocation brokenTexture = new ResourceLocation("skilltree:textures/icons/broken_skill.png");
-            graphics.blit(brokenTexture, 0, 0, width, height, 0, 0, width, height, width, height);
-=======
             ResourceLocation brokenTexture = ResourceLocation.fromNamespaceAndPath("skilltree", "textures/icons/broken_skill.png");
             graphics.blit(RenderType::guiTextured, brokenTexture, 0, 0, 0F, 0F, width, height, width, height, width, height);
->>>>>>> Stashed changes
             graphics.pose().popPose();
             return;
         }
@@ -104,7 +99,7 @@ public class SkillButton extends Button {
         if (!ClientConfig.favorite_skills.contains(skill.getId())) {
             return;
         }
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/favorite_skill.png");
+        ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("skilltree", "textures/screen/favorite_skill.png");
         int color;
         if (ClientConfig.favorite_color_is_rainbow) {
             color = Color.getHSBColor(animationFunction.get() / 240f, 1f, 1f).getRGB();

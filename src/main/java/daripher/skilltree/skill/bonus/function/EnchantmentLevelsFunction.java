@@ -12,14 +12,16 @@ import daripher.skilltree.skill.bonus.predicate.item.EquipmentPredicate;
 import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.FloatFunctionEntityPredicate;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -37,8 +39,14 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
         return getEnchantLevels(PlayerHelper.getAllEquipment(entity).filter(itemStackPredicate));
     }
 
+    // CORRECTION 1.21.1 : EnchantmentHelper.getEnchantments(stack) n'existe plus sous cette forme.
+    // Les enchantements se lisent désormais via le Data Component DataComponents.ENCHANTMENTS, qui
+    // renvoie un ItemEnchantments (et non plus un Map<Enchantment, Integer>). On somme les niveaux
+    // via son entrySet() (Object2IntMap.Entry<Holder<Enchantment>>), équivalent de l'ancien
+    // m.values().stream().reduce(Integer::sum) sur la Map.
     private int getEnchantLevels(Stream<ItemStack> items) {
-        return items.map(EnchantmentHelper::getEnchantments).mapToInt(m -> m.values().stream().reduce(Integer::sum).orElse(0))
+        return items.map(item -> item.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY))
+                .mapToInt(enchantments -> enchantments.entrySet().stream().mapToInt(Object2IntMap.Entry::getIntValue).sum())
                 .reduce(Integer::sum).orElse(0);
     }
 

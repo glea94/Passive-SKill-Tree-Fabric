@@ -1,16 +1,28 @@
 package daripher.skilltree.network.message;
 
+import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.capability.skill.IPlayerSkills;
 import daripher.skilltree.capability.skill.PlayerSkillsProvider;
 import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SyncPlayerSkillsMessage {
+public class SyncPlayerSkillsMessage implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<SyncPlayerSkillsMessage> TYPE =
+            new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "sync_player_skills"));
+
+    public static final StreamCodec<FriendlyByteBuf, SyncPlayerSkillsMessage> STREAM_CODEC =
+            StreamCodec.of(
+                    (buf, message) -> message.encode(buf),
+                    SyncPlayerSkillsMessage::decode
+            );
+
     public List<ResourceLocation> learnedSkills = new ArrayList<>();
     public int skillPoints;
 
@@ -27,7 +39,7 @@ public class SyncPlayerSkillsMessage {
         SyncPlayerSkillsMessage result = new SyncPlayerSkillsMessage();
         int learnedSkillsCount = buf.readInt();
         for (int i = 0; i < learnedSkillsCount; i++) {
-            result.learnedSkills.add(new ResourceLocation(buf.readUtf()));
+            result.learnedSkills.add(ResourceLocation.parse(buf.readUtf()));
         }
         result.skillPoints = buf.readInt();
         return result;
@@ -37,5 +49,10 @@ public class SyncPlayerSkillsMessage {
         buf.writeInt(learnedSkills.size());
         learnedSkills.stream().map(ResourceLocation::toString).forEach(buf::writeUtf);
         buf.writeInt(skillPoints);
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

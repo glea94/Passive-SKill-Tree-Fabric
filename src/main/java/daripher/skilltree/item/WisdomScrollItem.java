@@ -31,11 +31,7 @@ public class WisdomScrollItem extends Item {
     }
 
     @Override
-<<<<<<< Updated upstream
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
-=======
     public @NotNull InteractionResult use(Level level, Player player, @NotNull InteractionHand hand) {
->>>>>>> Stashed changes
         ItemStack itemInHand = player.getItemInHand(hand);
         IPlayerSkills skillsCapability = PlayerSkillsProvider.get(player);
         int totalSkillPoints = skillsCapability.getPlayerSkills().size() + skillsCapability.getSkillPoints();
@@ -59,8 +55,9 @@ public class WisdomScrollItem extends Item {
         return InteractionResult.SUCCESS;
     }
 
+    // CORRECTION 1.21.1 : Remplacement de Level par Item.TooltipContext context
     @Override
-    public void appendHoverText(@NotNull ItemStack itemStack, Level level, List<Component> components, @NotNull TooltipFlag tooltipFlag) {
+    public void appendHoverText(@NotNull ItemStack itemStack, Item.TooltipContext context, List<Component> components, @NotNull TooltipFlag tooltipFlag) {
         components.add(Component.translatable(getDescriptionId() + ".tooltip").withStyle(ChatFormatting.GOLD));
     }
 }

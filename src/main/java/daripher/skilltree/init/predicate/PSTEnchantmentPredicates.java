@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTEnchantmentPredicates {
-    public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "enchantment_conditions");
+    public static final ResourceLocation REGISTRY_ID = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "enchantment_conditions");
     public static final DeferredRegister<EnchantmentCondition.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<EnchantmentCondition.Serializer> NONE = REGISTRY.register("none", NoneEnchantmentCondition.Serializer::new);

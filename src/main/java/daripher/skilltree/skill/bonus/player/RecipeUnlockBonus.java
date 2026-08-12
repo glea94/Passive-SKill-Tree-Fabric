@@ -15,11 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-<<<<<<< Updated upstream
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeManager;
-=======
->>>>>>> Stashed changes
 
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
@@ -85,14 +80,7 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<RecipeUnlockBonus> consumer) {
         editor.addLabel(0, 0, "Recipe ID", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-<<<<<<< Updated upstream
-        ClientLevel clientLevel = Minecraft.getInstance().level;
-        Objects.requireNonNull(clientLevel);
-        RecipeManager recipesManager = clientLevel.getRecipeManager();
-        List<ResourceLocation> artisanRecipes = recipesManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH).stream().map(Recipe::getId)
-=======
         List<ResourceLocation> artisanRecipes = WorkbenchRecipeClientCache.get().stream().map(AbstractWorkbenchRecipe::getId)
->>>>>>> Stashed changes
                 .toList();
         editor.addSelectionMenu(0, 0, 200, artisanRecipes).setValue(recipeId).setResponder(id -> selectRecipeId(editor, consumer, id));
         editor.increaseHeight(19);
@@ -133,7 +121,9 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public RecipeUnlockBonus deserialize(JsonObject json) throws JsonParseException {
-            ResourceLocation recipeId = new ResourceLocation(json.get("recipe_id").getAsString());
+            // CORRECTION 1.21.1 : ResourceLocation.fromNamespaceAndPath(String) à un seul argument
+            // n'existe plus ; on utilise désormais ResourceLocation.parse(String).
+            ResourceLocation recipeId = ResourceLocation.parse(json.get("recipe_id").getAsString());
             return new RecipeUnlockBonus(recipeId);
         }
 
@@ -147,7 +137,9 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
 
         @Override
         public RecipeUnlockBonus deserialize(CompoundTag tag) {
-            ResourceLocation recipeId = new ResourceLocation(tag.getString("recipe_id"));
+            // CORRECTION 1.21.1 : ResourceLocation.fromNamespaceAndPath(String) à un seul argument
+            // n'existe plus ; on utilise désormais ResourceLocation.parse(String).
+            ResourceLocation recipeId = ResourceLocation.parse(tag.getString("recipe_id"));
             return new RecipeUnlockBonus(recipeId);
         }
 
@@ -163,7 +155,9 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
 
         @Override
         public RecipeUnlockBonus deserialize(FriendlyByteBuf buf) {
-            ResourceLocation recipeId = new ResourceLocation(buf.readUtf());
+            // CORRECTION 1.21.1 : ResourceLocation.fromNamespaceAndPath(String) à un seul argument
+            // n'existe plus ; on utilise désormais ResourceLocation.parse(String).
+            ResourceLocation recipeId = ResourceLocation.parse(buf.readUtf());
             return new RecipeUnlockBonus(recipeId);
         }
 
@@ -177,7 +171,10 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
-            return new RecipeUnlockBonus(new ResourceLocation("unknown_recipe"));
+            // CORRECTION 1.21.1 : ResourceLocation.fromNamespaceAndPath(String) à un seul argument
+            // n'existe plus ; on utilise désormais ResourceLocation.parse(String) (namespace
+            // "minecraft" implicite pour ce placeholder, comme avant le portage).
+            return new RecipeUnlockBonus(ResourceLocation.parse("unknown_recipe"));
         }
     }
 }

@@ -29,18 +29,12 @@ import java.util.stream.Stream;
 
 public class PSTCommands {
     public static final SuggestionProvider<CommandSourceStack> SKILL_ID_SUGGESTION = (ctx, builder) -> SharedSuggestionProvider.suggest(gatherSkillIds(), builder);
-<<<<<<< Updated upstream
-    public static final String AMOUNT_ARGUMENT_NAME = "amount";
-    public static final String PLAYER_ARGUMENT_NAME = "player";
-    public static final String SKILL_ID_ARGUMENT_NAME = "skill_id";
-=======
     public static final SuggestionProvider<CommandSourceStack> SKILL_TREE_ID_SUGGESTION = (ctx, builder) -> SharedSuggestionProvider.suggest(gatherSkillTreesIds(), builder);
     public static final ResourceLocation DEFAULT_SKILL_TREE_ID = ResourceLocation.fromNamespaceAndPath("skilltree", "tree");
     public static final String AMOUNT_ARGUMENT_NAME = "amount";
     public static final String PLAYER_ARGUMENT_NAME = "player";
     public static final String SKILL_ID_ARGUMENT_NAME = "skill_id";
     public static final String SKILL_TREE_ID_ARGUMENT_NAME = "skill_tree_id";
->>>>>>> Stashed changes
 
     public static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> registerCommands(dispatcher));
@@ -58,18 +52,19 @@ public class PSTCommands {
 
         var grantSkillCommand = getRootCommand().then(getGrantSkillSubCommand().then(getPlayerArgument().then(getSkillArgument().executes(PSTCommands::executeGrantSkillCommand))));
         dispatcher.register(grantSkillCommand);
-<<<<<<< Updated upstream
-=======
 
         var editorCommand = getRootCommand().then(getEditorSubCommand()
                 .executes(PSTCommands::executeEditorCommand)
                 .then(getSkillTreeArgument().executes(PSTCommands::executeEditorCommand)));
         dispatcher.register(editorCommand);
->>>>>>> Stashed changes
     }
 
     private static @NotNull LiteralArgumentBuilder<CommandSourceStack> getGrantSkillSubCommand() {
         return Commands.literal("grant_skill");
+    }
+
+    private static @NotNull LiteralArgumentBuilder<CommandSourceStack> getEditorSubCommand() {
+        return Commands.literal("editor");
     }
 
     private static @NotNull LiteralArgumentBuilder<CommandSourceStack> getSetSubCommand() {
@@ -104,13 +99,10 @@ public class PSTCommands {
         return Commands.argument(SKILL_ID_ARGUMENT_NAME, ResourceLocationArgument.id()).suggests(SKILL_ID_SUGGESTION);
     }
 
-<<<<<<< Updated upstream
-=======
     private static @NotNull RequiredArgumentBuilder<CommandSourceStack, ResourceLocation> getSkillTreeArgument() {
         return Commands.argument(SKILL_TREE_ID_ARGUMENT_NAME, ResourceLocationArgument.id()).suggests(SKILL_TREE_ID_SUGGESTION);
     }
 
->>>>>>> Stashed changes
     private static int executeResetCommand(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = EntityArgument.getPlayer(ctx, PLAYER_ARGUMENT_NAME);
         IPlayerSkills skillsCapability = PlayerSkillsProvider.get(player);
@@ -136,6 +128,18 @@ public class PSTCommands {
         IPlayerSkills skillsCapability = PlayerSkillsProvider.get(player);
         skillsCapability.setSkillPoints(amount);
         ServerNetworking.sendSyncPlayerSkills(player);
+        return 1;
+    }
+
+    private static int executeEditorCommand(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        ResourceLocation treeId;
+        try {
+            treeId = ctx.getArgument(SKILL_TREE_ID_ARGUMENT_NAME, ResourceLocation.class);
+        } catch (IllegalArgumentException e) {
+            treeId = DEFAULT_SKILL_TREE_ID;
+        }
+        ServerNetworking.sendOpenSkillTreeEditor(player, treeId);
         return 1;
     }
 

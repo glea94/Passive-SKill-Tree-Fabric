@@ -91,9 +91,9 @@ public class SkillNodeEditor extends EditorMenu {
     }
 
     private void createNewSkill(float x, float y, @Nullable PassiveSkill original) {
-        ResourceLocation background = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/icons/background/lesser.png");
-        ResourceLocation icon = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/icons/void.png");
-        ResourceLocation border = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/tooltip/lesser.png");
+        ResourceLocation background = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/icons/background/lesser.png");
+        ResourceLocation icon = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/icons/void.png");
+        ResourceLocation border = ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/tooltip/lesser.png");
         ResourceLocation skillTreeId = editor.getSkillTree().getId();
         PassiveSkill skill = new PassiveSkill(createNewSkillId(skillTreeId), 16, background, icon, border, false);
         skill.setPosition(x, y);
@@ -110,7 +110,7 @@ public class SkillNodeEditor extends EditorMenu {
         ResourceLocation id;
         int counter = 1;
         do {
-            id = new ResourceLocation("skilltree", skillTreeId.getPath() + "_" + counter++);
+            id = ResourceLocation.fromNamespaceAndPath("skilltree", skillTreeId.getPath() + "_" + counter++);
         } while (SkillTreeEditorData.getEditorSkill(id) != null);
         return id;
     }

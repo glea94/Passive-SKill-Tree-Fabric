@@ -17,6 +17,6 @@ public class PSTRecipeTypes {
                 return identifier;
             }
         };
-        return Registry.register(BuiltInRegistries.RECIPE_TYPE, new ResourceLocation(SkillTreeMod.MOD_ID, identifier), recipeType);
+        return Registry.register(BuiltInRegistries.RECIPE_TYPE, ResourceLocation.fromNamespaceAndPath(SkillTreeMod.MOD_ID, identifier), recipeType);
     }
 }

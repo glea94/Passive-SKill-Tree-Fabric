@@ -13,6 +13,7 @@ import daripher.skilltree.skill.bonus.event.OutgoingDamageEventListener;
 import daripher.skilltree.skill.bonus.event.SkillEventListener;
 import daripher.skilltree.skill.bonus.event.TickingEventListener;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -53,14 +54,16 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
             return;
         }
         MobEffectInstance effectInstanceCopy = new MobEffectInstance(effectInstance);
-        MobEffect effect = effectInstance.getEffect();
+        // CORRECTION 1.21.1 : getEffect() renvoie désormais un Holder<MobEffect>
+        Holder<MobEffect> effect = effectInstance.getEffect();
         if (maxStacks > 1) {
             effectInstanceCopy = getEffectInstanceAfterStacking(target, effect, effectInstanceCopy);
         }
         target.addEffect(effectInstanceCopy, source);
     }
 
-    private MobEffectInstance getEffectInstanceAfterStacking(LivingEntity target, MobEffect effect, MobEffectInstance effectInstance) {
+    // CORRECTION 1.21.1 : Le type de paramètre passe de MobEffect à Holder<MobEffect>
+    private MobEffectInstance getEffectInstanceAfterStacking(LivingEntity target, Holder<MobEffect> effect, MobEffectInstance effectInstance) {
         MobEffectInstance activeEffectInstance = target.getEffect(effect);
         if (activeEffectInstance == null) {
             return effectInstance;
@@ -72,6 +75,7 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
         int duration = this.effectInstance.getDuration();
         amplifier += effectInstance.getAmplifier();
         amplifier = Math.min(amplifier, maxStacks - 1);
+        // CORRECTION 1.21.1 : le constructeur prend le Holder<MobEffect>
         effectInstance = new MobEffectInstance(effect, duration, amplifier);
         return effectInstance;
     }
@@ -92,6 +96,7 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
             chance *= (float) multiplier;
         } else {
             int newDuration = (int) (effectInstance.getDuration() * multiplier);
+            // CORRECTION 1.21.1 : le constructeur prend le Holder<MobEffect>
             effectInstance = new MobEffectInstance(effectInstance.getEffect(), newDuration, effectInstance.getAmplifier());
             return new InflictMobEffectBonus(chance, effectInstance, eventListener, maxStacks);
         }
@@ -147,7 +152,7 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
             tooltip = Component.translatable(bonusDescription, effectDescription, "");
         }
         if (chance < 1) {
-            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.MULTIPLY_BASE);
+            tooltip = TooltipHelper.getSkillBonusTooltip(tooltip, chance, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         }
         tooltip = eventListener.getTooltip(tooltip);
         if (maxStacks > 1) {
@@ -171,8 +176,9 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
 
     @Override
     public boolean isPositive() {
+        // CORRECTION 1.21.1 : On ajoute .value() sur le Holder<MobEffect> pour accéder à sa catégorie
         return chance > 0 ^ eventListener.getTarget() == Target.PLAYER ^ effectInstance.getEffect()
-                .getCategory() != MobEffectCategory.HARMFUL;
+                .value().getCategory() != MobEffectCategory.HARMFUL;
     }
 
     @Override
@@ -185,7 +191,9 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
         editor.addLabel(0, 0, "Effect", ChatFormatting.GOLD);
         editor.addLabel(150, 0, "Chance", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-        editor.addSelectionMenu(0, 0, 145, effectInstance.getEffect()).setResponder(effect -> selectEffect(consumer, effect));
+        // CORRECTION 1.21.1 : Adaptation de la lambda de sélection pour recevoir un Holder<MobEffect>
+        editor.addSelectionMenu(0, 0, 145, effectInstance.getEffect().value()).setResponder(holder -> selectEffect(consumer, (Holder<MobEffect>) holder));
+
         editor.addNumericTextField(150, 0, 50, 14, chance).setNumericResponder(value -> selectChance(consumer, value));
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Duration", ChatFormatting.GOLD);
@@ -240,7 +248,8 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
         consumer.accept(this.copy());
     }
 
-    private void selectEffect(Consumer<EventListenerBonus<InflictMobEffectBonus>> consumer, MobEffect effect) {
+    // CORRECTION 1.21.1 : On accepte le Holder<MobEffect> venant de l'éditeur graphique
+    private void selectEffect(Consumer<EventListenerBonus<InflictMobEffectBonus>> consumer, net.minecraft.core.Holder<MobEffect> effect) {
         setEffectInstance(effect);
         consumer.accept(this);
     }
@@ -249,7 +258,8 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
         this.chance = chance;
     }
 
-    public void setEffectInstance(MobEffect effectInstance) {
+    // CORRECTION 1.21.1 : On change le type de paramètre en Holder<MobEffect>
+    public void setEffectInstance(net.minecraft.core.Holder<MobEffect> effectInstance) {
         this.effectInstance = new MobEffectInstance(effectInstance, this.effectInstance.getDuration(), this.effectInstance.getAmplifier());
     }
 
@@ -337,7 +347,11 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
-            return new InflictMobEffectBonus(0.05f, new MobEffectInstance(MobEffects.POISON, 100), 1);
+            // CORRECTION 1.21.1 : On récupère l'effet sous forme de Holder intégré
+            return new InflictMobEffectBonus(0.05f, new MobEffectInstance(net.minecraft.world.effect.MobEffects.POISON, 100), 1);
+
+
         }
     }
 }
+

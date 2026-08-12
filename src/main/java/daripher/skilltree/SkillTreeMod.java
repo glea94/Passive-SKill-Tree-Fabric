@@ -7,6 +7,7 @@ import daripher.skilltree.data.reloader.SkillTreesReloader;
 import daripher.skilltree.data.reloader.SkillsReloader;
 import daripher.skilltree.init.*;
 import daripher.skilltree.init.predicate.*;
+import daripher.skilltree.network.PSTNetworkChannels;
 import daripher.skilltree.network.ServerNetworking;
 import daripher.skilltree.skill.bonus.handler.*;
 import daripher.skilltree.skill.bonus.item.ItemBonusHandler;
@@ -107,6 +108,7 @@ public class SkillTreeMod implements ModInitializer {
         GrindstoneBonusHandler.register();
         RepairEfficiencyBonusHandler.register();
         ItemUsageSpeedBonusHandler.register();
+        daripher.skilltree.event.PlayerJoinEventHandler.register();
     }
 
     private static void registerCommands() {
@@ -114,6 +116,7 @@ public class SkillTreeMod implements ModInitializer {
     }
 
     private static void registerNetwork() {
+        PSTNetworkChannels.register();
         ServerNetworking.register();
     }
 

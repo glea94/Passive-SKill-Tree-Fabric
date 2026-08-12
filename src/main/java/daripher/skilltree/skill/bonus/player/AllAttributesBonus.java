@@ -18,6 +18,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -43,14 +44,20 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
         if (playerCondition != NoneLivingEntityPredicate.INSTANCE || playerMultiplier != NoneLivingMultiplier.INSTANCE) {
             return;
         }
-        AttributesHelper.playerAttributesList().stream().map(player::getAttribute).filter(Objects::nonNull).filter(a -> !a.hasModifier(modifier))
+        // CORRECTION 1.21.1 : player.getAttribute(...) attend un Holder<Attribute>, alors que
+        // AttributesHelper.playerAttributesList() renvoie des Attribute bruts ; on réemballe donc
+        // chaque élément avant l'appel.
+        AttributesHelper.playerAttributesList().stream().map(attr -> player.getAttribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attr))).filter(Objects::nonNull).filter(a -> !a.hasModifier(modifier.id()))
+
                 .forEach(a -> applyAttributeModifier(a, modifier, player));
     }
 
     @Override
     public void onSkillRemoved(ServerPlayer player) {
-        AttributesHelper.playerAttributesList().stream().map(player::getAttribute).filter(Objects::nonNull).filter(a -> !a.hasModifier(modifier))
-                .forEach(a -> a.removeModifier(modifier.getId()));
+        // CORRECTION 1.21.1: removeModifier prend désormais un ResourceLocation (modifier.id())
+        AttributesHelper.playerAttributesList().stream().map(attr -> player.getAttribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attr))).filter(Objects::nonNull).filter(a -> !a.hasModifier(modifier.id()))
+
+                .forEach(a -> a.removeModifier(modifier.id()));
     }
 
     @Override
@@ -72,17 +79,20 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
     }
 
     private void applyDynamicAttributeBonus(ServerPlayer player) {
-        AttributesHelper.playerAttributesList().stream().map(player::getAttribute).filter(Objects::nonNull).forEach(playerAttribute -> {
-            AttributeModifier oldModifier = playerAttribute.getModifier(modifier.getId());
-            double value = modifier.getAmount();
+        AttributesHelper.playerAttributesList().stream().map(attr -> player.getAttribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attr))).filter(Objects::nonNull).forEach(playerAttribute -> {
+            // CORRECTION 1.21.1: getModifier/removeModifier prennent un ResourceLocation (modifier.id())
+            AttributeModifier oldModifier = playerAttribute.getModifier(modifier.id());
+            double value = modifier.amount();
             value *= playerMultiplier.getValue(player);
             if (oldModifier != null) {
-                if (oldModifier.getAmount() == value) {
+                if (oldModifier.amount() == value) {
                     return;
                 }
-                playerAttribute.removeModifier(modifier.getId());
+                playerAttribute.removeModifier(modifier.id());
             }
-            AttributeModifier dynamicModifier = new AttributeModifier(modifier.getId(), "Dynamic", value, modifier.getOperation());
+            // CORRECTION 1.21.1: AttributeModifier est un record à 3 arguments (id, amount, operation) ;
+            // le paramètre "name" a disparu, il n'y a plus besoin de le fournir.
+            AttributeModifier dynamicModifier = new AttributeModifier(modifier.id(), value, modifier.operation());
             applyAttributeModifier(playerAttribute, dynamicModifier, player);
             if (playerAttribute.getAttribute() == Attributes.MAX_HEALTH) {
                 player.setHealth(player.getHealth());
@@ -105,7 +115,14 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
 
     @Override
     public AllAttributesBonus copy() {
-        AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), this.modifier.getName(), this.modifier.getAmount(), this.modifier.getOperation());
+        // CORRECTION 1.21.1: l'id n'est plus un UUID mais un ResourceLocation. On en génère un nouveau et
+        // unique (comme le faisait UUID.randomUUID() auparavant) pour que la copie ne partage pas son
+        // identifiant de modificateur avec l'original.
+        AttributeModifier modifier = new AttributeModifier(
+                ResourceLocation.fromNamespaceAndPath("skilltree", "modifier_" + UUID.randomUUID()),
+                this.modifier.amount(),
+                this.modifier.operation()
+        );
         AllAttributesBonus bonus = new AllAttributesBonus(modifier);
         bonus.playerMultiplier = this.playerMultiplier;
         bonus.playerCondition = this.playerCondition;
@@ -114,7 +131,7 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
 
     @Override
     public AllAttributesBonus multiply(double multiplier) {
-        modifier = new AttributeModifier(modifier.getId(), modifier.getName(), modifier.getAmount() * multiplier, modifier.getOperation());
+        modifier = new AttributeModifier(modifier.id(), modifier.amount() * multiplier, modifier.operation());
         return this;
     }
 
@@ -129,7 +146,7 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
         if (!Objects.equals(otherBonus.playerCondition, this.playerCondition)) {
             return false;
         }
-        return otherBonus.modifier.getOperation() == this.modifier.getOperation();
+        return otherBonus.modifier.operation() == this.modifier.operation();
     }
 
     @Override
@@ -137,7 +154,7 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
         if (!(other instanceof AllAttributesBonus otherBonus)) {
             throw new IllegalArgumentException();
         }
-        AttributeModifier mergedModifier = new AttributeModifier(this.modifier.getId(), "Merged", this.modifier.getAmount() + otherBonus.modifier.getAmount(), this.modifier.getOperation());
+        AttributeModifier mergedModifier = new AttributeModifier(this.modifier.id(), this.modifier.amount() + otherBonus.modifier.amount(), this.modifier.operation());
         AllAttributesBonus mergedBonus = new AllAttributesBonus(mergedModifier);
         mergedBonus.playerMultiplier = this.playerMultiplier;
         mergedBonus.playerCondition = this.playerCondition;
@@ -146,7 +163,7 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
 
     @Override
     public MutableComponent getSimpleTooltip() {
-        MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), modifier.getAmount(), modifier.getOperation());
+        MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), modifier.amount(), modifier.operation());
         tooltip = playerMultiplier.getTooltip(tooltip, Target.PLAYER);
         tooltip = playerCondition.getTooltip(tooltip, Target.PLAYER);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
@@ -154,7 +171,7 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
 
     @Override
     public boolean isPositive() {
-        return modifier.getAmount() > 0;
+        return modifier.amount() > 0;
     }
 
     @Override
@@ -162,8 +179,8 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
         editor.addLabel(110, 0, "Amount", ChatFormatting.GOLD);
         editor.addLabel(0, 0, "Operation", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-        editor.addNumericTextField(110, 0, 50, 14, modifier.getAmount()).setNumericResponder(value -> selectAmount(consumer, value));
-        editor.addOperationSelection(0, 0, 80, modifier.getOperation()).setResponder(operation -> selectOperation(consumer, operation));
+        editor.addNumericTextField(110, 0, 50, 14, modifier.amount()).setNumericResponder(value -> selectAmount(consumer, value));
+        editor.addOperationSelection(0, 0, 80, modifier.operation()).setResponder(operation -> selectOperation(consumer, operation));
         editor.increaseHeight(29);
         editor.addLabel(0, 0, "Player Condition", ChatFormatting.GOLD);
         editor.increaseHeight(19);
@@ -215,11 +232,11 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
     }
 
     public void setAmount(double amount) {
-        this.modifier = new AttributeModifier(modifier.getId(), modifier.getName(), amount, modifier.getOperation());
+        this.modifier = new AttributeModifier(modifier.id(), amount, modifier.operation());
     }
 
     public void setOperation(AttributeModifier.Operation operation) {
-        this.modifier = new AttributeModifier(modifier.getId(), modifier.getName(), modifier.getAmount(), operation);
+        this.modifier = new AttributeModifier(modifier.id(), modifier.amount(), operation);
     }
 
     public SkillBonus<?> setCondition(LivingEntityPredicate condition) {
@@ -294,7 +311,12 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
-            return new AllAttributesBonus(new AttributeModifier(UUID.randomUUID(), "Skill", 0.05, AttributeModifier.Operation.MULTIPLY_BASE));
+            // CORRECTION 1.21.1: constructeur à 3 arguments (ResourceLocation id, double amount, Operation)
+            return new AllAttributesBonus(new AttributeModifier(
+                    ResourceLocation.fromNamespaceAndPath("skilltree", "default_all_attributes_bonus"),
+                    0.05,
+                    AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+            ));
         }
     }
 }

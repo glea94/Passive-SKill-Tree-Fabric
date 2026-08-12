@@ -3,6 +3,7 @@ package daripher.skilltree.skill.bonus.predicate.item;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTItemPredicates;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
@@ -10,11 +11,13 @@ import net.minecraft.world.item.ItemStack;
 public record FoodStackPredicate() implements ItemStackPredicate {
     @Override
     public boolean test(ItemStack stack) {
-        return stack.getItem().getFoodProperties() != null;
+        // CORRECTION 1.21.1 : On vérifie si l'item possède le Data Component FOOD natif
+        return stack.has(DataComponents.FOOD);
     }
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == null) return false;
         return obj.getClass() == this.getClass();
     }
 
