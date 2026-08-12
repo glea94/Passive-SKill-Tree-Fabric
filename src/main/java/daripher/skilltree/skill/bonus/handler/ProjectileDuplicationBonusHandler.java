@@ -4,6 +4,7 @@ package daripher.skilltree.skill.bonus.handler;
 import daripher.skilltree.entity.persistentdata.PersistentDataProvider;
 import daripher.skilltree.event.LivingHurtPSTEvent;
 import daripher.skilltree.event.PSTEvents;
+import daripher.skilltree.mixin.AbstractArrowAccessor;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.ProjectileDuplicationBonus;
 import daripher.skilltree.util.event.EntityLoadHelper;

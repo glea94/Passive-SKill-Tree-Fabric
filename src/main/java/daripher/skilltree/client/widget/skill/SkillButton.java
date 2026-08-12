@@ -1,8 +1,11 @@
 package daripher.skilltree.client.widget.skill;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -18,7 +21,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.client.gui.screens.Screen;
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.client.renderer.RenderPipelines;
 >>>>>>> Stashed changes
@@ -75,6 +82,7 @@ public class SkillButton extends Button {
     @Override
     public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         RenderSystem.enableBlend();
         graphics.pose().pushPose();
         graphics.pose().translate(x, y, 0);
@@ -96,6 +104,8 @@ public class SkillButton extends Button {
         renderIcon(graphics);
         graphics.pose().popPose();
 =======
+=======
+>>>>>>> Stashed changes
 
         graphics.pose().pushMatrix();
         graphics.pose().translate(x, y);
@@ -120,6 +130,9 @@ public class SkillButton extends Button {
         graphics.pose().translate(-currentWidth / 2f, -currentHeight / 2f);
         renderIcon(graphics, WHITE);
         graphics.pose().popMatrix();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         float animation = (Mth.sin(animationFunction.get() / 3F) + 1) / 2;
         float rb = searched ? 0.1f : 1f;
@@ -132,11 +145,15 @@ public class SkillButton extends Button {
             renderFrame(graphics, frameColor);
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         if (canLearn || searched || selected) {
             graphics.setColor(1F, 1F, 1F, 1F);
         }
         graphics.pose().popPose();
         RenderSystem.disableBlend();
+=======
+        graphics.pose().popMatrix();
+>>>>>>> Stashed changes
 =======
         graphics.pose().popMatrix();
 >>>>>>> Stashed changes
@@ -234,6 +251,9 @@ public class SkillButton extends Button {
         int currentWidth = this.getWidth();
         int currentHeight = this.getHeight();
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth * 3, currentHeight, color);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 

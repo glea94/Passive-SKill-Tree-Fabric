@@ -1,2 +1,5 @@
 accessWidener	v2	named
 
+# Fix 1.21.8 : le constructeur 12-arg de MultiLineEditBox est package-private côté Mojang,
+# nécessaire pour que TextArea puisse continuer à extends MultiLineEditBox et appeler super(...)
+accessible method net/minecraft/client/gui/components/MultiLineEditBox <init> (Lnet/minecraft/client/gui/Font;IIIILnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;IZIZZ)V

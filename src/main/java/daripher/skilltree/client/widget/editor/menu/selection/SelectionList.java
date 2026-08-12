@@ -5,6 +5,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -99,8 +105,14 @@ public abstract class SelectionList<T> extends AbstractButton {
     private void renderBackgroundLine(@NotNull GuiGraphics graphics, int x, int y, int textureOffset, int width, int height) {
         ResourceLocation texture = WIDGETS_TEXTURE;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         graphics.blit(texture, x, y, 0, textureOffset, width / 2, height);
         graphics.blit(texture, x + width / 2, y, -width / 2, textureOffset, width / 2, height);
+=======
+        // Fix 1.21.8 : blit(RenderType::guiTextured, ...) supprimé, remplacé par blit(RenderPipeline, ...) confirmé par décompilation de GuiGraphics (RenderPipelines.GUI_TEXTURED = équivalent direct)
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, 0F, textureOffset, width / 2, height, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, x + width / 2, y, (256F - width / 2F), textureOffset, width / 2, height, 256, 256);
+>>>>>>> Stashed changes
 =======
         // Fix 1.21.8 : blit(RenderType::guiTextured, ...) supprimé, remplacé par blit(RenderPipeline, ...) confirmé par décompilation de GuiGraphics (RenderPipelines.GUI_TEXTURED = équivalent direct)
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, 0F, textureOffset, width / 2, height, 256, 256);

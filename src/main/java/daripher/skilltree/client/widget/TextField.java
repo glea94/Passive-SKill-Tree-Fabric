@@ -6,9 +6,12 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 =======
+=======
+>>>>>>> Stashed changes
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -28,13 +31,19 @@ import java.util.function.Predicate;
 
 public class TextField extends EditBox implements TickingWidget {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public static final int INVALID_TEXT_COLOR = 0xD80000;
     private static final int HINT_COLOR = 0x575757;
 =======
+=======
+>>>>>>> Stashed changes
     // Fix 1.21.8 : couleur ARGB au lieu de RGB depuis 1.21.6 - ces constantes sans octet alpha
     // rendaient en transparent (invisible), notamment le placeholder "Search..."
     public static final int INVALID_TEXT_COLOR = 0xFFD80000;
     private static final int HINT_COLOR = 0xFF575757;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     private Predicate<String> softFilter = Objects::nonNull;
     private Function<String, @Nullable String> suggestionProvider = s -> null;

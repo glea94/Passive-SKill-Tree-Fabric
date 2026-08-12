@@ -1,5 +1,6 @@
 {
   "block.skilltree.workbench": "Продвинутый рабочий стол",
+  "item.skilltree.workbench": "Продвинутый рабочий стол",
   "damage_condition.skilltree.fall": "Урон от падения",
   "damage_condition.skilltree.fall.type": "от падения",
   "damage_condition.skilltree.fire": "Урон огнём",

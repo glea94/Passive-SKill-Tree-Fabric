@@ -1,6 +1,10 @@
 plugins {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	id 'fabric-loom' version '1.14.10'
+=======
+	id 'fabric-loom' version '1.12.0-alpha.25'
+>>>>>>> Stashed changes
 =======
 	id 'fabric-loom' version '1.12.0-alpha.25'
 >>>>>>> Stashed changes
@@ -42,10 +46,16 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	// Trinkets API -> équivalent Fabric de Curios (choix confirmé pour la compat accessoires)
 	// Bascule vers Modrinth : maven.terraformersmc.com renvoyait une erreur 502 persistante.
 	// Coordonnées confirmées par toi depuis la page de téléchargement officielle Modrinth (3.7.2).
 	modImplementation "maven.modrinth:5aaWibi9:AHxQGtuC"
+=======
+	// CARDINAL COMPONENTS API 7.2.0
+	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-base:7.2.0"
+	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:7.2.0"
+>>>>>>> Stashed changes
 =======
 	// CARDINAL COMPONENTS API 7.2.0
 	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-base:7.2.0"

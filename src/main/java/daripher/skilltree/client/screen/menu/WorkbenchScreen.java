@@ -14,7 +14,7 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -87,8 +87,12 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
     @Override
     protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         renderBackground(guiGraphics);
         guiGraphics.blit(BACKGROUND_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+=======
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0F, 0F, this.imageWidth, this.imageHeight, 256, 256);
+>>>>>>> Stashed changes
 =======
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0F, 0F, this.imageWidth, this.imageHeight, 256, 256);
 >>>>>>> Stashed changes
@@ -112,6 +116,9 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
 
         int uOffset = 256 - (SCROLLER_WIDTH * scrollerIconIndex);
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, scrollerX, scrollerY, (float) uOffset, 0F, SCROLLER_WIDTH, SCROLLER_HEIGHT, 256, 256);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 
@@ -314,6 +321,9 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
 =======
             AbstractWorkbenchRecipe recipe = getRecipeInSlot(i).getKey().value();
             guiGraphics.setComponentTooltipForNextFrame(this.font, recipe.getFullDescription(), mouseX, mouseY);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
     }
@@ -322,7 +332,11 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
         List<Component> tooltip = getTooltipFromContainerItem(itemStack);
         Optional<TooltipComponent> tooltipImage = itemStack.getTooltipImage();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         guiGraphics.renderTooltip(font, tooltip, tooltipImage, x, y);
+=======
+        guiGraphics.setTooltipForNextFrame(this.font, tooltip, tooltipImage, x, y);
+>>>>>>> Stashed changes
 =======
         guiGraphics.setTooltipForNextFrame(this.font, tooltip, tooltipImage, x, y);
 >>>>>>> Stashed changes

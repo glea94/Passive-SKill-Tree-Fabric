@@ -37,6 +37,7 @@
   "accessWidener": "skilltree.accesswidener",
   "depends": {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "fabricloader": ">=0.15.11",
     "fabric-api": "*",
     "minecraft": "1.20.1",
@@ -44,12 +45,17 @@
     "cardinal-components-base": "*",
     "cardinal-components-entity": "*",
 =======
+=======
+>>>>>>> Stashed changes
     "fabricloader": "0.19.3",
     "fabric-api": "*",
     "minecraft": "1.21.10",
     "java": ">=21",
     "cardinal-components-base": ">=7.2.0",
     "cardinal-components-entity": ">=7.2.0",
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     "attributefix": "*"
   },

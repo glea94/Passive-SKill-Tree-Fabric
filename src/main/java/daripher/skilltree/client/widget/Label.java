@@ -6,6 +6,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.client.renderer.RenderPipelines;
 >>>>>>> Stashed changes
@@ -42,11 +46,14 @@ public class Label extends AbstractWidget {
 
         if (hasBackground) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             graphics.blit(WIDGETS_TEXTURE, getX(), getY(), 0, 14, width / 2, height);
             graphics.blit(WIDGETS_TEXTURE, getX() + width / 2, getY(), 256 - width / 2, 14, width / 2, height);
             int textColor = 0xFFFFFF | Mth.ceil(alpha * 255F) << 24; // couleur par défaut vanilla
             graphics.drawCenteredString(font, getMessage(), getX() + width / 2, getY() + (height - 8) / 2, textColor);
 =======
+=======
+>>>>>>> Stashed changes
             // Fix 1.21.8 : blit(RenderType::guiTextured, ...) supprimé, remplacé par blit(RenderPipeline, ...) confirmé par décompilation de GuiGraphics (RenderPipelines.GUI_TEXTURED = équivalent direct)
             graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS_TEXTURE, getX(), getY(), 0F, 14F, currentWidth / 2, currentHeight, 256, 256);
             graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS_TEXTURE, getX() + currentWidth / 2, getY(), 256F - currentWidth / 2F, 14F, currentWidth / 2, currentHeight, 256, 256);

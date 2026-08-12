@@ -4,6 +4,10 @@ import daripher.skilltree.client.screen.SkillTreeScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.client.renderer.RenderPipelines;
 >>>>>>> Stashed changes
@@ -38,6 +42,9 @@ public class SkillTreeSelectionButton extends Button {
 
         // Fix 1.21.8 : RenderPipelines.GUI_TEXTURED remplace le wrapper RenderType::guiTextured (supprimé)
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), 0F, (float) v, currentWidth, currentHeight, 19, 57);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 

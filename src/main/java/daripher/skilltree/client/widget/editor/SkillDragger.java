@@ -53,7 +53,7 @@ public class SkillDragger extends AbstractWidget {
                 float y = gridY * i;
                 graphics.fill(-width, (int) (-1 + y), width, (int) (1 + y), 0x55CFCFCF);
             }
-            graphics.pose().popPose();
+            graphics.pose().popMatrix();
         }
     }
 
