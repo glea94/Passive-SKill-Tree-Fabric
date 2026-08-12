@@ -1,0 +1,98 @@
+plugins {
+	id 'fabric-loom' version '1.9-SNAPSHOT'
+	id 'maven-publish'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+	archivesName = "PassiveSkillTree-Fabric-${minecraft_version}"
+}
+
+repositories {
+	mavenCentral()
+
+	maven {
+		name = "Ladysnake Mods"
+		url = "https://maven.ladysnake.org/releases"
+	}
+
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = "Modrinth"
+				url = "https://api.modrinth.com/maven"
+			}
+		}
+		filter {
+			includeGroup "maven.modrinth"
+		}
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+
+	// CARDINAL COMPONENTS API 6.2.2 via le dépôt officiel Ladysnake (base + entity, les seuls modules utilisés par le mod)
+	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-base:6.2.2"
+	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:6.2.2"
+
+	// TRINKETS CANARY via variables gradle.properties
+	modImplementation "maven.modrinth:${trinkets_id}:${trinkets_version}"
+
+	// ATTRIBUTEFIX via variables gradle.properties
+	modImplementation "maven.modrinth:${attributefix_id}:${attributefix_version}"
+}
+
+loom {
+	// Utilisation de votre fichier d'accès v2 validé
+	accessWidenerPath = file("src/main/resources/skilltree.accesswidener")
+
+	runs {
+		datagen {
+			inherit client
+			name "Data Generation"
+			vmArg "-Dfabric-api.datagen"
+			vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated").absolutePath}"
+			vmArg "-Dfabric-api.datagen.modid=skilltree"
+			vmArg "-Dfabric.development=true"
+			runDir "build/datagen"
+		}
+	}
+}
+
+processResources {
+	inputs.property "version", project.version
+	filteringCharset "UTF-8"
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+	it.options.compilerArgs.addAll(["-Xmaxerrs", "1000"])
+}
+
+java {
+	withSourcesJar()
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+sourceSets {
+	main {
+		resources {
+			srcDir 'src/main/generated'
+		}
+	}
+}
+
+tasks.withType(AbstractCopyTask).configureEach {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
