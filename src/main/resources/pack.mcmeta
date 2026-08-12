@@ -4,12 +4,18 @@
       "text": "${mod_id} resources"
     },
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "pack_format": 15
 =======
+=======
+>>>>>>> Stashed changes
     "pack_format": 69,
     "min_format": 64,
     "max_format": 81,
     "supported_formats": [64, 81]
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   }
 }

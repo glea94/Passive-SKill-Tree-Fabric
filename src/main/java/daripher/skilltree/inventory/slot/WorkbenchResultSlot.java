@@ -7,6 +7,7 @@ import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -44,10 +45,12 @@ public class WorkbenchResultSlot extends Slot {
     }
 
     private void repeatQuickCraft() {
-        AbstractWorkbenchRecipe selectedRecipe = workbenchContainer.menu.getSelectedRecipe();
-        if (selectedRecipe == null) {
+        // Factual Fix 1.21.4: Update lookups to match the holder-centric menu model
+        RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder = workbenchContainer.menu.getSelectedRecipeHolder();
+        if (selectedRecipeHolder == null) {
             return;
         }
+        AbstractWorkbenchRecipe selectedRecipe = selectedRecipeHolder.value();
         int additionalCrafts = -1;
         int requiredBaseItems = selectedRecipe.requiredBaseItemAmount();
         if (requiredBaseItems != 0) {
@@ -78,10 +81,8 @@ public class WorkbenchResultSlot extends Slot {
     @Override
     protected void checkTakeAchievements(@NotNull ItemStack itemStack) {
         if (removeCount > 0) {
-            itemStack.onCraftedBy(player.level(), player, removeCount);
-            // Portage Fabric : ForgeEventFactory.firePlayerCraftingEvent retiré - c'était une
-            // notification pour que D'AUTRES mods réagissent au craft (achievements custom,
-            // stats), pas utilisée par PST lui-même en interne, pas d'équivalent Fabric direct.
+            // Factual Fix 1.21.5 (confirmé par le message d'erreur du compilateur) : ItemStack#onCraftedBy ne prend plus de Level, signature réduite à (Player, int)
+            itemStack.onCraftedBy(player, removeCount);
             consumeMaterials();
         }
         removeCount = 0;
@@ -93,10 +94,12 @@ public class WorkbenchResultSlot extends Slot {
     }
 
     private void consumeMaterials() {
-        AbstractWorkbenchRecipe selectedRecipe = workbenchContainer.menu.getSelectedRecipe();
-        if (selectedRecipe == null) {
+        // Factual Fix 1.21.4: Update lookups to match the holder-centric menu model
+        RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder = workbenchContainer.menu.getSelectedRecipeHolder();
+        if (selectedRecipeHolder == null) {
             return;
         }
+        AbstractWorkbenchRecipe selectedRecipe = selectedRecipeHolder.value();
         if (!workbenchContainer.getItem(0).isEmpty()) {
             workbenchContainer.removeItem(0, selectedRecipe.requiredBaseItemAmount());
         }

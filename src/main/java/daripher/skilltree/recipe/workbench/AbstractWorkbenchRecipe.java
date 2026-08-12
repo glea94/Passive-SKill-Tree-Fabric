@@ -5,13 +5,16 @@ import daripher.skilltree.inventory.menu.WorkbenchContainer;
 import daripher.skilltree.recipe.SkillRequiringRecipe;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.RecipeUnlockBonus;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -28,11 +31,15 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
     private final ResourceLocation id;
     private final boolean requiresPassiveSkill;
 
+<<<<<<< Updated upstream
     public AbstractWorkbenchRecipe(ResourceLocation id, boolean requiresPassiveSkill) {
 =======
     private Identifier id;
     private final boolean requiresPassiveSkill;
 
+    protected AbstractWorkbenchRecipe(Identifier id, boolean requiresPassiveSkill) {
+>>>>>>> Stashed changes
+=======
     protected AbstractWorkbenchRecipe(Identifier id, boolean requiresPassiveSkill) {
 >>>>>>> Stashed changes
         this.requiresPassiveSkill = requiresPassiveSkill;
@@ -53,10 +60,13 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
 
     public String getDescriptionId() {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation id = BuiltInRegistries.RECIPE_SERIALIZER.getKey(getSerializer());
         Objects.requireNonNull(id);
         return "recipe.%s.%s".formatted(id.getNamespace(), id.getPath());
 =======
+=======
+>>>>>>> Stashed changes
         Identifier serializerId = BuiltInRegistries.RECIPE_SERIALIZER.getKey(getSerializer());
         Objects.requireNonNull(serializerId);
         return "recipe.%s.%s".formatted(serializerId.getNamespace(), serializerId.getPath());
@@ -82,7 +92,10 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
     public abstract @NotNull ItemStack getResult(WorkbenchContainer workbenchContainer);
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     @Override
     public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container) {
         return getResult(container);
@@ -98,6 +111,9 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
         return "";
     }
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     public abstract int requiredBaseItemAmount();
 
@@ -114,11 +130,11 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
         return container.hasIngredients(ingredients);
     }
 
-    @Override
     public boolean canCraftInDimensions(int width, int height) {
         return width == 5 && height == 2;
     }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     @Override
     public @NotNull ResourceLocation getId() {
@@ -126,6 +142,8 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
     }
 
 =======
+=======
+>>>>>>> Stashed changes
     public @NotNull Identifier getId() {
         return id;
     }
@@ -136,14 +154,23 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
 
 >>>>>>> Stashed changes
     @Deprecated
-    @Override
-    public @NotNull ItemStack getResultItem(@NotNull RegistryAccess registryAccess) {
+    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registries) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
+    public @NotNull RecipeType<? extends Recipe<WorkbenchContainer>> getType() {
         return PSTRecipeTypes.WORKBENCH;
+    }
+
+    @Override
+    public @NotNull PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
+    }
+
+    @Override
+    public @NotNull RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CRAFTING_MISC;
     }
 
     @Override

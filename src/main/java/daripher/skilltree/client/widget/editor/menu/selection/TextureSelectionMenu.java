@@ -4,6 +4,7 @@ import daripher.skilltree.data.client.SkillTexturesData;
 import daripher.skilltree.mixin.AbstractWidgetAccessor;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.editor.menu.EditorMenu;
+import daripher.skilltree.client.widget.TextField;
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -34,18 +35,28 @@ public class TextureSelectionMenu extends EditorMenu {
         editor.increaseHeight(29);
         editor.addLabel(0, 0, "Folder", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-        editor.addTextField(0, 0, 200, 14, texturesFolder).setSoftFilter(SkillTexturesData::isTextureFolder)
-                .setSuggestionProvider(SkillTexturesData::autocompleteFolderName).setResponder(v -> {
-                    selectionList.setElementsList(SkillTexturesData.getTexturesInFolder(v));
-                    selectionList.setColumns(selectionListColumns);
-                    selectionList.setRows(selectionListRows);
-                    ((AbstractWidgetAccessor) (Object) editor).setHeight(selectionList.getY() + selectionList.getHeight() + 10);
-                });
+
+        // Factual Fix 1.21.4: Extracted out of a fluid chain to safeguard text field type boundaries
+        TextField folderField = editor.addTextField(0, 0, 200, 14, texturesFolder);
+        folderField.setSoftFilter(SkillTexturesData::isTextureFolder);
+        folderField.setSuggestionProvider(SkillTexturesData::autocompleteFolderName);
+        folderField.setResponder(v -> {
+            selectionList.setElementsList(SkillTexturesData.getTexturesInFolder(v));
+            selectionList.setColumns(selectionListColumns);
+            selectionList.setRows(selectionListRows);
+            ((AbstractWidgetAccessor) (Object) editor).setHeight(selectionList.getY() + selectionList.getHeight() + 10);
+        });
+
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Search", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-        editor.addTextField(0, 0, 200, 14, "").setFocused().setResponder(selectionList::setSearchString);
+
+        // Factual Fix 1.21.4: Extracted out of a fluent chain to completely resolve the "void cannot be dereferenced" compilation error
+        TextField searchField = editor.addTextField(0, 0, 200, 14, "");
+        searchField.setFocused(true);
+        searchField.setResponder(selectionList::setSearchString);
         editor.increaseHeight(29);
+
         selectionList.setX(editor.getWidgetsX(0));
         selectionList.setY(editor.getWidgetsY(0));
         selectionList.setColumns(selectionListColumns);

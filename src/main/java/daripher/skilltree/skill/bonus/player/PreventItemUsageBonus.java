@@ -12,7 +12,7 @@ import daripher.skilltree.skill.bonus.predicate.item.EquipmentPredicate;
 import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -145,13 +145,15 @@ public final class PreventItemUsageBonus implements SkillBonus<PreventItemUsageB
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public PreventItemUsageBonus deserialize(FriendlyByteBuf buf) {
+        public PreventItemUsageBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new PreventItemUsageBonus(NetworkHelper.readItemPredicate(buf));
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof PreventItemUsageBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

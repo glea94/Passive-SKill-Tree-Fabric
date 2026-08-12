@@ -38,7 +38,7 @@ public class SkillDescriptionLineEditor extends EditorMenu {
         List<MutableComponent> description = selectedSkill.getDescription();
         editor.addConfirmationButton(110, 0, 90, 14, "Remove", "Confirm").setPressFunc(b -> removeDescriptionLine());
         editor.increaseHeight(29);
-        if (description == null || selectedLine > description.size()) {
+        if (description == null || selectedLine >= description.size()) {
             editor.selectMenu(previousMenu);
             return;
         }
@@ -62,30 +62,35 @@ public class SkillDescriptionLineEditor extends EditorMenu {
         editor.addLabel(0, 0, "Bold", ChatFormatting.GOLD);
         editor.addCheckBox(186, 0, originalStyle.isBold()).setResponder(v -> {
             setDescriptionStyle(s -> s.withBold(v));
+            editor.clearWidgets();
             editor.rebuildWidgets();
         });
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Italic", ChatFormatting.GOLD);
         editor.addCheckBox(186, 0, originalStyle.isItalic()).setResponder(v -> {
             setDescriptionStyle(s -> s.withItalic(v));
+            editor.clearWidgets();
             editor.rebuildWidgets();
         });
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Underline", ChatFormatting.GOLD);
         editor.addCheckBox(186, 0, originalStyle.isUnderlined()).setResponder(v -> {
             setDescriptionStyle(s -> s.withUnderlined(v));
+            editor.clearWidgets();
             editor.rebuildWidgets();
         });
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Strikethrough", ChatFormatting.GOLD);
         editor.addCheckBox(186, 0, originalStyle.isStrikethrough()).setResponder(v -> {
             setDescriptionStyle(s -> s.withStrikethrough(v));
+            editor.clearWidgets();
             editor.rebuildWidgets();
         });
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Obfuscated", ChatFormatting.GOLD);
         editor.addCheckBox(186, 0, originalStyle.isObfuscated()).setResponder(v -> {
             setDescriptionStyle(s -> s.withObfuscated(v));
+            editor.clearWidgets();
             editor.rebuildWidgets();
         });
         editor.increaseHeight(19);
@@ -124,9 +129,12 @@ public class SkillDescriptionLineEditor extends EditorMenu {
         editor.getSelectedSkills().forEach(skill -> {
             List<MutableComponent> description = skill.getDescription();
             Objects.requireNonNull(description);
-            description.remove(selectedLine);
+            if (selectedLine < description.size()) {
+                description.remove(selectedLine);
+            }
         });
         editor.saveSelectedSkills();
+        editor.clearWidgets();
         editor.selectMenu(previousMenu);
         editor.rebuildWidgets();
     }
@@ -135,9 +143,10 @@ public class SkillDescriptionLineEditor extends EditorMenu {
         editor.getSelectedSkills().forEach(skill -> {
             List<MutableComponent> description = skill.getDescription();
             Objects.requireNonNull(description);
-            MutableComponent component = description.get(selectedLine);
-            Style style = component.getStyle();
-            description.set(selectedLine, Component.literal(line).withStyle(style));
+            if (selectedLine < description.size()) {
+                Style style = description.get(selectedLine).getStyle();
+                description.set(selectedLine, Component.literal(line).withStyle(style));
+            }
         });
         editor.saveSelectedSkills();
     }
@@ -146,11 +155,13 @@ public class SkillDescriptionLineEditor extends EditorMenu {
         editor.getSelectedSkills().forEach(skill -> {
             List<MutableComponent> description = skill.getDescription();
             Objects.requireNonNull(description);
-            MutableComponent component = description.get(selectedLine);
-            Style style = styleFunc.apply(component.getStyle());
-            description.set(selectedLine, component.withStyle(style));
-            SkillTreeEditorData.saveEditorSkill(skill);
-            SkillTreeEditorData.loadEditorSkill(skill.getId());
+            if (selectedLine < description.size()) {
+                MutableComponent component = description.get(selectedLine);
+                Style style = styleFunc.apply(component.getStyle());
+                description.set(selectedLine, component.withStyle(style));
+                SkillTreeEditorData.saveEditorSkill(skill);
+                SkillTreeEditorData.loadEditorSkill(skill.getId());
+            }
         });
     }
 

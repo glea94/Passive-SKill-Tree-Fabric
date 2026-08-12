@@ -3,7 +3,12 @@ package daripher.skilltree.client.widget;
 import daripher.skilltree.client.screen.SkillTreeScreen;
 import net.minecraft.client.Minecraft;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.client.gui.GuiGraphics;
+=======
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -26,7 +31,12 @@ public class SkillTreeSelectionButton extends Button {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     protected void renderBackground(@NotNull GuiGraphics graphics) {
+=======
+    @Override
+    protected void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
+>>>>>>> Stashed changes
 =======
     @Override
     protected void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
@@ -51,6 +61,9 @@ public class SkillTreeSelectionButton extends Button {
     @Override
     protected void renderText(@NotNull GuiGraphicsExtractor graphics) {
         // Keeps empty implementation to prevent drawing text directly over custom graphics icons
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 

@@ -12,14 +12,16 @@ import daripher.skilltree.skill.bonus.predicate.item.EquipmentPredicate;
 import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.FloatFunctionEntityPredicate;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -38,7 +40,9 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
     }
 
     private int getEnchantLevels(Stream<ItemStack> items) {
-        return items.map(EnchantmentHelper::getEnchantments).mapToInt(m -> m.values().stream().reduce(Integer::sum).orElse(0))
+        // Aligned 1.21.4: Map the active enchantment levels safely via ItemEnchantments stream mapping loops
+        return items.map(item -> item.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY))
+                .mapToInt(enchantments -> enchantments.entrySet().stream().mapToInt(Object2IntMap.Entry::getIntValue).sum())
                 .reduce(Integer::sum).orElse(0);
     }
 
@@ -93,7 +97,6 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
         Component logicDescription = logic.getTooltip("enchantment_amount", valueDescription);
         return Component.translatable(key, logicDescription, levelsDescription, itemDescription);
     }
-
     @Override
     public FloatFunction.Serializer getSerializer() {
         return PSTFloatFunctions.ENCHANTMENT_LEVELS.get();
@@ -173,14 +176,16 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public FloatFunction<?> deserialize(FriendlyByteBuf buf) {
+        public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return new EnchantmentLevelsFunction(itemStackPredicate);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, FloatFunction<?> provider) {
+        public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof EnchantmentLevelsFunction aProvider)) {
                 throw new IllegalArgumentException();
             }

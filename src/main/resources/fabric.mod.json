@@ -6,7 +6,8 @@
   "description": "Adds passive skill tree with player class system",
   "authors": ["Daripher"],
   "contact": {
-    "sources": "https://github.com/Daripher/Passive-Skill-Tree"
+    "sources": "https://github.com/Daripher/Passive-Skill-Tree",
+    "issues": "https://github.com/glea94/Passive-SKill-Tree-Fabric/issues"
   },
   "license": "GPL-3.0",
   "icon": "assets/skilltree/icon.png",
@@ -36,6 +37,7 @@
   "accessWidener": "skilltree.accesswidener",
   "depends": {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "fabricloader": ">=0.15.11",
     "fabric-api": "*",
     "minecraft": "1.20.1",
@@ -43,12 +45,17 @@
     "cardinal-components-base": "*",
     "cardinal-components-entity": "*",
 =======
+=======
+>>>>>>> Stashed changes
     "fabricloader": "0.19.3",
     "fabric-api": "*",
     "minecraft": "26.1.2",
     "java": ">=25",
     "cardinal-components-base": ">=8.0.1",
     "cardinal-components-entity": ">=8.0.1",
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     "attributefix": "*"
   },
@@ -57,7 +64,7 @@
   },
   "custom": {
     "modmenu": {
-      "badges": ["library"]
+      "badges": []
     },
     "cardinal-components": [
       "skilltree:player_skills",

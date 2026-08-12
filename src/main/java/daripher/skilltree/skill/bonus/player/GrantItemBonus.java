@@ -10,7 +10,7 @@ import daripher.skilltree.init.PSTSkillBonuses;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -21,6 +21,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
 
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
     @Override
     public void onSkillLearned(ServerPlayer player, boolean firstTime) {
         if (firstTime) {
-            Item item = BuiltInRegistries.ITEM.get(itemId);
+            Item item = BuiltInRegistries.ITEM.get(itemId).map(Holder::value).orElse(null);
             if (item == null) {
                 SkillTreeEditorData.sendChatMessage("Unknown item: " + itemId, ChatFormatting.DARK_RED);
                 return;
@@ -89,13 +90,17 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
 
     @Override
     public MutableComponent getSimpleTooltip() {
-        Item item = BuiltInRegistries.ITEM.get(itemId);
+        Item item = BuiltInRegistries.ITEM.get(itemId).map(Holder::value).orElse(null);
         if (item == null) {
             return Component.literal("Unknown item: " + itemId).withStyle(ChatFormatting.DARK_RED);
         }
         Style style = TooltipHelper.getSkillBonusStyle(isPositive());
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         Component itemDescription = item.getDescription();
+=======
+        Component itemDescription = item.getName(item.getDefaultInstance());
+>>>>>>> Stashed changes
 =======
         Component itemDescription = item.getName(item.getDefaultInstance());
 >>>>>>> Stashed changes
@@ -150,7 +155,11 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
         @Override
         public GrantItemBonus deserialize(JsonObject json) throws JsonParseException {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             ResourceLocation itemId = new ResourceLocation(json.get("item_id").getAsString());
+=======
+            Identifier itemId = Identifier.parse(json.get("item_id").getAsString());
+>>>>>>> Stashed changes
 =======
             Identifier itemId = Identifier.parse(json.get("item_id").getAsString());
 >>>>>>> Stashed changes
@@ -170,9 +179,12 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
         @Override
         public GrantItemBonus deserialize(CompoundTag tag) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             ResourceLocation itemId = new ResourceLocation(tag.getString("item_id"));
             int amount = tag.getInt("amount");
 =======
+=======
+>>>>>>> Stashed changes
             Identifier itemId = Identifier.parse(tag.getString("item_id").orElse(""));
             int amount = tag.getInt("amount").orElse(0);
 >>>>>>> Stashed changes
@@ -190,6 +202,7 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
 <<<<<<< Updated upstream
         public GrantItemBonus deserialize(FriendlyByteBuf buf) {
@@ -204,8 +217,9 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
 >>>>>>> Stashed changes
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof GrantItemBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

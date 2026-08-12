@@ -19,7 +19,7 @@ import daripher.skilltree.skill.bonus.player.AttributeBonus;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -93,13 +93,12 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
         GroupedItemBonus that = (GroupedItemBonus) o;
         return Objects.equals(innerBonuses, that.innerBonuses);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(innerBonuses);
     }
 
-    @SuppressWarnings({"rawtypes"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<GroupedItemBonus> consumer) {
         ItemBonus<?> defaultBonus = PSTItemBonuses.SKILL_BONUS.get().createDefaultInstance();
@@ -141,7 +140,7 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
         }
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void addItemBonus(SkillTreeEditor editor, ItemBonus<?> itemBonus) {
         final EditorMenu previousMenu = editor.getSelectedMenu().previousMenu;
         if (itemBonus instanceof EquipmentBonus equipmentBonus) {
@@ -167,8 +166,6 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
     public String toString() {
         return "GroupedItemBonus[" + "innerBonuses=" + innerBonuses + ']';
     }
-
-
     public static class Serializer implements ItemBonus.Serializer {
         @Override
         public ItemBonus<?> deserialize(JsonObject json) throws JsonParseException {
@@ -178,7 +175,11 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
                 JsonObject innerBonusTag = innerBonusesJson.get(i).getAsJsonObject();
                 String serializerIdString = innerBonusTag.get("type").getAsString();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 ResourceLocation serializerId = new ResourceLocation(serializerIdString);
+=======
+                Identifier serializerId = Identifier.parse(serializerIdString);
+>>>>>>> Stashed changes
 =======
                 Identifier serializerId = Identifier.parse(serializerIdString);
 >>>>>>> Stashed changes
@@ -212,7 +213,7 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
         @Override
         public ItemBonus<?> deserialize(CompoundTag tag) {
             ArrayList<ItemBonus<?>> innerBonuses = new ArrayList<>();
-            ListTag innerBonusesTag = tag.getList("inner_bonuses", Tag.TAG_COMPOUND);
+            ListTag innerBonusesTag = tag.getList("inner_bonuses").orElseGet(ListTag::new);
             for (Tag value : innerBonusesTag) {
                 CompoundTag innerBonusTag = (CompoundTag) value;
 <<<<<<< Updated upstream
@@ -221,6 +222,9 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
 =======
                 String type = innerBonusTag.getString("type").orElseThrow();
                 Identifier serializerId = Identifier.parse(type);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                 ItemBonus.Serializer serializer = PSTRegistries.ITEM_BONUSES.get().getValue(serializerId);
                 Objects.requireNonNull(serializer, "Unknown item bonus: " + serializerId);
@@ -249,8 +253,9 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public ItemBonus<?> deserialize(FriendlyByteBuf buf) {
+        public ItemBonus<?> deserialize(RegistryFriendlyByteBuf buf) {
             ArrayList<ItemBonus<?>> innerBonuses = new ArrayList<>();
             int size = buf.readInt();
             for (int i = 0; i < size; i++) {
@@ -259,8 +264,9 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             return new GroupedItemBonus(innerBonuses);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, ItemBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, ItemBonus<?> bonus) {
             if (!(bonus instanceof GroupedItemBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

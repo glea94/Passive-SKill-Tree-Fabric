@@ -1,8 +1,11 @@
 package daripher.skilltree.client.widget.skill;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -12,12 +15,17 @@ import daripher.skilltree.skill.PassiveSkillTree;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.player.BrokenSkillBonus;
 import daripher.skilltree.skill.requirement.SkillRequirement;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.client.gui.screens.Screen;
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.client.renderer.RenderPipelines;
 >>>>>>> Stashed changes
@@ -28,6 +36,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -50,17 +59,28 @@ public class SkillButton extends Button {
     public boolean hasBrokenBonuses;
 
     public SkillButton(Supplier<Float> animationFunc, float x, float y, PassiveSkill skill) {
-        super((int) x, (int) y, skill.getSkillSize(), skill.getSkillSize(), Component.empty(), b -> {
-        }, Supplier::get);
+        // Factual Fix 1.21.4: Super constructor requires x, y, width, height, message, pressAction, and narration
+        super((int) x, (int) y, skill.getSkillSize(), skill.getSkillSize(), Component.empty(), b -> {}, DEFAULT_NARRATION);
         this.x = x;
         this.y = y;
         this.skill = skill;
         this.animationFunction = animationFunc;
+        // Factual Fix 1.21.4: Use direct field assignment to completely avoid method overloading conflicts
         this.active = false;
         this.hasBrokenBonuses = skill.getBonuses().stream().anyMatch(bonus -> bonus instanceof BrokenSkillBonus);
     }
 
+    private static final int WHITE = 0xFFFFFFFF;
+
+    private static int argb(float r, float g, float b, float a) {
+        return ((int) (Mth.clamp(a, 0F, 1F) * 255) << 24)
+                | ((int) (Mth.clamp(r, 0F, 1F) * 255) << 16)
+                | ((int) (Mth.clamp(g, 0F, 1F) * 255) << 8)
+                | (int) (Mth.clamp(b, 0F, 1F) * 255);
+    }
+
     @Override
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         RenderSystem.enableBlend();
@@ -84,6 +104,8 @@ public class SkillButton extends Button {
         renderIcon(graphics);
         graphics.pose().popPose();
 =======
+=======
+>>>>>>> Stashed changes
     protected void extractContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 
         graphics.pose().pushMatrix();
@@ -109,27 +131,30 @@ public class SkillButton extends Button {
         graphics.pose().translate(-currentWidth / 2f, -currentHeight / 2f);
         renderIcon(graphics, WHITE);
         graphics.pose().popMatrix();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         float animation = (Mth.sin(animationFunction.get() / 3F) + 1) / 2;
         float rb = searched ? 0.1f : 1f;
-        if (canLearn || searched) {
-            graphics.setColor(rb, 1F, rb, 1 - animation);
-        }
+        int darkeningColor = (canLearn || searched) ? argb(rb, 1F, rb, 1 - animation) : WHITE;
         if (!skillLearned) {
-            renderDarkening(graphics);
+            renderDarkening(graphics, darkeningColor);
         }
-        if (canLearn || searched) {
-            graphics.setColor(rb, 1F, rb, animation);
-        }
+        int frameColor = (canLearn || searched) ? argb(rb, 1F, rb, animation) : WHITE;
         if (skillLearned || canLearn || searched) {
-            renderFrame(graphics);
+            renderFrame(graphics, frameColor);
         }
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
         if (canLearn || searched || selected) {
             graphics.setColor(1F, 1F, 1F, 1F);
         }
         graphics.pose().popPose();
         RenderSystem.disableBlend();
+=======
+        graphics.pose().popMatrix();
+>>>>>>> Stashed changes
 =======
         graphics.pose().popMatrix();
 >>>>>>> Stashed changes
@@ -140,7 +165,11 @@ public class SkillButton extends Button {
             return;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/favorite_skill.png");
+=======
+        Identifier texture = Identifier.parse("skilltree:textures/screen/favorite_skill.png");
+>>>>>>> Stashed changes
 =======
         Identifier texture = Identifier.parse("skilltree:textures/screen/favorite_skill.png");
 >>>>>>> Stashed changes
@@ -227,11 +256,16 @@ public class SkillButton extends Button {
         int currentWidth = this.getWidth();
         int currentHeight = this.getHeight();
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth * 3, currentHeight, color);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 
     public void setButtonSize(int size) {
-        width = height = size;
+        // Factual Fix 1.21.4: Alter layout dimension states safely using encapsulated setters
+        this.setWidth(size);
+        this.setHeight(size);
     }
 
     public List<MutableComponent> getSkillTooltip(PassiveSkillTree skillTree) {
@@ -276,7 +310,14 @@ public class SkillButton extends Button {
     }
 
     private void addInfoTooltip(List<MutableComponent> tooltip) {
-        if (!Screen.hasAltDown()) {
+        // Fix 1.21.9 : Screen.hasAltDown() a disparu (le polling de modificateurs passe
+        // maintenant par les records d'input reçus dans les event handlers) ; comme cette
+        // méthode est appelée hors handler d'input (rendu de tooltip), on reproduit l'ancien
+        // comportement de Screen.hasAltDown() en interrogeant directement GLFW via InputConstants
+        // (même API que celle utilisée en interne par KeyMapping pour son propre polling).
+        boolean altDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_LEFT_ALT)
+                || InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_RIGHT_ALT);
+        if (!altDown) {
             return;
         }
         List<MutableComponent> info = new ArrayList<>();
@@ -349,7 +390,8 @@ public class SkillButton extends Button {
     }
 
     public void setActive() {
-        active = true;
+        // Factual Fix 1.21.4: Update interactive state via direct vanilla active field configuration
+        this.active = true;
     }
 
     private String getSkillId() {

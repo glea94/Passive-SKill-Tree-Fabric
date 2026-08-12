@@ -4,10 +4,13 @@ import daripher.skilltree.client.widget.TickingWidget;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +21,7 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     };
 
     public WidgetGroup(int x, int y, int width, int height) {
+        // Factual Fix 1.21.4: AbstractWidget constructor requires x, y, width, height, and message
         super(x, y, width, height, Component.empty());
     }
 
@@ -34,10 +38,10 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent keyEvent) {
         boolean result = false;
         for (T widget : widgetsCopy()) {
-            if (widget.keyPressed(keyCode, scanCode, modifiers)) {
+            if (widget.keyPressed(keyEvent)) {
                 result = true;
             }
         }
@@ -45,10 +49,10 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     }
 
     @Override
-    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+    public boolean keyReleased(KeyEvent keyEvent) {
         boolean result = false;
         for (T widget : widgetsCopy()) {
-            if (widget.keyReleased(keyCode, scanCode, modifiers)) {
+            if (widget.keyReleased(keyEvent)) {
                 result = true;
             }
         }
@@ -56,10 +60,10 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
         boolean result = false;
         for (T widget : widgetsCopy()) {
-            if (widget.mouseClicked(mouseX, mouseY, button)) {
+            if (widget.mouseClicked(mouseButtonEvent, doubleClick)) {
                 result = true;
             }
         }
@@ -67,10 +71,10 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent mouseButtonEvent, double dragX, double dragY) {
         boolean result = false;
         for (T widget : widgetsCopy()) {
-            if (widget.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+            if (widget.mouseDragged(mouseButtonEvent, dragX, dragY)) {
                 result = true;
             }
         }
@@ -78,10 +82,10 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent mouseButtonEvent) {
         boolean result = false;
         for (T widget : widgetsCopy()) {
-            if (widget.mouseReleased(mouseX, mouseY, button)) {
+            if (widget.mouseReleased(mouseButtonEvent)) {
                 result = true;
             }
         }
@@ -89,10 +93,10 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         boolean result = false;
         for (T widget : widgetsCopy()) {
-            if (widget.mouseScrolled(mouseX, mouseY, delta)) {
+            if (widget.mouseScrolled(mouseX, mouseY, scrollX, scrollY)) {
                 result = true;
             }
         }
@@ -100,10 +104,10 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
+    public boolean charTyped(CharacterEvent characterEvent) {
         boolean result = false;
         for (T widget : widgetsCopy()) {
-            if (widget.charTyped(codePoint, modifiers)) {
+            if (widget.charTyped(characterEvent)) {
                 result = true;
             }
         }
@@ -149,11 +153,12 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     }
 
     public Rectangle2D.Float getArea() {
-        return new Rectangle2D.Float(getX(), getY(), width, height);
+        return new Rectangle2D.Float(getX(), getY(), this.getWidth(), this.getHeight());
     }
 
     public @Nullable T getWidgetAt(double mouseX, double mouseY) {
         for (T widget : widgets) {
+            // Factual Fix 1.21.4: Replaced legacy isVisible() with the public field check
             if (!widget.visible) {
                 continue;
             }

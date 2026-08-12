@@ -10,14 +10,15 @@ package daripher.skilltree.skill.bonus.handler;
  * référencée dans le reste du code porté.
  * <p>
  * VOLONTAIREMENT PAS ENCORE IMPLÉMENTÉ : GrindstoneEvent n'a pas d'équivalent Fabric API direct.
- * La cible vanilla probable est une classe anonyme interne à GrindstoneMenu (le Slot de résultat
- * qui donne l'XP à la reprise de l'objet), ce qui rend le ciblage par mixin risqué sans jar
- * décompilé (nom de classe anonyme généré par le compilateur, pas un nom stable). À traiter une
- * fois genSources lancé dans IntelliJ - jusque-là, l'XP de meule n'est simplement pas
- * multipliée par ce bonus, sans que rien d'autre ne soit affecté.
+ * La cible vanilla est localisée dans les slots de GrindstoneMenu (le Slot de résultat
+ * qui donne l'XP à la reprise de l'objet).
+ * <p>
+ * NOTE DE MISE À JOUR 1.21.4 : Une fois 'genSources' exécuté, l'implémentation propre se fera
+ * via un @Mixin ciblant la méthode d'extraction d'XP du slot de résultat de GrindstoneMenu,
+ * en multipliant la valeur de l'expérience par vos modificateurs d'arbre de compétences.
  */
 public class GrindstoneBonusHandler {
     public static void register() {
-        // en attente, voir le commentaire de classe
+        // En attente de l'implémentation du Mixin sur GrindstoneMenu après genSources.
     }
 }

@@ -30,6 +30,7 @@ public class StealthBonusHandler {
         for (StealthBonus skillBonus : skillBonuses) {
             stealthMultiplier += skillBonus.getStealthMultiplier(player, lookingEntity);
         }
+        // Modifies the final detection scale parameter safely on the event pipeline capsule
         event.modifyVisibility(1f - stealthMultiplier);
     }
 }

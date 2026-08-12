@@ -7,8 +7,13 @@ import daripher.skilltree.init.predicate.PSTItemPredicates;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+=======
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
@@ -65,7 +70,11 @@ public class ItemTagPredicate implements ItemStackPredicate {
         editor.addLabel(0, 0, "Tag", ChatFormatting.GREEN);
         editor.increaseHeight(19);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         editor.addTextField(0, 0, 200, 14, tagId.toString()).setSoftFilter(ResourceLocation::isValidResourceLocation)
+=======
+        editor.addTextField(0, 0, 200, 14, tagId.toString()).setSoftFilter(text -> Identifier.tryParse(text) != null)
+>>>>>>> Stashed changes
 =======
         editor.addTextField(0, 0, 200, 14, tagId.toString()).setSoftFilter(text -> Identifier.tryParse(text) != null)
 >>>>>>> Stashed changes
@@ -75,7 +84,11 @@ public class ItemTagPredicate implements ItemStackPredicate {
 
     private void selectTagId(Consumer<ItemStackPredicate> consumer, String text) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         setTagId(new ResourceLocation(text));
+=======
+        setTagId(Identifier.parse(text));
+>>>>>>> Stashed changes
 =======
         setTagId(Identifier.parse(text));
 >>>>>>> Stashed changes
@@ -90,7 +103,11 @@ public class ItemTagPredicate implements ItemStackPredicate {
         @Override
         public ItemStackPredicate deserialize(JsonObject json) throws JsonParseException {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             ResourceLocation tagId = new ResourceLocation(json.get("tag_id").getAsString());
+=======
+            Identifier tagId = Identifier.parse(json.get("tag_id").getAsString());
+>>>>>>> Stashed changes
 =======
             Identifier tagId = Identifier.parse(json.get("tag_id").getAsString());
 >>>>>>> Stashed changes
@@ -112,6 +129,9 @@ public class ItemTagPredicate implements ItemStackPredicate {
 =======
             // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
             Identifier tagId = Identifier.parse(tag.getString("tag_id").orElse(""));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             return new ItemTagPredicate(tagId);
         }
@@ -126,6 +146,7 @@ public class ItemTagPredicate implements ItemStackPredicate {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
 <<<<<<< Updated upstream
         public ItemStackPredicate deserialize(FriendlyByteBuf buf) {
@@ -133,12 +154,16 @@ public class ItemTagPredicate implements ItemStackPredicate {
 =======
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             Identifier tagId = Identifier.parse(buf.readUtf());
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             return new ItemTagPredicate(tagId);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, ItemStackPredicate condition) {
+        public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof ItemTagPredicate aCondition)) {
                 throw new IllegalArgumentException();
             }

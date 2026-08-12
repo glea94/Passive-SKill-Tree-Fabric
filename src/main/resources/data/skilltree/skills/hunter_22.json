@@ -3,7 +3,7 @@
   "bonuses": [
     {
       "type": "skilltree:attribute",
-      "attribute": "minecraft:generic.movement_speed",
+      "attribute": "minecraft:movement_speed",
       "id": "ff153cf5-59cb-4806-8ede-f5eb0a9a9e09",
       "name": "Skill",
       "amount": 0.04,

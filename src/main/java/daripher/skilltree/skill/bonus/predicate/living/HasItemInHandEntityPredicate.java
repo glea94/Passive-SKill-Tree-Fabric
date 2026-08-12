@@ -11,13 +11,12 @@ import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
 import daripher.skilltree.skill.bonus.predicate.item.NoneItemStackPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -58,13 +57,13 @@ public final class HasItemInHandEntityPredicate implements LivingEntityPredicate
     private void addItemPredicateWidgets(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer) {
         itemStackPredicate.addEditorWidgets(editor, predicate -> {
             setItemPredicate(predicate);
-            consumer.accept(this);
+            consumer.accept(this.copy());
         });
     }
 
     private void selectItemPredicate(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer, ItemStackPredicate predicate) {
         setItemPredicate(predicate);
-        consumer.accept(this);
+        consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
 
@@ -87,6 +86,10 @@ public final class HasItemInHandEntityPredicate implements LivingEntityPredicate
 
     public void setItemPredicate(@NotNull ItemStackPredicate itemStackPredicate) {
         this.itemStackPredicate = itemStackPredicate;
+    }
+
+    public HasItemInHandEntityPredicate copy() {
+        return new HasItemInHandEntityPredicate(this.itemStackPredicate);
     }
 
     public static class Serializer implements LivingEntityPredicate.Serializer {
@@ -114,13 +117,15 @@ public final class HasItemInHandEntityPredicate implements LivingEntityPredicate
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public LivingEntityPredicate deserialize(FriendlyByteBuf buf) {
+        public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new HasItemInHandEntityPredicate(NetworkHelper.readItemPredicate(buf));
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, LivingEntityPredicate predicate) {
+        public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             HasItemInHandEntityPredicate validPredicate = validatePredicate(predicate);
             NetworkHelper.writeItemPredicate(buf, validPredicate.itemStackPredicate);
         }

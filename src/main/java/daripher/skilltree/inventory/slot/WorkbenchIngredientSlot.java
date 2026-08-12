@@ -5,6 +5,7 @@ import daripher.skilltree.recipe.workbench.AbstractWorkbenchRecipe;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -22,10 +23,12 @@ public class WorkbenchIngredientSlot extends Slot {
 
     @Override
     public boolean mayPlace(@NotNull ItemStack itemStack) {
-        AbstractWorkbenchRecipe selectedRecipe = container.menu.getSelectedRecipe();
-        if (selectedRecipe == null) {
+        // Factual Fix 1.21.4: Update lookups to match the modern holder-centric menu model
+        RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder = container.menu.getSelectedRecipeHolder();
+        if (selectedRecipeHolder == null) {
             return false;
         }
+        AbstractWorkbenchRecipe selectedRecipe = selectedRecipeHolder.value();
         if (!selectedRecipe.isValidIngredient(itemStack)) {
             return false;
         }

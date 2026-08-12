@@ -5,7 +5,7 @@ import com.google.gson.JsonParseException;
 import daripher.skilltree.init.PSTLivingMultipliers;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -53,13 +53,15 @@ public enum NoneLivingMultiplier implements LivingMultiplier {
             return new CompoundTag();
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public LivingMultiplier deserialize(FriendlyByteBuf buf) {
+        public LivingMultiplier deserialize(RegistryFriendlyByteBuf buf) {
             return INSTANCE;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, LivingMultiplier multiplier) {
+        public void serialize(RegistryFriendlyByteBuf buf, LivingMultiplier multiplier) {
             if (multiplier != NoneLivingMultiplier.INSTANCE) {
                 throw new IllegalArgumentException();
             }

@@ -12,6 +12,7 @@ import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.requirement.SkillRequirement;
 import java.util.concurrent.CompletableFuture;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
@@ -26,24 +27,33 @@ import java.util.Objects;
 
 /**
  * Portage Fabric de LanguageProvider (Forge) vers FabricLanguageProvider (Fabric Data Generation API).
- * Signature confirmée par le compilateur (23/07/2026) : constructeur à 2 arguments (pas de
- * CompletableFuture), generateTranslations(TranslationBuilder) sans RegistryAccess.
+ * Correctif (31/07/2026) : en 1.21.1, FabricLanguageProvider attend un constructeur à 3 arguments
+ * avec un CompletableFuture<HolderLookup.Provider> registryLookup, et generateTranslations prend
+ * désormais ce HolderLookup.Provider en premier argument, en plus du TranslationBuilder.
  */
 public abstract class PSTTranslationProvider extends FabricLanguageProvider {
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     public PSTTranslationProvider(FabricDataOutput dataOutput, String locale) {
         super(dataOutput, locale);
 =======
+=======
+>>>>>>> Stashed changes
     protected HolderLookup.Provider registries;
 
     public PSTTranslationProvider(
             FabricPackOutput dataOutput, String locale, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(dataOutput, locale, registryLookup);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 
     @Override
-    public void generateTranslations(FabricLanguageProvider.TranslationBuilder translationBuilder) {
+    public void generateTranslations(
+            HolderLookup.Provider registryLookup, FabricLanguageProvider.TranslationBuilder translationBuilder) {
+        this.registries = registryLookup;
         this.translationBuilder = translationBuilder;
         addTranslations();
     }

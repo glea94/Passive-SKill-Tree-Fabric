@@ -3,7 +3,7 @@
   "bonuses": [
     {
       "type": "skilltree:attribute",
-      "attribute": "minecraft:generic.armor",
+      "attribute": "minecraft:armor",
       "id": "60ad3682-3454-4ea4-b5a2-7cde11e1729e",
       "name": "Skill",
       "amount": 4.0,

@@ -16,7 +16,11 @@ import java.util.Objects;
 
 public class PSTEnchantmentPredicates {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "enchantment_conditions");
+=======
+    public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "enchantment_conditions");
+>>>>>>> Stashed changes
 =======
     public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "enchantment_conditions");
 >>>>>>> Stashed changes
@@ -27,7 +31,9 @@ public class PSTEnchantmentPredicates {
     public static final RegistryObject<EnchantmentCondition.Serializer> WEAPON = REGISTRY.register("weapon", WeaponEnchantmentCondition.Serializer::new);
 
     public static List<EnchantmentCondition> conditionsList() {
-        return PSTRegistries.ENCHANTMENT_CONDITIONS.get().getValues().stream().map(EnchantmentCondition.Serializer::createDefaultInstance)
+        // Alignment 1.21.4: Safely streams custom criteria registry maps
+        return PSTRegistries.ENCHANTMENT_CONDITIONS.get().getValues().stream()
+                .map(EnchantmentCondition.Serializer::createDefaultInstance)
                 .toList();
     }
 

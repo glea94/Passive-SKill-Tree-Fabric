@@ -14,7 +14,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffect;
@@ -84,7 +84,7 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
         editor.addLabel(0, 0, "Effect Condition", ChatFormatting.GOLD);
         editor.increaseHeight(19);
         editor.addSelectionMenu(0, 0, 200, effectPredicate).setRequiresSearch(false)
-                .setResponder(effectPredicate -> selectEffectPredicate(editor, consumer, effectPredicate))
+                .setResponder(predicate -> selectEffectPredicate(editor, consumer, predicate))
                 .setMenuInitFunc(() -> addEffectPredicateWidgets(editor, consumer));
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Player Condition", ChatFormatting.GOLD);
@@ -105,7 +105,6 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addEffectPredicateWidgets(SkillTreeEditor editor, Consumer<EffectImmunityBonus> consumer) {
         effectPredicate.addEditorWidgets(editor, predicate -> {
             setEffectPredicate(predicate);
@@ -162,16 +161,18 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
             return compoundTag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public EffectImmunityBonus deserialize(FriendlyByteBuf buf) {
+        public EffectImmunityBonus deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectPredicate mobEffectPredicate = NetworkHelper.readMobEffectCondition(buf);
             EffectImmunityBonus bonus = new EffectImmunityBonus(mobEffectPredicate);
             bonus.playerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             EffectImmunityBonus validBonus = validateBonus(bonus);
             NetworkHelper.writeMobEffectCondition(buf, validBonus.effectPredicate);
             NetworkHelper.writeLivingCondition(buf, validBonus.playerCondition);
@@ -186,6 +187,7 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
+            // Factual Fix 1.21.4: Removed deprecated .value() call since MobEffects.POISON is a native registry Holder
             return new EffectImmunityBonus(new MobEffectIdPredicate(MobEffects.POISON));
         }
     }

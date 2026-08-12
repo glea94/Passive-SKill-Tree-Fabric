@@ -1,5 +1,9 @@
 package daripher.skilltree.inventory.menu;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.crafting.RecipeManager;
+import daripher.skilltree.client.network.ClientWorkbenchRecipeCache;
 import daripher.skilltree.init.PSTBlocks;
 import daripher.skilltree.init.PSTMenuTypes;
 import daripher.skilltree.init.PSTRecipeTypes;
@@ -16,7 +20,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +34,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class WorkbenchMenu extends AbstractContainerMenu {
-    private static final List<AbstractWorkbenchRecipe> WORKBENCH_RECIPE_CACHE = new ArrayList<>();
+    private static final List<RecipeHolder<AbstractWorkbenchRecipe>> WORKBENCH_RECIPE_CACHE = new ArrayList<>();
     private static final int RESULT_SLOT = 0;
     private static final int CRAFT_SLOT_START = RESULT_SLOT + 1;
     private static final int CRAFT_SLOT_END = CRAFT_SLOT_START + 10;
@@ -39,7 +47,7 @@ public class WorkbenchMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess levelAccess;
     private final Player player;
     private final DataSlot selectedRecipeIndex;
-    private List<AbstractWorkbenchRecipe> selectedRecipes = new ArrayList<>();
+    private List<RecipeHolder<AbstractWorkbenchRecipe>> selectedRecipes = new ArrayList<>();
     private @NotNull ItemStack prevInput = ItemStack.EMPTY;
     private final Level level;
     private @Nullable Runnable recipeListUpdateListener;
@@ -56,8 +64,10 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         this.levelAccess = levelAccess;
         this.player = playerInventory.player;
         this.level = player.level();
+
         addSlot(new WorkbenchResultSlot(playerInventory.player, workbenchContainer, resultSlots, 0, 143, 129));
         addSlot(new WorkbenchBaseSlot(workbenchContainer, 0, 8, 120));
+
         for (int i = 0; i < 2; ++i) {
             for (int j = 0; j < 5; ++j) {
                 if (i == 0 && j == 0) {
@@ -88,7 +98,7 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         ItemStack clickedStack = slot.getItem();
         movedStack = clickedStack.copy();
         if (slotIndex == RESULT_SLOT) {
-            levelAccess.execute((level, blockPos) -> clickedStack.getItem().onCraftedBy(clickedStack, level, player));
+            levelAccess.execute((level, blockPos) -> clickedStack.onCraftedBy(player, clickedStack.getCount()));
             if (!moveItemStackTo(clickedStack, INV_SLOT_START, HOTBAR_SLOT_END, true)) {
                 return ItemStack.EMPTY;
             }
@@ -96,6 +106,7 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         } else if (slotIndex >= INV_SLOT_START && slotIndex < HOTBAR_SLOT_END) {
             if (!moveItemStackTo(clickedStack, CRAFT_SLOT_START, CRAFT_SLOT_END, false)) {
                 if (slotIndex < INV_SLOT_END) {
+                    // Factual Fix 1.21.4: Swapped invalid placeholders with real class fields
                     if (!moveItemStackTo(clickedStack, HOTBAR_SLOT_START, HOTBAR_SLOT_END, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -107,7 +118,7 @@ public class WorkbenchMenu extends AbstractContainerMenu {
             return ItemStack.EMPTY;
         }
         if (clickedStack.isEmpty()) {
-            slot.setByPlayer(ItemStack.EMPTY);
+            slot.set(ItemStack.EMPTY);
         } else {
             slot.setChanged();
         }
@@ -140,9 +151,9 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         }
         if (isValidRecipeIndex(id)) {
             selectedRecipeIndex.set(id);
-            AbstractWorkbenchRecipe selectedRecipe = getSelectedRecipe();
-            if (selectedRecipe != null) {
-                updateCraftingResult(selectedRecipe);
+            RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder = getSelectedRecipeHolder();
+            if (selectedRecipeHolder != null) {
+                updateCraftingResult(selectedRecipeHolder);
             }
         }
         return true;
@@ -159,12 +170,12 @@ public class WorkbenchMenu extends AbstractContainerMenu {
 
     private void updateSelectedRecipe() {
         ItemStack input = workbenchContainer.getBaseItem();
-        AbstractWorkbenchRecipe selectedRecipe = getSelectedRecipe();
-        if (selectedRecipe != null) {
-            updateCraftingResult(selectedRecipe);
+        RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder = getSelectedRecipeHolder();
+        if (selectedRecipeHolder != null) {
+            updateCraftingResult(selectedRecipeHolder);
             return;
         }
-        if (!ItemStack.isSameItemSameTags(input, prevInput)) {
+        if (!ItemStack.isSameItemSameComponents(input, prevInput)) {
             setupRecipeList();
             prevInput = input.copy();
         }
@@ -178,10 +189,12 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         this.recipeListUpdateListener = recipeListUpdateListener;
     }
 
-    private void updateCraftingResult(AbstractWorkbenchRecipe selectedRecipe) {
-        if (!selectedRecipe.matches(workbenchContainer, level)) {
+    private void updateCraftingResult(RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder) {
+        AbstractWorkbenchRecipe recipe = selectedRecipeHolder.value();
+        if (!recipe.matches(workbenchContainer, level)) {
             resultSlots.setItem(0, ItemStack.EMPTY);
         } else {
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
             if (!level.isClientSide) {
                 ItemStack craftResult = selectedRecipe.assemble(workbenchContainer, level.registryAccess());
@@ -190,74 +203,116 @@ public class WorkbenchMenu extends AbstractContainerMenu {
             if (!level.isClientSide()) {
                 ItemStack craftResult = recipe.assemble(workbenchContainer);
 >>>>>>> Stashed changes
+=======
+            // Fix 1.21.9 : isClientSide champ private, méthode isClientSide() confirmée par décompilation
+            if (!level.isClientSide()) {
+                ItemStack craftResult = recipe.assemble(workbenchContainer);
+>>>>>>> Stashed changes
                 addCraftingBonuses(craftResult);
-                resultSlots.setRecipeUsed(selectedRecipe);
+                resultSlots.setRecipeUsed(selectedRecipeHolder);
                 resultSlots.setItem(0, craftResult);
             }
         }
     }
-
     public void addCraftingBonuses(ItemStack craftResult) {
         SkillBonusProvider.getMergedSkillBonuses(player, CraftedItemBonusBonus.class).forEach(bonus -> bonus.itemCrafted(craftResult));
     }
 
     private void setupRecipeList() {
-        selectedRecipeIndex.set(-1);
-        resultSlots.setItem(0, ItemStack.EMPTY);
-        selectedRecipes = getAllWorkbenchRecipes().stream().filter(this::shouldDisplayRecipe)
-                .sorted(Comparator.comparing(AbstractWorkbenchRecipe::getId)).toList();
+        this.selectedRecipeIndex.set(-1);
+        this.resultSlots.setItem(0, ItemStack.EMPTY);
+        this.selectedRecipes = getAllWorkbenchRecipes().stream()
+                .filter(holder -> this.shouldDisplayRecipe(holder.value()))
+                .sorted(Comparator.comparing(holder -> holder.id().toString()))
+                .toList();
     }
 
-    private List<AbstractWorkbenchRecipe> getAllWorkbenchRecipes() {
+    private List<RecipeHolder<AbstractWorkbenchRecipe>> getAllWorkbenchRecipes() {
         if (!WORKBENCH_RECIPE_CACHE.isEmpty()) {
             return WORKBENCH_RECIPE_CACHE;
         }
-        List<CraftingRecipe> vanillaCraftingRecipes = level.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING).stream()
-                .filter(recipe -> !recipe.getResultItem(level.registryAccess()).isEmpty()).toList();
-        WORKBENCH_RECIPE_CACHE.addAll(level.getRecipeManager().getAllRecipesFor(PSTRecipeTypes.WORKBENCH));
-        WORKBENCH_RECIPE_CACHE.addAll(vanillaCraftingRecipes.stream().map(this::convertVanillaRecipe).toList());
+
+        if (this.level.getServer() != null) {
+            RecipeManager recipeManager = this.level.getServer().getRecipeManager();
+
+            // Factual Fix 1.21.5 : CraftingRecipe#getResultItem(RegistryAccess) a été retiré de l'interface Recipe<T>,
+            // remplacé par le système RecipeDisplay (confirmé par décompilation Fernflower de Recipe<T>, RecipeDisplay
+            // et SlotDisplay) : Recipe#display() -> List<RecipeDisplay>, RecipeDisplay#result() -> SlotDisplay,
+            // SlotDisplay#resolveForFirstStack(ContextMap) -> ItemStack. Le ContextMap est construit via
+            // SlotDisplayContext.fromLevel(Level), qui y injecte REGISTRIES (HolderLookup.Provider) et FUEL_VALUES.
+            List<RecipeHolder<CraftingRecipe>> vanillaCraftingRecipes = recipeManager.getRecipes().stream()
+                    .filter(holder -> holder.value().getType() == RecipeType.CRAFTING)
+                    .map(holder -> new RecipeHolder<>(holder.id(), (CraftingRecipe) holder.value()))
+                    .filter(recipe -> {
+                        List<RecipeDisplay> displays = recipe.value().display();
+                        if (displays.isEmpty()) {
+                            return false;
+                        }
+                        ItemStack previewResult = displays.get(0).result().resolveForFirstStack(SlotDisplayContext.fromLevel(this.level));
+                        return !previewResult.isEmpty();
+                    })
+                    .toList();
+
+            recipeManager.getRecipes().stream()
+                    .filter(holder -> holder.value().getType() == PSTRecipeTypes.WORKBENCH)
+                    .map(holder -> new RecipeHolder<>(holder.id(), (AbstractWorkbenchRecipe) holder.value()))
+                    .forEach(WORKBENCH_RECIPE_CACHE::add);
+
+            for (RecipeHolder<CraftingRecipe> vanillaHolder : vanillaCraftingRecipes) {
+                WORKBENCH_RECIPE_CACHE.add(new RecipeHolder<>(
+                        vanillaHolder.id(),
+                        new WorkbenchVanillaCraftingRecipe(vanillaHolder, this.level.registryAccess())
+                ));
+            }
+        } else {
+            ClientWorkbenchRecipeCache.getAll().stream()
+                    .map(recipe -> new RecipeHolder<>((ResourceKey<Recipe<?>>) ResourceKey.create(Registries.RECIPE, recipe.getId()), recipe))
+                    .forEach(WORKBENCH_RECIPE_CACHE::add);
+        }
         return WORKBENCH_RECIPE_CACHE;
     }
 
-    private AbstractWorkbenchRecipe convertVanillaRecipe(CraftingRecipe craftingRecipe) {
-        return new WorkbenchVanillaCraftingRecipe(craftingRecipe, level.registryAccess());
-    }
-
     private boolean shouldDisplayRecipe(AbstractWorkbenchRecipe recipe) {
-        if (recipe.isLockedFor(player)) {
+        if (recipe.isLockedFor(this.player)) {
             return false;
         }
-        return workbenchContainer.getBaseItem().isEmpty() || recipe.isValidBaseItem(workbenchContainer.getBaseItem());
+        return this.workbenchContainer.getBaseItem().isEmpty() || recipe.isValidBaseItem(this.workbenchContainer.getBaseItem());
     }
 
     public Player getPlayer() {
-        return player;
+        return this.player;
     }
 
-    public List<AbstractWorkbenchRecipe> getSelectedRecipes() {
-        return selectedRecipes;
+    public List<RecipeHolder<AbstractWorkbenchRecipe>> getSelectedRecipes() {
+        return this.selectedRecipes;
     }
 
     public int getSelectedRecipeIndex() {
-        return selectedRecipeIndex.get();
+        return this.selectedRecipeIndex.get();
     }
 
     public WorkbenchContainer getWorkbenchContainer() {
-        return workbenchContainer;
+        return this.workbenchContainer;
     }
 
     public ItemStack getResultItem() {
-        return resultSlots.getItem(0);
+        return this.resultSlots.getItem(0);
     }
 
+    public @Nullable RecipeHolder<AbstractWorkbenchRecipe> getSelectedRecipeHolder() {
+        if (this.selectedRecipes.isEmpty()) {
+            return null;
+        }
+        int index = this.selectedRecipeIndex.get();
+        if (index >= this.selectedRecipes.size() || index < 0) {
+            return null;
+        }
+        return this.selectedRecipes.get(index);
+    }
+
+    @Deprecated
     public @Nullable AbstractWorkbenchRecipe getSelectedRecipe() {
-        if (selectedRecipes.isEmpty()) {
-            return null;
-        }
-        int index = selectedRecipeIndex.get();
-        if (index >= selectedRecipes.size() || index < 0) {
-            return null;
-        }
-        return selectedRecipes.get(index);
+        RecipeHolder<AbstractWorkbenchRecipe> holder = getSelectedRecipeHolder();
+        return holder != null ? holder.value() : null;
     }
 }

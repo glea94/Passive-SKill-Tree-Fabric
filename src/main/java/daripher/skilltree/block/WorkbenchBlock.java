@@ -1,9 +1,11 @@
 package daripher.skilltree.block;
 
 import daripher.skilltree.inventory.menu.WorkbenchMenu;
+import daripher.skilltree.util.registry.DeferredRegister;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
@@ -23,19 +25,27 @@ public class WorkbenchBlock extends Block {
     private static final Component CONTAINER_TITLE = Component.translatable("container.upgrade");
 
     public WorkbenchBlock() {
-        super(Properties.of().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)
+        // Changement 1.21.5 : comme pour Item.Properties, Block.Properties exige désormais
+        // que l'id soit connu avant la construction du Block (Objects.requireNonNull(this.id,
+        // "Block id not set") dans AbstractBlock.Properties). Même pattern que WisdomScrollItem/
+        // ModBlockItem, avec Registries.BLOCK au lieu de Registries.ITEM.
+        super(Properties.of().setId(ResourceKey.create(Registries.BLOCK, DeferredRegister.currentId()))
+                .mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)
                 .ignitedByLava());
     }
 
+    // Changement 1.21.4 : Signature et retours d'InteractionResult mis à jour
     @SuppressWarnings("deprecation")
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState blockState, Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull InteractionHand interactionHand, @NotNull BlockHitResult blockHitResult) {
-        if (level.isClientSide) {
+    protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState blockState, Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult blockHitResult) {
+        // Fix 1.21.9 : le champ isClientSide est désormais private dans Level, méthode isClientSide() confirmée par décompilation
+        if (level.isClientSide()) {
+            // Utilise la nouvelle structure ou l'instance statique de succès côté client
             return InteractionResult.SUCCESS;
         } else {
             player.openMenu(blockState.getMenuProvider(level, blockPos));
-            // add custom stat awarded for block usage?
-            return InteractionResult.CONSUME;
+            // InteractionResult.SUCCESS est le comportement standard pour l'ouverture d'un GUI serveur
+            return InteractionResult.SUCCESS;
         }
     }
 

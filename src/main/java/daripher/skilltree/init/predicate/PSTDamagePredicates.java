@@ -13,7 +13,11 @@ import java.util.Objects;
 
 public class PSTDamagePredicates {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "damage_conditions");
+=======
+    public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "damage_conditions");
+>>>>>>> Stashed changes
 =======
     public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "damage_conditions");
 >>>>>>> Stashed changes
@@ -29,7 +33,10 @@ public class PSTDamagePredicates {
     public static final RegistryObject<DamageCondition.Serializer> THORNS = REGISTRY.register("thorns", ThornsDamageCondition.Serializer::new);
 
     public static List<DamageCondition> conditionsList() {
-        return PSTRegistries.DAMAGE_CONDITIONS.get().getValues().stream().map(DamageCondition.Serializer::createDefaultInstance).toList();
+        // Alignment 1.21.4: Stream registry values directly to populate condition dropdown maps cleanly
+        return PSTRegistries.DAMAGE_CONDITIONS.get().getValues().stream()
+                .map(DamageCondition.Serializer::createDefaultInstance)
+                .toList();
     }
 
     public static String getName(DamageCondition condition) {

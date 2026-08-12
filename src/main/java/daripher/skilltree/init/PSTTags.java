@@ -49,6 +49,9 @@ public class PSTTags {
         public static final TagKey<Item> MELEE_WEAPON = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("skilltree", "melee_weapon"));
         public static final TagKey<Item> RANGED_WEAPON = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("skilltree", "ranged_weapon"));
         public static final TagKey<Item> LEATHER_ARMOR = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("skilltree", "armors/leather"));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 }

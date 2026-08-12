@@ -12,16 +12,16 @@ import daripher.skilltree.skill.bonus.predicate.item.EquipmentPredicate;
 import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.FloatFunctionEntityPredicate;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import org.jetbrains.annotations.NotNull;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -39,7 +39,9 @@ public class EnchantmentAmountFunction implements FloatFunction<EnchantmentAmoun
     }
 
     private int getEnchants(Stream<ItemStack> items) {
-        return items.map(EnchantmentHelper::getEnchantments).map(Map::size).reduce(Integer::sum).orElse(0);
+        return items.map(item -> item.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY))
+                .map(ItemEnchantments::size)
+                .reduce(Integer::sum).orElse(0);
     }
 
     @Override
@@ -93,7 +95,6 @@ public class EnchantmentAmountFunction implements FloatFunction<EnchantmentAmoun
         Component logicDescription = logic.getTooltip("enchantment_amount", valueDescription);
         return Component.translatable(key, logicDescription, enchantmentsDescription, itemDescription);
     }
-
     @Override
     public FloatFunction.Serializer getSerializer() {
         return PSTFloatFunctions.ENCHANTMENT_AMOUNT.get();
@@ -173,14 +174,16 @@ public class EnchantmentAmountFunction implements FloatFunction<EnchantmentAmoun
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public FloatFunction<?> deserialize(FriendlyByteBuf buf) {
+        public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return new EnchantmentAmountFunction(itemStackPredicate);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, FloatFunction<?> provider) {
+        public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof EnchantmentAmountFunction aProvider)) {
                 throw new IllegalArgumentException();
             }

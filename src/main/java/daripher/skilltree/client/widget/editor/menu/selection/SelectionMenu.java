@@ -2,6 +2,7 @@ package daripher.skilltree.client.widget.editor.menu.selection;
 
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.editor.menu.EditorMenu;
+import daripher.skilltree.client.widget.TextField;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,16 +26,24 @@ public class SelectionMenu<T> extends EditorMenu {
         clearWidgets();
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
         editor.increaseHeight(29);
+
         if (requiresSearch) {
-            editor.addTextField(0, 0, 200, 14, "").setHint("Search").setFocused().setResponder(selectionList::setSearchString);
+            // Factual Fix 1.21.4: Extracted out of a single fluent chain to fully resolve the "void cannot be dereferenced" compilation error
+            TextField searchField = editor.addTextField(0, 0, 200, 14, "");
+            searchField.setHint("Search");
+            searchField.setFocused(true);
+            searchField.setResponder(selectionList::setSearchString);
             editor.increaseHeight(19);
         }
+
         selectionList.setX(editor.getWidgetsX(0));
         selectionList.setY(editor.getWidgetsY(0));
+
+        onInit.run();
         editor.increaseHeight(selectionList.getHeight() + 10);
+
         selectionList.setResponder(responder);
         addWidget(selectionList);
-        onInit.run();
     }
 
     public SelectionMenu<T> setResponder(@NotNull Consumer<T> responder) {

@@ -14,7 +14,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -82,7 +82,7 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
 
     @Override
     public MutableComponent getSimpleTooltip() {
-        MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), amount, AttributeModifier.Operation.MULTIPLY_BASE);
+        MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), amount, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         tooltip = playerMultiplier.getTooltip(tooltip, Target.PLAYER);
         tooltip = playerCondition.getTooltip(tooltip, Target.PLAYER);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
@@ -111,7 +111,6 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
                 .setMenuInitFunc(() -> addPlayerMultiplierWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addPlayerMultiplierWidgets(SkillTreeEditor editor, Consumer<HealthReservationBonus> consumer) {
         playerMultiplier.addEditorWidgets(editor, multiplier -> {
             setPlayerMultiplier(multiplier);
@@ -179,7 +178,7 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
 
         @Override
         public HealthReservationBonus deserialize(CompoundTag tag) {
-            float amount = tag.getFloat("amount");
+            float amount = tag.getFloatOr("amount", 0f);
             HealthReservationBonus bonus = new HealthReservationBonus(amount);
             bonus.playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
@@ -198,8 +197,9 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public HealthReservationBonus deserialize(FriendlyByteBuf buf) {
+        public HealthReservationBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
             HealthReservationBonus bonus = new HealthReservationBonus(amount);
             bonus.playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
@@ -207,8 +207,9 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
             return bonus;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof HealthReservationBonus aBonus)) {
                 throw new IllegalArgumentException();
             }

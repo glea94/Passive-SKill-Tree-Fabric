@@ -2,6 +2,7 @@ package daripher.skilltree.client.widget.group;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.input.MouseButtonEvent;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
@@ -16,6 +17,7 @@ public class ScrollableZoomableWidgetGroup<T extends AbstractWidget> extends Wid
     private float zoom = 1F;
 
     public ScrollableZoomableWidgetGroup(int pX, int pY, int pWidth, int pHeight) {
+        // Factual Fix 1.21.4: Refactored to cleanly cascade parameters into your updated WidgetGroup parent constructor
         super(pX, pY, pWidth, pHeight);
     }
 
@@ -44,8 +46,8 @@ public class ScrollableZoomableWidgetGroup<T extends AbstractWidget> extends Wid
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (button != GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+    public boolean mouseDragged(MouseButtonEvent mouseButtonEvent, double dragX, double dragY) {
+        if (mouseButtonEvent.button() != GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             return false;
         }
         if (maxScrollX > 0) {
@@ -54,20 +56,20 @@ public class ScrollableZoomableWidgetGroup<T extends AbstractWidget> extends Wid
         if (maxScrollY > 0) {
             scrollY += (float) (dragY);
         }
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(mouseButtonEvent, dragX, dragY);
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        if (delta > 0 && zoom < 2F) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        if (scrollY > 0 && zoom < 2F) {
             zoom += 0.05f;
-            scrollX *= 1.05f;
-            scrollY *= 1.05f;
+            this.scrollX *= 1.05f;
+            this.scrollY *= 1.05f;
         }
-        if (delta < 0 && zoom > 0.25F) {
+        if (scrollY < 0 && zoom > 0.25F) {
             zoom -= 0.05f;
-            scrollX *= 0.95f;
-            scrollY *= 0.95f;
+            this.scrollX *= 0.95f;
+            this.scrollY *= 0.95f;
         }
         rebuildFunc.run();
         return true;

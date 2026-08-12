@@ -51,10 +51,13 @@ public class DeferredRegister<T> {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public <I extends T> RegistryObject<I> register(String name, Supplier<I> supplier) {
         ResourceLocation id = new ResourceLocation(modId, name);
         I value = supplier.get();
 =======
+=======
+>>>>>>> Stashed changes
     private static final ThreadLocal<Identifier> CURRENT_ID = new ThreadLocal<>();
 
     /**

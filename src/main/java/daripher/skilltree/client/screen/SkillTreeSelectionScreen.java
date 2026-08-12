@@ -8,6 +8,10 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.client.renderer.RenderPipelines;
 >>>>>>> Stashed changes
@@ -35,8 +39,8 @@ public class SkillTreeSelectionScreen extends Screen {
         List<PassiveSkillTree> skillTrees = getNonEmptySkillTrees();
         int buttonCount = skillTrees.size();
         int buttonRowWidth = buttonCount * BUTTONS_SIZE - (buttonCount - 1) * BUTTONS_SPACING;
-        int x = width / 2 - buttonRowWidth / 2;
-        int y = height / 2 - BUTTONS_SIZE / 2;
+        int x = this.width / 2 - buttonRowWidth / 2;
+        int y = this.height / 2 - BUTTONS_SIZE / 2;
         for (PassiveSkillTree skillTree : skillTrees) {
             Button button = new SkillTreeSelectionButton(x, y, BUTTONS_SIZE, BUTTONS_SIZE, skillTree.getId());
             x += BUTTONS_SIZE + BUTTONS_SPACING;
@@ -51,7 +55,12 @@ public class SkillTreeSelectionScreen extends Screen {
 
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+=======
+    public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        // Correction 1.21.4: Call updated background render method
+>>>>>>> Stashed changes
 =======
     public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Correction 1.21.4: Call updated background render method
@@ -70,16 +79,22 @@ public class SkillTreeSelectionScreen extends Screen {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     @Override
     public void renderBackground(GuiGraphics guiGraphics) {
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_background.png");
         int size = SkillTreeScreen.BACKGROUND_SIZE;
         guiGraphics.blit(texture, (width - size) / 2, (height - size) / 2, 0, 0F, 0F, size, size, size, size);
 =======
+=======
+>>>>>>> Stashed changes
     public void renderBackground(@NotNull GuiGraphicsExtractor guiGraphics) {
         Identifier texture = Identifier.parse("skilltree:textures/screen/skill_tree_background.png");
         int size = SkillTreeScreen.BACKGROUND_SIZE;
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, (this.width - size) / 2, (this.height - size) / 2, 0F, 0F, size, size, size, size);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 }

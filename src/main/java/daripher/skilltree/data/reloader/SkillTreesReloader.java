@@ -9,28 +9,37 @@ import daripher.skilltree.skill.PassiveSkillTree;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 =======
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
 >>>>>>> Stashed changes
+=======
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 public class SkillTreesReloader extends SimpleJsonResourceReloadListener implements IdentifiableResourceReloadListener {
     public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
             .setPrettyPrinting().create();
     private static final Map<ResourceLocation, PassiveSkillTree> SKILL_TREES = new HashMap<>();
 =======
+=======
+>>>>>>> Stashed changes
 // Factual Fix 1.21.4: Extends SimplePreparableReloadListener to safely retain custom GSON configs since SimpleJsonResourceReloadListener dropped Gson constructors
 public class SkillTreesReloader extends SimplePreparableReloadListener<Map<Identifier, JsonElement>> implements IdentifiableResourceReloadListener {
     public static final Gson GSON = new GsonBuilder()
@@ -48,16 +57,24 @@ public class SkillTreesReloader extends SimplePreparableReloadListener<Map<Ident
             .create();
 
     private static final Map<Identifier, PassiveSkillTree> SKILL_TREES = new HashMap<>();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     public SkillTreesReloader() {
-        super(GSON, "skill_trees");
+        super();
     }
 
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public ResourceLocation getFabricId() {
         return new ResourceLocation(SkillTreeMod.MOD_ID, "skill_trees_reloader");
+=======
+    public Identifier getFabricId() {
+        return Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_trees_reloader");
+>>>>>>> Stashed changes
 =======
     public Identifier getFabricId() {
         return Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_trees_reloader");
@@ -80,15 +97,19 @@ public class SkillTreesReloader extends SimplePreparableReloadListener<Map<Ident
         return getSkillTrees().keySet().stream().findAny().orElse(null);
     }
 
-    public static void loadFromByteBuf(FriendlyByteBuf buf) {
+    // Factual Fix 1.21.4: Parameter signature refactored from FriendlyByteBuf to RegistryFriendlyByteBuf to sync packet networks
+    public static void loadFromByteBuf(RegistryFriendlyByteBuf buf) {
         SKILL_TREES.clear();
         NetworkHelper.readPassiveSkillTrees(buf).forEach(t -> SKILL_TREES.put(t.getId(), t));
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
 =======
+=======
+>>>>>>> Stashed changes
     // Factual Fix 1.21.4: Implement prepare step for scanning json resources out of the skill_trees namespace directory manually
     @Override
     protected Map<Identifier, JsonElement> prepare(ResourceManager resourceManager, ProfilerFiller profilerFiller) {

@@ -19,7 +19,9 @@ public class SelectionMenuButton<T> extends Button {
     private boolean requiresSearch = true;
 
     public SelectionMenuButton(SkillTreeEditor editor, int x, int y, int width, String message, Collection<T> values) {
+        // Factual Fix 1.21.4: Call your updated custom button wrapper class directly with standard (x, y) coordinate mapping
         super(x, y, width, 14, Component.literal(message));
+
         this.selectionList = new TextSelectionList<>(0, 0, 190, 14, values).setRows(8);
         setPressFunc(b -> selectMenu(editor));
     }

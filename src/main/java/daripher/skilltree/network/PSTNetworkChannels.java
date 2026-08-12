@@ -1,7 +1,12 @@
 package daripher.skilltree.network;
 
-import daripher.skilltree.SkillTreeMod;
-import net.minecraft.resources.ResourceLocation;
+import daripher.skilltree.network.message.GainSkillPointMessage;
+import daripher.skilltree.network.message.LearnSkillMessage;
+import daripher.skilltree.network.message.OpenSkillTreeEditorMessage;
+import daripher.skilltree.network.message.SyncPlayerSkillsMessage;
+import daripher.skilltree.network.message.SyncServerDataMessage;
+import daripher.skilltree.network.message.SyncWorkbenchRecipesMessage;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
 /**
 <<<<<<< Updated upstream
@@ -35,5 +40,9 @@ public class PSTNetworkChannels {
         // Ajouté 1.21.5 : synchronisation des recettes Workbench vers le client (RecipeAccess client ne les expose plus)
         PayloadTypeRegistry.clientboundPlay().register(SyncWorkbenchRecipesMessage.TYPE, SyncWorkbenchRecipesMessage.STREAM_CODEC);
     }
+<<<<<<< Updated upstream
+}
+>>>>>>> Stashed changes
+=======
 }
 >>>>>>> Stashed changes

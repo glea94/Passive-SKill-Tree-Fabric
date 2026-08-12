@@ -9,7 +9,7 @@ import daripher.skilltree.skill.bonus.function.EffectAmountFunction;
 import daripher.skilltree.skill.bonus.predicate.effect.MobEffectType;
 import daripher.skilltree.skill.bonus.predicate.living.FloatFunctionEntityPredicate;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 
@@ -34,12 +34,12 @@ public final class NumericValueRequirement implements SkillRequirement<NumericVa
 
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<NumericValueRequirement> consumer) {
-        condition.addEditorWidgets(editor, condition -> setCondition((FloatFunctionEntityPredicate) condition, consumer));
+        condition.addEditorWidgets(editor, predicate -> setCondition((FloatFunctionEntityPredicate) predicate, consumer));
     }
 
     public void setCondition(FloatFunctionEntityPredicate condition, Consumer<NumericValueRequirement> consumer) {
         this.condition = condition;
-        consumer.accept(this);
+        consumer.accept(this.copy());
     }
 
     @Override
@@ -83,15 +83,17 @@ public final class NumericValueRequirement implements SkillRequirement<NumericVa
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public SkillRequirement<?> deserialize(FriendlyByteBuf buf) {
+        public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
             FloatFunctionEntityPredicate condition = (FloatFunctionEntityPredicate) PSTLivingEntityPredicates.NUMERIC_VALUE.get()
                     .deserialize(buf);
             return new NumericValueRequirement(condition);
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillRequirement<?> requirement) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillRequirement<?> requirement) {
             if (requirement instanceof NumericValueRequirement aRequirement) {
                 aRequirement.condition.getSerializer().serialize(buf, aRequirement.condition);
             }

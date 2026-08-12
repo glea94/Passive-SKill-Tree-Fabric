@@ -12,5 +12,8 @@ public class PSTDamageTypes {
 =======
     // Correctly provisions a dynamic data-driven damage type registry reference key
     public static final ResourceKey<DamageType> POISON = ResourceKey.create(Registries.DAMAGE_TYPE, Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "poison"));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }

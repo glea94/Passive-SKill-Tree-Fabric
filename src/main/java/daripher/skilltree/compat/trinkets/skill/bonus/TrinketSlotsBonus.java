@@ -2,15 +2,17 @@ package daripher.skilltree.compat.trinkets.skill.bonus;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.compat.trinkets.TrinketsCompatibility;
 import daripher.skilltree.data.serializers.SerializationHelper;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -22,21 +24,15 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-/**
- * Portage/réécriture de compat/curios/skill/bonus/CurioSlotsBonus.java contre Trinkets API.
- * <p>
- * Différence de mécanisme avec Curios (assumée) : Curios modifiait directement l'inventaire de
- * slots (inv.addPermanentSlotModifiers). Trinkets expose à la place un Attribute vanilla par
- * groupe/slot (ex. "trinkets:ring/ring") que l'on modifie via AttributeInstance.addPermanentModifier
- * comme n'importe quel attribut vanilla (max_health, armor...) - le nombre de slots disponibles
- * suit alors la valeur de cet attribut. CONFIANCE MODÉRÉE sur le format exact de l'identifiant
- * ("trinkets:" + slotName, à confirmer une fois la dépendance Trinkets résolue dans Gradle).
- */
 public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
     private String slotName;
     private int amount;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private final UUID modifierId;
+=======
+    private final Identifier modifierId;
+>>>>>>> Stashed changes
 =======
     private final Identifier modifierId;
 >>>>>>> Stashed changes
@@ -48,11 +44,15 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
         this.modifierId = UUID.randomUUID();
     }
 
+<<<<<<< Updated upstream
     private TrinketSlotsBonus(String slotName, int amount, UUID modifierId) {
 =======
         this.modifierId = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "trinket_slots_bonus_" + UUID.randomUUID());
     }
 
+    private TrinketSlotsBonus(String slotName, int amount, Identifier modifierId) {
+>>>>>>> Stashed changes
+=======
     private TrinketSlotsBonus(String slotName, int amount, Identifier modifierId) {
 >>>>>>> Stashed changes
         this.slotName = slotName;
@@ -62,10 +62,13 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
 
     private AttributeInstance getSlotAttributeInstance(ServerPlayer player) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation attributeId = new ResourceLocation("trinkets", slotName);
         Attribute slotAttribute = BuiltInRegistries.ATTRIBUTE.get(attributeId);
         if (slotAttribute == null) {
 =======
+=======
+>>>>>>> Stashed changes
         Identifier attributeId = Identifier.fromNamespaceAndPath("trinkets", slotName);
         // Factual Fix 1.21.4: BuiltInRegistries.ATTRIBUTE.get returns an Optional<Holder.Reference<Attribute>>, unwrap straight to a Holder type reference
         Holder<Attribute> slotAttributeHolder = BuiltInRegistries.ATTRIBUTE.get(attributeId)
@@ -75,7 +78,8 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
 >>>>>>> Stashed changes
             return null;
         }
-        return player.getAttribute(slotAttribute);
+        // Factual Fix 1.21.4: player.getAttribute strictly takes a Holder<Attribute> as parameter
+        return player.getAttribute(slotAttributeHolder);
     }
 
     @Override
@@ -87,7 +91,7 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
         if (attributeInstance == null) {
             return;
         }
-        AttributeModifier modifier = new AttributeModifier(modifierId, "SkillBonus", amount, AttributeModifier.Operation.ADDITION);
+        AttributeModifier modifier = new AttributeModifier(modifierId, amount, AttributeModifier.Operation.ADD_VALUE);
         attributeInstance.addPermanentModifier(modifier);
     }
 
@@ -133,10 +137,9 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
         } else {
             slotDescription = TooltipHelper.getSlotTooltip(slotName);
         }
-        MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(slotDescription, amount, AttributeModifier.Operation.ADDITION);
+        MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(slotDescription, amount, AttributeModifier.Operation.ADD_VALUE);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return amount > 0;
@@ -181,13 +184,16 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
 =======
             String modifierId = SerializationHelper.getElement(json, "modifier_id").getAsString();
             return new TrinketSlotsBonus(slotName, amount, Identifier.parse(modifierId));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
 
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof TrinketSlotsBonus aBonus)) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Expected TrinketSlotsBonus instance");
             }
             json.addProperty("slot", aBonus.slotName);
             json.addProperty("amount", aBonus.amount);
@@ -207,13 +213,16 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
             int amount = tag.getInt("amount").orElse(0);
             String modifierId = tag.getString("modifier_id").orElse("");
             return new TrinketSlotsBonus(slotName, amount, Identifier.parse(modifierId));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
 
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof TrinketSlotsBonus aBonus)) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Expected TrinketSlotsBonus instance");
             }
             CompoundTag tag = new CompoundTag();
             tag.putString("slot", aBonus.slotName);
@@ -222,8 +231,9 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored network signature from FriendlyByteBuf to RegistryFriendlyByteBuf to fulfill your core serialization interface
         @Override
-        public TrinketSlotsBonus deserialize(FriendlyByteBuf buf) {
+        public TrinketSlotsBonus deserialize(RegistryFriendlyByteBuf buf) {
             String slotName = buf.readUtf();
             int amount = buf.readInt();
 <<<<<<< Updated upstream
@@ -232,13 +242,17 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
 =======
             String modifierId = buf.readUtf();
             return new TrinketSlotsBonus(slotName, amount, Identifier.parse(modifierId));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
 
+        // Factual Fix 1.21.4: Refactored network signature from FriendlyByteBuf to RegistryFriendlyByteBuf to fulfill your core serialization interface
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillBonus<?> bonus) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof TrinketSlotsBonus aBonus)) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Expected TrinketSlotsBonus instance");
             }
             buf.writeUtf(aBonus.slotName);
             buf.writeInt(aBonus.amount);

@@ -38,6 +38,16 @@ public class PSTLootModifiers {
 
 >>>>>>> Stashed changes
     public static void register() {
-        // en attente, voir le commentaire de classe
+        // Alignment 1.21.4: Use Fabric Loot API v3 to dynamically inject mod items into vanilla drop lists
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+            // Check if it's the Ender Dragon loot table and configuration allows the drop
+            if (source.isBuiltin() && ENDER_DRAGON.equals(key) && ServerConfig.dragon_drops_amnesia_scroll) {
+                LootPool.Builder poolBuilder = LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1.0F))
+                        .add(LootItem.lootTableItem(PSTItems.AMNESIA_SCROLL.get()));
+
+                tableBuilder.withPool(poolBuilder);
+            }
+        });
     }
 }

@@ -15,7 +15,7 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.bonus.predicate.living.NoneLivingEntityPredicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
@@ -87,9 +87,10 @@ public class TickingEventListener implements SkillEventListener {
             return false;
         }
         TickingEventListener that = (TickingEventListener) o;
-        return cooldown == that.cooldown && Objects.equals(playerCondition, that.playerCondition) && Objects.equals(playerMultiplier, that.playerMultiplier);
+        return cooldown == that.cooldown
+                && Objects.equals(playerCondition, that.playerCondition)
+                && Objects.equals(playerMultiplier, that.playerMultiplier);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(playerCondition, playerMultiplier, cooldown);
@@ -145,7 +146,6 @@ public class TickingEventListener implements SkillEventListener {
         consumer.accept(this);
         editor.rebuildWidgets();
     }
-
     @Override
     public SkillBonus.Target getTarget() {
         return SkillBonus.Target.PLAYER;
@@ -199,7 +199,7 @@ public class TickingEventListener implements SkillEventListener {
             if (!tag.contains("cooldown")) {
                 listener.setCooldown(10);
             } else {
-                listener.setCooldown(tag.getInt("cooldown"));
+                listener.setCooldown(tag.getInt("cooldown").orElseThrow());
             }
             return listener;
         }
@@ -216,8 +216,9 @@ public class TickingEventListener implements SkillEventListener {
             return tag;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public SkillEventListener deserialize(FriendlyByteBuf buf) {
+        public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             TickingEventListener listener = new TickingEventListener();
             listener.setPlayerCondition(NetworkHelper.readLivingCondition(buf));
             listener.setPlayerMultiplier(NetworkHelper.readLivingMultiplier(buf));
@@ -225,8 +226,9 @@ public class TickingEventListener implements SkillEventListener {
             return listener;
         }
 
+        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-        public void serialize(FriendlyByteBuf buf, SkillEventListener listener) {
+        public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof TickingEventListener aListener)) {
                 throw new IllegalArgumentException();
             }

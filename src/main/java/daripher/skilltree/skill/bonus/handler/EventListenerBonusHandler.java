@@ -10,30 +10,13 @@ import daripher.skilltree.skill.bonus.event.*;
 import daripher.skilltree.util.event.EventPriority;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Entity;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-/**
- * Portage Fabric PARTIEL, assumé et documenté :
- * - triggerHurtEvents (LivingHurtEvent) -> PSTEvents.LIVING_HURT : porté.
- * - triggerCritEvents (CriticalHitEvent) -> PSTEvents.CRITICAL_HIT, event.isCrit() remplace le
- *   test Result.ALLOW/DEFAULT+vanillaCritical de Forge : porté.
- * - triggerKillEvents (LivingDeathEvent) -> ServerLivingEntityEvents.ALLOW_DEATH : porté.
- * - triggerItemUsedEvents (LivingEntityUseItemEvent.Finish) -> PSTEvents.ITEM_USE_FINISH : porté
- *   (mixin sur LivingEntity.completeUsingItem(), voir LivingEntityMixin). Corrige le bug signalé
- *   où les compétences "chance d'effet en mangeant" (ex. 15% Force en mangeant) ne se
- *   déclenchaient jamais.
- * <p>
- * VOLONTAIREMENT PAS ENCORE PORTÉ ICI (pas un stub, vraie dépendance manquante) :
- * - triggerShieldBlockEvents (ShieldBlockEvent) : nécessite un mixin sur le blocage au bouclier
- *   vanilla (LivingEntity.blockUsingShield), plus complexe que les autres mixins déjà faits
- *   (corrélation entre l'attaquant et la source de dégâts pas directement disponible au point
- *   d'injection) - à traiter spécifiquement, pas de raccourci pris ici.
- */
 public class EventListenerBonusHandler {
     public static void register() {
         PSTEvents.LIVING_HURT.register(EventListenerBonusHandler::triggerHurtEvents);
@@ -93,14 +76,15 @@ public class EventListenerBonusHandler {
         });
     }
 
-    @SuppressWarnings({"rawtypes"})
+    // Aligned 1.21.4: Safe generic cast arrays to map listener loops correctly under Java 21 boundaries
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static <T extends SkillEventListener> void triggerEvent(Player player, Class<T> listenerClass, BiConsumer<T, EventListenerBonus<?>> action) {
         List<EventListenerBonus> skillBonuses = SkillBonusProvider.getMergedSkillBonuses(player, EventListenerBonus.class);
         for (EventListenerBonus<?> skillBonus : skillBonuses) {
             SkillEventListener listener = skillBonus.getEventListener();
             if (listenerClass.isInstance(listener)) {
                 T eventListener = listenerClass.cast(listener);
-                action.accept(eventListener, skillBonus);
+                action.accept(eventListener, (EventListenerBonus<?>) skillBonus);
             }
         }
     }

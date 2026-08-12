@@ -1,12 +1,17 @@
 package daripher.skilltree.recipe.workbench;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.MapLike;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.RecordBuilder;
 import daripher.skilltree.inventory.menu.WorkbenchContainer;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.VanillaRecipeUnlockBonus;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Holder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 <<<<<<< Updated upstream
 import net.minecraft.resources.ResourceLocation;
@@ -20,17 +25,26 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_vanilla_crafting_recipe");
 
 >>>>>>> Stashed changes
@@ -70,7 +84,7 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
         List<Pair<Ingredient, Integer>> ingredients = new ArrayList<>(additionalIngredients.entrySet().stream().map(Pair::of).toList());
         if (!ingredients.isEmpty()) {
             this.baseIngredient = ingredients.remove(0);
-            additionalIngredients = ingredients.stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            this.additionalIngredients = ingredients.stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
     }
 
@@ -81,19 +95,24 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
         this.additionalIngredients = additionalIngredients;
     }
 
-    private static Map<Ingredient, Integer> getIngredientsFromCraftingRecipe(CraftingRecipe vanillaRecipe) {
+    private static Map<Ingredient, Integer> getIngredientsFromCraftingRecipe(CraftingRecipe vanillaRecipe, HolderLookup.Provider registryAccess) {
         record IngredientKey(Set<Item> items) {
         }
         Map<IngredientKey, Ingredient> uniqueIngredients = new HashMap<>();
         Map<IngredientKey, Integer> ingredientCounts = new HashMap<>();
-        NonNullList<Ingredient> vanillaIngredients = vanillaRecipe.getIngredients();
+
+        // Factual Fix 1.21.4: Read recipe ingredient configurations out of vanilla container placement lists
+        List<Ingredient> vanillaIngredients = vanillaRecipe.placementInfo().ingredients();
         for (Ingredient ingredient : vanillaIngredients) {
-            ItemStack[] matchingStacks = ingredient.getItems();
-            if (matchingStacks.length == 0) {
+            // Factual Fix 1.21.5 : ingredient.items() renvoie désormais directement un Stream<Holder<Item>>
+            // (confirmé par l'erreur de compilation "cannot find symbol: method stream() location: interface
+            // Stream<Holder<Item>>" -> le .stream() supplémentaire était appelé sur un Stream déjà construit)
+            List<ItemStack> matchingItemList = ingredient.items().map(Holder::value).map(ItemStack::new).toList();
+            if (matchingItemList.isEmpty()) {
                 continue;
             }
-            Set<Item> itemSet = new HashSet<>(matchingStacks.length);
-            for (ItemStack matchingStack : matchingStacks) {
+            Set<Item> itemSet = new HashSet<>(matchingItemList.size());
+            for (ItemStack matchingStack : matchingItemList) {
                 itemSet.add(matchingStack.getItem());
             }
             IngredientKey key = new IngredientKey(itemSet);
@@ -109,11 +128,14 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
 
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container, @NotNull RegistryAccess registryAccess) {
         return getResult(container);
     }
 
     @Override
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     public boolean isValidBaseItem(ItemStack itemStack) {
@@ -127,7 +149,6 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
     public Map<Ingredient, Integer> getAdditionalIngredients(ItemStack baseIngredient) {
         return getAdditionalIngredients();
     }
-
     public Map<Ingredient, Integer> getAdditionalIngredients() {
         return additionalIngredients;
     }
@@ -170,18 +191,20 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
         return baseIngredient;
     }
 
+    // Factual Fix 1.21.4: Resolve recipe book classification categories using type-safe registration lookups directly
     @Override
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     public @NotNull RecipeSerializer<?> getSerializer() {
         return new Serializer();
+=======
+    public @NotNull RecipeBookCategory recipeBookCategory() {
+        return net.minecraft.world.item.crafting.RecipeBookCategories.CRAFTING_MISC;
+>>>>>>> Stashed changes
     }
 
-    public static class Serializer implements RecipeSerializer<WorkbenchVanillaCraftingRecipe> {
-        @Override
-        public @NotNull WorkbenchVanillaCraftingRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject jsonObject) {
-            throw new UnsupportedOperationException("Attempted to load an invalid recipe type.");
-        }
 
+<<<<<<< Updated upstream
         @Override
         public @Nullable WorkbenchVanillaCraftingRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
 =======
@@ -190,6 +213,8 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
     }
 
 
+=======
+>>>>>>> Stashed changes
     // Factual Fix 1.21.5 : le type de retour de Recipe#getSerializer() est désormais covariant. Le message du
     // compilateur donne lui-même le type exact attendu ("RecipeSerializer<? extends Recipe<WorkbenchContainer>>"),
     // donc ce correctif est sûr, sans décompilation nécessaire (même erreur/même fix que WorkbenchCraftingRecipe,
@@ -231,36 +256,38 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
         // Ingredient.STREAM_CODEC n'a jamais existé, c'est Ingredient.CONTENTS_STREAM_CODEC (déjà présent en 1.21.1)
         // qui est le bon champ, inchangé en 1.21.5. Le renommage supposé lors du fix 1.21.4 était erroné.
         private static @NotNull WorkbenchVanillaCraftingRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buf) {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             Map<Ingredient, Integer> ingredients = new HashMap<>();
             int ingredientsCount = buf.readInt();
             for (int i = 0; i < ingredientsCount; i++) {
-                ingredients.put(Ingredient.fromNetwork(buf), buf.readInt());
+                ingredients.put(Ingredient.CONTENTS_STREAM_CODEC.decode(buf), buf.readInt());
             }
             Pair<Ingredient, Integer> baseIngredient = null;
             boolean hasBaseIngredient = buf.readBoolean();
             if (hasBaseIngredient) {
-                baseIngredient = Pair.of(Ingredient.fromNetwork(buf), buf.readInt());
+                baseIngredient = Pair.of(Ingredient.CONTENTS_STREAM_CODEC.decode(buf), buf.readInt());
             }
-            ItemStack result = buf.readItem();
-            return new WorkbenchVanillaCraftingRecipe(id, baseIngredient, ingredients, result);
+            ItemStack result = ItemStack.STREAM_CODEC.decode(buf);
+            return new WorkbenchVanillaCraftingRecipe(UNKNOWN_ID, baseIngredient, ingredients, result);
         }
 
-        @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull WorkbenchVanillaCraftingRecipe recipe) {
+        private static void toNetwork(@NotNull RegistryFriendlyByteBuf buf, @NotNull WorkbenchVanillaCraftingRecipe recipe) {
             int ingredientsCount = recipe.getAdditionalIngredients().size();
             buf.writeInt(ingredientsCount);
             recipe.getAdditionalIngredients().forEach((ingredient, requiredAmount) -> {
-                ingredient.toNetwork(buf);
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buf, ingredient);
                 buf.writeInt(requiredAmount);
             });
             Pair<Ingredient, Integer> baseIngredient = recipe.baseIngredient;
             buf.writeBoolean(baseIngredient != null);
             if (baseIngredient != null) {
-                baseIngredient.getLeft().toNetwork(buf);
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buf, baseIngredient.getLeft());
                 buf.writeInt(baseIngredient.getRight());
             }
-            buf.writeItem(recipe.result);
+            ItemStack.STREAM_CODEC.encode(buf, recipe.result);
         }
     }
 }

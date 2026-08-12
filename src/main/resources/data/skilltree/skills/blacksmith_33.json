@@ -3,7 +3,7 @@
   "bonuses": [
     {
       "type": "skilltree:attribute",
-      "attribute": "minecraft:generic.armor_toughness",
+      "attribute": "minecraft:armor_toughness",
       "id": "a1e5f2e5-1ddb-4476-8554-f325c91c02ca",
       "name": "Skill",
       "amount": 1.0,
@@ -21,7 +21,7 @@
     },
     {
       "type": "skilltree:attribute",
-      "attribute": "minecraft:generic.movement_speed",
+      "attribute": "minecraft:movement_speed",
       "id": "975bee95-f0b2-4a43-9d8a-131b17d26248",
       "name": "Skill",
       "amount": -0.05,

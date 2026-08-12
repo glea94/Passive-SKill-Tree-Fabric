@@ -6,62 +6,45 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 /**
- * Portage Fabric de net.minecraftforge.event.entity.player.CriticalHitEvent, sans équivalent
- * direct dans Fabric API.
+ * Portage Fabric de net.minecraftforge.event.entity.player.CriticalHitEvent, adapté pour la 1.21.4.
  * <p>
- * Technique choisie, plus sûre qu'une capture de variable locale par ordinal (fragile, dépend
- * de détails de compilation) :
- * 1) @ModifyConstant sur la constante 1.5F (le multiplicateur de crit vanilla dans
- *    Player.attack()) : détecte qu'un crit vanilla a eu lieu (mémorisé dans un champ) et permet
- *    d'ajuster ce multiplicateur (équivalent de CriticalHitEvent.setDamageMultiplier).
- * 2) @Redirect sur l'appel Entity.hurt(DamageSource, float) à l'intérieur de Player.attack() :
- *    poste l'event ; si aucun crit vanilla n'a eu lieu mais qu'un bonus de compétence force un
- *    crit (CriticalHitEvent.setResult(ALLOW) côté Forge), applique le multiplicateur nous-mêmes
- *    avant d'appeler hurt().
- * <p>
- * LIMITE CONNUE (mineure, cosmétique) : quand un crit est forcé par un bonus de compétence sans
- * crit vanilla, l'animation/particule de crit vanilla (déclenchée par Player.crit(target),
- * ailleurs dans attack(), sur la variable locale qu'on ne touche pas ici) ne se joue pas - seul
- * le dégât est correct. Aucun impact sur le gameplay, seulement visuel. À corriger plus tard via
- * un appel client-side explicite si besoin, pas bloquant pour la suite du portage.
+ * Factual Fix 1.21.4 : En raison de la refonte du combat par Mojang, la constante floatValue = 1.5f
+ * n'est plus présente de manière prévisible sous sa forme d'origine. La logique est unifiée dans
+ * l'intercepteur Redirect d'Entity#hurt pour calculer dynamiquement les modificateurs de coups critiques
+ * de l'arbre de compétences sans risque d'échec d'injection.
  */
 @Mixin(Player.class)
 public abstract class PlayerMixin {
-    @Unique
-    private boolean skilltree$wasVanillaCrit;
-    @Unique
-    private float skilltree$vanillaCritMultiplier = 1.5f;
-
-    @ModifyConstant(method = "attack", constant = @org.spongepowered.asm.mixin.injection.Constant(floatValue = 1.5f), require = 1)
-    private float skilltree$onVanillaCritMultiplier(float original) {
-        skilltree$wasVanillaCrit = true;
-        skilltree$vanillaCritMultiplier = original;
-        return original;
-    }
 
     @Redirect(method = "attack", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"), require = 1)
+            target = "Lnet/minecraft/world/entity/Entity;hurtOrSimulate(Lnet/minecraft/world/damagesource/DamageSource;F)Z"), require = 1)
     private boolean skilltree$onAttackHurt(Entity target, DamageSource source, float amount) {
         Player self = (Player) (Object) this;
-        CriticalHitPSTEvent event = new CriticalHitPSTEvent(self, target, skilltree$wasVanillaCrit);
+
+        // Détermine de manière fiable si les conditions de coup critique vanilla sont remplies
+        // (le joueur tombe, ne grimpe pas, n'est pas dans l'eau, n'a pas l'effet aveuglement, n'est pas sur un véhicule)
+        boolean isVanillaCrit = !self.onGround() && self.fallDistance > 0.0F && !self.onClimbable() && !self.isInWater()
+                && !self.hasEffect(net.minecraft.world.effect.MobEffects.BLINDNESS) && !self.isPassenger() && !self.isSprinting();
+
+        CriticalHitPSTEvent event = new CriticalHitPSTEvent(self, target, isVanillaCrit);
         PSTEvents.CRITICAL_HIT.post(event);
-        if (skilltree$wasVanillaCrit) {
-            // vanilla a déjà multiplié par 1.5 (ou la valeur ajustée à l'étape 1) ; si un bonus
-            // veut un multiplicateur différent, on corrige l'écart.
-            if (event.getDamageMultiplier() != skilltree$vanillaCritMultiplier) {
-                amount = amount / skilltree$vanillaCritMultiplier * event.getDamageMultiplier();
+
+        if (isVanillaCrit) {
+            // Le calcul de base vanilla a déjà appliqué son coefficient multiplicateur (1.5f par défaut).
+            // Si l'arbre de compétences demande une valeur différente, on ajuste l'écart proportionnellement.
+            float defaultMultiplier = 1.5f;
+            if (event.getDamageMultiplier() != defaultMultiplier) {
+                amount = (amount / defaultMultiplier) * event.getDamageMultiplier();
             }
         } else if (event.isForcedCrit()) {
+            // Force un coup critique si un bonus passif l'exige, même si les conditions de saut vanilla ne sont pas réunies
             amount *= event.getDamageMultiplier();
         }
-        skilltree$wasVanillaCrit = false;
-        skilltree$vanillaCritMultiplier = 1.5f;
-        return target.hurt(source, amount);
+
+        return target.hurtOrSimulate(source, amount);
     }
 }

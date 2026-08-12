@@ -101,7 +101,6 @@ public class PassiveSkill {
         }
         return requirements;
     }
-
     public void addSkillBonus(SkillBonus<?> bonus) {
         bonuses.add(bonus);
     }
@@ -168,7 +167,7 @@ public class PassiveSkill {
     }
 
     public void learn(ServerPlayer player, boolean firstTime) {
-        getBonuses().forEach(b -> b.onSkillLearned(player, firstTime));
+        getBonuses().forEach(bonus -> bonus.onSkillLearned(player, firstTime));
     }
 
     public void setTitleColor(@Nullable String color) {
@@ -188,7 +187,7 @@ public class PassiveSkill {
     }
 
     public void remove(ServerPlayer player) {
-        getBonuses().forEach(b -> b.onSkillRemoved(player));
+        getBonuses().forEach(bonus -> bonus.onSkillRemoved(player));
     }
 
     public boolean isInvalid() {

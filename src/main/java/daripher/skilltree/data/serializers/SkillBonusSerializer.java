@@ -19,6 +19,9 @@ public class SkillBonusSerializer implements JsonSerializer<SkillBonus<?>>, Json
 =======
 
         Identifier serializerId = Identifier.parse(type);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         SkillBonus.Serializer serializer = PSTRegistries.SKILL_BONUSES.get().getValue(serializerId);
         if (serializer == null) {

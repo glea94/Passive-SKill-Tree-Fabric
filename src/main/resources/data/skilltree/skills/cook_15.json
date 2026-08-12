@@ -3,7 +3,7 @@
   "bonuses": [
     {
       "type": "skilltree:attribute",
-      "attribute": "minecraft:generic.luck",
+      "attribute": "minecraft:luck",
       "id": "6e34fde8-f406-41ba-bfde-924394c7fd9a",
       "name": "Skill",
       "amount": 1.0,

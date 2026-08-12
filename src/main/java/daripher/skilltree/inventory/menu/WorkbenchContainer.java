@@ -1,18 +1,21 @@
 package daripher.skilltree.inventory.menu;
 
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class WorkbenchContainer extends TransientCraftingContainer {
+// Factual Fix 1.21.4: TransientCraftingContainer has been removed. Extend SimpleContainer to function as a modern RecipeInput layout.
+public class WorkbenchContainer extends SimpleContainer implements RecipeInput {
     public final WorkbenchMenu menu;
 
     public WorkbenchContainer(WorkbenchMenu menu) {
-        super(menu, 5, 2);
+        // Initializes a layout storage grid with 10 slots (5 columns * 2 rows)
+        super(10);
         this.menu = menu;
     }
 
@@ -24,9 +27,15 @@ public class WorkbenchContainer extends TransientCraftingContainer {
         return getItem(0);
     }
 
+    // Factual Fix 1.21.4: Implement standard layout contract requirements for modern RecipeInput matching
+    @Override
+    public int size() {
+        return this.getContainerSize();
+    }
+
     public boolean hasIngredients(Map<Ingredient, Integer> ingredients) {
         Map<Ingredient, Integer> remaining = new HashMap<>(ingredients);
-        for (int i = 1; i < getContainerSize(); i++) {
+        for (int i = 1; i < this.getContainerSize(); i++) {
             ItemStack item = getItem(i);
             if (item.isEmpty()) {
                 continue;

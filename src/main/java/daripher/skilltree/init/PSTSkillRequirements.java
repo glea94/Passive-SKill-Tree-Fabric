@@ -12,7 +12,11 @@ import java.util.Objects;
 
 public class PSTSkillRequirements {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "skill_requirements");
+=======
+    public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_requirements");
+>>>>>>> Stashed changes
 =======
     public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_requirements");
 >>>>>>> Stashed changes
@@ -25,8 +29,11 @@ public class PSTSkillRequirements {
 
     @SuppressWarnings("rawtypes")
     public static List<SkillRequirement> requirementList() {
-        return PSTRegistries.SKILL_REQUIREMENTS.get().getValues().stream().map(SkillRequirement.Serializer::createDefaultInstance)
-                .map(SkillRequirement.class::cast).toList();
+        // Alignment 1.21.4: Streams data structures through custom registry endpoints safely
+        return PSTRegistries.SKILL_REQUIREMENTS.get().getValues().stream()
+                .map(SkillRequirement.Serializer::createDefaultInstance)
+                .map(SkillRequirement.class::cast)
+                .toList();
     }
 
     public static String getName(SkillRequirement<?> bonus) {

@@ -35,9 +35,13 @@ public class SkillTexturesEditor extends EditorMenu {
             editor.addLabel(0, 0, label, ChatFormatting.GOLD);
             editor.increaseHeight(19);
             String textureFolder = SkillTexturesData.getTextureFolder(texture);
+
+            // Texture menus bind dynamically to user interactions in 1.21.4 layout grids
             editor.addTextureSelectionMenu(0, 0, 200, texture, textureFolder)
-                    .setElementTextureSize(elementTextureWidth, elementTextureHeight).setSelectionListGridSize(rows, columns)
-                    .setElementNameGetter(TooltipHelper::getTextureName).setElementSize(elementWidth, elementHeight)
+                    .setElementTextureSize(elementTextureWidth, elementTextureHeight)
+                    .setSelectionListGridSize(rows, columns)
+                    .setElementNameGetter(TooltipHelper::getTextureName)
+                    .setElementSize(elementWidth, elementHeight)
                     .setResponder(setTextureFunction);
             editor.increaseHeight(19);
         }

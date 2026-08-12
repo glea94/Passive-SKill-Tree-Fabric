@@ -1,5 +1,7 @@
 package daripher.skilltree.client.widget;
 
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +22,7 @@ public class ConfirmationButton extends Button {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers inputWithModifiers) {
         if (!confirming) {
             confirming = true;
             return;
@@ -29,8 +31,8 @@ public class ConfirmationButton extends Button {
     }
 
     @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        boolean clicked = super.mouseClicked(pMouseX, pMouseY, pButton);
+    public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
+        boolean clicked = super.mouseClicked(mouseButtonEvent, doubleClick);
         if (!clicked) {
             confirming = false;
         }

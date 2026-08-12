@@ -1,10 +1,11 @@
 package daripher.skilltree.recipe.workbench;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import daripher.skilltree.init.PSTRecipeSerializers;
 import daripher.skilltree.inventory.menu.WorkbenchContainer;
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
@@ -17,16 +18,24 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 >>>>>>> Stashed changes
+=======
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class WorkbenchCraftingRecipe extends AbstractWorkbenchRecipe {
 <<<<<<< Updated upstream
@@ -57,11 +66,14 @@ public class WorkbenchCraftingRecipe extends AbstractWorkbenchRecipe {
 
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container, @NotNull RegistryAccess registryAccess) {
         return getResult(container);
     }
 
     @Override
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     public boolean isValidBaseItem(ItemStack itemStack) {
@@ -101,10 +113,11 @@ public class WorkbenchCraftingRecipe extends AbstractWorkbenchRecipe {
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<WorkbenchCraftingRecipe> getSerializer() {
         return PSTRecipeSerializers.WORKBENCH_CRAFTING.get();
     }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     public static class Serializer implements RecipeSerializer<WorkbenchCraftingRecipe> {
         @Override
@@ -147,6 +160,22 @@ public class WorkbenchCraftingRecipe extends AbstractWorkbenchRecipe {
             return new IngredientEntry(pair.getLeft(), pair.getRight());
         }
 
+=======
+    // Portage 1.21.1 : petit conteneur interne utilisé uniquement par les Codec/StreamCodec ci-dessous pour
+    // représenter une entrée "ingrédient + quantité requise", afin de coller exactement à l'ancien format
+    // JSON (celui que produisait/lisait fromJson) : {"ingredient": {...}, "required_amount": N}. Utilisé à la
+    // fois pour additionalIngredients (liste) et base_ingredient (une seule entrée, optionnelle).
+    private record IngredientEntry(Ingredient ingredient, int requiredAmount) {
+        static final Codec<IngredientEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Ingredient.CODEC.fieldOf("ingredient").forGetter(IngredientEntry::ingredient),
+                Codec.INT.fieldOf("required_amount").forGetter(IngredientEntry::requiredAmount)
+        ).apply(instance, IngredientEntry::new));
+
+        static IngredientEntry of(Pair<Ingredient, Integer> pair) {
+            return new IngredientEntry(pair.getLeft(), pair.getRight());
+        }
+
+>>>>>>> Stashed changes
         Pair<Ingredient, Integer> toPair() {
             return Pair.of(ingredient, requiredAmount);
         }
@@ -188,37 +217,44 @@ public class WorkbenchCraftingRecipe extends AbstractWorkbenchRecipe {
         public static final RecipeSerializer<WorkbenchCraftingRecipe> INSTANCE = new RecipeSerializer<>(CODEC, STREAM_CODEC);
 
         private static @NotNull WorkbenchCraftingRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buf) {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             boolean requiresPassiveSkill = buf.readBoolean();
             Map<Ingredient, Integer> additionalIngredients = new HashMap<>();
             int ingredientsCount = buf.readInt();
             for (int i = 0; i < ingredientsCount; i++) {
-                additionalIngredients.put(Ingredient.fromNetwork(buf), buf.readInt());
+                // CORRECTION 1.21.1: Ingredient.fromNetwork(buf) a disparu ; remplacé par le StreamCodec dédié.
+                additionalIngredients.put(Ingredient.CONTENTS_STREAM_CODEC.decode(buf), buf.readInt());
             }
             Pair<Ingredient, Integer> baseIngredient = null;
             boolean hasBaseIngredient = buf.readBoolean();
             if (hasBaseIngredient) {
-                baseIngredient = Pair.of(Ingredient.fromNetwork(buf), buf.readInt());
+                baseIngredient = Pair.of(Ingredient.CONTENTS_STREAM_CODEC.decode(buf), buf.readInt());
             }
-            ItemStack result = buf.readItem();
-            return new WorkbenchCraftingRecipe(id, baseIngredient, additionalIngredients, requiresPassiveSkill, result);
+            // CORRECTION 1.21.1: buf.readItem() a disparu ; remplacé par ItemStack.STREAM_CODEC.
+            ItemStack result = ItemStack.STREAM_CODEC.decode(buf);
+            // CORRECTION 1.21.1 : voir la remarque sur UNKNOWN_ID en haut du fichier.
+            return new WorkbenchCraftingRecipe(UNKNOWN_ID, baseIngredient, additionalIngredients, requiresPassiveSkill, result);
         }
 
-        @Override
-        public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull WorkbenchCraftingRecipe recipe) {
+        private static void toNetwork(@NotNull RegistryFriendlyByteBuf buf, @NotNull WorkbenchCraftingRecipe recipe) {
             buf.writeBoolean(recipe.hasPassiveSkillRequirement());
             int ingredientsCount = recipe.getAdditionalIngredients().size();
             buf.writeInt(ingredientsCount);
             recipe.getAdditionalIngredients().forEach((ingredient, requiredAmount) -> {
-                ingredient.toNetwork(buf);
+                // CORRECTION 1.21.1: Ingredient#toNetwork(buf) a disparu ; remplacé par le StreamCodec dédié.
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buf, ingredient);
                 buf.writeInt(requiredAmount);
             });
             buf.writeBoolean(recipe.baseIngredient != null);
             if (recipe.baseIngredient != null) {
-                recipe.baseIngredient.getLeft().toNetwork(buf);
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buf, recipe.baseIngredient.getLeft());
                 buf.writeInt(recipe.baseIngredient.getRight());
             }
-            buf.writeItem(recipe.result);
+            // CORRECTION 1.21.1: buf.writeItem(...) a disparu ; remplacé par ItemStack.STREAM_CODEC.
+            ItemStack.STREAM_CODEC.encode(buf, recipe.result);
         }
     }
 }

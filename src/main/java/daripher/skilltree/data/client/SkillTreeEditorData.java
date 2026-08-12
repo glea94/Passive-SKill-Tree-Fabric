@@ -93,16 +93,21 @@ public class SkillTreeEditorData {
             SkillTreeMod.LOGGER.error(errorMessage, exception);
         }
     }
-
     private static void generatePackMcmetaFile(File file) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
         // Fix 26.1.2 : confirmé par décompilation de PackFormat.IntermediaryFormat (vanilla) que
         // le codec CLIENT_RESOURCES (lastPreMinorVersion=64) interdit supported_formats dès que
         // min_format > 64, alors que le codec SERVER_DATA (lastPreMinorVersion=81) l'exige tant
         // que min_format <= 81 ; pack_format 69 étant lu par les deux codecs sur le même fichier,
         // min_format est volontairement abaissé à 64 pour faire basculer les deux lectures dans
         // le même mode (ancienne ère, supported_formats requis et cohérent des deux côtés)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         String fileContents = """
                 {
@@ -111,12 +116,18 @@ public class SkillTreeEditorData {
                       "text": "PST editor data"
                     },
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     "pack_format": 15
 =======
+=======
+>>>>>>> Stashed changes
                     "pack_format": 69,
                     "min_format": 64,
                     "max_format": 81,
                     "supported_formats": [64, 81]
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                   }
                 }
@@ -157,7 +168,7 @@ public class SkillTreeEditorData {
         try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
             SkillTreesReloader.GSON.toJson(skillTree, writer);
         } catch (JsonIOException | IOException exception) {
-            Minecraft.getInstance().setScreen(null);
+            Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreen(null));
             sendChatMessage("Can't save editor skill tree " + skillTree.getId(), ChatFormatting.DARK_RED);
             sendChatMessage(exception.getMessage(), ChatFormatting.DARK_RED);
         }
@@ -183,7 +194,7 @@ public class SkillTreeEditorData {
         try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
             SkillsReloader.GSON.toJson(skill, writer);
         } catch (JsonIOException | IOException exception) {
-            Minecraft.getInstance().setScreen(null);
+            Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreen(null));
             sendChatMessage("Can't save editor skill " + skill.getId(), ChatFormatting.DARK_RED);
             sendChatMessage(exception.getMessage(), ChatFormatting.DARK_RED);
         }
@@ -204,7 +215,6 @@ public class SkillTreeEditorData {
         }
         EDITOR_PASSIVE_SKILLS.put(skillId, skill);
     }
-
     public static void deleteEditorSkill(PassiveSkill skill) {
         try {
             Files.delete(getSkillSaveFile(skill.getId()).toPath());
@@ -253,7 +263,12 @@ public class SkillTreeEditorData {
                 component.withStyle(style);
             }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             player.sendSystemMessage(component);
+=======
+            Component chatMessage = component;
+            player.sendSystemMessage(chatMessage);
+>>>>>>> Stashed changes
 =======
             Component chatMessage = component;
             player.sendSystemMessage(chatMessage);
@@ -290,7 +305,11 @@ public class SkillTreeEditorData {
                 }
                 String skillTreeName = skillTreeFileName.substring(0, skillTreeFileName.lastIndexOf('.'));
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 EDITOR_TREES_IDS.add(new ResourceLocation(namespace, skillTreeName));
+=======
+                EDITOR_TREES_IDS.add(Identifier.fromNamespaceAndPath(namespace, skillTreeName));
+>>>>>>> Stashed changes
 =======
                 EDITOR_TREES_IDS.add(Identifier.fromNamespaceAndPath(namespace, skillTreeName));
 >>>>>>> Stashed changes

@@ -8,19 +8,6 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
-/**
- * Portage Fabric PARTIEL, assumé et documenté :
- * - applyMobExpBonus (LivingExperienceDropEvent) -> PSTEvents.LIVING_EXPERIENCE_DROP : porté
- *   (voir LivingExperienceDropMixin, confiance modérée sur la méthode ciblée - à vérifier en jeu).
- * <p>
- * VOLONTAIREMENT PAS ENCORE PORTÉ ICI (pas un stub, vraies dépendances manquantes) :
- * - applyOreMiningExpBonus (BlockEvent.BreakEvent) : nécessite de cibler DropExperienceBlock
- *   (interface vanilla implémentée par les blocs de minerai) ou le pipeline de cassage de bloc
- *   côté ServerPlayerGameMode - pas assez de certitude sans jar décompilé pour livrer ça
- *   maintenant sans risque d'erreur silencieuse sur les gains d'XP de minage.
- * - applyFishingExpBonus (ItemFishedEvent) : nécessite un mixin sur FishingHook (méthode de
- *   remise à l'eau/prise), même remarque - à vérifier avant d'écrire le mixin.
- */
 public class ExperienceGainMultiplierBonusHandler {
     public static void register() {
         PSTEvents.LIVING_EXPERIENCE_DROP.register(ExperienceGainMultiplierBonusHandler::applyMobExpBonus);

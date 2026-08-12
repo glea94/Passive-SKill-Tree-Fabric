@@ -20,15 +20,19 @@ public class GainSkillPointMessage implements CustomPacketPayload {
     );
 >>>>>>> Stashed changes
 
-public class GainSkillPointMessage {
     public GainSkillPointMessage() {
     }
 
-    public static GainSkillPointMessage decode(FriendlyByteBuf buf) {
+    public static GainSkillPointMessage decode(RegistryFriendlyByteBuf buf) {
         return new GainSkillPointMessage();
     }
 
-    public void encode(FriendlyByteBuf buf) {
-        // aucune donnée à envoyer, identique à l'original Forge
+    public void encode(RegistryFriendlyByteBuf buf) {
+        // Aucune donnée à envoyer, identique à la structure d'origine
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

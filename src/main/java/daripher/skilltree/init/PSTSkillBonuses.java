@@ -13,7 +13,11 @@ import java.util.Objects;
 
 public class PSTSkillBonuses {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "skill_bonuses");
+=======
+    public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_bonuses");
+>>>>>>> Stashed changes
 =======
     public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_bonuses");
 >>>>>>> Stashed changes
@@ -64,8 +68,12 @@ public class PSTSkillBonuses {
 
     @SuppressWarnings("rawtypes")
     public static List<SkillBonus> defaultInstances() {
-        return PSTRegistries.SKILL_BONUSES.get().getValues().stream().map(SkillBonus.Serializer::createDefaultInstance)
-                .map(SkillBonus.class::cast).filter(Objects::nonNull).toList();
+        // Aligned 1.21.4: Streams data structures through custom registry endpoints safely
+        return PSTRegistries.SKILL_BONUSES.get().getValues().stream()
+                .map(SkillBonus.Serializer::createDefaultInstance)
+                .map(SkillBonus.class::cast)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     public static String getName(SkillBonus<?> bonus) {

@@ -1,17 +1,24 @@
 package daripher.skilltree.network.message;
 
+import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.capability.skill.IPlayerSkills;
 import daripher.skilltree.capability.skill.PlayerSkillsProvider;
 import daripher.skilltree.skill.PassiveSkill;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 =======
+=======
+>>>>>>> Stashed changes
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import net.minecraft.world.entity.player.Player;
 
@@ -48,23 +55,12 @@ public class SyncPlayerSkillsMessage implements CustomPacketPayload {
 
     public SyncPlayerSkillsMessage(Player player) {
         IPlayerSkills skillsCapability = PlayerSkillsProvider.get(player);
-        learnedSkills = skillsCapability.getPlayerSkills().stream().map(PassiveSkill::getId).toList();
-        skillPoints = skillsCapability.getSkillPoints();
+        this.learnedSkills = skillsCapability.getPlayerSkills().stream().map(PassiveSkill::getId).toList();
+        this.skillPoints = skillsCapability.getSkillPoints();
     }
 
-    public static SyncPlayerSkillsMessage decode(FriendlyByteBuf buf) {
-        SyncPlayerSkillsMessage result = new SyncPlayerSkillsMessage();
-        int learnedSkillsCount = buf.readInt();
-        for (int i = 0; i < learnedSkillsCount; i++) {
-            result.learnedSkills.add(new ResourceLocation(buf.readUtf()));
-        }
-        result.skillPoints = buf.readInt();
-        return result;
-    }
-
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(learnedSkills.size());
-        learnedSkills.stream().map(ResourceLocation::toString).forEach(buf::writeUtf);
-        buf.writeInt(skillPoints);
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

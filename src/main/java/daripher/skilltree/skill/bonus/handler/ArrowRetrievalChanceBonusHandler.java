@@ -7,12 +7,16 @@ import daripher.skilltree.mixin.AbstractArrowAccessor;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.ArrowRetrievalBonus;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerLevel;
 >>>>>>> Stashed changes
@@ -24,12 +28,6 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-/**
- * Portage Fabric. LivingDeathEvent (Forge) -> ServerLivingEntityEvents.ALLOW_DEATH (Fabric API,
- * équivalent natif direct) : on ne veut jamais annuler la mort ici, juste réagir dessus, donc on
- * exécute notre logique puis on renvoie toujours true (mort autorisée), comme le faisait
- * l'original qui ne l'annulait pas non plus.
- */
 public class ArrowRetrievalChanceBonusHandler {
     public static final String STUCK_ARROWS_TAG_NAME = "StuckArrows";
 
@@ -92,7 +90,8 @@ public class ArrowRetrievalChanceBonusHandler {
 
     private static void retrieveArrows(LivingEntity entity) {
         CompoundTag entityPersistentData = PersistentDataProvider.get(entity);
-        ListTag arrowsTag = entityPersistentData.getList(STUCK_ARROWS_TAG_NAME, Tag.TAG_COMPOUND);
+        // Factual Fix 1.21.5: CompoundTag#getList(name, type) supprimé -> getList(name) renvoyant Optional<ListTag>
+        ListTag arrowsTag = entityPersistentData.getList(STUCK_ARROWS_TAG_NAME).orElse(new ListTag());
         if (arrowsTag.isEmpty()) {
             return;
         }

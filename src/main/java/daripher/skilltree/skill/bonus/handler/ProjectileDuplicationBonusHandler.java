@@ -1,3 +1,4 @@
+// Fichier : src/main/java/daripher/skilltree/skill/bonus/handler/ProjectileDuplicationBonusHandler.java
 package daripher.skilltree.skill.bonus.handler;
 
 import daripher.skilltree.entity.persistentdata.PersistentDataProvider;
@@ -13,17 +14,24 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 import net.minecraft.world.entity.projectile.AbstractArrow;
 =======
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.entity.projectile.throwableitemprojectile.AbstractThrownPotion;
 >>>>>>> Stashed changes
+=======
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.AbstractThrownPotion;
+>>>>>>> Stashed changes
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
@@ -51,7 +59,7 @@ public class ProjectileDuplicationBonusHandler {
 
     private static void duplicateProjectiles(Projectile projectile, ServerLevel level, Player player) {
         CompoundTag projectileTag = PersistentDataProvider.get(projectile);
-        if (projectileTag.getBoolean(IS_DUPLICATED_TAG_NAME)) {
+        if (projectileTag.getBooleanOr(IS_DUPLICATED_TAG_NAME, false)) {
             return;
         }
         List<ProjectileDuplicationBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(player, ProjectileDuplicationBonus.class);
@@ -87,7 +95,7 @@ public class ProjectileDuplicationBonusHandler {
 
     private static void spawnDuplicateProjectileWithOffset(Projectile original, Player player, ServerLevel level, float angleOffset) {
         EntityType<?> projectileType = original.getType();
-        Projectile duplicate = (Projectile) projectileType.create(level);
+        Projectile duplicate = (Projectile) projectileType.create(level, EntitySpawnReason.TRIGGERED);
         if (duplicate == null) {
             return;
         }
@@ -144,7 +152,7 @@ public class ProjectileDuplicationBonusHandler {
             return;
         }
         CompoundTag projectileTag = PersistentDataProvider.get(projectile);
-        if (!(projectileTag.getBoolean(IS_DUPLICATED_TAG_NAME))) {
+        if (!(projectileTag.getBooleanOr(IS_DUPLICATED_TAG_NAME, false))) {
             return;
         }
         LivingEntity target = event.getEntity();
