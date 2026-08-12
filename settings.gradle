@@ -5,8 +5,10 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
-<<<<<<< Updated upstream
-=======
 
+<<<<<<< Updated upstream
+rootProject.name = 'Passive-Skill-Tree-Fabric-1.21.9'
+>>>>>>> Stashed changes
+=======
 rootProject.name = 'Passive-Skill-Tree-Fabric-1.21.9'
 >>>>>>> Stashed changes

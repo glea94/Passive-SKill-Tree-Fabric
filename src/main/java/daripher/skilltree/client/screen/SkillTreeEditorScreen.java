@@ -1,8 +1,11 @@
 package daripher.skilltree.client.screen;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 import daripher.skilltree.SkillTreeMod;
@@ -17,12 +20,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.client.gui.screens.achievement.StatsUpdateListener;
 =======
+=======
+>>>>>>> Stashed changes
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
@@ -149,6 +158,7 @@ public class SkillTreeEditorScreen extends Screen {
 
     private void renderOverlay(GuiGraphics graphics) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_overlay.png");
         RenderSystem.enableBlend();
         graphics.blit(texture, 0, 0, 0, 0F, 0F, width, height, width, height);
@@ -165,6 +175,8 @@ public class SkillTreeEditorScreen extends Screen {
         graphics.blit(texture, (width - size) / 2, (height - size) / 2, 0, 0F, 0F, size, size, size, size);
         poseStack.popPose();
 =======
+=======
+>>>>>>> Stashed changes
         ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_overlay.png");
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, this.width, this.height, this.width, this.height);
     }
@@ -177,6 +189,9 @@ public class SkillTreeEditorScreen extends Screen {
         int size = SkillTreeScreen.BACKGROUND_SIZE;
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (this.width - size) / 2, (this.height - size) / 2, 0F, 0F, size, size, size, size);
         poseStack.popMatrix();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 

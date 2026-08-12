@@ -6,11 +6,17 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -89,10 +95,6 @@ public class TextField extends EditBox implements TickingWidget {
         }
         ResourceLocation texture = ResourceLocation.parse("skilltree:textures/screen/widgets.png");
         int v = isHoveredOrFocused() ? 42 : 56;
-<<<<<<< Updated upstream
-        graphics.blit(texture, getX(), getY(), 0, v, width / 2, height);
-        graphics.blit(texture, getX() + width / 2, getY(), -width / 2, v, width / 2, height);
-=======
 
         int currentWidth = this.getWidth();
         int currentHeight = this.getHeight();
@@ -100,7 +102,6 @@ public class TextField extends EditBox implements TickingWidget {
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), 0F, v, currentWidth / 2, currentHeight, 256, 256);
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX() + currentWidth / 2, getY(), (256 - currentWidth / 2F), v, currentWidth / 2, currentHeight, 256, 256);
 
->>>>>>> Stashed changes
         int textColor = getTextColor();
         int valueLength = getValue().length();
 

@@ -37,8 +37,6 @@ public class AdvancementRequirement implements SkillRequirement<AdvancementRequi
         if (player instanceof ServerPlayer serverPlayer) {
             return testServer(serverPlayer);
         }
-<<<<<<< Updated upstream
-=======
         return testClient();
     }
 
@@ -67,7 +65,6 @@ public class AdvancementRequirement implements SkillRequirement<AdvancementRequi
                 .map(AdvancementNode::holder)
                 .map(AdvancementHolder::id)
                 .toList();
->>>>>>> Stashed changes
     }
 
     @Override
