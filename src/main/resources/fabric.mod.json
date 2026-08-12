@@ -36,6 +36,7 @@
   "accessWidener": "skilltree.accesswidener",
   "depends": {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "fabricloader": ">=0.15.11",
     "fabric-api": "*",
     "minecraft": "1.20.1",
@@ -43,6 +44,10 @@
 =======
     "fabricloader": "0.19.3",
     "fabric-api": "*",
+=======
+    "fabricloader": "0.19.3",
+    "fabric-api": "*",
+>>>>>>> Stashed changes
     "minecraft": "1.21.8",
     "java": ">=21",
 >>>>>>> Stashed changes

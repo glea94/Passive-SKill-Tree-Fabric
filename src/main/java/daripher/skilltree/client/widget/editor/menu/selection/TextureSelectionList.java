@@ -2,6 +2,10 @@ package daripher.skilltree.client.widget.editor.menu.selection;
 
 import net.minecraft.client.gui.GuiGraphics;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.client.renderer.RenderPipelines;
 >>>>>>> Stashed changes
@@ -34,6 +38,9 @@ public class TextureSelectionList extends SelectionList<ResourceLocation> {
 
         // Fix 1.21.8 : RenderPipelines.GUI_TEXTURED remplace le wrapper RenderType::guiTextured (supprimé)
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, textureX, textureY, 0F, 0F, textureWidth, textureHeight, textureWidth, textureHeight);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 

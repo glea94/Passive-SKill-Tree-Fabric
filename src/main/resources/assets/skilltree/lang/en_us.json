@@ -1,5 +1,6 @@
 {
   "block.skilltree.workbench": "Advanced Workbench",
+  "item.skilltree.workbench": "Advanced Workbench",
   "damage_condition.skilltree.fall": "Fall Damage",
   "damage_condition.skilltree.fall.type": "Fall",
   "damage_condition.skilltree.fire": "Fire Damage",

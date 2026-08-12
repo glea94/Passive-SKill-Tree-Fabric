@@ -6,6 +6,10 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.client.renderer.RenderPipelines;
 >>>>>>> Stashed changes

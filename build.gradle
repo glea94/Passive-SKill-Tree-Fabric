@@ -1,6 +1,10 @@
 plugins {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	id 'fabric-loom' version '1.14.10'
+=======
+	id 'fabric-loom' version '1.17.19'
+>>>>>>> Stashed changes
 =======
 	id 'fabric-loom' version '1.17.19'
 >>>>>>> Stashed changes
@@ -51,10 +55,16 @@ dependencies {
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cardinal_components_version}"
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	// Trinkets API -> équivalent Fabric de Curios (choix confirmé pour la compat accessoires)
 	// Bascule vers Modrinth : maven.terraformersmc.com renvoyait une erreur 502 persistante.
 	// Coordonnées confirmées par toi depuis la page de téléchargement officielle Modrinth (3.7.2).
 	modImplementation "maven.modrinth:5aaWibi9:AHxQGtuC"
+=======
+	// CARDINAL COMPONENTS API 7.0.0-beta.1 via le dépôt officiel Ladysnake (base + entity, les seuls modules utilisés par le mod)
+	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-base:7.0.0-beta.1"
+	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:7.0.0-beta.1"
+>>>>>>> Stashed changes
 =======
 	// CARDINAL COMPONENTS API 7.0.0-beta.1 via le dépôt officiel Ladysnake (base + entity, les seuls modules utilisés par le mod)
 	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-base:7.0.0-beta.1"

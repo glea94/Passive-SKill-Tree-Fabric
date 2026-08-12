@@ -1,8 +1,11 @@
 package daripher.skilltree.client.screen;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 import daripher.skilltree.client.widget.SkillTreeWidgets;
@@ -20,6 +23,10 @@ import net.minecraft.client.gui.screens.achievement.StatsUpdateListener;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.client.renderer.RenderPipelines;
 >>>>>>> Stashed changes
@@ -179,6 +186,9 @@ public class SkillTreeScreen extends Screen implements StatsUpdateListener {
         ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_background.png");
         Matrix3x2fStack poseStack = graphics.pose();
         poseStack.pushMatrix();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         float x = skillButtons.getScrollX();
         float y = skillButtons.getScrollY();
@@ -189,8 +199,13 @@ public class SkillTreeScreen extends Screen implements StatsUpdateListener {
         poseStack.translate(x, y);
         int size = BACKGROUND_SIZE;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         graphics.blit(texture, (width - size) / 2, (height - size) / 2, 0, 0F, 0F, size, size, size, size);
         poseStack.popPose();
+=======
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (width - size) / 2, (height - size) / 2, 0F, 0F, size, size, size, size);
+        poseStack.popMatrix();
+>>>>>>> Stashed changes
 =======
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (width - size) / 2, (height - size) / 2, 0F, 0F, size, size, size, size);
         poseStack.popMatrix();

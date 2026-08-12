@@ -12,7 +12,10 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerLevel;
 >>>>>>> Stashed changes
