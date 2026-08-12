@@ -8,6 +8,10 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.client.renderer.RenderPipelines;
 >>>>>>> Stashed changes
@@ -64,17 +68,13 @@ public class SkillTreeSelectionScreen extends Screen {
         }
     }
 
-<<<<<<< Updated upstream
-    @Override
-    public void renderBackground(GuiGraphics guiGraphics) {
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_background.png");
-        int size = SkillTreeScreen.BACKGROUND_SIZE;
-        guiGraphics.blit(texture, (width - size) / 2, (height - size) / 2, 0, 0F, 0F, size, size, size, size);
-=======
     public void renderBackground(@NotNull GuiGraphics guiGraphics) {
         Identifier texture = Identifier.parse("skilltree:textures/screen/skill_tree_background.png");
         int size = SkillTreeScreen.BACKGROUND_SIZE;
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, (this.width - size) / 2, (this.height - size) / 2, 0F, 0F, size, size, size, size);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 }

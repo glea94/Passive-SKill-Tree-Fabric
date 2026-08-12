@@ -8,7 +8,12 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.resources.ResourceLocation;
+=======
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
@@ -36,7 +41,13 @@ public class WorkbenchPotionMixingRecipe extends AbstractWorkbenchRecipe {
     public static final String IS_MIXTURE_TAG_NAME = "isMixture";
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public WorkbenchPotionMixingRecipe(ResourceLocation id, boolean requiresPassiveSkill) {
+=======
+    private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_potion_mixing_recipe");
+
+    public WorkbenchPotionMixingRecipe(Identifier id, boolean requiresPassiveSkill) {
+>>>>>>> Stashed changes
 =======
     private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_potion_mixing_recipe");
 

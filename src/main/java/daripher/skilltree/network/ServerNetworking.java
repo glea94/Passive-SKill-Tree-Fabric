@@ -13,11 +13,13 @@ import daripher.skilltree.skill.PassiveSkill;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.network.FriendlyByteBuf;
 =======
+=======
+>>>>>>> Stashed changes
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
->>>>>>> Stashed changes
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Objects;
@@ -75,9 +77,6 @@ public class ServerNetworking {
         message.encode(buf);
         ServerPlayNetworking.send(player, PSTNetworkChannels.SYNC_SERVER_DATA, buf);
     }
-<<<<<<< Updated upstream
-}
-=======
 
     public static void sendSyncWorkbenchRecipes(ServerPlayer player) {
         MinecraftServer server = player.level().getServer();
@@ -89,4 +88,3 @@ public class ServerNetworking {
         ServerPlayNetworking.send(player, new OpenSkillTreeEditorMessage(treeId));
     }
 }
->>>>>>> Stashed changes

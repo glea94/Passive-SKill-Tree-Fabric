@@ -8,8 +8,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+=======
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
@@ -75,7 +80,11 @@ public final class ItemIdPredicate implements ItemStackPredicate {
 
     private void selectItemId(Consumer<ItemStackPredicate> consumer, String text) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         setId(new ResourceLocation(text));
+=======
+        setId(Identifier.parse(text));
+>>>>>>> Stashed changes
 =======
         setId(Identifier.parse(text));
 >>>>>>> Stashed changes
@@ -83,15 +92,18 @@ public final class ItemIdPredicate implements ItemStackPredicate {
     }
 
     private static boolean isItemId(String text) {
-<<<<<<< Updated upstream
-        if (!ResourceLocation.isValidResourceLocation(text)) {
+        if (Identifier.tryParse(text) == null) {
             return false;
         }
+<<<<<<< Updated upstream
         return BuiltInRegistries.ITEM.containsKey(new ResourceLocation(text));
 =======
         if (Identifier.tryParse(text) == null) {
             return false;
         }
+        return BuiltInRegistries.ITEM.containsKey(Identifier.parse(text));
+>>>>>>> Stashed changes
+=======
         return BuiltInRegistries.ITEM.containsKey(Identifier.parse(text));
 >>>>>>> Stashed changes
     }
@@ -104,7 +116,11 @@ public final class ItemIdPredicate implements ItemStackPredicate {
         @Override
         public ItemStackPredicate deserialize(JsonObject json) throws JsonParseException {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             ResourceLocation id = new ResourceLocation(json.get("id").getAsString());
+=======
+            Identifier id = Identifier.parse(json.get("id").getAsString());
+>>>>>>> Stashed changes
 =======
             Identifier id = Identifier.parse(json.get("id").getAsString());
 >>>>>>> Stashed changes
@@ -123,11 +139,11 @@ public final class ItemIdPredicate implements ItemStackPredicate {
         public ItemStackPredicate deserialize(CompoundTag tag) {
             Tag idTag = tag.get("id");
             Objects.requireNonNull(idTag);
-<<<<<<< Updated upstream
-            ResourceLocation id = new ResourceLocation(idTag.getAsString());
-=======
             // Fix 1.21.5 : Tag.getAsString() renommé Tag.asString(), retourne Optional<String>
             Identifier id = Identifier.parse(idTag.asString().orElseThrow());
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             return new ItemIdPredicate(id);
         }
@@ -143,12 +159,11 @@ public final class ItemIdPredicate implements ItemStackPredicate {
         }
 
         @Override
-<<<<<<< Updated upstream
-        public ItemStackPredicate deserialize(FriendlyByteBuf buf) {
-            return new ItemIdPredicate(new ResourceLocation(buf.readUtf()));
-=======
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new ItemIdPredicate(Identifier.parse(buf.readUtf()));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
 
@@ -163,7 +178,11 @@ public final class ItemIdPredicate implements ItemStackPredicate {
         @Override
         public ItemStackPredicate createDefaultInstance() {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             return new ItemIdPredicate(new ResourceLocation("minecraft:shield"));
+=======
+            return new ItemIdPredicate(Identifier.parse("minecraft:shield"));
+>>>>>>> Stashed changes
 =======
             return new ItemIdPredicate(Identifier.parse("minecraft:shield"));
 >>>>>>> Stashed changes

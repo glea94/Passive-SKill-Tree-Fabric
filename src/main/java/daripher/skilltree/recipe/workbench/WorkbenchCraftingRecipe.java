@@ -9,7 +9,12 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.resources.ResourceLocation;
+=======
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
@@ -26,8 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WorkbenchCraftingRecipe extends AbstractWorkbenchRecipe {
-<<<<<<< Updated upstream
-=======
     // CORRECTION 1.21.1 : codec() et streamCodec() (voir la classe Serializer plus bas) ne reçoivent plus
     // l'identifiant de la recette en cours de chargement : celui-ci vit désormais uniquement dans le
     // RecipeHolder<T> construit par le RecipeManager (id = chemin du fichier JSON), et n'est plus transmis
@@ -40,7 +43,6 @@ public class WorkbenchCraftingRecipe extends AbstractWorkbenchRecipe {
     // envoyée avec ce fichier.
     private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_crafting_recipe");
 
->>>>>>> Stashed changes
     private final @Nullable Pair<Ingredient, Integer> baseIngredient;
     private final Map<Ingredient, Integer> additionalIngredients;
     private final ItemStack result;

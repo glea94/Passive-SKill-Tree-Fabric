@@ -242,6 +242,7 @@ public class TooltipHelper {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public static Component getRecipeTooltip(ResourceLocation recipeId) {
         ClientLevel level = Minecraft.getInstance().level;
         Objects.requireNonNull(level);
@@ -249,15 +250,17 @@ public class TooltipHelper {
         List<AbstractWorkbenchRecipe> recipes = recipeManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH);
         AbstractWorkbenchRecipe recipe = recipes.stream().filter(r -> r.getId().equals(recipeId)).findAny().orElse(null);
 =======
+=======
+>>>>>>> Stashed changes
     public static Component getRecipeTooltip(Identifier recipeId) {
         AbstractWorkbenchRecipe recipe = ClientWorkbenchRecipeCache.getById(recipeId).orElse(null);
->>>>>>> Stashed changes
         if (recipe == null) {
             return Component.literal("Unknown Recipe: " + recipeId.toString()).withStyle(ChatFormatting.RED);
         }
         return getRecipeTooltip(recipe);
     }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     public static String getRecipeDescriptionId(ResourceLocation recipeId) {
         ClientLevel level = Minecraft.getInstance().level;
@@ -266,9 +269,10 @@ public class TooltipHelper {
         List<AbstractWorkbenchRecipe> recipes = recipeManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH);
         AbstractWorkbenchRecipe recipe = recipes.stream().filter(r -> r.getId().equals(recipeId)).findAny().orElse(null);
 =======
+=======
+>>>>>>> Stashed changes
     public static String getRecipeDescriptionId(Identifier recipeId) {
         AbstractWorkbenchRecipe recipe = ClientWorkbenchRecipeCache.getById(recipeId).orElse(null);
->>>>>>> Stashed changes
         if (recipe == null) {
             return "Unknown Recipe: " + recipeId.toString();
         }

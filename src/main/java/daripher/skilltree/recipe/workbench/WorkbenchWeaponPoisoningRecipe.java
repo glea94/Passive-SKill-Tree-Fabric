@@ -9,7 +9,13 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.resources.ResourceLocation;
+=======
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -35,14 +41,11 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class WorkbenchWeaponPoisoningRecipe extends AbstractWorkbenchRecipe {
-<<<<<<< Updated upstream
-=======
     // CORRECTION 1.21.1 : voir la javadoc d'AbstractWorkbenchRecipe — codec()/streamCodec() ne
     // reçoivent plus l'id de la recette (contrairement à l'ancien fromJson(id, json)). Ce
     // placeholder est utilisé le temps que l'appelant réinjecte le vrai id via setId(...).
     private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_weapon_poisoning_recipe");
 
->>>>>>> Stashed changes
     private final int maxUses;
 
     public WorkbenchWeaponPoisoningRecipe(Identifier id, boolean requiresPassiveSkill, int maxUses) {

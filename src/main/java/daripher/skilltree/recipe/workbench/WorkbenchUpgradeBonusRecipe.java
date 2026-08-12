@@ -17,7 +17,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.resources.ResourceLocation;
+=======
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
@@ -36,14 +41,11 @@ import java.util.List;
 import java.util.Map;
 
 public class WorkbenchUpgradeBonusRecipe extends AbstractWorkbenchRecipe {
-<<<<<<< Updated upstream
-=======
     // CORRECTION 1.21.1 : voir la javadoc d'AbstractWorkbenchRecipe — codec()/streamCodec() ne
     // reçoivent plus l'id de la recette (contrairement à l'ancien fromJson(id, json)). Ce
     // placeholder est utilisé le temps que l'appelant réinjecte le vrai id via setId(...).
     private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_upgrade_bonus_recipe");
 
->>>>>>> Stashed changes
     private final ItemStackPredicate baseItemStackPredicate;
     private final Map<Ingredient, Integer> additionalIngredients;
     private final ItemBonus<?> itemBonus;

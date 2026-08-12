@@ -4,27 +4,26 @@ import daripher.skilltree.capability.skill.IPlayerSkills;
 import daripher.skilltree.capability.skill.PlayerSkillsProvider;
 import daripher.skilltree.skill.PassiveSkill;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 =======
+=======
+>>>>>>> Stashed changes
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< Updated upstream
-public class SyncPlayerSkillsMessage {
-    public List<ResourceLocation> learnedSkills = new ArrayList<>();
-    public int skillPoints;
-
-    private SyncPlayerSkillsMessage() {
-=======
 public class SyncPlayerSkillsMessage implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<SyncPlayerSkillsMessage> TYPE =
             new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "sync_player_skills"));
@@ -43,7 +42,6 @@ public class SyncPlayerSkillsMessage implements CustomPacketPayload {
     private SyncPlayerSkillsMessage(List<Identifier> learnedSkills, int skillPoints) {
         this.learnedSkills = learnedSkills;
         this.skillPoints = skillPoints;
->>>>>>> Stashed changes
     }
 
     public SyncPlayerSkillsMessage(Player player) {

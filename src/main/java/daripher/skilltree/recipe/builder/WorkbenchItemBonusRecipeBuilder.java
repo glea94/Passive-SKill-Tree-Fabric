@@ -8,16 +8,11 @@ import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.item.ItemBonus;
 import daripher.skilltree.skill.bonus.item.EquipmentBonus;
 import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
-<<<<<<< Updated upstream
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.resources.ResourceLocation;
-=======
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Recipe;
->>>>>>> Stashed changes
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.jetbrains.annotations.NotNull;
@@ -69,16 +64,12 @@ public class WorkbenchItemBonusRecipeBuilder {
 
     public void save(Consumer<FinishedRecipe> finishedRecipeConsumer) {
         validate();
-<<<<<<< Updated upstream
-        finishedRecipeConsumer.accept(new Result(id, baseItemStackPredicate, ingredients, requiresPassiveSkill, itemBonus));
-=======
         WorkbenchUpgradeBonusRecipe recipe =
                 new WorkbenchUpgradeBonusRecipe(id, baseItemStackPredicate, ingredients, requiresPassiveSkill, itemBonus);
 
         // Factual Fix 1.21.4: Convert the Identifier into a modern type-safe ResourceKey for the recipe registry
         ResourceKey<Recipe<?>> recipeKey = ResourceKey.create(Registries.RECIPE, id);
         recipeOutput.accept(recipeKey, recipe, null);
->>>>>>> Stashed changes
     }
 
     private void validate() {

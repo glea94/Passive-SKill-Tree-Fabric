@@ -24,15 +24,18 @@ import java.util.Map;
 import java.util.Objects;
 
 public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContainer>, SkillRequiringRecipe {
-<<<<<<< Updated upstream
-    private final ResourceLocation id;
+    private Identifier id;
     private final boolean requiresPassiveSkill;
 
+<<<<<<< Updated upstream
     public AbstractWorkbenchRecipe(ResourceLocation id, boolean requiresPassiveSkill) {
 =======
     private Identifier id;
     private final boolean requiresPassiveSkill;
 
+    protected AbstractWorkbenchRecipe(Identifier id, boolean requiresPassiveSkill) {
+>>>>>>> Stashed changes
+=======
     protected AbstractWorkbenchRecipe(Identifier id, boolean requiresPassiveSkill) {
 >>>>>>> Stashed changes
         this.requiresPassiveSkill = requiresPassiveSkill;
@@ -53,14 +56,16 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
 
     public String getDescriptionId() {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation id = BuiltInRegistries.RECIPE_SERIALIZER.getKey(getSerializer());
         Objects.requireNonNull(id);
         return "recipe.%s.%s".formatted(id.getNamespace(), id.getPath());
 =======
+=======
+>>>>>>> Stashed changes
         Identifier serializerId = BuiltInRegistries.RECIPE_SERIALIZER.getKey(getSerializer());
         Objects.requireNonNull(serializerId);
         return "recipe.%s.%s".formatted(serializerId.getNamespace(), serializerId.getPath());
->>>>>>> Stashed changes
     }
 
     public boolean isLockedFor(@NotNull Player player) {
@@ -102,6 +107,7 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     @Override
     public @NotNull ResourceLocation getId() {
         return id;
@@ -112,11 +118,16 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
         return id;
     }
 
+=======
+    public @NotNull Identifier getId() {
+        return id;
+    }
+
+>>>>>>> Stashed changes
     public void setId(@NotNull Identifier id) {
         this.id = id;
     }
 
->>>>>>> Stashed changes
     @Deprecated
     @Override
     public @NotNull ItemStack getResultItem(@NotNull RegistryAccess registryAccess) {

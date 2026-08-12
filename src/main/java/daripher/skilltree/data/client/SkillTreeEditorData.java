@@ -269,7 +269,11 @@ public class SkillTreeEditorData {
                 }
                 String skillTreeName = skillTreeFileName.substring(0, skillTreeFileName.lastIndexOf('.'));
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 EDITOR_TREES_IDS.add(new ResourceLocation(namespace, skillTreeName));
+=======
+                EDITOR_TREES_IDS.add(Identifier.fromNamespaceAndPath(namespace, skillTreeName));
+>>>>>>> Stashed changes
 =======
                 EDITOR_TREES_IDS.add(Identifier.fromNamespaceAndPath(namespace, skillTreeName));
 >>>>>>> Stashed changes

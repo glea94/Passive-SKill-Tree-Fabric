@@ -18,8 +18,14 @@ import net.minecraft.world.entity.Entity;
  */
 public class PersistentDataProvider implements EntityComponentInitializer {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public static final ComponentKey<IPersistentData> KEY = ComponentRegistry.getOrCreate(
             new ResourceLocation(SkillTreeMod.MOD_ID, "persistent_data"), IPersistentData.class);
+=======
+    // Aligned 1.21.4: Using Identifier.fromNamespaceAndPath is standard and type-safe for component capabilities
+    public static final ComponentKey<IPersistentData> KEY = ComponentRegistryV3.INSTANCE.getOrCreate(
+            Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "persistent_data"), IPersistentData.class);
+>>>>>>> Stashed changes
 =======
     // Aligned 1.21.4: Using Identifier.fromNamespaceAndPath is standard and type-safe for component capabilities
     public static final ComponentKey<IPersistentData> KEY = ComponentRegistryV3.INSTANCE.getOrCreate(

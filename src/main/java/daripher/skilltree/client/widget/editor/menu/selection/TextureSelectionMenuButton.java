@@ -9,11 +9,13 @@ public class TextureSelectionMenuButton extends SelectionMenuButton<Identifier> 
     private final String texturesFolder;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public TextureSelectionMenuButton(SkillTreeEditor editor, int x, int y, int width, String message, String texturesFolder, Collection<ResourceLocation> values) {
 =======
+=======
+>>>>>>> Stashed changes
     public TextureSelectionMenuButton(SkillTreeEditor editor, int x, int y, int width, String message, String texturesFolder, Collection<Identifier> values) {
         // Factual Fix 1.21.4: Remove layout coordinates x and y from parent widget constructor arguments
->>>>>>> Stashed changes
         super(editor, x, y, width, message, values);
         this.texturesFolder = texturesFolder;
         this.selectionList = new TextureSelectionList(0, 0, 19, 19, 16, 16, values).setColumns(10).setRows(10);

@@ -1,18 +1,13 @@
 package daripher.skilltree.recipe.builder;
 
-<<<<<<< Updated upstream
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import daripher.skilltree.init.PSTRecipeSerializers;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-=======
 import daripher.skilltree.recipe.workbench.WorkbenchCraftingRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -64,16 +59,12 @@ public class WorkbenchCraftingRecipeBuilder {
 
     public void save(Consumer<FinishedRecipe> finishedRecipeConsumer) {
         validate();
-<<<<<<< Updated upstream
-        finishedRecipeConsumer.accept(new Result(id, baseIngredient, ingredients, requiresPassiveSkill, result));
-=======
         WorkbenchCraftingRecipe recipe =
                 new WorkbenchCraftingRecipe(id, baseIngredient, ingredients, requiresPassiveSkill, result);
 
         // Factual Fix 1.21.4: Convert the Identifier into a modern type-safe ResourceKey for the recipe registry
         ResourceKey<Recipe<?>> recipeKey = ResourceKey.create(Registries.RECIPE, id);
         recipeOutput.accept(recipeKey, recipe, null);
->>>>>>> Stashed changes
     }
 
     private void validate() {

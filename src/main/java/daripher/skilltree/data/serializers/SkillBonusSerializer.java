@@ -14,11 +14,11 @@ public class SkillBonusSerializer implements JsonSerializer<SkillBonus<?>>, Json
     public SkillBonus<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObj = (JsonObject) json;
         String type = jsonObj.get("type").getAsString();
-<<<<<<< Updated upstream
-        ResourceLocation serializerId = new ResourceLocation(type);
-=======
 
         Identifier serializerId = Identifier.parse(type);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         SkillBonus.Serializer serializer = PSTRegistries.SKILL_BONUSES.get().getValue(serializerId);
         if (serializer == null) {

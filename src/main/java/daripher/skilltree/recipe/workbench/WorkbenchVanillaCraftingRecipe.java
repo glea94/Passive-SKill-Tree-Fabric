@@ -8,13 +8,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-<<<<<<< Updated upstream
-import net.minecraft.resources.ResourceLocation;
-=======
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextMap;
->>>>>>> Stashed changes
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,20 +26,16 @@ import java.util.stream.Collectors;
 
 public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_vanilla_crafting_recipe");
 
->>>>>>> Stashed changes
     private @Nullable Pair<Ingredient, Integer> baseIngredient;
     private Map<Ingredient, Integer> additionalIngredients;
     private final ItemStack result;
 
-<<<<<<< Updated upstream
-    public WorkbenchVanillaCraftingRecipe(CraftingRecipe vanillaRecipe, RegistryAccess registryAccess) {
-        super(vanillaRecipe.getId(), true);
-        this.result = vanillaRecipe.getResultItem(registryAccess);
-        additionalIngredients = getIngredientsFromCraftingRecipe(vanillaRecipe);
-=======
     public WorkbenchVanillaCraftingRecipe(RecipeHolder<CraftingRecipe> vanillaRecipeHolder, HolderLookup.Provider registryAccess) {
         // Factual Fix 1.21.4: Extracted raw Identifier path out of the RecipeHolder's ResourceKey handle
         super(vanillaRecipeHolder.id().identifier(), true);
@@ -66,7 +58,6 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
         }
         this.result = resolvedResult;
         this.additionalIngredients = getIngredientsFromCraftingRecipe(vanillaRecipe, registryAccess);
->>>>>>> Stashed changes
         List<Pair<Ingredient, Integer>> ingredients = new ArrayList<>(additionalIngredients.entrySet().stream().map(Pair::of).toList());
         if (!ingredients.isEmpty()) {
             this.baseIngredient = ingredients.remove(0);

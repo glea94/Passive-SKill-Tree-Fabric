@@ -36,7 +36,11 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
     private String slotName;
     private int amount;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private final UUID modifierId;
+=======
+    private final Identifier modifierId;
+>>>>>>> Stashed changes
 =======
     private final Identifier modifierId;
 >>>>>>> Stashed changes
@@ -44,15 +48,18 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
     public TrinketSlotsBonus(String slotName, int amount) {
         this.slotName = slotName;
         this.amount = amount;
-<<<<<<< Updated upstream
-        this.modifierId = UUID.randomUUID();
+        this.modifierId = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "trinket_slots_bonus_" + UUID.randomUUID());
     }
 
+<<<<<<< Updated upstream
     private TrinketSlotsBonus(String slotName, int amount, UUID modifierId) {
 =======
         this.modifierId = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "trinket_slots_bonus_" + UUID.randomUUID());
     }
 
+    private TrinketSlotsBonus(String slotName, int amount, Identifier modifierId) {
+>>>>>>> Stashed changes
+=======
     private TrinketSlotsBonus(String slotName, int amount, Identifier modifierId) {
 >>>>>>> Stashed changes
         this.slotName = slotName;
@@ -62,17 +69,19 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
 
     private AttributeInstance getSlotAttributeInstance(ServerPlayer player) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation attributeId = new ResourceLocation("trinkets", slotName);
         Attribute slotAttribute = BuiltInRegistries.ATTRIBUTE.get(attributeId);
         if (slotAttribute == null) {
 =======
+=======
+>>>>>>> Stashed changes
         Identifier attributeId = Identifier.fromNamespaceAndPath("trinkets", slotName);
         // Factual Fix 1.21.4: BuiltInRegistries.ATTRIBUTE.get returns an Optional<Holder.Reference<Attribute>>, unwrap straight to a Holder type reference
         Holder<Attribute> slotAttributeHolder = BuiltInRegistries.ATTRIBUTE.get(attributeId)
                 .map(holder -> (Holder<Attribute>) (Object) holder)
                 .orElse(null);
         if (slotAttributeHolder == null) {
->>>>>>> Stashed changes
             return null;
         }
         return player.getAttribute(slotAttribute);
@@ -175,12 +184,11 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
         public TrinketSlotsBonus deserialize(JsonObject json) throws JsonParseException {
             String slotName = SerializationHelper.getElement(json, "slot").getAsString();
             int amount = SerializationHelper.getElement(json, "amount").getAsInt();
-<<<<<<< Updated upstream
-            String uuid = SerializationHelper.getElement(json, "modifier_id").getAsString();
-            return new TrinketSlotsBonus(slotName, amount, UUID.fromString(uuid));
-=======
             String modifierId = SerializationHelper.getElement(json, "modifier_id").getAsString();
             return new TrinketSlotsBonus(slotName, amount, Identifier.parse(modifierId));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
 
@@ -196,17 +204,14 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
 
         @Override
         public TrinketSlotsBonus deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-            String slotName = tag.getString("slot");
-            int amount = tag.getInt("amount");
-            String uuid = tag.getString("modifier_id");
-            return new TrinketSlotsBonus(slotName, amount, UUID.fromString(uuid));
-=======
             // Factual Fix 1.21.5: getString/getInt renvoient désormais Optional<T>
             String slotName = tag.getString("slot").orElse("");
             int amount = tag.getInt("amount").orElse(0);
             String modifierId = tag.getString("modifier_id").orElse("");
             return new TrinketSlotsBonus(slotName, amount, Identifier.parse(modifierId));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
 
@@ -226,12 +231,11 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
         public TrinketSlotsBonus deserialize(FriendlyByteBuf buf) {
             String slotName = buf.readUtf();
             int amount = buf.readInt();
-<<<<<<< Updated upstream
-            String uuid = buf.readUtf();
-            return new TrinketSlotsBonus(slotName, amount, UUID.fromString(uuid));
-=======
             String modifierId = buf.readUtf();
             return new TrinketSlotsBonus(slotName, amount, Identifier.parse(modifierId));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
 

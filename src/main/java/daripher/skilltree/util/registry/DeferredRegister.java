@@ -51,10 +51,13 @@ public class DeferredRegister<T> {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public <I extends T> RegistryObject<I> register(String name, Supplier<I> supplier) {
         ResourceLocation id = new ResourceLocation(modId, name);
         I value = supplier.get();
 =======
+=======
+>>>>>>> Stashed changes
     private static final ThreadLocal<Identifier> CURRENT_ID = new ThreadLocal<>();
 
     /**
@@ -68,6 +71,10 @@ public class DeferredRegister<T> {
 
     public <I extends T> RegistryObject<I> register(String name, Supplier<I> supplier) {
         Identifier id = Identifier.fromNamespaceAndPath(modId, name);
+<<<<<<< Updated upstream
+=======
+        Identifier previous = CURRENT_ID.get();
+>>>>>>> Stashed changes
         CURRENT_ID.set(id);
         I value;
         try {
@@ -75,7 +82,6 @@ public class DeferredRegister<T> {
         } finally {
             CURRENT_ID.remove();
         }
->>>>>>> Stashed changes
         if (backingRegistry != null) {
             value = Registry.register(backingRegistry, id, value);
         }

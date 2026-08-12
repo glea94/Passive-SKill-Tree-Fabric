@@ -12,10 +12,12 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerLevel;
->>>>>>> Stashed changes
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -70,10 +72,6 @@ public class ArrowRetrievalChanceBonusHandler {
         }
         LivingEntity target = event.getEntity();
         CompoundTag targetPersistentData = PersistentDataProvider.get(target);
-<<<<<<< Updated upstream
-        ListTag stuckArrowsTag = targetPersistentData.getList(STUCK_ARROWS_TAG_NAME, Tag.TAG_COMPOUND);
-        stuckArrowsTag.add(arrowStack.save(new CompoundTag()));
-=======
         // Factual Fix 1.21.5: CompoundTag#getList(name, type) supprimé -> getList(name) renvoyant Optional<ListTag>
         // A VERIFIER en IntelliJ : confirme que getList(String) retourne bien Optional<ListTag>
         ListTag stuckArrowsTag = targetPersistentData.getList(STUCK_ARROWS_TAG_NAME).orElse(new ListTag());
@@ -86,7 +84,6 @@ public class ArrowRetrievalChanceBonusHandler {
         Tag arrowTag = ItemStack.CODEC.encodeStart(ops, arrowStack).getOrThrow(IllegalStateException::new);
 
         stuckArrowsTag.add(arrowTag);
->>>>>>> Stashed changes
         targetPersistentData.put(STUCK_ARROWS_TAG_NAME, stuckArrowsTag);
     }
 
@@ -96,11 +93,6 @@ public class ArrowRetrievalChanceBonusHandler {
         if (arrowsTag.isEmpty()) {
             return;
         }
-<<<<<<< Updated upstream
-        for (Tag tag : arrowsTag) {
-            ItemStack arrowStack = ItemStack.of((CompoundTag) tag);
-            entity.spawnAtLocation(arrowStack);
-=======
 
         HolderLookup.Provider registries = entity.level().registryAccess();
         // Factual Fix 1.21.8 : ItemStack.parse(Provider, Tag) statique supprimé.
@@ -116,7 +108,6 @@ public class ArrowRetrievalChanceBonusHandler {
             if (entity.level() instanceof ServerLevel serverLevel) {
                 entity.spawnAtLocation(serverLevel, arrowStack);
             }
->>>>>>> Stashed changes
         }
     }
 }

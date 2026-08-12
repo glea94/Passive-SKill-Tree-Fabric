@@ -1,8 +1,11 @@
 package daripher.skilltree.client.screen;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 import daripher.skilltree.client.widget.SkillTreeWidgets;
@@ -20,6 +23,10 @@ import net.minecraft.client.gui.screens.achievement.StatsUpdateListener;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.client.renderer.RenderPipelines;
 >>>>>>> Stashed changes
@@ -154,19 +161,6 @@ public class SkillTreeScreen extends Screen implements StatsUpdateListener {
     }
 
     private void renderOverlay(GuiGraphics graphics) {
-<<<<<<< Updated upstream
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_overlay.png");
-        RenderSystem.enableBlend();
-        graphics.blit(texture, 0, 0, 0, 0F, 0F, width, height, width, height);
-        RenderSystem.disableBlend();
-    }
-
-    @Override
-    public void renderBackground(GuiGraphics graphics) {
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_background.png");
-        PoseStack poseStack = graphics.pose();
-        poseStack.pushPose();
-=======
         // CORRECTION 1.21.1: Modern factory constructor pattern
         Identifier texture = Identifier.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_overlay.png");
         // Fix 1.21.8 : RenderPipelines.GUI_TEXTURED gère déjà le blending, pas besoin de RenderSystem.enableBlend()/disableBlend()
@@ -179,6 +173,9 @@ public class SkillTreeScreen extends Screen implements StatsUpdateListener {
         Identifier texture = Identifier.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_background.png");
         Matrix3x2fStack poseStack = graphics.pose();
         poseStack.pushMatrix();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         float x = skillButtons.getScrollX();
         float y = skillButtons.getScrollY();
@@ -189,8 +186,13 @@ public class SkillTreeScreen extends Screen implements StatsUpdateListener {
         poseStack.translate(x, y);
         int size = BACKGROUND_SIZE;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         graphics.blit(texture, (width - size) / 2, (height - size) / 2, 0, 0F, 0F, size, size, size, size);
         poseStack.popPose();
+=======
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (width - size) / 2, (height - size) / 2, 0F, 0F, size, size, size, size);
+        poseStack.popMatrix();
+>>>>>>> Stashed changes
 =======
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (width - size) / 2, (height - size) / 2, 0F, 0F, size, size, size, size);
         poseStack.popMatrix();

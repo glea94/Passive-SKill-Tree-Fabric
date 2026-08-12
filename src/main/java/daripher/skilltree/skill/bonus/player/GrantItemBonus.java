@@ -146,7 +146,11 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
         @Override
         public GrantItemBonus deserialize(JsonObject json) throws JsonParseException {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             ResourceLocation itemId = new ResourceLocation(json.get("item_id").getAsString());
+=======
+            Identifier itemId = Identifier.parse(json.get("item_id").getAsString());
+>>>>>>> Stashed changes
 =======
             Identifier itemId = Identifier.parse(json.get("item_id").getAsString());
 >>>>>>> Stashed changes
@@ -166,12 +170,14 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
         @Override
         public GrantItemBonus deserialize(CompoundTag tag) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             ResourceLocation itemId = new ResourceLocation(tag.getString("item_id"));
             int amount = tag.getInt("amount");
 =======
+=======
+>>>>>>> Stashed changes
             Identifier itemId = Identifier.parse(tag.getString("item_id").orElse(""));
             int amount = tag.getInt("amount").orElse(0);
->>>>>>> Stashed changes
             return new GrantItemBonus(itemId, amount);
         }
 
@@ -187,17 +193,10 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
         }
 
         @Override
-<<<<<<< Updated upstream
-        public GrantItemBonus deserialize(FriendlyByteBuf buf) {
-            ResourceLocation itemId = buf.readResourceLocation();
-            int duration = buf.readInt();
-            return new GrantItemBonus(itemId, duration);
-=======
         public GrantItemBonus deserialize(RegistryFriendlyByteBuf buf) {
             Identifier itemId = buf.readIdentifier();
             int amount = buf.readInt();
             return new GrantItemBonus(itemId, amount);
->>>>>>> Stashed changes
         }
 
         @Override

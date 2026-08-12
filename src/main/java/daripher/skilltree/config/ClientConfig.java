@@ -55,16 +55,18 @@ public class ClientConfig {
 
     private static void applyData(Data data) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         favorite_skills = data.favorite_skills.stream().map(ResourceLocation::new).collect(Collectors.toCollection(HashSet::new));
         favorite_color_is_rainbow = data.favorite_color_hex.equals("rainbow");
 =======
+=======
+>>>>>>> Stashed changes
         // En 1.21.4, Identifier.parse est parfaitement standard pour charger les clés d'identification
         favorite_skills = data.favorite_skills.stream()
                 .map(Identifier::parse)
                 .collect(Collectors.toCollection(HashSet::new));
 
         favorite_color_is_rainbow = "rainbow".equalsIgnoreCase(data.favorite_color_hex);
->>>>>>> Stashed changes
         skill_tree_background_parallax = data.skill_tree_background_parallax;
         if (!favorite_color_is_rainbow) {
             favorite_color = Integer.decode(data.favorite_color_hex);

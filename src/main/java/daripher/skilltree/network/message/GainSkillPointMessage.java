@@ -1,8 +1,5 @@
 package daripher.skilltree.network.message;
 
-<<<<<<< Updated upstream
-import net.minecraft.network.FriendlyByteBuf;
-=======
 import daripher.skilltree.SkillTreeMod;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -18,7 +15,6 @@ public class GainSkillPointMessage implements CustomPacketPayload {
             (buf, msg) -> msg.encode(buf),
             buf -> decode(buf)
     );
->>>>>>> Stashed changes
 
 public class GainSkillPointMessage {
     public GainSkillPointMessage() {

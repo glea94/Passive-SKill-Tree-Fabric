@@ -183,7 +183,12 @@ public class ItemBonusHandler {
             return null;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation id = new ResourceLocation(tag.getString("type"));
+=======
+        // Aligned 1.21.4: Using type-safe Identifier parsing matching modern Mojang conventions
+        Identifier id = Identifier.parse(tag.getString("type").orElseThrow());
+>>>>>>> Stashed changes
 =======
         // Aligned 1.21.4: Using type-safe Identifier parsing matching modern Mojang conventions
         Identifier id = Identifier.parse(tag.getString("type").orElseThrow());

@@ -98,7 +98,11 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
         @Override
         public SkillRequirement<?> deserialize(JsonObject json) throws JsonParseException {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             ResourceLocation id = new ResourceLocation(json.get("skill_id").getAsString());
+=======
+            Identifier id = Identifier.parse(json.get("skill_id").getAsString());
+>>>>>>> Stashed changes
 =======
             Identifier id = Identifier.parse(json.get("skill_id").getAsString());
 >>>>>>> Stashed changes
@@ -114,11 +118,11 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
 
         @Override
         public SkillRequirement<?> deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-            ResourceLocation id = new ResourceLocation(tag.getString("skill_id"));
-=======
             // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
             Identifier id = Identifier.parse(tag.getString("skill_id").orElse(""));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             return new LearnedSkillRequirement(id);
         }
@@ -133,12 +137,11 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
         }
 
         @Override
-<<<<<<< Updated upstream
-        public SkillRequirement<?> deserialize(FriendlyByteBuf buf) {
-            ResourceLocation id = new ResourceLocation(buf.readUtf());
-=======
         public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
             Identifier id = Identifier.parse(buf.readUtf());
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             return new LearnedSkillRequirement(id);
         }
@@ -153,7 +156,11 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
         @Override
         public SkillRequirement<?> createDefaultInstance() {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             return new LearnedSkillRequirement(new ResourceLocation("skilltree:hunter_1"));
+=======
+            return new LearnedSkillRequirement(Identifier.parse("skilltree:hunter_1"));
+>>>>>>> Stashed changes
 =======
             return new LearnedSkillRequirement(Identifier.parse("skilltree:hunter_1"));
 >>>>>>> Stashed changes

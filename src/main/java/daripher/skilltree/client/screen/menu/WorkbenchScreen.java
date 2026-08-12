@@ -31,8 +31,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/gui/container/workbench.png");
     private static final ResourceLocation RECIPES_TEXTURE = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/gui/container/workbench_recipes.png");
+=======
+    private static final Identifier BACKGROUND_TEXTURE = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/gui/container/workbench.png");
+    private static final Identifier RECIPES_TEXTURE = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/gui/container/workbench_recipes.png");
+>>>>>>> Stashed changes
 =======
     private static final Identifier BACKGROUND_TEXTURE = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/gui/container/workbench.png");
     private static final Identifier RECIPES_TEXTURE = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/gui/container/workbench_recipes.png");
@@ -68,6 +73,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
         searchBox.setBordered(false);
         searchBox.setTextColor(0xffffff);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         addRenderableWidget(searchBox);
     }
 
@@ -82,6 +88,11 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
         if (!previousSearch.isEmpty()) {
             searchBox.setValue(previousSearch);
 >>>>>>> Stashed changes
+=======
+        this.addRenderableWidget(searchBox);
+        if (!previousSearch.isEmpty()) {
+            searchBox.setValue(previousSearch);
+>>>>>>> Stashed changes
             refreshSearchResults();
         }
     }
@@ -89,8 +100,12 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
     @Override
     protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         renderBackground(guiGraphics);
         guiGraphics.blit(BACKGROUND_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+=======
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0F, 0F, this.imageWidth, this.imageHeight, 256, 256);
+>>>>>>> Stashed changes
 =======
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, this.leftPos, this.topPos, 0F, 0F, this.imageWidth, this.imageHeight, 256, 256);
 >>>>>>> Stashed changes
@@ -106,14 +121,13 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
         int scrollerIconIndex = (isScrollBarActive() ? 2 : 1);
         int scrollerX = leftPos + 156;
         float scrollOffset = (float) amountScrolled / getMaxScroll();
-<<<<<<< Updated upstream
-        int scrollerY = (int) (topPos + 24 + (SCROLLER_FULL_HEIGHT - SCROLLER_HEIGHT) * scrollOffset);
-        guiGraphics.blit(BACKGROUND_TEXTURE, scrollerX, scrollerY, -SCROLLER_WIDTH * scrollerIconIndex, 0, SCROLLER_WIDTH, SCROLLER_HEIGHT);
-=======
         int scrollerY = (int) (this.topPos + 24 + (SCROLLER_FULL_HEIGHT - SCROLLER_HEIGHT) * scrollOffset);
 
         int uOffset = 256 - (SCROLLER_WIDTH * scrollerIconIndex);
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND_TEXTURE, scrollerX, scrollerY, (float) uOffset, 0F, SCROLLER_WIDTH, SCROLLER_HEIGHT, 256, 256);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 
@@ -124,14 +138,9 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
             int y = topPos + RECIPES_Y + i * RECIPE_HEIGHT;
             int recipeTexture = getRecipeTexture(mouseX, mouseY, recipeIndex, i);
             int vOffset = recipeTexture * RECIPE_HEIGHT;
-<<<<<<< Updated upstream
-            guiGraphics.blit(RECIPES_TEXTURE, x, y, 0, vOffset, RECIPE_WIDTH, RECIPE_HEIGHT);
-            AbstractWorkbenchRecipe recipe = getRecipeInSlot(i).getKey();
-=======
 
             guiGraphics.blit(RenderPipelines.GUI_TEXTURED, RECIPES_TEXTURE, x, y, 0F, (float) vOffset, RECIPE_WIDTH, RECIPE_HEIGHT, 256, 256);
             AbstractWorkbenchRecipe recipe = getRecipeInSlot(i).getKey().value();
->>>>>>> Stashed changes
             String tooltip = recipe.getShortDescription().getString();
             tooltip = TooltipHelper.getTrimmedString(font, tooltip, RECIPE_WIDTH - 4);
             guiGraphics.drawString(font, tooltip, x + 2, y + 5, 0xffffff);
@@ -304,12 +313,11 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
             if (!isMouseOverRecipe(i, mouseX, mouseY)) {
                 continue;
             }
-<<<<<<< Updated upstream
-            AbstractWorkbenchRecipe recipe = getRecipeInSlot(i).getKey();
-            guiGraphics.renderComponentTooltip(font, recipe.getFullDescription(), mouseX, mouseY);
-=======
             AbstractWorkbenchRecipe recipe = getRecipeInSlot(i).getKey().value();
             guiGraphics.setComponentTooltipForNextFrame(this.font, recipe.getFullDescription(), mouseX, mouseY);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
     }
@@ -318,7 +326,11 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
         List<Component> tooltip = getTooltipFromContainerItem(itemStack);
         Optional<TooltipComponent> tooltipImage = itemStack.getTooltipImage();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         guiGraphics.renderTooltip(font, tooltip, tooltipImage, x, y);
+=======
+        guiGraphics.setTooltipForNextFrame(this.font, tooltip, tooltipImage, x, y);
+>>>>>>> Stashed changes
 =======
         guiGraphics.setTooltipForNextFrame(this.font, tooltip, tooltipImage, x, y);
 >>>>>>> Stashed changes

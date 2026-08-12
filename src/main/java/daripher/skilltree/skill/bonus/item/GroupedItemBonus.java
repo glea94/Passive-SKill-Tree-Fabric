@@ -178,7 +178,11 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
                 JsonObject innerBonusTag = innerBonusesJson.get(i).getAsJsonObject();
                 String serializerIdString = innerBonusTag.get("type").getAsString();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 ResourceLocation serializerId = new ResourceLocation(serializerIdString);
+=======
+                Identifier serializerId = Identifier.parse(serializerIdString);
+>>>>>>> Stashed changes
 =======
                 Identifier serializerId = Identifier.parse(serializerIdString);
 >>>>>>> Stashed changes
@@ -215,12 +219,11 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             ListTag innerBonusesTag = tag.getList("inner_bonuses", Tag.TAG_COMPOUND);
             for (Tag value : innerBonusesTag) {
                 CompoundTag innerBonusTag = (CompoundTag) value;
-<<<<<<< Updated upstream
-                String type = innerBonusTag.getString("type");
-                ResourceLocation serializerId = new ResourceLocation(type);
-=======
                 String type = innerBonusTag.getString("type").orElseThrow();
                 Identifier serializerId = Identifier.parse(type);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                 ItemBonus.Serializer serializer = PSTRegistries.ITEM_BONUSES.get().getValue(serializerId);
                 Objects.requireNonNull(serializer, "Unknown item bonus: " + serializerId);
@@ -272,13 +275,9 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
 
         @Override
         public ItemBonus<?> createDefaultInstance() {
-<<<<<<< Updated upstream
-            AttributeModifier defaultModifier = new AttributeModifier("Default Modifier", 1, AttributeModifier.Operation.ADDITION);
-=======
             // Aligned 1.21.4: Explicit clean resource-keyed declaration matching modern Mojang attribute modifier conventions
             AttributeModifier defaultModifier = new AttributeModifier(Identifier.parse("skilltree:default_modifier"), 1, AttributeModifier.Operation.ADD_VALUE);
 
->>>>>>> Stashed changes
             ItemBonus<?> bonus1 = new EquipmentBonus(new AttributeBonus(Attributes.ARMOR, defaultModifier));
             ItemBonus<?> bonus2 = new EquipmentBonus(new AttributeBonus(Attributes.ARMOR_TOUGHNESS, defaultModifier));
             ArrayList<ItemBonus<?>> bonuses = new ArrayList<>();
