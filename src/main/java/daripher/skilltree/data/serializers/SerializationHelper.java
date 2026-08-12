@@ -37,16 +37,18 @@ public class SerializationHelper {
     @NotNull
     public static Attribute deserializeAttribute(JsonObject json) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation attributeId = new ResourceLocation(json.get("attribute").getAsString());
         Attribute attribute;
         attribute = BuiltInRegistries.ATTRIBUTE.get(attributeId);
 =======
+=======
+>>>>>>> Stashed changes
         Identifier attributeId = Identifier.parse(json.get("attribute").getAsString());
         // Factual Fix 1.21.4: Registry get() returns Optional<Holder.Reference<Attribute>>, unwrap with map()
         Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(attributeId)
                 .map(net.minecraft.core.Holder::value)
                 .orElse(null);
->>>>>>> Stashed changes
         if (attribute == null) {
             throw new RuntimeException("Attribute " + attributeId + " doesn't exist!");
         }
@@ -54,12 +56,11 @@ public class SerializationHelper {
     }
 
     public static void serializeAttribute(JsonObject json, Attribute attribute) {
-<<<<<<< Updated upstream
-        ResourceLocation attributeId;
-        attributeId = BuiltInRegistries.ATTRIBUTE.getKey(attribute);
-=======
         // Factual Fix 1.21.4: Use official ResourceKey formatting matching safe registry hooks
         Identifier attributeId = BuiltInRegistries.ATTRIBUTE.getKey(attribute);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         Objects.requireNonNull(attributeId);
         json.addProperty("attribute", attributeId.toString());
@@ -68,8 +69,12 @@ public class SerializationHelper {
     @NotNull
     public static AttributeModifier deserializeAttributeModifier(JsonObject json) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         UUID id = UUID.fromString(json.get("id").getAsString());
         String name = json.get("name").getAsString();
+=======
+        Identifier id = Identifier.parse(json.get("id").getAsString());
+>>>>>>> Stashed changes
 =======
         Identifier id = Identifier.parse(json.get("id").getAsString());
 >>>>>>> Stashed changes
@@ -104,7 +109,11 @@ public class SerializationHelper {
         }
         JsonObject multiplierJson = json.getAsJsonObject(name);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(multiplierJson.get("type").getAsString());
+=======
+        Identifier serializerId = Identifier.parse(multiplierJson.get("type").getAsString());
+>>>>>>> Stashed changes
 =======
         Identifier serializerId = Identifier.parse(multiplierJson.get("type").getAsString());
 >>>>>>> Stashed changes
@@ -132,7 +141,11 @@ public class SerializationHelper {
         }
         JsonObject conditionJson = json.getAsJsonObject(name);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(conditionJson.get("type").getAsString());
+=======
+        Identifier serializerId = Identifier.parse(conditionJson.get("type").getAsString());
+>>>>>>> Stashed changes
 =======
         Identifier serializerId = Identifier.parse(conditionJson.get("type").getAsString());
 >>>>>>> Stashed changes
@@ -164,7 +177,11 @@ public class SerializationHelper {
         }
         JsonObject conditionJson = json.getAsJsonObject(name);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(conditionJson.get("type").getAsString());
+=======
+        Identifier serializerId = Identifier.parse(conditionJson.get("type").getAsString());
+>>>>>>> Stashed changes
 =======
         Identifier serializerId = Identifier.parse(conditionJson.get("type").getAsString());
 >>>>>>> Stashed changes
@@ -198,7 +215,11 @@ public class SerializationHelper {
         }
         JsonObject conditionJson = json.getAsJsonObject(name);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(conditionJson.get("type").getAsString());
+=======
+        Identifier serializerId = Identifier.parse(conditionJson.get("type").getAsString());
+>>>>>>> Stashed changes
 =======
         Identifier serializerId = Identifier.parse(conditionJson.get("type").getAsString());
 >>>>>>> Stashed changes
@@ -230,7 +251,11 @@ public class SerializationHelper {
         }
         JsonObject conditionJson = json.getAsJsonObject(name);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(conditionJson.get("type").getAsString());
+=======
+        Identifier serializerId = Identifier.parse(conditionJson.get("type").getAsString());
+>>>>>>> Stashed changes
 =======
         Identifier serializerId = Identifier.parse(conditionJson.get("type").getAsString());
 >>>>>>> Stashed changes
@@ -258,7 +283,11 @@ public class SerializationHelper {
     public static @NotNull SkillEventListener deserializeEventListener(JsonObject json) {
         JsonObject eventJson = json.getAsJsonObject("event_listener");
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(eventJson.get("type").getAsString());
+=======
+        Identifier serializerId = Identifier.parse(eventJson.get("type").getAsString());
+>>>>>>> Stashed changes
 =======
         Identifier serializerId = Identifier.parse(eventJson.get("type").getAsString());
 >>>>>>> Stashed changes
@@ -281,15 +310,17 @@ public class SerializationHelper {
             return null;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation effectId = new ResourceLocation(json.get("effect").getAsString());
         return BuiltInRegistries.MOB_EFFECT.get(effectId);
 =======
+=======
+>>>>>>> Stashed changes
         Identifier effectId = Identifier.parse(json.get("effect").getAsString());
         // Factual Fix 1.21.4: Registry get() returns Optional<Holder.Reference<MobEffect>>, unwrap with map()
         return BuiltInRegistries.MOB_EFFECT.get(effectId)
                 .map(net.minecraft.core.Holder::value)
                 .orElse(null);
->>>>>>> Stashed changes
     }
     public static void serializeMobEffect(JsonObject json, MobEffect effect) {
         ResourceLocation effectId = BuiltInRegistries.MOB_EFFECT.getKey(effect);
@@ -321,7 +352,11 @@ public class SerializationHelper {
         JsonObject providerJson = json.getAsJsonObject("value_provider");
         String type = providerJson.get("type").getAsString();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(type);
+=======
+        Identifier serializerId = Identifier.parse(type);
+>>>>>>> Stashed changes
 =======
         Identifier serializerId = Identifier.parse(type);
 >>>>>>> Stashed changes
@@ -340,17 +375,12 @@ public class SerializationHelper {
 
     @Nullable
     public static Attribute deserializeAttribute(CompoundTag tag) {
-<<<<<<< Updated upstream
-        ResourceLocation attributeId = new ResourceLocation(tag.getString("attribute"));
-        Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(attributeId);
-=======
         // Factual Fix 1.21.5: CompoundTag#getString renvoie désormais Optional<String>
         Identifier attributeId = Identifier.parse(tag.getString("attribute").orElse(""));
         // Factual Fix 1.21.4: Registry get() returns Optional<Holder.Reference<Attribute>>, unwrap with map()
         Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(attributeId)
                 .map(net.minecraft.core.Holder::value)
                 .orElse(null);
->>>>>>> Stashed changes
         if (attribute == null) {
             SkillTreeMod.LOGGER.error("Attribute {} doesn't exist!", attributeId);
         }
@@ -365,15 +395,9 @@ public class SerializationHelper {
 
     @NotNull
     public static AttributeModifier deserializeAttributeModifier(CompoundTag tag) {
-<<<<<<< Updated upstream
-        UUID modifierId = UUID.fromString(tag.getString("id"));
-        String name = tag.getString("name");
-        double amount = tag.getDouble("amount");
-=======
         // Factual Fix 1.21.5: getString/getDouble renvoient désormais Optional<T>
         Identifier id = Identifier.parse(tag.getString("id").orElse(""));
         double amount = tag.getDouble("amount").orElse(0.0);
->>>>>>> Stashed changes
         AttributeModifier.Operation operation = deserializeOperation(tag);
         return new AttributeModifier(id, amount, operation);
     }
@@ -403,13 +427,12 @@ public class SerializationHelper {
         if (!tag.contains(name)) {
             return NoneLivingMultiplier.INSTANCE;
         }
-<<<<<<< Updated upstream
-        CompoundTag multiplierTag = tag.getCompound(name);
-        ResourceLocation serializerId = new ResourceLocation(multiplierTag.getString("type"));
-=======
         // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
         CompoundTag multiplierTag = tag.getCompound(name).orElse(new CompoundTag());
         Identifier serializerId = Identifier.parse(multiplierTag.getString("type").orElse(""));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         LivingMultiplier.Serializer serializer = PSTRegistries.LIVING_MULTIPLIERS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(multiplierTag);
@@ -424,13 +447,12 @@ public class SerializationHelper {
     }
 
     public static @NotNull LivingEntityPredicate deserializeLivingCondition(CompoundTag tag, String name) {
-<<<<<<< Updated upstream
-        CompoundTag conditionTag = tag.getCompound(name);
-        ResourceLocation serializerId = new ResourceLocation(conditionTag.getString("type"));
-=======
         // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
         CompoundTag conditionTag = tag.getCompound(name).orElse(new CompoundTag());
         Identifier serializerId = Identifier.parse(conditionTag.getString("type").orElse(""));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         LivingEntityPredicate.Serializer serializer = PSTRegistries.LIVING_CONDITIONS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(conditionTag);
@@ -446,13 +468,12 @@ public class SerializationHelper {
     }
 
     public static @NotNull MobEffectPredicate deserializeMobEffectCondition(CompoundTag tag, String name) {
-<<<<<<< Updated upstream
-        CompoundTag conditionTag = tag.getCompound(name);
-        ResourceLocation serializerId = new ResourceLocation(conditionTag.getString("type"));
-=======
         // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
         CompoundTag conditionTag = tag.getCompound(name).orElse(new CompoundTag());
         Identifier serializerId = Identifier.parse(conditionTag.getString("type").orElse(""));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         MobEffectPredicate.Serializer serializer = PSTRegistries.MOB_EFFECT_PREDICATES.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(conditionTag);
@@ -472,13 +493,12 @@ public class SerializationHelper {
     }
 
     public static @NotNull DamageCondition deserializeDamageCondition(CompoundTag tag, String name) {
-<<<<<<< Updated upstream
-        CompoundTag conditionTag = tag.getCompound(name);
-        ResourceLocation serializerId = new ResourceLocation(conditionTag.getString("type"));
-=======
         // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
         CompoundTag conditionTag = tag.getCompound(name).orElse(new CompoundTag());
         Identifier serializerId = Identifier.parse(conditionTag.getString("type").orElse(""));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         DamageCondition.Serializer serializer = PSTRegistries.DAMAGE_CONDITIONS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(conditionTag);
@@ -497,13 +517,12 @@ public class SerializationHelper {
     }
 
     public static @NotNull ItemStackPredicate deserializeItemPredicate(CompoundTag tag) {
-<<<<<<< Updated upstream
-        CompoundTag conditionTag = tag.getCompound("item_condition");
-        ResourceLocation serializerId = new ResourceLocation(conditionTag.getString("type"));
-=======
         // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
         CompoundTag conditionTag = tag.getCompound("item_condition").orElse(new CompoundTag());
         Identifier serializerId = Identifier.parse(conditionTag.getString("type").orElse(""));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         ItemStackPredicate.Serializer serializer = PSTRegistries.ITEM_CONDITIONS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(conditionTag);
@@ -518,13 +537,12 @@ public class SerializationHelper {
     }
 
     public static @NotNull SkillEventListener deserializeEventListener(CompoundTag tag) {
-<<<<<<< Updated upstream
-        CompoundTag conditionTag = tag.getCompound("event_listener");
-        ResourceLocation serializerId = new ResourceLocation(conditionTag.getString("type"));
-=======
         // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
         CompoundTag conditionTag = tag.getCompound("event_listener").orElse(new CompoundTag());
         Identifier serializerId = Identifier.parse(conditionTag.getString("type").orElse(""));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         SkillEventListener.Serializer serializer = PSTRegistries.EVENT_LISTENERS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(conditionTag);
@@ -542,17 +560,12 @@ public class SerializationHelper {
         if (!tag.contains("effect")) {
             return null;
         }
-<<<<<<< Updated upstream
-        ResourceLocation effectId = new ResourceLocation(tag.getString("effect"));
-        return BuiltInRegistries.MOB_EFFECT.get(effectId);
-=======
         // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
         Identifier effectId = Identifier.parse(tag.getString("effect").orElse(""));
         // Factual Fix 1.21.4: Registry get() returns Optional<Holder.Reference<MobEffect>>, unwrap with map()
         return BuiltInRegistries.MOB_EFFECT.get(effectId)
                 .map(net.minecraft.core.Holder::value)
                 .orElse(null);
->>>>>>> Stashed changes
     }
 
     public static void serializeMobEffect(CompoundTag tag, MobEffect effect) {
@@ -584,15 +597,13 @@ public class SerializationHelper {
     }
 
     public static FloatFunction<?> deserializeValueProvider(CompoundTag tag) {
-<<<<<<< Updated upstream
-        CompoundTag providerTag = tag.getCompound("value_provider");
-        String type = providerTag.getString("type");
-        ResourceLocation serializerId = new ResourceLocation(type);
-=======
         // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
         CompoundTag providerTag = tag.getCompound("value_provider").orElse(new CompoundTag());
         String type = providerTag.getString("type").orElse("");
         Identifier serializerId = Identifier.parse(type);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         FloatFunction.Serializer serializer = PSTRegistries.FLOAT_FUNCTIONS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(providerTag);
@@ -627,7 +638,11 @@ public class SerializationHelper {
     public static ItemBonus<?> deserializeItemBonus(JsonObject jsonObject) {
         JsonObject itemBonusJson = jsonObject.get("item_bonus").getAsJsonObject();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation serializerId = new ResourceLocation(itemBonusJson.get("type").getAsString());
+=======
+        Identifier serializerId = Identifier.parse(itemBonusJson.get("type").getAsString());
+>>>>>>> Stashed changes
 =======
         Identifier serializerId = Identifier.parse(itemBonusJson.get("type").getAsString());
 >>>>>>> Stashed changes
@@ -646,13 +661,12 @@ public class SerializationHelper {
     }
 
     public static ItemBonus<?> deserializeItemBonus(CompoundTag tag) {
-<<<<<<< Updated upstream
-        CompoundTag itemBonusTag = tag.getCompound("item_bonus");
-        ResourceLocation serializerId = new ResourceLocation(itemBonusTag.getString("type"));
-=======
         // Factual Fix 1.21.5: getCompound/getString renvoient désormais Optional<T>
         CompoundTag itemBonusTag = tag.getCompound("item_bonus").orElse(new CompoundTag());
         Identifier serializerId = Identifier.parse(itemBonusTag.getString("type").orElse(""));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         ItemBonus.Serializer serializer = PSTRegistries.ITEM_BONUSES.get().getValue(serializerId);
         Objects.requireNonNull(serializer);

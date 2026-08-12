@@ -1,8 +1,11 @@
 package daripher.skilltree.client.screen;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 import daripher.skilltree.client.widget.SkillTreeWidgets;
@@ -22,6 +25,10 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.client.renderer.RenderPipelines;
 >>>>>>> Stashed changes
@@ -106,6 +113,10 @@ public class SkillTreeScreen extends Screen {
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         renderAnimation += partialTick;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+        // Fix 1.21.5 : la méthode renderBackground prend uniquement GuiGraphicsExtractor en paramètre (pattern déjà validé dans SkillTreeEditorScreen.java / SkillTreeSelectionScreen.java)
+>>>>>>> Stashed changes
 =======
         // Fix 1.21.5 : la méthode renderBackground prend uniquement GuiGraphicsExtractor en paramètre (pattern déjà validé dans SkillTreeEditorScreen.java / SkillTreeSelectionScreen.java)
 >>>>>>> Stashed changes
@@ -165,6 +176,7 @@ public class SkillTreeScreen extends Screen {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private void renderOverlay(GuiGraphics graphics) {
         ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_overlay.png");
         RenderSystem.enableBlend();
@@ -178,6 +190,8 @@ public class SkillTreeScreen extends Screen {
         PoseStack poseStack = graphics.pose();
         poseStack.pushPose();
 =======
+=======
+>>>>>>> Stashed changes
     private void renderOverlay(GuiGraphicsExtractor graphics) {
         // CORRECTION 1.21.1: Modern factory constructor pattern
         Identifier texture = Identifier.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_overlay.png");
@@ -191,6 +205,9 @@ public class SkillTreeScreen extends Screen {
         Identifier texture = Identifier.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_background.png");
         Matrix3x2fStack poseStack = graphics.pose();
         poseStack.pushMatrix();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         float x = skillButtons.getScrollX();
         float y = skillButtons.getScrollY();
@@ -201,8 +218,13 @@ public class SkillTreeScreen extends Screen {
         poseStack.translate(x, y, 0);
         int size = BACKGROUND_SIZE;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         graphics.blit(texture, (width - size) / 2, (height - size) / 2, 0, 0F, 0F, size, size, size, size);
         poseStack.popPose();
+=======
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (width - size) / 2, (height - size) / 2, 0F, 0F, size, size, size, size);
+        poseStack.popMatrix();
+>>>>>>> Stashed changes
 =======
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (width - size) / 2, (height - size) / 2, 0F, 0F, size, size, size, size);
         poseStack.popMatrix();

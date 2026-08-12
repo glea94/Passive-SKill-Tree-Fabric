@@ -2,6 +2,7 @@ package daripher.skilltree.capability.skill;
 
 import daripher.skilltree.SkillTreeMod;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
@@ -9,24 +10,28 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import net.minecraft.resources.ResourceLocation;
 =======
+=======
+>>>>>>> Stashed changes
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistryV3;
 import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
 import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
 import net.minecraft.resources.Identifier;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerSkillsProvider implements EntityComponentInitializer {
-<<<<<<< Updated upstream
-    public static final ComponentKey<IPlayerSkills> KEY = ComponentRegistry.getOrCreate(
-            new ResourceLocation(SkillTreeMod.MOD_ID, "player_skills"), IPlayerSkills.class);
-=======
     // Utilisation stricte de la méthode standard fromNamespaceAndPath recommandée en 1.21.4
     public static final ComponentKey<IPlayerSkills> KEY = ComponentRegistryV3.INSTANCE.getOrCreate(
             Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "player_skills"), IPlayerSkills.class);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     @Override

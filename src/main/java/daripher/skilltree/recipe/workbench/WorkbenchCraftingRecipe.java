@@ -6,16 +6,22 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import daripher.skilltree.init.PSTRecipeSerializers;
 import daripher.skilltree.inventory.menu.WorkbenchContainer;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 =======
+=======
+>>>>>>> Stashed changes
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -30,8 +36,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class WorkbenchCraftingRecipe extends AbstractWorkbenchRecipe {
-<<<<<<< Updated upstream
-=======
     // CORRECTION 1.21.1 : codec() et streamCodec() (voir la classe Serializer plus bas) ne reçoivent plus
     // l'identifiant de la recette en cours de chargement : celui-ci vit désormais uniquement dans le
     // RecipeHolder<T> construit par le RecipeManager (id = chemin du fichier JSON), et n'est plus transmis
@@ -44,7 +48,6 @@ public class WorkbenchCraftingRecipe extends AbstractWorkbenchRecipe {
     // envoyée avec ce fichier.
     private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_crafting_recipe");
 
->>>>>>> Stashed changes
     private final @Nullable Pair<Ingredient, Integer> baseIngredient;
     private final Map<Ingredient, Integer> additionalIngredients;
     private final ItemStack result;
@@ -58,11 +61,14 @@ public class WorkbenchCraftingRecipe extends AbstractWorkbenchRecipe {
 
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container, @NotNull RegistryAccess registryAccess) {
         return getResult(container);
     }
 
     @Override
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     public boolean isValidBaseItem(ItemStack itemStack) {
@@ -107,6 +113,7 @@ public class WorkbenchCraftingRecipe extends AbstractWorkbenchRecipe {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public static class Serializer implements RecipeSerializer<WorkbenchCraftingRecipe> {
         @Override
         public @NotNull WorkbenchCraftingRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject jsonObject) {
@@ -134,6 +141,8 @@ public class WorkbenchCraftingRecipe extends AbstractWorkbenchRecipe {
         @Override
         public @Nullable WorkbenchCraftingRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
 =======
+=======
+>>>>>>> Stashed changes
     // Portage 1.21.1 : petit conteneur interne utilisé uniquement par les Codec/StreamCodec ci-dessous pour
     // représenter une entrée "ingrédient + quantité requise", afin de coller exactement à l'ancien format
     // JSON (celui que produisait/lisait fromJson) : {"ingredient": {...}, "required_amount": N}. Utilisé à la
@@ -189,6 +198,9 @@ public class WorkbenchCraftingRecipe extends AbstractWorkbenchRecipe {
         public static final RecipeSerializer<WorkbenchCraftingRecipe> INSTANCE = new RecipeSerializer<>(CODEC, STREAM_CODEC);
 
         private static @NotNull WorkbenchCraftingRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buf) {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             boolean requiresPassiveSkill = buf.readBoolean();
             Map<Ingredient, Integer> additionalIngredients = new HashMap<>();

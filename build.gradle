@@ -1,6 +1,10 @@
 plugins {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	id 'fabric-loom' version '1.14.10'
+=======
+	id 'net.fabricmc.fabric-loom' version '1.17.19'
+>>>>>>> Stashed changes
 =======
 	id 'net.fabricmc.fabric-loom' version '1.17.19'
 >>>>>>> Stashed changes
@@ -38,6 +42,7 @@ repositories {
 dependencies {
 	minecraft "com.mojang:minecraft:${minecraft_version}"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	// Mappings officiels Mojang (PAS Yarn) : tout le code de ce portage utilise les noms Mojang
 	// (ChatFormatting, ResourceLocation, LivingEntity...), hérités directement de la source Forge
 	// d'origine (Forge utilise Mojmap depuis des années, pas les noms Yarn). Utiliser Yarn ici
@@ -59,6 +64,8 @@ dependencies {
 	// coordonnées Modrinth vérifiées (maven.modrinth:<slug-id>:<version-id>)
 	modImplementation "maven.modrinth:lOOpEntO:Y42wjyly"
 =======
+=======
+>>>>>>> Stashed changes
 	
 	implementation "net.fabricmc:fabric-loader:${loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
@@ -72,6 +79,9 @@ dependencies {
 
 	// ATTRIBUTEFIX via variables gradle.properties
 	implementation "maven.modrinth:${attributefix_id}:${attributefix_version}"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }
 
@@ -103,7 +113,12 @@ processResources {
 
 tasks.withType(JavaCompile).configureEach {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	it.options.release = 17
+=======
+	it.options.release = 25
+	it.options.compilerArgs.addAll(["-Xmaxerrs", "1000"])
+>>>>>>> Stashed changes
 =======
 	it.options.release = 25
 	it.options.compilerArgs.addAll(["-Xmaxerrs", "1000"])
@@ -113,8 +128,13 @@ tasks.withType(JavaCompile).configureEach {
 java {
 	withSourcesJar()
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	sourceCompatibility = JavaVersion.VERSION_17
 	targetCompatibility = JavaVersion.VERSION_17
+=======
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+>>>>>>> Stashed changes
 =======
 	sourceCompatibility = JavaVersion.VERSION_25
 	targetCompatibility = JavaVersion.VERSION_25
@@ -134,11 +154,18 @@ tasks.withType(AbstractCopyTask).configureEach {
 }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 java {
 	withSourcesJar()
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(25)
 	}
+<<<<<<< Updated upstream
+}
+>>>>>>> Stashed changes
+=======
 }
 >>>>>>> Stashed changes

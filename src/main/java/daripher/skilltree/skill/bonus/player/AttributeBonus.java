@@ -24,6 +24,10 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.resources.Identifier;
 >>>>>>> Stashed changes
@@ -382,15 +386,11 @@ public final class AttributeBonus implements SkillBonus<AttributeBonus>, Ticking
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
-<<<<<<< Updated upstream
-            return new AttributeBonus(Attributes.ARMOR, new AttributeModifier(UUID.randomUUID(), "Skill", 1, AttributeModifier.Operation.ADDITION));
-=======
             // Aligned 1.21.4: Maps a clean default armor attribute lookup using the type-safe registry identifier format
             return new AttributeBonus(
                     Attributes.ARMOR,
                     new AttributeModifier(Identifier.parse("skilltree:default_bonus"), 1, AttributeModifier.Operation.ADD_VALUE)
             );
->>>>>>> Stashed changes
         }
     }
 }

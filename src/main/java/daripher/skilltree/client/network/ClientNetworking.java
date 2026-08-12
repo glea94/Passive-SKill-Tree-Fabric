@@ -5,6 +5,7 @@ import daripher.skilltree.capability.skill.PlayerSkillsProvider;
 import daripher.skilltree.client.screen.SkillTreeEditorScreen;
 import daripher.skilltree.client.screen.SkillTreeScreen;
 import daripher.skilltree.data.reloader.SkillsReloader;
+import daripher.skilltree.data.reloader.SkillTreesReloader;
 import daripher.skilltree.network.message.GainSkillPointMessage;
 import daripher.skilltree.network.message.LearnSkillMessage;
 import daripher.skilltree.network.message.OpenSkillTreeEditorMessage;
@@ -14,6 +15,7 @@ import daripher.skilltree.network.message.SyncWorkbenchRecipesMessage;
 import daripher.skilltree.skill.PassiveSkill;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 
 import java.util.Objects;
 
@@ -21,7 +23,12 @@ public class ClientNetworking {
     public static void register() {
         // En 1.21.4, l'exécution est déjà synchronisée sur le thread principal par Fabric lors de la réception du payload
         ClientPlayNetworking.registerGlobalReceiver(SyncServerDataMessage.TYPE, (message, context) -> {
-            // Le decode() du STREAM_CODEC a déjà appliqué les données (SkillsReloader/SkillTreesReloader)
+            // Fix 26.2 : le decode() du STREAM_CODEC ne fait que copier le buffer brut, il n'appliquait jamais les
+            // données (contrairement à ce que laissait penser ce commentaire) ; lecture dans le même ordre que
+            // l'écriture côté serveur (writePassiveSkills puis writePassiveSkillTrees dans SyncServerDataMessage#encode)
+            RegistryFriendlyByteBuf buf = message.getDataBuffer();
+            SkillsReloader.loadFromByteBuf(buf);
+            SkillTreesReloader.loadFromByteBuf(buf);
         });
 
         ClientPlayNetworking.registerGlobalReceiver(SyncPlayerSkillsMessage.TYPE, (message, context) -> {

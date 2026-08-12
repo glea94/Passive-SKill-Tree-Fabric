@@ -14,8 +14,13 @@ import net.minecraft.world.item.alchemy.Potion;
 
 public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public PSTEnglishTranslationProvider(FabricDataOutput dataOutput) {
         super(dataOutput, "en_us");
+=======
+    public PSTEnglishTranslationProvider(FabricPackOutput dataOutput, java.util.concurrent.CompletableFuture<net.minecraft.core.HolderLookup.Provider> registryLookup) {
+        super(dataOutput, "en_us", registryLookup);
+>>>>>>> Stashed changes
 =======
     public PSTEnglishTranslationProvider(FabricPackOutput dataOutput, java.util.concurrent.CompletableFuture<net.minecraft.core.HolderLookup.Provider> registryLookup) {
         super(dataOutput, "en_us", registryLookup);

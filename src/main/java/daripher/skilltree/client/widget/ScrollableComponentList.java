@@ -35,8 +35,14 @@ public class ScrollableComponentList extends AbstractWidget {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private void renderBackground(@NotNull GuiGraphics graphics) {
         graphics.fill(getX(), getY(), getX() + width, getY() + height, 0xDD000000);
+=======
+    private void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
+        // Factual Fix 1.21.4: Replace legacy field 'width' and 'height' access with standard encapsulated getters
+        graphics.fill(getX(), getY(), getX() + this.getWidth(), getY() + this.getHeight(), 0xDD000000);
+>>>>>>> Stashed changes
 =======
     private void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
         // Factual Fix 1.21.4: Replace legacy field 'width' and 'height' access with standard encapsulated getters
@@ -56,7 +62,13 @@ public class ScrollableComponentList extends AbstractWidget {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private void renderScrollBar(@NotNull GuiGraphics graphics) {
+=======
+    private void renderScrollBar(@NotNull GuiGraphicsExtractor graphics) {
+        int currentWidth = this.getWidth();
+        int currentHeight = this.getHeight();
+>>>>>>> Stashed changes
 =======
     private void renderScrollBar(@NotNull GuiGraphicsExtractor graphics) {
         int currentWidth = this.getWidth();

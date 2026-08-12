@@ -18,7 +18,12 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.world.entity.projectile.AbstractArrow;
+=======
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.AbstractThrownPotion;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.entity.projectile.throwableitemprojectile.AbstractThrownPotion;
@@ -106,13 +111,6 @@ public class ProjectileDuplicationBonusHandler {
         if (duplicate instanceof AbstractArrow duplicateArrow) {
             AbstractArrow originalArrow = (AbstractArrow) original;
             duplicateArrow.pickup = AbstractArrow.Pickup.DISALLOWED;
-<<<<<<< Updated upstream
-            float velocity = (float) movementVector.length();
-            duplicateArrow.setEnchantmentEffectsFromEntity(player, velocity);
-            duplicateArrow.setBaseDamage(originalArrow.getBaseDamage());
-        } else if (duplicate instanceof ThrownPotion potion) {
-            ThrownPotion originalPotion = (ThrownPotion) original;
-=======
             ItemStack weaponItem = originalArrow.getWeaponItem();
 
             // Aligned 1.21.4: Map the item context safely over the native EnchantmentHelper initialization logic
@@ -122,7 +120,6 @@ public class ProjectileDuplicationBonusHandler {
             duplicateArrow.setBaseDamage(originalArrowAccessor.getBaseDamage());
         } else if (duplicate instanceof AbstractThrownPotion potion) {
             AbstractThrownPotion originalPotion = (AbstractThrownPotion) original;
->>>>>>> Stashed changes
             potion.setItem(originalPotion.getItem());
         }
         level.addFreshEntity(duplicate);

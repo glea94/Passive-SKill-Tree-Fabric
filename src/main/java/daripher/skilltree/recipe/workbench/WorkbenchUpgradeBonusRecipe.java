@@ -17,6 +17,7 @@ import daripher.skilltree.skill.bonus.item.ItemBonus;
 import daripher.skilltree.skill.bonus.item.ItemBonusHandler;
 import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -24,6 +25,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 =======
+=======
+>>>>>>> Stashed changes
 import daripher.skilltree.skill.bonus.predicate.item.NoneItemStackPredicate;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -31,6 +34,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -48,14 +54,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class WorkbenchUpgradeBonusRecipe extends AbstractWorkbenchRecipe {
-<<<<<<< Updated upstream
-=======
     // CORRECTION 1.21.1 : voir la javadoc d'AbstractWorkbenchRecipe — codec()/streamCodec() ne
     // reçoivent plus l'id de la recette (contrairement à l'ancien fromJson(id, json)). Ce
     // placeholder est utilisé le temps que l'appelant réinjecte le vrai id via setId(...).
     private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_upgrade_bonus_recipe");
 
->>>>>>> Stashed changes
     private final ItemStackPredicate baseItemStackPredicate;
     private final Map<Ingredient, Integer> additionalIngredients;
     private final ItemBonus<?> itemBonus;
@@ -69,11 +72,14 @@ public class WorkbenchUpgradeBonusRecipe extends AbstractWorkbenchRecipe {
 
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container, @NotNull RegistryAccess registryAccess) {
         return getResult(container);
     }
 
     @Override
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     public boolean isValidBaseItem(ItemStack itemStack) {
@@ -141,6 +147,7 @@ public class WorkbenchUpgradeBonusRecipe extends AbstractWorkbenchRecipe {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public static class Serializer implements RecipeSerializer<WorkbenchUpgradeBonusRecipe> {
         @Override
         public @NotNull WorkbenchUpgradeBonusRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject jsonObject) {
@@ -160,6 +167,8 @@ public class WorkbenchUpgradeBonusRecipe extends AbstractWorkbenchRecipe {
         @Override
         public @Nullable WorkbenchUpgradeBonusRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
 =======
+=======
+>>>>>>> Stashed changes
     // Portage 1.21.1 : petit conteneur interne pour représenter une entrée "ingrédient + quantité
     // requise" dans additionalIngredients, exactement comme dans WorkbenchCraftingRecipe (même
     // format JSON {"ingredient": {...}, "required_amount": N} que l'ancien fromJson lisait).
@@ -256,6 +265,9 @@ public class WorkbenchUpgradeBonusRecipe extends AbstractWorkbenchRecipe {
         public static final RecipeSerializer<WorkbenchUpgradeBonusRecipe> INSTANCE = new RecipeSerializer<>(CODEC, STREAM_CODEC);
 
         private static @NotNull WorkbenchUpgradeBonusRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buf) {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             ItemStackPredicate baseItemStackPredicate = NetworkHelper.readItemPredicate(buf);
             ItemBonus<?> itemBonus = NetworkHelper.readItemBonus(buf);

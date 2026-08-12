@@ -6,6 +6,11 @@ import it.unimi.dsi.fastutil.floats.Float2FloatMap;
 import it.unimi.dsi.fastutil.floats.Float2FloatOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -29,10 +34,13 @@ public class LootAmountModifierBonusHandler {
                 continue;
             }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             if (lootContext.hasParam(LootContextParams.TOOL)) {
                 ItemStack tool = lootContext.getParam(LootContextParams.TOOL);
                 if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, tool) > 0) {
 =======
+=======
+>>>>>>> Stashed changes
             // Factual Fix 1.21.5 (confirmé par décompilation LootContext) : getParams() n'existe plus ; hasParam/getParam renommés hasParameter/getParameter, appelés directement sur lootContext
             player = (Player) lootContext.getParameter(lootType.getPlayerLootContextParam());
             if (lootContext.hasParameter(LootContextParams.TOOL)) {
@@ -45,6 +53,9 @@ public class LootAmountModifierBonusHandler {
                         player.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH)
                 );
                 if (silkTouchLevel > 0) {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                     return defaultLoot;
                 }

@@ -195,8 +195,14 @@ public class WorkbenchMenu extends AbstractContainerMenu {
             resultSlots.setItem(0, ItemStack.EMPTY);
         } else {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             if (!level.isClientSide) {
                 ItemStack craftResult = selectedRecipe.assemble(workbenchContainer, level.registryAccess());
+=======
+            // Fix 1.21.9 : isClientSide champ private, méthode isClientSide() confirmée par décompilation
+            if (!level.isClientSide()) {
+                ItemStack craftResult = recipe.assemble(workbenchContainer);
+>>>>>>> Stashed changes
 =======
             // Fix 1.21.9 : isClientSide champ private, méthode isClientSide() confirmée par décompilation
             if (!level.isClientSide()) {

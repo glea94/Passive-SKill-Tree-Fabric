@@ -1,8 +1,11 @@
 package daripher.skilltree.client.widget.editor;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 import daripher.skilltree.client.screen.ScreenHelper;
@@ -57,8 +60,13 @@ public class SkillMirrorer extends AbstractWidget {
 
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         if (!active) {
+=======
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        if (!this.active) {
+>>>>>>> Stashed changes
 =======
     protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (!this.active) {
@@ -78,9 +86,13 @@ public class SkillMirrorer extends AbstractWidget {
         }
         ScreenHelper.drawRectangle(graphics, -4, -4, 8, 8, 0x55CFCFCF);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         graphics.pose().popPose();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
+=======
+        graphics.pose().popMatrix();
+>>>>>>> Stashed changes
 =======
         graphics.pose().popMatrix();
 >>>>>>> Stashed changes
@@ -157,13 +169,14 @@ public class SkillMirrorer extends AbstractWidget {
     @Override
     protected void updateWidgetNarration(@NotNull NarrationElementOutput output) {
     }
-<<<<<<< Updated upstream
-}
-=======
 
     @FunctionalInterface
     public interface SkillFactory {
         void accept(float x, float y, PassiveSkill skill);
     }
+<<<<<<< Updated upstream
+}
+>>>>>>> Stashed changes
+=======
 }
 >>>>>>> Stashed changes

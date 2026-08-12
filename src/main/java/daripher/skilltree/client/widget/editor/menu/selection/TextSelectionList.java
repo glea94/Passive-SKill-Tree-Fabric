@@ -20,13 +20,19 @@ public class TextSelectionList<T> extends SelectionList<T> {
         String elementName = getElementName(element);
         String selectedElementName = getElementName(getSelectedElement());
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         int textColor = elementName.equals(selectedElementName) ? 0x55ff55 : 0xe0e0e0;
         elementName = TooltipHelper.getTrimmedString(elementName, width - 10);
 =======
+=======
+>>>>>>> Stashed changes
         int textColor = ARGB.opaque(elementName.equals(selectedElementName) ? 0x55ff55 : 0xe0e0e0);
 
         // Factual Fix 1.21.4: Replace legacy field 'width' access with standard getWidth() call
         elementName = TooltipHelper.getTrimmedString(elementName, this.getWidth() - 10);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         Font font = Minecraft.getInstance().font;
         String lowerCase = elementName.toLowerCase(Locale.ROOT);

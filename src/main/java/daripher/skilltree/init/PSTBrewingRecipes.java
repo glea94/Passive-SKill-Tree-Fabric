@@ -1,12 +1,18 @@
 package daripher.skilltree.init;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistry;
 =======
+=======
+>>>>>>> Stashed changes
 import net.fabricmc.fabric.api.registry.FabricPotionBrewingBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Items;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.Potion;
@@ -18,10 +24,13 @@ public class PSTBrewingRecipes {
 
     public static void addRecipes() {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         FabricBrewingRecipeRegistry.registerPotionRecipe(Potions.FIRE_RESISTANCE, Ingredient.of(Items.FERMENTED_SPIDER_EYE), PSTPotions.LIQUID_FIRE_1.get());
         FabricBrewingRecipeRegistry.registerPotionRecipe(PSTPotions.LIQUID_FIRE_1.get(), Ingredient.of(Items.GLOWSTONE_DUST), PSTPotions.LIQUID_FIRE_2.get());
         registerContainerConversions();
 =======
+=======
+>>>>>>> Stashed changes
         // Aligned 26.1.2: FabricBrewingRecipeRegistryBuilder renommé FabricPotionBrewingBuilder (mappings officiels)
         FabricPotionBrewingBuilder.BUILD.register(builder -> {
             builder.registerPotionRecipe(Potions.FIRE_RESISTANCE, Ingredient.of(Items.FERMENTED_SPIDER_EYE), wrapPotion(PSTPotions.LIQUID_FIRE_1.get()));
@@ -34,6 +43,9 @@ public class PSTBrewingRecipes {
                 builder.registerItemRecipe((Item) Items.SPLASH_POTION, Ingredient.of(Items.DRAGON_BREATH), (Item) Items.LINGERING_POTION);
             }
         });
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 

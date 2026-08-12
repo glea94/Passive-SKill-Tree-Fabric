@@ -4,11 +4,16 @@ import daripher.skilltree.data.reloader.SkillsReloader;
 import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.core.NonNullList;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+=======
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.resources.Identifier;
@@ -83,6 +88,7 @@ public class PlayerSkills implements IPlayerSkills {
 
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public void writeToNbt(CompoundTag tag) {
         tag.putUUID("TreeVersion", TREE_VERSION);
         tag.putInt("Points", skillPoints);
@@ -91,6 +97,8 @@ public class PlayerSkills implements IPlayerSkills {
         skills.forEach(skill -> skillsTag.add(StringTag.valueOf(skill.getId().toString())));
         tag.put("Skills", skillsTag);
 =======
+=======
+>>>>>>> Stashed changes
     public void writeData(ValueOutput output) {
         // Fix 1.21.8 : writeToNbt(CompoundTag, HolderLookup.Provider) remplacé par writeData(ValueOutput) (interface Component de Cardinal Components 7.0.0-beta.1), confirmé par décompilation
         output.store("TreeVersion", UUIDUtil.CODEC, TREE_VERSION);
@@ -98,6 +106,7 @@ public class PlayerSkills implements IPlayerSkills {
         output.putBoolean("TreeReset", treeReset);
         ValueOutput.TypedOutputList<String> skillsList = output.list("Skills", Codec.STRING);
         skills.forEach(skill -> skillsList.add(skill.getId().toString()));
+<<<<<<< Updated upstream
 >>>>>>> Stashed changes
     }
 
@@ -109,6 +118,11 @@ public class PlayerSkills implements IPlayerSkills {
         skillPoints = tag.getInt("Points");
         ListTag skillsTag = tag.getList("Skills", Tag.TAG_STRING);
 =======
+=======
+    }
+
+    @Override
+>>>>>>> Stashed changes
     public void readData(ValueInput input) {
         // Fix 1.21.8 : readFromNbt(CompoundTag, HolderLookup.Provider) remplacé par readData(ValueInput), confirmé par décompilation
         skills.clear();
@@ -117,6 +131,9 @@ public class PlayerSkills implements IPlayerSkills {
 
         skillPoints = input.getIntOr("Points", 0);
         List<String> skillIds = input.listOrEmpty("Skills", Codec.STRING).stream().toList();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         if (!TREE_VERSION.equals(treeVersion)) {
             skillPoints += skillsTag.size();
@@ -124,8 +141,13 @@ public class PlayerSkills implements IPlayerSkills {
             return;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         for (Tag skillTag : skillsTag) {
             ResourceLocation skillId = new ResourceLocation(skillTag.getAsString());
+=======
+        for (String skillIdStr : skillIds) {
+            Identifier skillId = Identifier.parse(skillIdStr);
+>>>>>>> Stashed changes
 =======
         for (String skillIdStr : skillIds) {
             Identifier skillId = Identifier.parse(skillIdStr);

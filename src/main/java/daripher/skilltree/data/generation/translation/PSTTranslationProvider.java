@@ -33,14 +33,20 @@ import java.util.Objects;
  */
 public abstract class PSTTranslationProvider extends FabricLanguageProvider {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public PSTTranslationProvider(FabricDataOutput dataOutput, String locale) {
         super(dataOutput, locale);
 =======
+=======
+>>>>>>> Stashed changes
     protected HolderLookup.Provider registries;
 
     public PSTTranslationProvider(
             FabricPackOutput dataOutput, String locale, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(dataOutput, locale, registryLookup);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 

@@ -33,8 +33,11 @@ import daripher.skilltree.skill.requirement.SkillRequirement;
 import daripher.skilltree.skill.requirement.StatRequirement;
 import net.minecraft.ChatFormatting;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.client.gui.GuiGraphics;
 =======
+=======
+>>>>>>> Stashed changes
 import net.minecraft.core.Holder;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 >>>>>>> Stashed changes
@@ -44,7 +47,12 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.resources.ResourceLocation;
+=======
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
@@ -91,6 +99,7 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
 
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         skillMirrorer.render(graphics, mouseX, mouseY, partialTick);
         skillDragger.render(graphics, mouseX, mouseY, partialTick);
@@ -99,6 +108,8 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
         }
         super.render(graphics, mouseX, mouseY, partialTick);
 =======
+=======
+>>>>>>> Stashed changes
     protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         skillMirrorer.extractRenderState(graphics, mouseX, mouseY, partialTick);
         skillDragger.extractRenderState(graphics, mouseX, mouseY, partialTick);
@@ -108,6 +119,9 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
             graphics.fill(getX(), getY(), getX() + this.getWidth(), getY() + this.getHeight(), 0xDD000000);
         }
         super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTick);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
     @Override
@@ -173,16 +187,18 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public TextureSelectionMenuButton addTextureSelectionMenu(int x, int y, int width, ResourceLocation currentValue, String folder) {
         Collection<ResourceLocation> values = SkillTexturesData.getTexturesInFolder(folder);
         x = getWidgetsX(x);
         y = getWidgetsY(y);
 =======
+=======
+>>>>>>> Stashed changes
     public TextureSelectionMenuButton addTextureSelectionMenu(int x, int y, int width, Identifier currentValue, String folder) {
         Collection<Identifier> values = SkillTexturesData.getTexturesInFolder(folder);
         int finalX = getWidgetsX(x);
         int finalY = getWidgetsY(y);
->>>>>>> Stashed changes
         String message = currentValue.toString();
         TextureSelectionMenuButton button = (TextureSelectionMenuButton) new TextureSelectionMenuButton(this, finalX, finalY, width, message, folder, values).setValue(currentValue)
                 .setElementNameGetter(TooltipHelper::getTextureName);
@@ -225,14 +241,16 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
             return null;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         return new StatRequirement(statId, statRegistry.getKey(stat), 1);
 =======
+=======
+>>>>>>> Stashed changes
         Identifier entryId = statRegistry.getKey(stat);
         if (entryId == null) {
             return null;
         }
         return new StatRequirement(statId, entryId, 1);
->>>>>>> Stashed changes
     }
 
     @SuppressWarnings("rawtypes")

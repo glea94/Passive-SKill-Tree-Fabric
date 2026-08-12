@@ -24,8 +24,13 @@ public class SkillTexturesData implements IdentifiableResourceReloadListener {
 
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public ResourceLocation getFabricId() {
         return new ResourceLocation(SkillTreeMod.MOD_ID, "skill_textures_reloader");
+=======
+    public Identifier getFabricId() {
+        return Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_textures_reloader");
+>>>>>>> Stashed changes
 =======
     public Identifier getFabricId() {
         return Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_textures_reloader");
@@ -45,18 +50,24 @@ public class SkillTexturesData implements IdentifiableResourceReloadListener {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private static Map<String, Set<ResourceLocation>> scanTextures(ResourceManager resourceManager) {
         Map<String, Set<ResourceLocation>> result = new HashMap<>();
         Map<ResourceLocation, Resource> textures = resourceManager.listResources("textures", SkillTexturesData::isTexturePath);
         List<ResourceLocation> textureLocations = textures.keySet().stream().toList();
         for (ResourceLocation textureLocation : textureLocations) {
 =======
+=======
+>>>>>>> Stashed changes
     private static Map<String, Set<Identifier>> scanTextures(ResourceManager resourceManager) {
         Map<String, Set<Identifier>> result = new HashMap<>();
 
         Map<Identifier, Resource> textures = resourceManager.listResources("textures", SkillTexturesData::isTexturePath);
         List<Identifier> textureLocations = textures.keySet().stream().toList();
         for (Identifier textureLocation : textureLocations) {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             String folder = getTextureFolder(textureLocation);
             if (folder.isEmpty()) {

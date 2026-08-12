@@ -6,9 +6,12 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 =======
+=======
+>>>>>>> Stashed changes
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -18,6 +21,9 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Util;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,17 +35,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class TextField extends EditBox implements TickingWidget {
-<<<<<<< Updated upstream
-    public static final int INVALID_TEXT_COLOR = 0xD80000;
-    private static final int HINT_COLOR = 0x575757;
-=======
     // Fix 1.21.8 : couleur ARGB au lieu de RGB depuis 1.21.6 - ces constantes sans octet alpha
     // rendaient en transparent (invisible), notamment le placeholder "Search...", et le champ DEFAULT_TEXT_COLOR
     // hérité d'EditBox (0xE0E0E0, sans alpha) n'avait pas été corrigé, rendant le texte tapé lui-même invisible
     public static final int INVALID_TEXT_COLOR = 0xFFD80000;
     private static final int HINT_COLOR = 0xFF575757;
     private static final int TEXT_COLOR = 0xFFE0E0E0;
->>>>>>> Stashed changes
     private Predicate<String> softFilter = Objects::nonNull;
     private Function<String, @Nullable String> suggestionProvider = s -> null;
     private String hint = null;
@@ -96,6 +97,7 @@ public class TextField extends EditBox implements TickingWidget {
 
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         EditBoxAccessor accessor = (EditBoxAccessor) this;
         if (!isVisible()) {
@@ -106,6 +108,8 @@ public class TextField extends EditBox implements TickingWidget {
         graphics.blit(texture, getX(), getY(), 0, v, width / 2, height);
         graphics.blit(texture, getX() + width / 2, getY(), -width / 2, v, width / 2, height);
 =======
+=======
+>>>>>>> Stashed changes
     public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         EditBoxAccessor accessor = new EditBoxAccessor(this);
         if (!this.visible) {
@@ -120,7 +124,6 @@ public class TextField extends EditBox implements TickingWidget {
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), 0F, v, currentWidth / 2, currentHeight, 256, 256);
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX() + currentWidth / 2, getY(), (256 - currentWidth / 2F), v, currentWidth / 2, currentHeight, 256, 256);
 
->>>>>>> Stashed changes
         int textColor = getTextColor();
         int valueLength = getValue().length();
 
@@ -148,13 +151,12 @@ public class TextField extends EditBox implements TickingWidget {
         }
 
         if (!visibleText.isEmpty()) {
-<<<<<<< Updated upstream
-            String s1 = isTextSplitByCursor ? visibleText.substring(0, cursorVisiblePosition) : visibleText;
-            textX = graphics.drawString(font, accessor.getFormatter().apply(s1, accessor.getDisplayPos()), textX, textY, textColor, true);
-=======
             int cursorIndex = Math.max(0, Math.min(cursorVisiblePosition, visibleText.length()));
             String s1 = isTextSplitByCursor ? visibleText.substring(0, cursorIndex) : visibleText;
             graphics.text(font, FormattedCharSequence.forward(s1, Style.EMPTY), textX, textY, textColor, true);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
 
@@ -169,8 +171,13 @@ public class TextField extends EditBox implements TickingWidget {
 
         if (!visibleText.isEmpty() && isTextSplitByCursor && cursorVisiblePosition < visibleText.length()) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             graphics.drawString(font, accessor.getFormatter()
                     .apply(visibleText.substring(cursorVisiblePosition), getCursorPosition()), textX, textY, textColor, true);
+=======
+            int cursorIndex = Math.max(0, Math.min(cursorVisiblePosition, visibleText.length()));
+            graphics.text(font, FormattedCharSequence.forward(visibleText.substring(cursorIndex), Style.EMPTY), textX, textY, textColor, true);
+>>>>>>> Stashed changes
 =======
             int cursorIndex = Math.max(0, Math.min(cursorVisiblePosition, visibleText.length()));
             graphics.text(font, FormattedCharSequence.forward(visibleText.substring(cursorIndex), Style.EMPTY), textX, textY, textColor, true);
@@ -189,15 +196,21 @@ public class TextField extends EditBox implements TickingWidget {
 
         if (highlightWidth != cursorVisiblePosition) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             int highlightEndX = textStartX + font.width(visibleText.substring(0, highlightWidth));
             accessor.invokeRenderHighlight(graphics, cursorX, textY - 1, highlightEndX - 1, textY + 9);
 =======
+=======
+>>>>>>> Stashed changes
             int hWidth = Math.max(0, Math.min(highlightWidth, visibleText.length()));
             int highlightEndX = textStartX + font.width(visibleText.substring(0, hWidth));
             // Fix 1.21.11 : EditBox n'a plus de méthode privée de surlignage - elle appelle directement
             // GuiGraphicsExtractor.textHighlight(...) (méthode publique, confirmée par décompilation). true = invertHighlightedTextColor,
             // valeur par défaut d'EditBox jamais modifiée par TextField
             graphics.textHighlight(cursorX, textY - 1, highlightEndX - 1, textY + 9, true);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
     }

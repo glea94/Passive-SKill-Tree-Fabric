@@ -16,9 +16,13 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+=======
+import net.minecraft.resources.Identifier;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.resources.Identifier;
 >>>>>>> Stashed changes
@@ -32,8 +36,13 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 public final class AdvancementRequirement implements SkillRequirement<AdvancementRequirement> {
     private ResourceLocation advancementId;
+=======
+public class AdvancementRequirement implements SkillRequirement<AdvancementRequirement> {
+    private Identifier advancementId;
+>>>>>>> Stashed changes
 =======
 public class AdvancementRequirement implements SkillRequirement<AdvancementRequirement> {
     private Identifier advancementId;
@@ -48,8 +57,6 @@ public class AdvancementRequirement implements SkillRequirement<AdvancementRequi
         if (player instanceof ServerPlayer serverPlayer) {
             return testServer(serverPlayer);
         }
-<<<<<<< Updated upstream
-=======
         return testClient();
     }
 
@@ -78,7 +85,6 @@ public class AdvancementRequirement implements SkillRequirement<AdvancementRequi
                 .map(AdvancementNode::holder)
                 .map(AdvancementHolder::id)
                 .toList();
->>>>>>> Stashed changes
     }
 
     @Override
@@ -91,16 +97,18 @@ public class AdvancementRequirement implements SkillRequirement<AdvancementRequi
         editor.addLabel(0, 0, "Advancement", ChatFormatting.GOLD);
         editor.increaseHeight(19);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         List<ResourceLocation> advancementIds = advancements.getAdvancements().getAllAdvancements().stream().map(Advancement::getId)
                 .toList();
         editor.addSelectionMenu(0, 0, 200, advancementIds).setValue(getAdvancementId())
                 .setElementNameGetter(v -> Component.literal(v.toString())).setResponder(v -> selectAdvancementId(consumer, v));
 =======
+=======
+>>>>>>> Stashed changes
         List<Identifier> advancementIds = getAdvancementIds();
         editor.addSelectionMenu(0, 0, 200, advancementIds).setValue(advancementId)
                 .setElementNameGetter(v -> Component.literal(v.toString()))
                 .setResponder(v -> selectAdvancementId(consumer, v));
->>>>>>> Stashed changes
         editor.increaseHeight(19);
     }
 
@@ -114,12 +122,14 @@ public class AdvancementRequirement implements SkillRequirement<AdvancementRequi
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     public Identifier getAdvancementId() {
         return advancementId;
     }
 
->>>>>>> Stashed changes
     @Override
     public AdvancementRequirement copy() {
         return new AdvancementRequirement(advancementId);
@@ -151,7 +161,11 @@ public class AdvancementRequirement implements SkillRequirement<AdvancementRequi
         @Override
         public SkillRequirement<?> deserialize(JsonObject json) throws JsonParseException {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             ResourceLocation id = new ResourceLocation(json.get("advancement").getAsString());
+=======
+            Identifier id = Identifier.parse(json.get("advancement").getAsString());
+>>>>>>> Stashed changes
 =======
             Identifier id = Identifier.parse(json.get("advancement").getAsString());
 >>>>>>> Stashed changes
@@ -167,11 +181,11 @@ public class AdvancementRequirement implements SkillRequirement<AdvancementRequi
 
         @Override
         public SkillRequirement<?> deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-            ResourceLocation id = new ResourceLocation(tag.getString("advancement"));
-=======
             // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
             Identifier id = Identifier.parse(tag.getString("advancement").orElse(""));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             return new AdvancementRequirement(id);
         }
@@ -187,12 +201,11 @@ public class AdvancementRequirement implements SkillRequirement<AdvancementRequi
 
         // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
         @Override
-<<<<<<< Updated upstream
-        public SkillRequirement<?> deserialize(FriendlyByteBuf buf) {
-            ResourceLocation id = new ResourceLocation(buf.readUtf());
-=======
         public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
             Identifier id = Identifier.parse(buf.readUtf());
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             return new AdvancementRequirement(id);
         }
@@ -208,7 +221,11 @@ public class AdvancementRequirement implements SkillRequirement<AdvancementRequi
         @Override
         public SkillRequirement<?> createDefaultInstance() {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             return new AdvancementRequirement(new ResourceLocation("minecraft:adventure/hero_of_the_village"));
+=======
+            return new AdvancementRequirement(Identifier.withDefaultNamespace("story/mine_stone"));
+>>>>>>> Stashed changes
 =======
             return new AdvancementRequirement(Identifier.withDefaultNamespace("story/mine_stone"));
 >>>>>>> Stashed changes

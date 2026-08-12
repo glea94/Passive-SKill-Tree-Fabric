@@ -263,14 +263,14 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
     }
 
     private void confirmLearnSkills() {
-<<<<<<< Updated upstream
-        newlyLearnedSkills.forEach(id -> learnSkill(skills.getWidgetById(id).skill));
-=======
         // Fix : newlyLearnedSkills doit être vidé AVANT de déclencher les rebuilds via learnSkill(),
         // car rebuildWidgets() (minecraft.execute) s'exécute de façon synchrone (même thread) et
         // recréait le bouton confirm comme encore actif tant que la liste n'était pas encore vidée
         // (le clear() se produisait après la boucle, donc trop tard pour le premier rebuild)
         List<Identifier> skillsToLearn = new ArrayList<>(newlyLearnedSkills);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         newlyLearnedSkills.clear();
         skillsToLearn.forEach(id -> learnSkill(skills.getWidgetById(id).skill));

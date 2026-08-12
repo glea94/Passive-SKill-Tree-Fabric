@@ -56,7 +56,11 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         }
         if (statType == Stats.CUSTOM) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             ResourceLocation originalStatId = Stats.CUSTOM.getRegistry().get(statId);
+=======
+            Identifier originalStatId = Stats.CUSTOM.getRegistry().get(statId).map(Holder::value).orElse(null);
+>>>>>>> Stashed changes
 =======
             Identifier originalStatId = Stats.CUSTOM.getRegistry().get(statId).map(Holder::value).orElse(null);
 >>>>>>> Stashed changes
@@ -99,7 +103,11 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         int statValue;
         if (statType == Stats.CUSTOM) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             ResourceLocation originalStatId = Stats.CUSTOM.getRegistry().get(statId);
+=======
+            Identifier originalStatId = Stats.CUSTOM.getRegistry().get(statId).map(Holder::value).orElse(null);
+>>>>>>> Stashed changes
 =======
             Identifier originalStatId = Stats.CUSTOM.getRegistry().get(statId).map(Holder::value).orElse(null);
 >>>>>>> Stashed changes
@@ -220,8 +228,13 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         @Override
         public SkillRequirement<?> deserialize(JsonObject json) throws JsonParseException {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             ResourceLocation statTypeId = new ResourceLocation(json.get("statTypeId").getAsString());
             ResourceLocation statId = new ResourceLocation(json.get("statId").getAsString());
+=======
+            Identifier statTypeId = Identifier.parse(json.get("statTypeId").getAsString());
+            Identifier statId = Identifier.parse(json.get("statId").getAsString());
+>>>>>>> Stashed changes
 =======
             Identifier statTypeId = Identifier.parse(json.get("statTypeId").getAsString());
             Identifier statId = Identifier.parse(json.get("statId").getAsString());
@@ -241,16 +254,10 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
 
         @Override
         public SkillRequirement<?> deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-            ResourceLocation statTypeId = new ResourceLocation(tag.getString("statTypeId"));
-            ResourceLocation statId = new ResourceLocation(tag.getString("statId"));
-            int minValue = tag.getInt("minValue");
-=======
             // Factual Fix 1.21.5: getString/getInt renvoient désormais Optional<T>
             Identifier statTypeId = Identifier.parse(tag.getString("statTypeId").orElse(""));
             Identifier statId = Identifier.parse(tag.getString("statId").orElse(""));
             int minValue = tag.getInt("minValue").orElse(0);
->>>>>>> Stashed changes
             return new StatRequirement(statTypeId, statId, minValue);
         }
 
@@ -266,14 +273,12 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         }
 
         @Override
-<<<<<<< Updated upstream
-        public SkillRequirement<?> deserialize(FriendlyByteBuf buf) {
-            ResourceLocation statTypeId = new ResourceLocation(buf.readUtf());
-            ResourceLocation statId = new ResourceLocation(buf.readUtf());
-=======
         public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
             Identifier statTypeId = Identifier.parse(buf.readUtf());
             Identifier statId = Identifier.parse(buf.readUtf());
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             int minValue = buf.readInt();
             return new StatRequirement(statTypeId, statId, minValue);
@@ -290,13 +295,9 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
 
         @Override
         public SkillRequirement<?> createDefaultInstance() {
-<<<<<<< Updated upstream
-            return new StatRequirement(BuiltInRegistries.STAT_TYPE.getKey(Stats.CUSTOM), Stats.DEATHS, 1);
-=======
             // Factual Fix 1.21.4: Resolve custom stat type using its direct official registry identifier location to fix argument mismatch
             Identifier customStatType = Stats.CUSTOM.getRegistry().key().identifier();
             return new StatRequirement(customStatType, Stats.DEATHS, 1);
->>>>>>> Stashed changes
         }
     }
 }

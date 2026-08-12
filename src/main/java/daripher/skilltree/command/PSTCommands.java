@@ -29,8 +29,11 @@ import java.util.stream.Stream;
 
 public class PSTCommands {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public static final SuggestionProvider<CommandSourceStack> SKILL_ID_SUGGESTION = (ctx, builder) -> SharedSuggestionProvider.suggest(gatherSkillIds(), builder);
 =======
+=======
+>>>>>>> Stashed changes
     // Factual Fix 1.21.4: Use suggestResource directly with Identifier streams for perfect efficiency
     public static final SuggestionProvider<CommandSourceStack> SKILL_ID_SUGGESTION = (ctx, builder) ->
             SharedSuggestionProvider.suggestResource(SkillsReloader.getSkillIds().stream(), builder);
@@ -39,6 +42,9 @@ public class PSTCommands {
             SharedSuggestionProvider.suggestResource(SkillTreesReloader.getSkillTrees().keySet().stream(), builder);
 
     public static final Identifier DEFAULT_SKILL_TREE_ID = Identifier.fromNamespaceAndPath("skilltree", "tree");
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     public static final String AMOUNT_ARGUMENT_NAME = "amount";
     public static final String PLAYER_ARGUMENT_NAME = "player";
@@ -109,12 +115,14 @@ public class PSTCommands {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     private static @NotNull RequiredArgumentBuilder<CommandSourceStack, Identifier> getSkillTreeArgument() {
         return Commands.argument(SKILL_TREE_ID_ARGUMENT_NAME, IdentifierArgument.id()).suggests(SKILL_TREE_ID_SUGGESTION);
     }
 
->>>>>>> Stashed changes
     private static int executeResetCommand(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = EntityArgument.getPlayer(ctx, PLAYER_ARGUMENT_NAME);
         IPlayerSkills skillsCapability = PlayerSkillsProvider.get(player);
@@ -143,11 +151,6 @@ public class PSTCommands {
         return 1;
     }
 
-<<<<<<< Updated upstream
-    private static int executeGrantSkillCommand(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        ServerPlayer player = EntityArgument.getPlayer(ctx, PLAYER_ARGUMENT_NAME);
-        ResourceLocation skillId = ctx.getArgument(SKILL_ID_ARGUMENT_NAME, ResourceLocation.class);
-=======
     private static int executeEditorCommand(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         Identifier treeId;
@@ -165,6 +168,9 @@ public class PSTCommands {
         ServerPlayer player = EntityArgument.getPlayer(ctx, PLAYER_ARGUMENT_NAME);
         // Factual Fix 1.21.4: Standardize resource key extractions via ResourceLocationArgument helper
         Identifier skillId = IdentifierArgument.getId(ctx, SKILL_ID_ARGUMENT_NAME);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         IPlayerSkills skillsCapability = PlayerSkillsProvider.get(player);
 
@@ -180,6 +186,7 @@ public class PSTCommands {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private static boolean hasPermission(CommandSourceStack commandSourceStack) {
         return commandSourceStack.hasPermission(2);
     }
@@ -194,6 +201,9 @@ public class PSTCommands {
         return SkillsReloader.getSkills().keySet().stream().map(ResourceLocation::toString);
     }
 }
+=======
+}
+>>>>>>> Stashed changes
 =======
 }
 >>>>>>> Stashed changes

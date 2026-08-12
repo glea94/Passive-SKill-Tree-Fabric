@@ -37,8 +37,14 @@ public class SkillSelector extends AbstractWidget {
 
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         if (active) {
+=======
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        // Factual Fix 1.21.4: Use direct active field lookup
+        if (this.active) {
+>>>>>>> Stashed changes
 =======
     protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         // Factual Fix 1.21.4: Use direct active field lookup

@@ -5,6 +5,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -21,7 +27,11 @@ import java.util.function.Function;
 
 public abstract class SelectionList<T> extends AbstractButton {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public static final ResourceLocation WIDGETS_TEXTURE = new ResourceLocation("skilltree:textures/screen/widgets.png");
+=======
+    public static final Identifier WIDGETS_TEXTURE = Identifier.parse("skilltree:textures/screen/widgets.png");
+>>>>>>> Stashed changes
 =======
     public static final Identifier WIDGETS_TEXTURE = Identifier.parse("skilltree:textures/screen/widgets.png");
 >>>>>>> Stashed changes
@@ -55,15 +65,17 @@ public abstract class SelectionList<T> extends AbstractButton {
 
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         if (!visible) {
 =======
+=======
+>>>>>>> Stashed changes
     // Fix 26.1.2 : AbstractButton.extractWidgetRenderState(GuiGraphicsExtractor,int,int,float) est final et délègue à
     // extractContents(GuiGraphicsExtractor,int,int,float) (confirmé par décompilation d'AbstractButton).
     public void extractContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         // Factual Fix 1.21.4: Replaced legacy isVisible() check with standard visible field lookup
         if (!this.visible) {
->>>>>>> Stashed changes
             return;
         }
         renderBackground(graphics, mouseX, mouseY);
@@ -72,9 +84,15 @@ public abstract class SelectionList<T> extends AbstractButton {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private void renderBackground(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
         renderBackgroundLine(graphics, getX(), getY(), 42, width, 7);
         renderBackgroundLine(graphics, getX(), getY() + getHeight() - 7, 49, width, 7);
+=======
+    private void renderBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        renderBackgroundLine(graphics, getX(), getY(), 42, this.getWidth(), 7);
+        renderBackgroundLine(graphics, getX(), getY() + getHeight() - 7, 49, this.getWidth(), 7);
+>>>>>>> Stashed changes
 =======
     private void renderBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         renderBackgroundLine(graphics, getX(), getY(), 42, this.getWidth(), 7);
@@ -106,16 +124,22 @@ public abstract class SelectionList<T> extends AbstractButton {
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private void renderBackgroundLine(@NotNull GuiGraphics graphics, int x, int y, int textureOffset, int width, int height) {
         ResourceLocation texture = WIDGETS_TEXTURE;
         graphics.blit(texture, x, y, 0, textureOffset, width / 2, height);
         graphics.blit(texture, x + width / 2, y, -width / 2, textureOffset, width / 2, height);
 =======
+=======
+>>>>>>> Stashed changes
     private void renderBackgroundLine(@NotNull GuiGraphicsExtractor graphics, int x, int y, int textureOffset, int width, int height) {
         Identifier texture = WIDGETS_TEXTURE;
         // Fix 1.21.8 : blit(RenderType::guiTextured, ...) supprimé, remplacé par blit(RenderPipeline, ...) confirmé par décompilation de GuiGraphicsExtractor (RenderPipelines.GUI_TEXTURED = équivalent direct)
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, 0F, textureOffset, width / 2, height, 256, 256);
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, x + width / 2, y, (256F - width / 2F), textureOffset, width / 2, height, 256, 256);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 
@@ -148,8 +172,12 @@ public abstract class SelectionList<T> extends AbstractButton {
         return nameGetter.apply(value).getString().toLowerCase(Locale.ROOT).contains(search);
     }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
     private void renderScroll(GuiGraphics graphics) {
+=======
+    private void renderScroll(GuiGraphicsExtractor graphics) {
+>>>>>>> Stashed changes
 =======
     private void renderScroll(GuiGraphicsExtractor graphics) {
 >>>>>>> Stashed changes

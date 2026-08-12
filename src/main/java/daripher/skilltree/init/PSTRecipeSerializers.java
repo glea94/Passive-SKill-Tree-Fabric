@@ -15,12 +15,15 @@ public class PSTRecipeSerializers {
     public static final DeferredRegister<RecipeSerializer<?>> REGISTRY = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, SkillTreeMod.MOD_ID);
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public static final RegistryObject<WorkbenchUpgradeBonusRecipe.Serializer> WORKBENCH_ITEM_BONUS = REGISTRY.register("workbench_item_bonus", WorkbenchUpgradeBonusRecipe.Serializer::new);
     public static final RegistryObject<WorkbenchCraftingRecipe.Serializer> WORKBENCH_CRAFTING = REGISTRY.register("workbench_crafting", WorkbenchCraftingRecipe.Serializer::new);
     public static final RegistryObject<WorkbenchPotionMixingRecipe.Serializer> WORKBENCH_POTION_MIXING = REGISTRY.register("workbench_potion_mixing", WorkbenchPotionMixingRecipe.Serializer::new);
     public static final RegistryObject<WorkbenchWeaponPoisoningRecipe.Serializer> WORKBENCH_WEAPON_POISONING = REGISTRY.register("workbench_weapon_poisoning", WorkbenchWeaponPoisoningRecipe.Serializer::new);
 }
 =======
+=======
+>>>>>>> Stashed changes
     // Custom artisan workbench processing serializations
     // CORRECTION 26.1.2 : RecipeSerializer<T> est désormais un record final ; on enregistre donc
     // directement l'instance X.Serializer.INSTANCE (de type RecipeSerializer<X>) plutôt qu'un
@@ -29,5 +32,9 @@ public class PSTRecipeSerializers {
     public static final RegistryObject<RecipeSerializer<WorkbenchCraftingRecipe>> WORKBENCH_CRAFTING = REGISTRY.register("workbench_crafting", () -> WorkbenchCraftingRecipe.Serializer.INSTANCE);
     public static final RegistryObject<RecipeSerializer<WorkbenchPotionMixingRecipe>> WORKBENCH_POTION_MIXING = REGISTRY.register("workbench_potion_mixing", () -> WorkbenchPotionMixingRecipe.Serializer.INSTANCE);
     public static final RegistryObject<RecipeSerializer<WorkbenchWeaponPoisoningRecipe>> WORKBENCH_WEAPON_POISONING = REGISTRY.register("workbench_weapon_poisoning", () -> WorkbenchWeaponPoisoningRecipe.Serializer.INSTANCE);
+<<<<<<< Updated upstream
+}
+>>>>>>> Stashed changes
+=======
 }
 >>>>>>> Stashed changes

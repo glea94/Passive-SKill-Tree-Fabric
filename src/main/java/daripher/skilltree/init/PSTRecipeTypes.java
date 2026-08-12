@@ -18,11 +18,11 @@ public class PSTRecipeTypes {
                 return identifier;
             }
         };
-<<<<<<< Updated upstream
-        return Registry.register(BuiltInRegistries.RECIPE_TYPE, new ResourceLocation(SkillTreeMod.MOD_ID, identifier), recipeType);
-=======
         // Aligned 1.21.4: Direct type-safe static registration into the standard recipe type registry
         return Registry.register(BuiltInRegistries.RECIPE_TYPE, Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, identifier), recipeType);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
 }

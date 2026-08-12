@@ -25,6 +25,10 @@ public class PlayerJoinEventHandler {
                 // Ajouté 1.21.5 : synchronise les recettes Workbench vers le client (RecipeAccess client ne les expose plus)
                 ServerNetworking.sendSyncWorkbenchRecipes(player);
 
+                // Fix 26.2 : synchronise les arbres de compétences et skills vers le client (jamais appelé auparavant,
+                // invisible en solo car client/serveur partagent la même JVM, mais requis sur un serveur dédié)
+                ServerNetworking.sendSyncServerData(player);
+
                 if (PlayerSkillsProvider.hasSkills(player)) {
                     // Synchronise l'arbre de compétences Cardinal Components avec le client
                     PlayerSkillsProvider.KEY.sync(player);

@@ -13,13 +13,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-<<<<<<< Updated upstream
-import net.minecraft.resources.ResourceLocation;
-=======
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextMap;
->>>>>>> Stashed changes
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -41,20 +37,16 @@ import java.util.stream.Stream;
 
 public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_vanilla_crafting_recipe");
 
->>>>>>> Stashed changes
     private @Nullable Pair<Ingredient, Integer> baseIngredient;
     private Map<Ingredient, Integer> additionalIngredients;
     private final ItemStack result;
 
-<<<<<<< Updated upstream
-    public WorkbenchVanillaCraftingRecipe(CraftingRecipe vanillaRecipe, RegistryAccess registryAccess) {
-        super(vanillaRecipe.getId(), true);
-        this.result = vanillaRecipe.getResultItem(registryAccess);
-        additionalIngredients = getIngredientsFromCraftingRecipe(vanillaRecipe);
-=======
     public WorkbenchVanillaCraftingRecipe(RecipeHolder<CraftingRecipe> vanillaRecipeHolder, HolderLookup.Provider registryAccess) {
         // Factual Fix 1.21.4: Extracted raw Identifier path out of the RecipeHolder's ResourceKey handle
         super(vanillaRecipeHolder.id().identifier(), true);
@@ -77,7 +69,6 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
         }
         this.result = resolvedResult;
         this.additionalIngredients = getIngredientsFromCraftingRecipe(vanillaRecipe, registryAccess);
->>>>>>> Stashed changes
         List<Pair<Ingredient, Integer>> ingredients = new ArrayList<>(additionalIngredients.entrySet().stream().map(Pair::of).toList());
         if (!ingredients.isEmpty()) {
             this.baseIngredient = ingredients.remove(0);
@@ -125,11 +116,14 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
 
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container, @NotNull RegistryAccess registryAccess) {
         return getResult(container);
     }
 
     @Override
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     public boolean isValidBaseItem(ItemStack itemStack) {
@@ -188,6 +182,7 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
     // Factual Fix 1.21.4: Resolve recipe book classification categories using type-safe registration lookups directly
     @Override
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public @NotNull RecipeSerializer<?> getSerializer() {
         return new Serializer();
     }
@@ -201,6 +196,8 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
         @Override
         public @Nullable WorkbenchVanillaCraftingRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
 =======
+=======
+>>>>>>> Stashed changes
     public @NotNull RecipeBookCategory recipeBookCategory() {
         return net.minecraft.world.item.crafting.RecipeBookCategories.CRAFTING_MISC;
     }
@@ -247,6 +244,9 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
         // Ingredient.STREAM_CODEC n'a jamais existé, c'est Ingredient.CONTENTS_STREAM_CODEC (déjà présent en 1.21.1)
         // qui est le bon champ, inchangé en 1.21.5. Le renommage supposé lors du fix 1.21.4 était erroné.
         private static @NotNull WorkbenchVanillaCraftingRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buf) {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             Map<Ingredient, Integer> ingredients = new HashMap<>();
             int ingredientsCount = buf.readInt();

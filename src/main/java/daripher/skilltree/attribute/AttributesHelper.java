@@ -2,8 +2,14 @@ package daripher.skilltree.attribute;
 
 import daripher.skilltree.SkillTreeMod;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+=======
+import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.EntityTypes;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;

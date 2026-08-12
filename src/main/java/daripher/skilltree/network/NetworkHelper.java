@@ -33,20 +33,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class NetworkHelper {
-<<<<<<< Updated upstream
-    public static void writePassiveSkill(FriendlyByteBuf buf, PassiveSkill skill) {
-        buf.writeUtf(skill.getId().toString());
-        buf.writeInt(skill.getSkillSize());
-        buf.writeUtf(skill.getFrameTexture().toString());
-        buf.writeUtf(skill.getIconTexture().toString());
-        buf.writeUtf(skill.getTooltipFrameTexture().toString());
-=======
     public static void writePassiveSkill(RegistryFriendlyByteBuf buf, PassiveSkill skill) {
         buf.writeIdentifier(skill.getId());
         buf.writeInt(skill.getSkillSize());
         buf.writeIdentifier(skill.getFrameTexture());
         buf.writeIdentifier(skill.getIconTexture());
         buf.writeIdentifier(skill.getTooltipFrameTexture());
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         buf.writeBoolean(skill.isStartingPoint());
         buf.writeBoolean(skill.isAlwaysStartingPoint());
@@ -63,20 +58,15 @@ public class NetworkHelper {
         writeDescription(buf, skill.getDescription());
     }
 
-<<<<<<< Updated upstream
-    public static PassiveSkill readPassiveSkill(FriendlyByteBuf buf) {
-        ResourceLocation id = new ResourceLocation(buf.readUtf());
-        int size = buf.readInt();
-        ResourceLocation background = new ResourceLocation(buf.readUtf());
-        ResourceLocation icon = new ResourceLocation(buf.readUtf());
-        ResourceLocation border = new ResourceLocation(buf.readUtf());
-=======
     public static PassiveSkill readPassiveSkill(RegistryFriendlyByteBuf buf) {
         Identifier id = buf.readIdentifier();
         int size = buf.readInt();
         Identifier background = buf.readIdentifier();
         Identifier icon = buf.readIdentifier();
         Identifier border = buf.readIdentifier();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         boolean startingPoint = buf.readBoolean();
         boolean alwaysStartingPoint = buf.readBoolean();
@@ -95,16 +85,6 @@ public class NetworkHelper {
         return skill;
     }
 
-<<<<<<< Updated upstream
-    public static void writeAttribute(FriendlyByteBuf buf, Attribute attribute) {
-        String attributeId = Objects.requireNonNull(BuiltInRegistries.ATTRIBUTE.getKey(attribute)).toString();
-        buf.writeUtf(attributeId);
-    }
-
-    public static @Nullable Attribute readAttribute(FriendlyByteBuf buf) {
-        String attributeId = buf.readUtf();
-        Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(new ResourceLocation(attributeId));
-=======
     public static void writeAttribute(RegistryFriendlyByteBuf buf, Attribute attribute) {
         Identifier attributeKey = BuiltInRegistries.ATTRIBUTE.getKey(attribute);
         Objects.requireNonNull(attributeKey);
@@ -117,27 +97,12 @@ public class NetworkHelper {
         Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(attributeId)
                 .map(Holder::value)
                 .orElse(null);
->>>>>>> Stashed changes
         if (attribute == null) {
             SkillTreeMod.LOGGER.error("Attribute {} does not exist", attributeId);
         }
         return attribute;
     }
 
-<<<<<<< Updated upstream
-    public static void writeAttributeModifier(FriendlyByteBuf buf, AttributeModifier modifier) {
-        buf.writeLong(modifier.getId().getMostSignificantBits());
-        buf.writeLong(modifier.getId().getLeastSignificantBits());
-        buf.writeUtf(modifier.getName());
-        buf.writeDouble(modifier.getAmount());
-        writeOperation(buf, modifier.getOperation());
-    }
-
-    @NotNull
-    public static AttributeModifier readAttributeModifier(FriendlyByteBuf buf) {
-        UUID id = new UUID(buf.readLong(), buf.readLong());
-        String name = buf.readUtf();
-=======
     public static void writeAttributeModifier(RegistryFriendlyByteBuf buf, AttributeModifier modifier) {
         buf.writeIdentifier(modifier.id());
         buf.writeDouble(modifier.amount());
@@ -147,12 +112,16 @@ public class NetworkHelper {
     @NotNull
     public static AttributeModifier readAttributeModifier(RegistryFriendlyByteBuf buf) {
         Identifier id = buf.readIdentifier();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         double amount = buf.readDouble();
         AttributeModifier.Operation operation = readOperation(buf);
         return new AttributeModifier(id, amount, operation);
     }
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     public static void writeResourceLocations(FriendlyByteBuf buf, List<ResourceLocation> locations) {
         buf.writeInt(locations.size());
@@ -161,12 +130,15 @@ public class NetworkHelper {
 
     public static List<ResourceLocation> readResourceLocations(FriendlyByteBuf buf) {
 =======
+=======
+>>>>>>> Stashed changes
     public static void writeResourceLocations(RegistryFriendlyByteBuf buf, List<Identifier> locations) {
         buf.writeInt(locations.size());
         locations.forEach(buf::writeIdentifier);
     }
 
     public static List<Identifier> readResourceLocations(RegistryFriendlyByteBuf buf) {
+<<<<<<< Updated upstream
 >>>>>>> Stashed changes
         int count = buf.readInt();
         List<ResourceLocation> locations = new ArrayList<>();
@@ -174,6 +146,12 @@ public class NetworkHelper {
 <<<<<<< Updated upstream
             locations.add(new ResourceLocation(buf.readUtf()));
 =======
+            locations.add(buf.readIdentifier());
+>>>>>>> Stashed changes
+=======
+        int count = buf.readInt();
+        List<Identifier> locations = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
             locations.add(buf.readIdentifier());
 >>>>>>> Stashed changes
         }
@@ -243,6 +221,7 @@ public class NetworkHelper {
         ResourceLocation serializerId = PSTRegistries.SKILL_BONUSES.get().getKey(serializer);
         Objects.requireNonNull(serializerId);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         buf.writeUtf(serializerId.toString());
         serializer.serialize(buf, bonus);
     }
@@ -250,12 +229,17 @@ public class NetworkHelper {
     public static SkillBonus<?> readSkillBonus(FriendlyByteBuf buf) {
         ResourceLocation serializerId = new ResourceLocation(buf.readUtf());
 =======
+=======
+>>>>>>> Stashed changes
         buf.writeIdentifier(serializerId);
         serializer.serialize(buf, bonus);
     }
 
     public static SkillBonus<?> readSkillBonus(RegistryFriendlyByteBuf buf) {
         Identifier serializerId = buf.readIdentifier();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         SkillBonus.Serializer serializer = PSTRegistries.SKILL_BONUSES.get().getValue(serializerId);
         Objects.requireNonNull(serializer);
@@ -267,6 +251,7 @@ public class NetworkHelper {
         ResourceLocation serializerId = PSTRegistries.SKILL_REQUIREMENTS.get().getKey(serializer);
         Objects.requireNonNull(serializerId);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         buf.writeUtf(serializerId.toString());
         serializer.serialize(buf, requirement);
     }
@@ -274,12 +259,17 @@ public class NetworkHelper {
     public static SkillRequirement<?> readSkillRequirement(FriendlyByteBuf buf) {
         ResourceLocation serializerId = new ResourceLocation(buf.readUtf());
 =======
+=======
+>>>>>>> Stashed changes
         buf.writeIdentifier(serializerId);
         serializer.serialize(buf, requirement);
     }
 
     public static SkillRequirement<?> readSkillRequirement(RegistryFriendlyByteBuf buf) {
         Identifier serializerId = buf.readIdentifier();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         SkillRequirement.Serializer serializer = PSTRegistries.SKILL_REQUIREMENTS.get().getValue(serializerId);
         Objects.requireNonNull(serializer);
@@ -333,23 +323,21 @@ public class NetworkHelper {
         return skillTrees;
     }
 
-<<<<<<< Updated upstream
-    public static void writePassiveSkillTree(FriendlyByteBuf buf, PassiveSkillTree skillTree) {
-        buf.writeUtf(skillTree.getId().toString());
-=======
     public static void writePassiveSkillTree(RegistryFriendlyByteBuf buf, PassiveSkillTree skillTree) {
         buf.writeIdentifier(skillTree.getId());
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         writeResourceLocations(buf, skillTree.getSkillIds());
         writeTagLimits(buf, skillTree.getSkillLimitations());
     }
 
-<<<<<<< Updated upstream
-    public static PassiveSkillTree readPassiveSkillTree(FriendlyByteBuf buf) {
-        ResourceLocation id = new ResourceLocation(buf.readUtf());
-=======
     public static PassiveSkillTree readPassiveSkillTree(RegistryFriendlyByteBuf buf) {
         Identifier id = buf.readIdentifier();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         PassiveSkillTree skillTree = new PassiveSkillTree(id);
         readResourceLocations(buf).forEach(skillTree.getSkillIds()::add);
@@ -377,6 +365,7 @@ public class NetworkHelper {
     public static void writeLivingMultiplier(RegistryFriendlyByteBuf buf, @NotNull LivingMultiplier multiplier) {
         LivingMultiplier.Serializer serializer = multiplier.getSerializer();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         ResourceLocation serializerId = PSTRegistries.LIVING_MULTIPLIERS.get().getKey(serializer);
         buf.writeUtf(Objects.requireNonNull(serializerId).toString());
         serializer.serialize(buf, multiplier);
@@ -385,12 +374,17 @@ public class NetworkHelper {
     public static @NotNull LivingMultiplier readLivingMultiplier(FriendlyByteBuf buf) {
         ResourceLocation serializerId = new ResourceLocation(buf.readUtf());
 =======
+=======
+>>>>>>> Stashed changes
         Identifier serializerId = PSTRegistries.LIVING_MULTIPLIERS.get().getKey(serializer);
         buf.writeIdentifier(Objects.requireNonNull(serializerId));
         serializer.serialize(buf, multiplier);
     }
     public static @NotNull LivingMultiplier readLivingMultiplier(RegistryFriendlyByteBuf buf) {
         Identifier serializerId = buf.readIdentifier();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         LivingMultiplier.Serializer serializer = PSTRegistries.LIVING_MULTIPLIERS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(buf);
@@ -398,6 +392,7 @@ public class NetworkHelper {
 
     public static void writeLivingCondition(RegistryFriendlyByteBuf buf, @NotNull LivingEntityPredicate condition) {
         LivingEntityPredicate.Serializer serializer = condition.getSerializer();
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
         ResourceLocation serializerId = PSTRegistries.LIVING_CONDITIONS.get().getKey(serializer);
         buf.writeUtf(Objects.requireNonNull(serializerId).toString());
@@ -407,6 +402,8 @@ public class NetworkHelper {
     public static @NotNull LivingEntityPredicate readLivingCondition(FriendlyByteBuf buf) {
         ResourceLocation serializerId = new ResourceLocation(buf.readUtf());
 =======
+=======
+>>>>>>> Stashed changes
         Identifier serializerId = PSTRegistries.LIVING_CONDITIONS.get().getKey(serializer);
         buf.writeIdentifier(Objects.requireNonNull(serializerId));
         serializer.serialize(buf, condition);
@@ -414,6 +411,9 @@ public class NetworkHelper {
 
     public static @NotNull LivingEntityPredicate readLivingCondition(RegistryFriendlyByteBuf buf) {
         Identifier serializerId = buf.readIdentifier();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         LivingEntityPredicate.Serializer serializer = PSTRegistries.LIVING_CONDITIONS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(buf);
@@ -421,6 +421,7 @@ public class NetworkHelper {
 
     public static void writeMobEffectCondition(RegistryFriendlyByteBuf buf, @NotNull MobEffectPredicate condition) {
         MobEffectPredicate.Serializer serializer = condition.getSerializer();
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
         ResourceLocation serializerId = PSTRegistries.MOB_EFFECT_PREDICATES.get().getKey(serializer);
         buf.writeUtf(Objects.requireNonNull(serializerId).toString());
@@ -430,6 +431,8 @@ public class NetworkHelper {
     public static @NotNull MobEffectPredicate readMobEffectCondition(FriendlyByteBuf buf) {
         ResourceLocation serializerId = new ResourceLocation(buf.readUtf());
 =======
+=======
+>>>>>>> Stashed changes
         Identifier serializerId = PSTRegistries.MOB_EFFECT_PREDICATES.get().getKey(serializer);
         buf.writeIdentifier(Objects.requireNonNull(serializerId));
         serializer.serialize(buf, condition);
@@ -437,6 +440,9 @@ public class NetworkHelper {
 
     public static @NotNull MobEffectPredicate readMobEffectCondition(RegistryFriendlyByteBuf buf) {
         Identifier serializerId = buf.readIdentifier();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         MobEffectPredicate.Serializer serializer = PSTRegistries.MOB_EFFECT_PREDICATES.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(buf);
@@ -447,6 +453,7 @@ public class NetworkHelper {
         ResourceLocation serializerId = PSTRegistries.DAMAGE_CONDITIONS.get().getKey(serializer);
         Objects.requireNonNull(serializerId);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         buf.writeUtf(serializerId.toString());
         serializer.serialize(buf, condition);
     }
@@ -454,12 +461,17 @@ public class NetworkHelper {
     public static @NotNull DamageCondition readDamageCondition(FriendlyByteBuf buf) {
         ResourceLocation serializerId = new ResourceLocation(buf.readUtf());
 =======
+=======
+>>>>>>> Stashed changes
         buf.writeIdentifier(serializerId);
         serializer.serialize(buf, condition);
     }
 
     public static @NotNull DamageCondition readDamageCondition(RegistryFriendlyByteBuf buf) {
         Identifier serializerId = buf.readIdentifier();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         DamageCondition.Serializer serializer = PSTRegistries.DAMAGE_CONDITIONS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(buf);
@@ -467,6 +479,7 @@ public class NetworkHelper {
 
     public static void writeItemPredicate(RegistryFriendlyByteBuf buf, @NotNull ItemStackPredicate condition) {
         ItemStackPredicate.Serializer serializer = condition.getSerializer();
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
         ResourceLocation serializerId = PSTRegistries.ITEM_CONDITIONS.get().getKey(serializer);
         buf.writeUtf(Objects.requireNonNull(serializerId).toString());
@@ -476,6 +489,8 @@ public class NetworkHelper {
     public static @NotNull ItemStackPredicate readItemPredicate(FriendlyByteBuf buf) {
         ResourceLocation serializerId = new ResourceLocation(buf.readUtf());
 =======
+=======
+>>>>>>> Stashed changes
         Identifier serializerId = PSTRegistries.ITEM_CONDITIONS.get().getKey(serializer);
         buf.writeIdentifier(Objects.requireNonNull(serializerId));
         serializer.serialize(buf, condition);
@@ -483,6 +498,9 @@ public class NetworkHelper {
 
     public static @NotNull ItemStackPredicate readItemPredicate(RegistryFriendlyByteBuf buf) {
         Identifier serializerId = buf.readIdentifier();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         ItemStackPredicate.Serializer serializer = PSTRegistries.ITEM_CONDITIONS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(buf);
@@ -490,6 +508,7 @@ public class NetworkHelper {
 
     public static void writeEventListener(RegistryFriendlyByteBuf buf, @NotNull SkillEventListener condition) {
         SkillEventListener.Serializer serializer = condition.getSerializer();
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
         ResourceLocation serializerId = PSTRegistries.EVENT_LISTENERS.get().getKey(serializer);
         buf.writeUtf(Objects.requireNonNull(serializerId).toString());
@@ -499,6 +518,8 @@ public class NetworkHelper {
     public static @NotNull SkillEventListener readEventListener(FriendlyByteBuf buf) {
         ResourceLocation serializerId = new ResourceLocation(buf.readUtf());
 =======
+=======
+>>>>>>> Stashed changes
         Identifier serializerId = PSTRegistries.EVENT_LISTENERS.get().getKey(serializer);
         buf.writeIdentifier(Objects.requireNonNull(serializerId));
         serializer.serialize(buf, condition);
@@ -506,24 +527,14 @@ public class NetworkHelper {
 
     public static @NotNull SkillEventListener readEventListener(RegistryFriendlyByteBuf buf) {
         Identifier serializerId = buf.readIdentifier();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         SkillEventListener.Serializer serializer = PSTRegistries.EVENT_LISTENERS.get().getValue(serializerId);
         return Objects.requireNonNull(serializer).deserialize(buf);
     }
 
-<<<<<<< Updated upstream
-    public static void writeMobEffect(FriendlyByteBuf buf, MobEffect effect) {
-        ResourceLocation effectId = BuiltInRegistries.MOB_EFFECT.getKey(effect);
-        buf.writeUtf(Objects.requireNonNull(effectId).toString());
-    }
-
-    public static @Nullable MobEffect readMobEffect(FriendlyByteBuf buf) {
-        ResourceLocation effectId = new ResourceLocation(buf.readUtf());
-        return BuiltInRegistries.MOB_EFFECT.get(effectId);
-    }
-
-    public static <T extends Enum<T>> void writeEnum(FriendlyByteBuf buf, T anEnum) {
-=======
     public static void writeMobEffect(RegistryFriendlyByteBuf buf, MobEffect effect) {
         Identifier effectId = BuiltInRegistries.MOB_EFFECT.getKey(effect);
         buf.writeIdentifier(Objects.requireNonNull(effectId));
@@ -538,6 +549,9 @@ public class NetworkHelper {
     }
 
     public static <T extends Enum<T>> void writeEnum(RegistryFriendlyByteBuf buf, T anEnum) {
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         buf.writeInt(anEnum.ordinal());
     }
@@ -573,6 +587,7 @@ public class NetworkHelper {
         ResourceLocation serializerId = PSTRegistries.FLOAT_FUNCTIONS.get().getKey(serializer);
         Objects.requireNonNull(serializerId);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         buf.writeUtf(serializerId.toString());
         serializer.serialize(buf, provider);
     }
@@ -580,12 +595,17 @@ public class NetworkHelper {
     public static FloatFunction<?> readValueProvider(FriendlyByteBuf buf) {
         ResourceLocation serializerId = new ResourceLocation(buf.readUtf());
 =======
+=======
+>>>>>>> Stashed changes
         buf.writeIdentifier(serializerId);
         serializer.serialize(buf, provider);
     }
 
     public static FloatFunction<?> readValueProvider(RegistryFriendlyByteBuf buf) {
         Identifier serializerId = buf.readIdentifier();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         FloatFunction.Serializer serializer = PSTRegistries.FLOAT_FUNCTIONS.get().getValue(serializerId);
         Objects.requireNonNull(serializer);
@@ -597,6 +617,7 @@ public class NetworkHelper {
         ResourceLocation serializerId = PSTRegistries.ITEM_BONUSES.get().getKey(serializer);
         Objects.requireNonNull(serializerId);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         buf.writeUtf(serializerId.toString());
         serializer.serialize(buf, itemBonus);
     }
@@ -604,12 +625,17 @@ public class NetworkHelper {
     public static ItemBonus<?> readItemBonus(FriendlyByteBuf buf) {
         ResourceLocation serializerId = new ResourceLocation(buf.readUtf());
 =======
+=======
+>>>>>>> Stashed changes
         buf.writeIdentifier(serializerId);
         serializer.serialize(buf, itemBonus);
     }
 
     public static ItemBonus<?> readItemBonus(RegistryFriendlyByteBuf buf) {
         Identifier serializerId = buf.readIdentifier();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         ItemBonus.Serializer serializer = PSTRegistries.ITEM_BONUSES.get().getValue(serializerId);
         Objects.requireNonNull(serializer);
