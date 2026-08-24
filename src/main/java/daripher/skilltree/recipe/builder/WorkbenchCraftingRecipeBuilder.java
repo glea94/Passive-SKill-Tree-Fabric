@@ -5,10 +5,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -20,17 +16,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WorkbenchCraftingRecipeBuilder {
-    private final ResourceLocation id;
+    private final Identifier id;
     private final Map<Ingredient, Integer> ingredients = new HashMap<>();
     private @Nullable Pair<Ingredient, Integer> baseIngredient;
     private boolean requiresPassiveSkill;
     private ItemStack result;
 
-    private WorkbenchCraftingRecipeBuilder(ResourceLocation id) {
+    private WorkbenchCraftingRecipeBuilder(Identifier id) {
         this.id = id;
     }
 
-    public static WorkbenchCraftingRecipeBuilder create(ResourceLocation id) {
+    public static WorkbenchCraftingRecipeBuilder create(Identifier id) {
         return new WorkbenchCraftingRecipeBuilder(id);
     }
 
@@ -59,7 +55,7 @@ public class WorkbenchCraftingRecipeBuilder {
         WorkbenchCraftingRecipe recipe =
                 new WorkbenchCraftingRecipe(id, baseIngredient, ingredients, requiresPassiveSkill, result);
 
-        // Factual Fix 1.21.4: Convert the Identifier into a modern type-safe ResourceKey for the recipe registry
+        
         ResourceKey<Recipe<?>> recipeKey = ResourceKey.create(Registries.RECIPE, id);
         recipeOutput.accept(recipeKey, recipe, null);
     }

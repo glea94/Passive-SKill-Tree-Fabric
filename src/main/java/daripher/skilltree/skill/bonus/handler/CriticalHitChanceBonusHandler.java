@@ -9,7 +9,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
-/** Portage Fabric : event.setResult(ALLOW) -> event.setForcedCrit(true), même logique. */
+
 public class CriticalHitChanceBonusHandler {
     public static void register() {
         PSTEvents.CRITICAL_HIT.register(EventPriority.HIGH, CriticalHitChanceBonusHandler::applyDirectHitCritChance);
@@ -17,7 +17,7 @@ public class CriticalHitChanceBonusHandler {
 
     private static void applyDirectHitCritChance(CriticalHitPSTEvent event) {
         Player player = event.getEntity();
-        // Fix 1.21.9 : isClientSide champ private, méthode isClientSide() confirmée par décompilation
+        
         if (player.level().isClientSide()) {
             return;
         }
@@ -32,7 +32,7 @@ public class CriticalHitChanceBonusHandler {
             return;
         }
         if (!isVanillaCrit) {
-            // Forces critical calculation on the current attack instance, bypassing vanilla jump bounds
+            
             event.setForcedCrit(true);
         }
     }

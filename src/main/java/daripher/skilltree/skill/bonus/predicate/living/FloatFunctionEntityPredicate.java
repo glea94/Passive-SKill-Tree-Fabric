@@ -137,7 +137,7 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
         return requiredValue;
     }
 
-    // Aligned 1.21.4: Direct structural copy mechanism to preserve safe multi-threaded snapshot states
+    
     public FloatFunctionEntityPredicate copy() {
         return new FloatFunctionEntityPredicate(valueProvider, requiredValue, logic);
     }
@@ -163,7 +163,7 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
         public LivingEntityPredicate deserialize(CompoundTag tag) {
             FloatFunction<?> valueProvider = SerializationHelper.deserializeValueProvider(tag);
             float requiredValue = tag.getFloatOr("required_value", 0f);
-            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            
             Logic logic = Logic.valueOf(tag.getString("logic").orElse(""));
             return new FloatFunctionEntityPredicate(valueProvider, requiredValue, logic);
         }
@@ -178,7 +178,7 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             FloatFunction<?> valueProvider = NetworkHelper.readValueProvider(buf);
@@ -187,7 +187,7 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
             return new FloatFunctionEntityPredicate(valueProvider, requiredValue, logic);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             FloatFunctionEntityPredicate validPredicate = validatePredicate(predicate);

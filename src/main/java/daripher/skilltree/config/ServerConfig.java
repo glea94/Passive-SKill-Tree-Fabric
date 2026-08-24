@@ -29,7 +29,7 @@ public class ServerConfig {
     public static boolean dragon_drops_amnesia_scroll;
     public static List<Integer> skill_points_costs;
 
-    /** Miroir du contenu du fichier JSON - uniquement pour la (dé)sérialisation Gson. */
+    
     private static class Data {
         int max_skill_points = DEFAULT_MAX_SKILLS;
         int first_skill_cost = 15;
@@ -107,7 +107,7 @@ public class ServerConfig {
             }
             return skill_points_costs.get(level);
         }
-        // Factual Fix 1.21.4: Secure calculations against divide-by-zero scenarios on malformed configs
+        
         int totalPoints = max_skill_points <= 0 ? DEFAULT_MAX_SKILLS : max_skill_points;
         return first_skill_cost + (last_skill_cost - first_skill_cost) * level / totalPoints;
     }

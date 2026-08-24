@@ -9,10 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-/**
- * Équivalent de net.minecraftforge.event.entity.player.ItemTooltipEvent. La liste de tooltip
- * est mutable et partagée entre listeners, comme event.getToolTip() côté Forge.
- */
+
 public class ItemTooltipPSTEvent extends PSTEvent {
     private final ItemStack itemStack;
     private final List<Component> tooltip;

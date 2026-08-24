@@ -130,7 +130,7 @@ public class KillEventListener implements SkillEventListener {
 
     private void addTargetMultiplierWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         enemyMultiplier.addEditorWidgets(editor, multiplier -> {
-            // Factual Fix 1.21.4: Corrected copy-paste target mapping error to set the enemy multiplier field
+            
             setEnemyMultiplier(multiplier);
             consumer.accept(this);
         });
@@ -253,7 +253,7 @@ public class KillEventListener implements SkillEventListener {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Updated signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             KillEventListener listener = new KillEventListener();
@@ -265,7 +265,7 @@ public class KillEventListener implements SkillEventListener {
             return listener;
         }
 
-        // Factual Fix 1.21.4: Updated signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof KillEventListener aListener)) {

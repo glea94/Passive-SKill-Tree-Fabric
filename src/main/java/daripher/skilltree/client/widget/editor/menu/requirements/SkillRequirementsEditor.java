@@ -45,7 +45,7 @@ public class SkillRequirementsEditor extends EditorMenu {
         editor.getSelectedSkills().forEach(s -> s.getRequirements().add(requirement.copy()));
         editor.saveSelectedSkills();
 
-        // Factual Fix 1.21.4: Use local field reference directly to ensure consistent layout navigation tasks
+        
         editor.selectMenu(previousMenu);
     }
 }

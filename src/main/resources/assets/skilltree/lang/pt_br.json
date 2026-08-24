@@ -418,6 +418,7 @@
   "skill_bonus.skilltree.self_splash_immune": "Suas poções arremessáveis não te afetam",
   "skill_requirements.skilltree.advancement": "Obter a conquista %s",
   "skill_requirements.skilltree.learned_skill": "Aprender a habilidade %s",
+  "skill_requirements.skilltree.not_learned_skill": "Não aprender a habilidade %s",
   "skilltree.message.point_command": "Ponto de habilidade ganho.",
   "skilltree.message.reset": "A Árvore de Habilidades mudou. Seus pontos de habilidade foram restaurados.",
   "skilltree.message.reset_command": "Sua árvore de habilidades foi resetada.",

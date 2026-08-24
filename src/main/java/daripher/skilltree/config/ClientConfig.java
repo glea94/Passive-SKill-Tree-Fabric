@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.skill.PassiveSkill;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -18,20 +18,22 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/** Portage Fabric : même principe que ServerConfig (JSON/Gson au lieu de ForgeConfigSpec). */
+
 public class ClientConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve(SkillTreeMod.MOD_ID + "-client.json");
 
-    public static Set<ResourceLocation> favorite_skills;
+    public static Set<Identifier> favorite_skills;
     public static int favorite_color;
     public static boolean favorite_color_is_rainbow;
     public static boolean skill_tree_background_parallax;
+    public static boolean show_hud_progress_bar;
 
     private static class Data {
         List<String> favorite_skills = new ArrayList<>();
         String favorite_color_hex = "#42B0FF";
         boolean skill_tree_background_parallax = true;
+        boolean show_hud_progress_bar = true;
     }
 
     public static void load() {
@@ -54,20 +56,14 @@ public class ClientConfig {
     }
 
     private static void applyData(Data data) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        favorite_skills = data.favorite_skills.stream().map(ResourceLocation::new).collect(Collectors.toCollection(HashSet::new));
-        favorite_color_is_rainbow = data.favorite_color_hex.equals("rainbow");
-=======
-=======
->>>>>>> Stashed changes
-        // En 1.21.4, Identifier.parse est parfaitement standard pour charger les clés d'identification
+        
         favorite_skills = data.favorite_skills.stream()
                 .map(Identifier::parse)
                 .collect(Collectors.toCollection(HashSet::new));
 
         favorite_color_is_rainbow = "rainbow".equalsIgnoreCase(data.favorite_color_hex);
         skill_tree_background_parallax = data.skill_tree_background_parallax;
+        show_hud_progress_bar = data.show_hud_progress_bar;
 
         if (!favorite_color_is_rainbow) {
             try {
@@ -97,9 +93,10 @@ public class ClientConfig {
             favorite_skills.add(skill.getId());
         }
         Data data = new Data();
-        data.favorite_skills = favorite_skills.stream().map(ResourceLocation::toString).collect(Collectors.toList());
+        data.favorite_skills = favorite_skills.stream().map(Identifier::toString).collect(Collectors.toList());
         data.favorite_color_hex = favorite_color_is_rainbow ? "rainbow" : String.format("#%06X", favorite_color);
         data.skill_tree_background_parallax = skill_tree_background_parallax;
+        data.show_hud_progress_bar = show_hud_progress_bar;
         save(data);
     }
 }

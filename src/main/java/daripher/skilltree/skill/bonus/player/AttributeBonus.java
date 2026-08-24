@@ -23,14 +23,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
 import net.minecraft.resources.Identifier;
->>>>>>> Stashed changes
-=======
-import net.minecraft.resources.Identifier;
->>>>>>> Stashed changes
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -77,8 +70,8 @@ public final class AttributeBonus implements SkillBonus<AttributeBonus>, Ticking
 
     @Override
     public void tick(ServerPlayer player) {
-        // CORRECTION LIBÉRATION : On supprime le blocage "isDynamic" pour permettre
-        // le rafraîchissement immédiat des attributs lors de la prise de nourriture !
+        
+        
         if (playerCondition != NoneLivingEntityPredicate.INSTANCE) {
             if (!playerCondition.test(player)) {
                 onSkillRemoved(player);
@@ -113,7 +106,7 @@ public final class AttributeBonus implements SkillBonus<AttributeBonus>, Ticking
         applyAttributeModifier(instance, dynamicModifier, player);
     }
     private void applyAttributeModifier(AttributeInstance instance, AttributeModifier modifier, Player player) {
-        // SÉCURISATION INJECTEUR : Protège contre la division par zéro/vide à la reconnexion
+        
         float currentHealth = player.getHealth();
         float maxHealthBefore = player.getMaxHealth();
         float healthPercentage = (currentHealth <= 0 || maxHealthBefore <= 0) ? 1.0f : (currentHealth / maxHealthBefore);
@@ -225,7 +218,7 @@ public final class AttributeBonus implements SkillBonus<AttributeBonus>, Ticking
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<AttributeBonus> consumer) {
         editor.addLabel(0, 0, "Attribute", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-        // Aligned 1.21.4: Safely unwrap and wrap elements back to a valid Holder instance using BuiltInRegistries
+        
         editor.addSelectionMenu(0, 0, 200, attribute.value()).setResponder(holder -> selectAttribute(consumer, BuiltInRegistries.ATTRIBUTE.wrapAsHolder((Attribute) holder)));
 
         editor.increaseHeight(19);
@@ -361,7 +354,7 @@ public final class AttributeBonus implements SkillBonus<AttributeBonus>, Ticking
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public AttributeBonus deserialize(RegistryFriendlyByteBuf buf) {
             Holder<Attribute> attribute = BuiltInRegistries.ATTRIBUTE.wrapAsHolder(NetworkHelper.readAttribute(buf));
@@ -372,7 +365,7 @@ public final class AttributeBonus implements SkillBonus<AttributeBonus>, Ticking
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof AttributeBonus aBonus)) {
@@ -386,7 +379,7 @@ public final class AttributeBonus implements SkillBonus<AttributeBonus>, Ticking
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
-            // Aligned 1.21.4: Maps a clean default armor attribute lookup using the type-safe registry identifier format
+            
             return new AttributeBonus(
                     Attributes.ARMOR,
                     new AttributeModifier(Identifier.parse("skilltree:default_bonus"), 1, AttributeModifier.Operation.ADD_VALUE)

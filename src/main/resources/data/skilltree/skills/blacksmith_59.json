@@ -1,16 +1,52 @@
 {
   "id": "skilltree:blacksmith_59",
-  "bonuses": [],
-  "requirements": [],
+  "bonuses": [
+    {
+      "type": "skilltree:crafted_item_bonus",
+      "item_condition": {
+        "equipment_type": "ranged_weapon",
+        "type": "skilltree:equipment_type"
+      },
+      "item_bonus": {
+        "type": "skilltree:item_bonus_list",
+        "inner_bonuses": [
+          {
+            "type": "skilltree:skill_bonus",
+            "skill_bonus": {
+              "type": "skilltree:crit_chance",
+              "chance": 0.35,
+              "damage_condition": {
+                "type": "skilltree:projectile"
+              }
+            }
+          }
+        ]
+      },
+      "recipe_ids": [
+        "skilltree:blacksmith_bow_crafting",
+        "skilltree:blacksmith_crossbow_crafting"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "type": "skilltree:stat_value",
+      "statTypeId": "minecraft:custom",
+      "statId": "skilltree:ranged_weapon_crafted",
+      "minValue": 1
+    }
+  ],
   "directConnections": [],
   "longConnections": [],
   "oneWayConnections": [],
   "tags": [],
   "backgroundTexture": "skilltree:textures/icons/background/notable.png",
-  "iconTexture": "skilltree:textures/icons/void.png",
+  "iconTexture": "skilltree:textures/icons/bow_diamond.png",
   "borderTexture": "skilltree:textures/tooltip/lesser.png",
+  "titleColor": "",
   "positionX": -124.70306,
   "positionY": -36.003998,
   "buttonSize": 20,
-  "isStartingPoint": false
+  "isStartingPoint": false,
+  "isAlwaysStartingPoint": false
 }

@@ -32,6 +32,7 @@ public class SkillTreeMod implements ModInitializer {
 
     private static void registerModRegistries() {
         touch(PSTRegistries.class);
+        touch(PSTStats.class);
 
         touch(PSTItems.class);
         touch(PSTBlocks.class);
@@ -81,6 +82,7 @@ public class SkillTreeMod implements ModInitializer {
         IncomingHealingBonusHandler.register();
         HealthReservationBonusHandler.register();
         DamageAvoidanceBonusHandler.register();
+        CheatDeathBonusHandler.register();
         daripher.skilltree.event.PoisonedWeaponEvents.register();
         EffectImmunityBonusHandler.register();
         EffectImmunityBypassBonusHandler.register();

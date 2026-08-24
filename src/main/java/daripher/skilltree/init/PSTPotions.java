@@ -10,10 +10,10 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 
 public class PSTPotions {
-    // Aligned 1.21.4: Direct registry mapping through BuiltInRegistries.POTION
+    
     public static final DeferredRegister<Potion> REGISTRY = DeferredRegister.create(BuiltInRegistries.POTION, SkillTreeMod.MOD_ID);
 
-    // Instantiates custom potions safely with registry-wrapped holders
+    
     public static final RegistryObject<Potion> LIQUID_FIRE_1 = REGISTRY.register("liquid_fire_1",
             () -> new Potion("liquid_fire_1", new MobEffectInstance(wrapEffect(PSTMobEffects.LIQUID_FIRE.get()))));
 

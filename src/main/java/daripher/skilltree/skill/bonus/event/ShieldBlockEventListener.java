@@ -145,7 +145,7 @@ public class ShieldBlockEventListener implements SkillEventListener {
 
     private void addTargetMultiplierWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         enemyMultiplier.addEditorWidgets(editor, multiplier -> {
-            // Factual Fix 1.21.4: Fixed copy-paste field mapping error to point to setEnemyMultiplier
+            
             setEnemyMultiplier(multiplier);
             consumer.accept(this);
         });
@@ -263,7 +263,7 @@ public class ShieldBlockEventListener implements SkillEventListener {
             listener.setPlayerCondition(SerializationHelper.deserializeLivingCondition(tag, "player_condition"));
             listener.setEnemyMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "enemy_multiplier"));
             listener.setPlayerMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier"));
-            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            
             listener.setTarget(SkillBonus.Target.valueOf(tag.getString("target").orElse("").toUpperCase(Locale.ROOT)));
             return listener;
         }
@@ -283,7 +283,7 @@ public class ShieldBlockEventListener implements SkillEventListener {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             ShieldBlockEventListener listener = new ShieldBlockEventListener();
@@ -296,7 +296,7 @@ public class ShieldBlockEventListener implements SkillEventListener {
             return listener;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof ShieldBlockEventListener aListener)) {

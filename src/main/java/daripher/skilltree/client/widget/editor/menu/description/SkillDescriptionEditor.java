@@ -87,8 +87,8 @@ public class SkillDescriptionEditor extends EditorMenu {
             editor.getSkillButton(skill.getId()).addSkillBonusTooltip(description);
             skill.setDescription(description);
         });
-        // Factual Fix 1.21.4: Clear menu widgets before telling the screen to rebuild
-        // to prevent duplicate widget reference states during the tick cycle.
+        
+        
         editor.clearWidgets();
         editor.rebuildWidgets();
     }

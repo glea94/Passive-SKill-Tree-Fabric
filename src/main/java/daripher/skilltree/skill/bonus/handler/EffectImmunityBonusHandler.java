@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
-/** Portage Fabric : logique identique. */
+
 public class EffectImmunityBonusHandler {
     public static void register() {
         PSTEvents.MOB_EFFECT_APPLICABLE.register(EventPriority.HIGHEST, EffectImmunityBonusHandler::applyEffectImmunity);
@@ -22,14 +22,14 @@ public class EffectImmunityBonusHandler {
             return;
         }
 
-        // Aligned 1.21.4: Map status effect holders down cleanly using value() to evaluate immunity requirements
+        
         Holder<MobEffect> mobEffectHolder = event.getEffectInstance().getEffect();
         MobEffect mobEffect = mobEffectHolder.value();
 
         List<EffectImmunityBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(player, EffectImmunityBonus.class);
         for (EffectImmunityBonus skillBonus : skillBonuses) {
             if (skillBonus.shouldProvideImmunity(mobEffect, player)) {
-                // Denies the incoming effect application sequence cleanly on the event pipeline
+                
                 event.setResult(MobEffectApplicablePSTEvent.Result.DENY);
                 return;
             }

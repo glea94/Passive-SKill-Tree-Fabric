@@ -183,13 +183,13 @@ public final class JumpHeightBonus implements SkillBonus<JumpHeightBonus> {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public JumpHeightBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new JumpHeightBonus(NetworkHelper.readLivingCondition(buf), buf.readFloat());
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof JumpHeightBonus aBonus)) {

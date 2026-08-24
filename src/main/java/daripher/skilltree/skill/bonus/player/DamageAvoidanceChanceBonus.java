@@ -311,7 +311,7 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public DamageAvoidanceChanceBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -324,7 +324,7 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof DamageAvoidanceChanceBonus aBonus)) {

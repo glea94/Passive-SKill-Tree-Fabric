@@ -7,11 +7,10 @@ import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.init.predicate.PSTItemPredicates;
 import daripher.skilltree.init.PSTTags;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.*;
@@ -69,7 +68,7 @@ public class EquipmentPredicate implements ItemStackPredicate {
     }
 
     public static boolean isTrident(ItemStack stack) {
-        ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        Identifier id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (Objects.requireNonNull(id).toString().equals("tetra:modular_single")) {
             return true;
         }
@@ -81,7 +80,7 @@ public class EquipmentPredicate implements ItemStackPredicate {
     }
 
     public static boolean isCrossbow(ItemStack stack) {
-        ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        Identifier id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (Objects.requireNonNull(id).toString().equals("tetra:modular_crossbow")) {
             return true;
         }
@@ -105,7 +104,7 @@ public class EquipmentPredicate implements ItemStackPredicate {
     }
 
     public static boolean isShield(ItemStack stack) {
-        ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        Identifier id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (Objects.requireNonNull(id).toString().equals("tetra:modular_shield")) {
             return true;
         }
@@ -116,15 +115,16 @@ public class EquipmentPredicate implements ItemStackPredicate {
     }
 
     public static boolean isSword(ItemStack stack) {
-        ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        Identifier id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (Objects.requireNonNull(id).toString().equals("tetra:modular_sword")) {
             return true;
         }
         return stack.is(ItemTags.SWORDS);
     }
 
+    
     public static boolean isTool(ItemStack stack) {
-        return stack.has(DataComponents.TOOL);
+        return isPickaxe(stack) || isShovel(stack) || isHoe(stack);
     }
 
     public static boolean isHoe(ItemStack stack) {
@@ -132,7 +132,7 @@ public class EquipmentPredicate implements ItemStackPredicate {
     }
 
     public static boolean isBow(ItemStack stack) {
-        ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        Identifier id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (Objects.requireNonNull(id).toString().equals("tetra:modular_bow")) {
             return true;
         }

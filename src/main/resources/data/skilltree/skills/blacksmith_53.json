@@ -1,6 +1,29 @@
 {
   "id": "skilltree:blacksmith_53",
-  "bonuses": [],
+  "bonuses": [
+    {
+      "type": "skilltree:crafted_item_bonus",
+      "item_condition": {
+        "equipment_type": "shield",
+        "type": "skilltree:equipment_type"
+      },
+      "item_bonus": {
+        "type": "skilltree:item_bonus_list",
+        "inner_bonuses": [
+          {
+            "type": "skilltree:skill_bonus",
+            "skill_bonus": {
+              "type": "skilltree:attribute",
+              "attribute": "minecraft:max_health",
+              "id": "skilltree:2ad93bb7-605f-4ac4-aacd-57e6d59c0ba1",
+              "amount": 4.0,
+              "operation": "add_value"
+            }
+          }
+        ]
+      }
+    }
+  ],
   "requirements": [],
   "directConnections": [
     "skilltree:blacksmith_50"
@@ -9,10 +32,12 @@
   "oneWayConnections": [],
   "tags": [],
   "backgroundTexture": "skilltree:textures/icons/background/lesser.png",
-  "iconTexture": "skilltree:textures/icons/void.png",
+  "iconTexture": "skilltree:textures/icons/blacksmith_life_1.png",
   "borderTexture": "skilltree:textures/tooltip/lesser.png",
+  "titleColor": "",
   "positionX": -31.17576,
   "positionY": 126.00198,
   "buttonSize": 16,
-  "isStartingPoint": false
+  "isStartingPoint": false,
+  "isAlwaysStartingPoint": false
 }

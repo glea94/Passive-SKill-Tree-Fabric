@@ -18,14 +18,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
 import net.minecraft.resources.Identifier;
->>>>>>> Stashed changes
-=======
-import net.minecraft.resources.Identifier;
->>>>>>> Stashed changes
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -51,7 +44,7 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
         if (playerCondition != NoneLivingEntityPredicate.INSTANCE || playerMultiplier != NoneLivingMultiplier.INSTANCE) {
             return;
         }
-        // Aligned 1.21.4: Map raw attributes safely down to registry Holders
+        
         AttributesHelper.playerAttributesList().stream()
                 .map(attr -> player.getAttribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attr)))
                 .filter(Objects::nonNull)
@@ -61,14 +54,7 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
 
     @Override
     public void onSkillRemoved(ServerPlayer player) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        AttributesHelper.playerAttributesList().stream().map(player::getAttribute).filter(Objects::nonNull).filter(a -> !a.hasModifier(modifier))
-                .forEach(a -> a.removeModifier(modifier.getId()));
-=======
-=======
->>>>>>> Stashed changes
-        // Aligned 1.21.4: Direct modifier isolation and removal utilizing Identifier id keys
+        
         AttributesHelper.playerAttributesList().stream()
                 .map(attr -> player.getAttribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attr)))
                 .filter(Objects::nonNull)
@@ -133,7 +119,7 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
 
     @Override
     public AllAttributesBonus copy() {
-        // Aligned 1.21.4: Safely spawn a new random resource-keyed identifier path on copy instantiation
+        
         AttributeModifier modifier = new AttributeModifier(
                 Identifier.fromNamespaceAndPath("skilltree", "modifier_" + UUID.randomUUID()),
                 this.modifier.amount(),
@@ -304,7 +290,7 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public AllAttributesBonus deserialize(RegistryFriendlyByteBuf buf) {
             AttributeModifier modifier = NetworkHelper.readAttributeModifier(buf);
@@ -314,7 +300,7 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof AllAttributesBonus aBonus)) {

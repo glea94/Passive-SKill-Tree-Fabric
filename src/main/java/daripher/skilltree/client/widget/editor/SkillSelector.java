@@ -4,7 +4,7 @@ import daripher.skilltree.client.screen.ScreenHelper;
 import daripher.skilltree.client.widget.skill.SkillButton;
 import daripher.skilltree.client.widget.skill.SkillButtons;
 import daripher.skilltree.skill.PassiveSkill;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -27,60 +27,49 @@ public class SkillSelector extends AbstractWidget {
     private int selectionStartY;
 
     public SkillSelector(SkillTreeEditor editor, SkillButtons skillButtons) {
-        // Factual Fix 1.21.4: AbstractWidget constructor strictly requires x, y, width, height, and message
+        
         super(0, 0, 0, 0, Component.empty());
         this.skillButtons = skillButtons;
         this.editor = editor;
-        // Factual Fix 1.21.4: Directly apply vanilla active field state to block method conflicts
+        
         this.active = false;
     }
 
     @Override
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        if (active) {
-=======
     protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        // Factual Fix 1.21.4: Use direct active field lookup
+        
         if (this.active) {
->>>>>>> Stashed changes
-=======
-    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        // Factual Fix 1.21.4: Use direct active field lookup
-        if (this.active) {
->>>>>>> Stashed changes
             renderSelectionArea(graphics, mouseX, mouseY);
         }
         renderSelectedSkillsHighlight(graphics);
     }
 
-    private void renderSelectedSkillsHighlight(@NotNull GuiGraphics graphics) {
-        graphics.pose().pushPose();
-        graphics.pose().translate(skillButtons.getScrollX(), skillButtons.getScrollY(), 0);
+    private void renderSelectedSkillsHighlight(@NotNull GuiGraphicsExtractor graphics) {
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(skillButtons.getScrollX(), skillButtons.getScrollY());
         float zoom = skillButtons.getZoom();
         for (SkillButton widget : getSelectedButtons()) {
             renderSkillSelection(graphics, widget, zoom);
         }
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 
-    private void renderSkillSelection(@NotNull GuiGraphics graphics, SkillButton widget, float zoom) {
-        graphics.pose().pushPose();
-        double widgetCenterX = widget.getX() + widget.getWidth() / 2f;
-        double widgetCenterY = widget.getY() + widget.getHeight() / 2f;
-        graphics.pose().translate(widgetCenterX, widgetCenterY, 0F);
-        graphics.pose().scale(zoom, zoom, 1F);
-        graphics.pose().translate(-widgetCenterX, -widgetCenterY, 0F);
+    private void renderSkillSelection(@NotNull GuiGraphicsExtractor graphics, SkillButton widget, float zoom) {
+        graphics.pose().pushMatrix();
+        float widgetCenterX = widget.getX() + widget.getWidth() / 2f;
+        float widgetCenterY = widget.getY() + widget.getHeight() / 2f;
+        graphics.pose().translate(widgetCenterX, widgetCenterY);
+        graphics.pose().scale(zoom, zoom);
+        graphics.pose().translate(-widgetCenterX, -widgetCenterY);
         int x = widget.getX() - 1;
         int y = widget.getY() - 1;
         int width = widget.getWidth() + 2;
         int height = widget.getHeight() + 2;
         ScreenHelper.drawRectangle(graphics, x, y, width, height, SELECTION_COLOR);
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 
-    private void renderSelectionArea(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+    private void renderSelectionArea(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         ScreenHelper.drawRectangle(graphics, selectionStartX, selectionStartY, mouseX - selectionStartX, mouseY - selectionStartY, SELECTION_COLOR);
     }
 
@@ -96,7 +85,7 @@ public class SkillSelector extends AbstractWidget {
             return false;
         }
         if (mouseButtonEvent.hasShiftDown()) {
-            // Factual Fix 1.21.4: Update interactive state via active field configuration
+            
             this.active = true;
             selectionStartX = (int) mouseButtonEvent.x();
             selectionStartY = (int) mouseButtonEvent.y();
@@ -122,7 +111,7 @@ public class SkillSelector extends AbstractWidget {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent mouseButtonEvent) {
-        // Factual Fix 1.21.4: Use direct active field lookup
+        
         if (this.active) {
             addSelectedSkills(mouseButtonEvent.x(), mouseButtonEvent.y());
             this.active = false;

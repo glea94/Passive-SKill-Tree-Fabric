@@ -4,7 +4,7 @@ import daripher.skilltree.util.event.PSTEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
-/** Équivalent de net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed. */
+
 public class BreakSpeedPSTEvent extends PSTEvent {
     private final Player player;
     private final BlockState state;

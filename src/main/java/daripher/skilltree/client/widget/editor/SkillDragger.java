@@ -1,7 +1,7 @@
 package daripher.skilltree.client.widget.editor;
 
 import daripher.skilltree.skill.PassiveSkill;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -18,13 +18,13 @@ public class SkillDragger extends AbstractWidget {
     private double totalDragY;
 
     public SkillDragger(SkillTreeEditor editor) {
-        // Factual Fix 1.21.4: AbstractWidget constructor strictly requires x, y, width, height, and message
+        
         super(0, 0, 0, 0, Component.empty());
         this.editor = editor;
     }
 
     @Override
-    protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (showGrid) {
             int width = editor.getScreenWidth();
             int height = editor.getScreenHeight();
@@ -42,7 +42,7 @@ public class SkillDragger extends AbstractWidget {
                 float y = gridY * i;
                 graphics.fill(-width, (int) (-1 + y), width, (int) (1 + y), 0x55CFCFCF);
             }
-            graphics.pose().popPose();
+            graphics.pose().popMatrix();
         }
     }
 

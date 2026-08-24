@@ -21,11 +21,11 @@ import java.util.Objects;
 
 public class ClientNetworking {
     public static void register() {
-        // En 1.21.4, l'exécution est déjà synchronisée sur le thread principal par Fabric lors de la réception du payload
+        
         ClientPlayNetworking.registerGlobalReceiver(SyncServerDataMessage.TYPE, (message, context) -> {
-            // Fix 26.2 : le decode() du STREAM_CODEC ne fait que copier le buffer brut, il n'appliquait jamais les
-            // données (contrairement à ce que laissait penser ce commentaire) ; lecture dans le même ordre que
-            // l'écriture côté serveur (writePassiveSkills puis writePassiveSkillTrees dans SyncServerDataMessage#encode)
+            
+            
+            
             RegistryFriendlyByteBuf buf = message.getDataBuffer();
             SkillsReloader.loadFromByteBuf(buf);
             SkillTreesReloader.loadFromByteBuf(buf);
@@ -39,7 +39,7 @@ public class ClientNetworking {
             handleOpenSkillTreeEditor(context.client(), message);
         });
 
-        // Ajouté 1.21.5 : reçoit et met en cache les recettes Workbench (RecipeAccess client ne les expose plus)
+        
         ClientPlayNetworking.registerGlobalReceiver(SyncWorkbenchRecipesMessage.TYPE, (message, context) -> {
             ClientWorkbenchRecipeCache.set(message.recipes);
         });
@@ -67,16 +67,16 @@ public class ClientNetworking {
     }
 
     public static void sendGainSkillPoint() {
-        // 1. Envoi réel du paquet au serveur
+        
         ClientPlayNetworking.send(new GainSkillPointMessage());
 
-        // 2. FEINTE VISUELLE : Rafraîchissement instantané de l'affichage client
+        
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player != null && minecraft.gui.screen() instanceof SkillTreeScreen screen) {
             IPlayerSkills capability = PlayerSkillsProvider.get(minecraft.player);
-            // On incrémente localement le compteur de points
+            
             capability.setSkillPoints(capability.getSkillPoints() + 1);
-            // On force l'écran de l'arbre de compétences à recalculer et à s'initialiser
+            
             screen.updateSkillPoints(capability.getSkillPoints());
             screen.init();
         }

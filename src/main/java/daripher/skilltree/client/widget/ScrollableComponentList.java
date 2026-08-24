@@ -2,7 +2,7 @@ package daripher.skilltree.client.widget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -18,14 +18,14 @@ public class ScrollableComponentList extends AbstractWidget {
     private int scroll;
 
     public ScrollableComponentList(int y, int maxHeight) {
-        // Fix 1.21.5 : AbstractWidget exige désormais (x, y, width, height, Component) — largeur/hauteur réelles
-        // fixées ensuite par setComponents() via setWidth()/setHeight()
+        
+        
         super(0, y, 0, 0, Component.empty());
         this.maxHeight = maxHeight;
     }
 
     @Override
-    public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (components.isEmpty()) {
             return;
         }
@@ -34,46 +34,27 @@ public class ScrollableComponentList extends AbstractWidget {
         renderScrollBar(graphics);
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    private void renderBackground(@NotNull GuiGraphics graphics) {
-        graphics.fill(getX(), getY(), getX() + width, getY() + height, 0xDD000000);
-=======
     private void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
-        // Factual Fix 1.21.4: Replace legacy field 'width' and 'height' access with standard encapsulated getters
+        
         graphics.fill(getX(), getY(), getX() + this.getWidth(), getY() + this.getHeight(), 0xDD000000);
->>>>>>> Stashed changes
-=======
-    private void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
-        // Factual Fix 1.21.4: Replace legacy field 'width' and 'height' access with standard encapsulated getters
-        graphics.fill(getX(), getY(), getX() + this.getWidth(), getY() + this.getHeight(), 0xDD000000);
->>>>>>> Stashed changes
     }
 
-    private void renderText(@NotNull GuiGraphics graphics) {
+    private void renderText(@NotNull GuiGraphicsExtractor graphics) {
         Font font = Minecraft.getInstance().font;
         for (int i = scroll; i < maxLines + scroll; i++) {
             if (i >= components.size()) break;
             Component component = components.get(i);
             int x = getX() + 5;
             int y = getY() + 5 + (i - scroll) * (font.lineHeight + 3);
-            graphics.drawString(font, component, x, y, 0x7B7BE5);
+            
+            
+            graphics.text(font, component, x, y, 0xFF7B7BE5);
         }
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    private void renderScrollBar(@NotNull GuiGraphics graphics) {
-=======
     private void renderScrollBar(@NotNull GuiGraphicsExtractor graphics) {
         int currentWidth = this.getWidth();
         int currentHeight = this.getHeight();
->>>>>>> Stashed changes
-=======
-    private void renderScrollBar(@NotNull GuiGraphicsExtractor graphics) {
-        int currentWidth = this.getWidth();
-        int currentHeight = this.getHeight();
->>>>>>> Stashed changes
         if (components.size() > maxLines) {
             int scrollSize = currentHeight * maxLines / components.size();
             int maxScroll = components.size() - maxLines;
@@ -87,7 +68,7 @@ public class ScrollableComponentList extends AbstractWidget {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        // Factual Fix 1.21.4: Use updated vertical scroll values securely
+        
         int maxScroll = components.size() - maxLines;
         if (scrollY < 0 && scroll < maxScroll) {
             scroll++;
@@ -110,7 +91,7 @@ public class ScrollableComponentList extends AbstractWidget {
             }
         }
         calculatedWidth += 14;
-        // Factual Fix 1.21.4: Alter dimensions safely using encapsulated setters
+        
         this.setWidth(calculatedWidth);
 
         int calculatedHeight = components.size() * (font.lineHeight + 3) + 10;

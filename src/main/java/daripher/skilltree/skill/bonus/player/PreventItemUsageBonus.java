@@ -145,13 +145,13 @@ public final class PreventItemUsageBonus implements SkillBonus<PreventItemUsageB
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public PreventItemUsageBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new PreventItemUsageBonus(NetworkHelper.readItemPredicate(buf));
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof PreventItemUsageBonus aBonus)) {

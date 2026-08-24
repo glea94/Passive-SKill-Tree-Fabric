@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
-/** Portage Fabric : logique identique. */
+
 public class StealthBonusHandler {
     public static void register() {
         PSTEvents.LIVING_VISIBILITY.register(StealthBonusHandler::applyVisibilityMultiplier);
@@ -30,7 +30,7 @@ public class StealthBonusHandler {
         for (StealthBonus skillBonus : skillBonuses) {
             stealthMultiplier += skillBonus.getStealthMultiplier(player, lookingEntity);
         }
-        // Modifies the final detection scale parameter safely on the event pipeline capsule
+        
         event.modifyVisibility(1f - stealthMultiplier);
     }
 }

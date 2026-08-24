@@ -9,12 +9,12 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import java.util.HashMap;
 import java.util.Map;
 
-// Factual Fix 1.21.4: TransientCraftingContainer has been removed. Extend SimpleContainer to function as a modern RecipeInput layout.
+
 public class WorkbenchContainer extends SimpleContainer implements RecipeInput {
     public final WorkbenchMenu menu;
 
     public WorkbenchContainer(WorkbenchMenu menu) {
-        // Initializes a layout storage grid with 10 slots (5 columns * 2 rows)
+        
         super(10);
         this.menu = menu;
     }
@@ -27,7 +27,7 @@ public class WorkbenchContainer extends SimpleContainer implements RecipeInput {
         return getItem(0);
     }
 
-    // Factual Fix 1.21.4: Implement standard layout contract requirements for modern RecipeInput matching
+    
     @Override
     public int size() {
         return this.getContainerSize();

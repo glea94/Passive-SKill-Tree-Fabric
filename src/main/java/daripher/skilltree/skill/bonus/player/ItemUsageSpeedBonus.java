@@ -243,7 +243,7 @@ public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public ItemUsageSpeedBonus deserialize(RegistryFriendlyByteBuf buf) {
             float multiplier = buf.readFloat();
@@ -254,7 +254,7 @@ public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemUsageSpeedBonus aBonus)) {

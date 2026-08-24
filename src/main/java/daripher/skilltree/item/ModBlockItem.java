@@ -9,6 +9,6 @@ import net.minecraft.world.level.block.Block;
 
 public class ModBlockItem extends BlockItem {
     public ModBlockItem(RegistryObject<Block> blockRegistryObject) {
-        super(blockRegistryObject.get(), new Properties().setId(ResourceKey.create(Registries.ITEM, DeferredRegister.currentId())));
+        super(blockRegistryObject.get(), new Properties().useBlockDescriptionPrefix().setId(ResourceKey.create(Registries.ITEM, DeferredRegister.currentId())));
     }
 }

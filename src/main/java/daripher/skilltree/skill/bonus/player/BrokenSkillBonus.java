@@ -57,7 +57,7 @@ public class BrokenSkillBonus implements SkillBonus<BrokenSkillBonus> {
 
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<BrokenSkillBonus> consumer) {
-        // Safe placeholder for error tracking definitions
+        
     }
 
     public static class Serializer implements SkillBonus.Serializer {
@@ -87,14 +87,14 @@ public class BrokenSkillBonus implements SkillBonus<BrokenSkillBonus> {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public BrokenSkillBonus deserialize(RegistryFriendlyByteBuf buf) {
             String errorMessage = buf.readUtf();
             return new BrokenSkillBonus(errorMessage);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             BrokenSkillBonus validBonus = validateBonus(bonus);

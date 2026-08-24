@@ -14,7 +14,7 @@ public abstract class PlayerBreakSpeedMixin {
     @Inject(method = "getDestroySpeed", at = @At("RETURN"), cancellable = true, require = 1)
     private void skilltree$onGetDestroySpeed(BlockState state, CallbackInfoReturnable<Float> cir) {
         Player self = (Player) (Object) this;
-        // Fires your custom event capsule to calculate block breaking passives before applying the mining speed
+        
         BreakSpeedPSTEvent event = new BreakSpeedPSTEvent(self, state, cir.getReturnValue());
         PSTEvents.BREAK_SPEED.post(event);
 

@@ -46,7 +46,7 @@ public class SkillRequirementEditor extends EditorMenu {
         editor.getSelectedSkills().forEach(s -> removeRequirement(s, selectedRequirement));
         editor.saveSelectedSkills();
 
-        // Factual Fix 1.21.4: Clear ongoing widget trees safely and isolate the backward layout navigation task
+        
         editor.clearWidgets();
         editor.selectMenu(previousMenu);
         editor.rebuildWidgets();

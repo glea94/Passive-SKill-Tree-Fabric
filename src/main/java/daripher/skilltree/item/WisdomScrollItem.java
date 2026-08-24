@@ -42,7 +42,7 @@ public class WisdomScrollItem extends Item {
             itemInHand.shrink(1);
         }
 
-        // Fix 1.21.9 : isClientSide champ private, méthode isClientSide() confirmée par décompilation
+        
         if (!level.isClientSide()) {
             level.playSound(null, player, SoundEvents.BOOK_PAGE_TURN, player.getSoundSource(), 0.9F, 0.7F + player.getRandom().nextFloat() * 0.3F);
             level.playSound(null, player, SoundEvents.PLAYER_LEVELUP, player.getSoundSource(), 0.4F, 0.2F + player.getRandom().nextFloat() * 0.3F);

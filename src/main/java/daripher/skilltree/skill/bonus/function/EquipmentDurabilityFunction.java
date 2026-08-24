@@ -144,14 +144,14 @@ public class EquipmentDurabilityFunction implements FloatFunction<EquipmentDurab
             return tag;
         }
 
-        // Factual Fix 1.21.4 : Utilisation obligatoire de RegistryFriendlyByteBuf
+        
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return new EquipmentDurabilityFunction(itemStackPredicate);
         }
 
-        // Factual Fix 1.21.4 : Utilisation obligatoire de RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof EquipmentDurabilityFunction aProvider)) {

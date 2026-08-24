@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "III",
+    "G#G",
+    "CCC"
+  ],
+  "key": {
+    "I": "#c:ingots/iron",
+    "G": "#c:ingots/gold",
+    "C": "#c:ingots/copper",
+    "#": "minecraft:smithing_table"
+  },
+  "result": {
+    "id": "skilltree:workbench",
+    "count": 1
+  }
+}

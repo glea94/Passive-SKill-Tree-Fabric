@@ -1,8 +1,10 @@
 package daripher.skilltree.inventory.menu;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.RecipeManager;
+import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.network.ClientWorkbenchRecipeCache;
 import daripher.skilltree.init.PSTBlocks;
 import daripher.skilltree.init.PSTMenuTypes;
@@ -12,14 +14,17 @@ import daripher.skilltree.inventory.slot.WorkbenchResultSlot;
 import daripher.skilltree.inventory.slot.WorkbenchIngredientSlot;
 import daripher.skilltree.recipe.workbench.AbstractWorkbenchRecipe;
 import daripher.skilltree.recipe.workbench.WorkbenchVanillaCraftingRecipe;
+import daripher.skilltree.recipe.workbench.WorkbenchVanillaSmithingRecipe;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.CraftedItemBonusBonus;
+import daripher.skilltree.skill.bonus.predicate.item.EquipmentPredicate;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.SmithingTransformRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.Recipe;
@@ -106,7 +111,7 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         } else if (slotIndex >= INV_SLOT_START && slotIndex < HOTBAR_SLOT_END) {
             if (!moveItemStackTo(clickedStack, CRAFT_SLOT_START, CRAFT_SLOT_END, false)) {
                 if (slotIndex < INV_SLOT_END) {
-                    // Factual Fix 1.21.4: Swapped invalid placeholders with real class fields
+
                     if (!moveItemStackTo(clickedStack, HOTBAR_SLOT_START, HOTBAR_SLOT_END, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -154,6 +159,9 @@ public class WorkbenchMenu extends AbstractContainerMenu {
             RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder = getSelectedRecipeHolder();
             if (selectedRecipeHolder != null) {
                 updateCraftingResult(selectedRecipeHolder);
+
+
+                broadcastChanges();
             }
         }
         return true;
@@ -173,6 +181,17 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder = getSelectedRecipeHolder();
         if (selectedRecipeHolder != null) {
             updateCraftingResult(selectedRecipeHolder);
+
+
+
+
+
+
+
+            broadcastChanges();
+            if (recipeListUpdateListener != null) {
+                recipeListUpdateListener.run();
+            }
             return;
         }
         if (!ItemStack.isSameItemSameComponents(input, prevInput)) {
@@ -194,28 +213,29 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         if (!recipe.matches(workbenchContainer, level)) {
             resultSlots.setItem(0, ItemStack.EMPTY);
         } else {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            if (!level.isClientSide) {
-                ItemStack craftResult = selectedRecipe.assemble(workbenchContainer, level.registryAccess());
-=======
-            // Fix 1.21.9 : isClientSide champ private, méthode isClientSide() confirmée par décompilation
+
             if (!level.isClientSide()) {
                 ItemStack craftResult = recipe.assemble(workbenchContainer);
->>>>>>> Stashed changes
-=======
-            // Fix 1.21.9 : isClientSide champ private, méthode isClientSide() confirmée par décompilation
-            if (!level.isClientSide()) {
-                ItemStack craftResult = recipe.assemble(workbenchContainer);
->>>>>>> Stashed changes
-                addCraftingBonuses(craftResult);
+                addCraftingBonuses(craftResult, recipe);
                 resultSlots.setRecipeUsed(selectedRecipeHolder);
                 resultSlots.setItem(0, craftResult);
             }
         }
     }
-    public void addCraftingBonuses(ItemStack craftResult) {
-        SkillBonusProvider.getMergedSkillBonuses(player, CraftedItemBonusBonus.class).forEach(bonus -> bonus.itemCrafted(craftResult));
+    public void addCraftingBonuses(ItemStack craftResult, Identifier usedRecipeId) {
+        SkillBonusProvider.getMergedSkillBonuses(player, CraftedItemBonusBonus.class).forEach(bonus -> bonus.itemCrafted(craftResult, usedRecipeId));
+    }
+
+    
+    public void addCraftingBonuses(ItemStack craftResult, AbstractWorkbenchRecipe recipe) {
+        boolean isNetheriteLikeUpgrade = recipe instanceof WorkbenchVanillaSmithingRecipe;
+        boolean bonusesAlreadyCarriedOverByTransmute = isNetheriteLikeUpgrade
+                && EquipmentPredicate.isTool(craftResult)
+                && !EquipmentPredicate.isMeleeWeapon(craftResult);
+        if (bonusesAlreadyCarriedOverByTransmute) {
+            return;
+        }
+        addCraftingBonuses(craftResult, recipe.getId());
     }
 
     private void setupRecipeList() {
@@ -227,6 +247,18 @@ public class WorkbenchMenu extends AbstractContainerMenu {
                 .toList();
     }
 
+    public static void clearRecipeCache() {
+
+
+
+
+
+
+
+
+        WORKBENCH_RECIPE_CACHE.clear();
+    }
+
     private List<RecipeHolder<AbstractWorkbenchRecipe>> getAllWorkbenchRecipes() {
         if (!WORKBENCH_RECIPE_CACHE.isEmpty()) {
             return WORKBENCH_RECIPE_CACHE;
@@ -235,21 +267,66 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         if (this.level.getServer() != null) {
             RecipeManager recipeManager = this.level.getServer().getRecipeManager();
 
-            // Factual Fix 1.21.5 : CraftingRecipe#getResultItem(RegistryAccess) a été retiré de l'interface Recipe<T>,
-            // remplacé par le système RecipeDisplay (confirmé par décompilation Fernflower de Recipe<T>, RecipeDisplay
-            // et SlotDisplay) : Recipe#display() -> List<RecipeDisplay>, RecipeDisplay#result() -> SlotDisplay,
-            // SlotDisplay#resolveForFirstStack(ContextMap) -> ItemStack. Le ContextMap est construit via
-            // SlotDisplayContext.fromLevel(Level), qui y injecte REGISTRIES (HolderLookup.Provider) et FUEL_VALUES.
+
+
+
+
+
             List<RecipeHolder<CraftingRecipe>> vanillaCraftingRecipes = recipeManager.getRecipes().stream()
                     .filter(holder -> holder.value().getType() == RecipeType.CRAFTING)
                     .map(holder -> new RecipeHolder<>(holder.id(), (CraftingRecipe) holder.value()))
                     .filter(recipe -> {
-                        List<RecipeDisplay> displays = recipe.value().display();
-                        if (displays.isEmpty()) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        try {
+                            List<RecipeDisplay> displays = recipe.value().display();
+                            if (displays.isEmpty()) {
+                                return false;
+                            }
+                            ItemStack previewResult = displays.get(0).result().resolveForFirstStack(SlotDisplayContext.fromLevel(this.level));
+                            return !previewResult.isEmpty();
+                        } catch (Exception e) {
+                            SkillTreeMod.LOGGER.warn("Skipping broken recipe display for {} in advanced workbench", recipe.id(), e);
                             return false;
                         }
-                        ItemStack previewResult = displays.get(0).result().resolveForFirstStack(SlotDisplayContext.fromLevel(this.level));
-                        return !previewResult.isEmpty();
+                    })
+                    .toList();
+
+
+
+
+
+            List<RecipeHolder<SmithingTransformRecipe>> vanillaSmithingRecipes = recipeManager.getRecipes().stream()
+                    .filter(holder -> holder.value().getType() == RecipeType.SMITHING)
+                    .filter(holder -> holder.value() instanceof SmithingTransformRecipe)
+                    .map(holder -> new RecipeHolder<>(holder.id(), (SmithingTransformRecipe) holder.value()))
+                    .filter(recipe -> {
+
+
+
+                        try {
+                            List<RecipeDisplay> displays = recipe.value().display();
+                            if (displays.isEmpty()) {
+                                return false;
+                            }
+                            ItemStack previewResult = displays.get(0).result().resolveForFirstStack(SlotDisplayContext.fromLevel(this.level));
+                            return !previewResult.isEmpty();
+                        } catch (Exception e) {
+                            SkillTreeMod.LOGGER.warn("Skipping broken smithing recipe display for {} in advanced workbench", recipe.id(), e);
+                            return false;
+                        }
                     })
                     .toList();
 
@@ -262,6 +339,13 @@ public class WorkbenchMenu extends AbstractContainerMenu {
                 WORKBENCH_RECIPE_CACHE.add(new RecipeHolder<>(
                         vanillaHolder.id(),
                         new WorkbenchVanillaCraftingRecipe(vanillaHolder, this.level.registryAccess())
+                ));
+            }
+
+            for (RecipeHolder<SmithingTransformRecipe> vanillaHolder : vanillaSmithingRecipes) {
+                WORKBENCH_RECIPE_CACHE.add(new RecipeHolder<>(
+                        vanillaHolder.id(),
+                        new WorkbenchVanillaSmithingRecipe(vanillaHolder, this.level.registryAccess())
                 ));
             }
         } else {

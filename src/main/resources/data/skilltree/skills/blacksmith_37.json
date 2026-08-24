@@ -1,7 +1,32 @@
 {
   "id": "skilltree:blacksmith_37",
-  "bonuses": [],
-  "requirements": [],
+  "bonuses": [
+    {
+      "type": "skilltree:crafted_item_bonus",
+      "item_condition": {
+        "equipment_type": "armor",
+        "type": "skilltree:equipment_type"
+      },
+      "item_bonus": {
+        "type": "skilltree:item_bonus_list",
+        "inner_bonuses": [
+          {
+            "type": "skilltree:skill_bonus",
+            "skill_bonus": {
+              "type": "skilltree:cheat_death",
+              "cooldown_ticks": 6000
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "requirements": [
+    {
+      "type": "skilltree:learned_skill",
+      "skill_id": "skilltree:blacksmith_14"
+    }
+  ],
   "directConnections": [
     "skilltree:blacksmith_34"
   ],
@@ -9,10 +34,12 @@
   "oneWayConnections": [],
   "tags": [],
   "backgroundTexture": "skilltree:textures/icons/background/notable.png",
-  "iconTexture": "skilltree:textures/icons/void.png",
+  "iconTexture": "skilltree:textures/icons/blacksmith_defensive_notable_1.png",
   "borderTexture": "skilltree:textures/tooltip/lesser.png",
+  "titleColor": "",
   "positionX": 62.354973,
   "positionY": 107.99999,
   "buttonSize": 20,
-  "isStartingPoint": false
+  "isStartingPoint": false,
+  "isAlwaysStartingPoint": false
 }

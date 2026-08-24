@@ -15,10 +15,13 @@ import daripher.skilltree.client.network.ClientNetworking;
 import daripher.skilltree.skill.PassiveSkill;
 import daripher.skilltree.skill.PassiveSkillTree;
 import daripher.skilltree.skill.bonus.SkillBonus;
+import daripher.skilltree.skill.bonus.player.ExecuteCommandBonus;
+import daripher.skilltree.skill.bonus.player.RecipeUnlockBonus;
+import daripher.skilltree.skill.bonus.player.VanillaRecipeUnlockBonus;
 import daripher.skilltree.skill.requirement.SkillRequirement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.player.LocalPlayer;
@@ -26,7 +29,7 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,12 +39,13 @@ import java.util.function.Supplier;
 public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
     private final SkillButtons skills;
     private final PassiveSkillTree skillTree;
-    private final List<ResourceLocation> learnedSkills = new ArrayList<>();
-    public final List<ResourceLocation> newlyLearnedSkills = new ArrayList<>();
+    private final List<Identifier> learnedSkills = new ArrayList<>();
+    public final List<Identifier> newlyLearnedSkills = new ArrayList<>();
     private final List<SkillButton> startingPoints = new ArrayList<>();
     private final List<SkillButton> alwaysStartingPoints = new ArrayList<>();
     private Button buyButton;
     private Label pointsInfo;
+    private Label treeNameLabel;
     private ProgressBar progressBar;
     private ScrollableComponentList statsInfo;
     public int skillPoints;
@@ -51,7 +55,7 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
     private final LocalPlayer player;
 
     public SkillTreeWidgets(LocalPlayer player, SkillButtons skills, PassiveSkillTree skillTree) {
-        // Factual Fix 1.21.4: AbstractWidget constructor now strictly takes width, height, message
+
         super(0, 0, 0, 0);
         this.setX(0);
         this.setY(0);
@@ -65,10 +69,11 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
         int currentWidth = this.getWidth();
         int currentHeight = this.getHeight();
 
-        // Factual Fix 1.21.4: Replace legacy width/height field checks with encapsulated getters
+
         progressBar = new ProgressBar(currentWidth / 2 - 235 / 2, currentHeight - 17, b -> toggleProgressDisplayMode());
         progressBar.showProgressInNumbers = showProgressInNumbers;
         addWidget(progressBar);
+        addTreeNameLabel(currentWidth, currentHeight);
         addTopWidgets();
         if (!ServerConfig.enable_exp_exchange) {
             progressBar.visible = false;
@@ -85,16 +90,16 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
     }
 
     @Override
-    protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         updateBuyPointButton();
         Style pointsStyle = Style.EMPTY.withColor(0xFCE266);
         Component pointsLeft = Component.literal("" + skillPoints).withStyle(pointsStyle);
         pointsInfo.setMessage(Component.translatable("widget.skill_points_left", pointsLeft));
 
-        // Factual Fix 1.21.4: Replace layout fields width/height with getWidth()/getHeight() accessors
+
         statsInfo.setX(this.getWidth() - statsInfo.getWidth() - 10);
         statsInfo.visible = showStats;
-        super.renderWidget(graphics, mouseX, mouseY, partialTick);
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTick);
     }
 
     @Override
@@ -121,7 +126,7 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
     }
 
     private void playButtonSound() {
-        // Factual Fix 1.21.4: Use non-spatial fixed volume sound instantiations for direct UI feedback pipelines
+
         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
     private void updateSearch() {
@@ -155,7 +160,7 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
             return;
         }
         alwaysStartingPoints.stream().filter(button -> canLearnSkill(button.skill)).forEach(skillButton -> {
-            ResourceLocation skillId = skillButton.skill.getId();
+            Identifier skillId = skillButton.skill.getId();
             if (!newlyLearnedSkills.contains(skillId) && !learnedSkills.contains(skillId)) {
                 skillButton.setCanLearn();
             }
@@ -179,8 +184,17 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
         });
     }
 
-    private List<ResourceLocation> getLearnedSkillsOnTree() {
+    private List<Identifier> getLearnedSkillsOnTree() {
         return learnedSkills.stream().filter(skillTree.getSkillIds()::contains).toList();
+    }
+
+    
+    private void addTreeNameLabel(int currentWidth, int currentHeight) {
+        Component treeName = Component.translatable(skillTree.getId().toString());
+        Font font = Minecraft.getInstance().font;
+        int textWidth = font.width(treeName);
+        treeNameLabel = new Label(currentWidth / 2 - textWidth / 2, currentHeight - 30, treeName);
+        addWidget(treeNameLabel);
     }
 
     private void addTopWidgets() {
@@ -196,7 +210,7 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
         buttonWidth += 20;
         int buttonsY = 8;
 
-        // Factual Fix 1.21.4: Replace legacy field 'width' access with standard encapsulated getWidth()
+
         int currentWidth = this.getWidth();
 
         Button showStatsButton = new Button(currentWidth - buttonWidth - 8, buttonsY, buttonWidth, 14, showStatsButtonText);
@@ -223,8 +237,8 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
         cancelButton.setPressFunc(b -> cancelLearnSkills());
         addWidget(cancelButton);
 
-        // Fix 1.21.5 : Button.setActive(boolean) supprimé, le champ 'active' est désormais accessible directement
-        // (pattern déjà utilisé et validé ailleurs dans le projet : SkillButton.java, SkillMirrorer.java, SkillSelector.java)
+
+
         boolean hasNewlyLearned = !newlyLearnedSkills.isEmpty();
         confirmButton.active = hasNewlyLearned;
         cancelButton.active = hasNewlyLearned;
@@ -263,15 +277,11 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
     }
 
     private void confirmLearnSkills() {
-        // Fix : newlyLearnedSkills doit être vidé AVANT de déclencher les rebuilds via learnSkill(),
-        // car rebuildWidgets() (minecraft.execute) s'exécute de façon synchrone (même thread) et
-        // recréait le bouton confirm comme encore actif tant que la liste n'était pas encore vidée
-        // (le clear() se produisait après la boucle, donc trop tard pour le premier rebuild)
+
+
+
+
         List<Identifier> skillsToLearn = new ArrayList<>(newlyLearnedSkills);
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         newlyLearnedSkills.clear();
         skillsToLearn.forEach(id -> learnSkill(skills.getWidgetById(id).skill));
     }
@@ -346,7 +356,7 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
             return;
         }
         int pointCost = ServerConfig.getSkillPointCost(currentLevel);
-        // Fix 1.21.5 : Button.setActive(boolean) supprimé, assignation directe du champ 'active'
+
         buyButton.active = ExpHelper.getPlayerExp(player) >= pointCost;
     }
 
@@ -365,8 +375,14 @@ public class SkillTreeWidgets extends WidgetGroup<AbstractWidget> {
     private List<Component> getMergedSkillBonusesTooltips() {
         List<SkillBonus<?>> bonuses = new ArrayList<>();
         learnedSkills.stream().map(skills::getWidgetById).filter(Objects::nonNull).map(button -> button.skill).map(PassiveSkill::getBonuses)
-                .flatMap(List::stream).forEach(b -> addToMergeList(b, bonuses));
+                .flatMap(List::stream).filter(this::isDisplayedInStatsPanel).forEach(b -> addToMergeList(b, bonuses));
         return bonuses.stream().sorted().map(SkillBonus::getFullTooltip).flatMap(List::stream).map(Component.class::cast).toList();
+    }
+
+    private boolean isDisplayedInStatsPanel(SkillBonus<?> bonus) {
+        return !(bonus instanceof VanillaRecipeUnlockBonus)
+                && !(bonus instanceof RecipeUnlockBonus)
+                && !(bonus instanceof ExecuteCommandBonus);
     }
 
     public void updateSkillPoints(int skillPoints) {

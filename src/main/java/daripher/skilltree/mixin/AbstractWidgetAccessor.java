@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(AbstractWidget.class)
 public interface AbstractWidgetAccessor {
-    // Maps cleanly to the underlying UI primitive widget size components
+    
     @Accessor("width")
     void setWidth(int width);
 

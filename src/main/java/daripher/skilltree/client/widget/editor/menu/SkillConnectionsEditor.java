@@ -3,7 +3,7 @@ package daripher.skilltree.client.widget.editor.menu;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.skill.SkillConnection;
 import daripher.skilltree.skill.PassiveSkill;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
 
@@ -66,8 +66,8 @@ public class SkillConnectionsEditor extends EditorMenu {
         }
         editor.saveSelectedSkills();
 
-        // Factual Fix 1.21.4: Clear widgets tracking layouts before telling the screen to rebuild
-        // to prevent duplicate widget reference states during the input tick cycle.
+        
+        
         editor.clearWidgets();
         editor.rebuildWidgets();
     }
@@ -76,7 +76,7 @@ public class SkillConnectionsEditor extends EditorMenu {
         PassiveSkill[] selectedSkills = editor.getSelectedSkills().toArray(new PassiveSkill[0]);
         for (int i = 0; i < selectedSkills.length - 1; i++) {
             PassiveSkill skill = selectedSkills[i];
-            List<ResourceLocation> connections = switch (connectionType) {
+            List<Identifier> connections = switch (connectionType) {
                 case DIRECT -> skill.getDirectConnections();
                 case LONG -> skill.getLongConnections();
                 case ONE_WAY -> skill.getOneWayConnections();
@@ -85,7 +85,7 @@ public class SkillConnectionsEditor extends EditorMenu {
         }
         editor.saveSelectedSkills();
 
-        // Factual Fix 1.21.4: Reset screen reference arrays before reconstruction
+        
         editor.clearWidgets();
         editor.rebuildWidgets();
     }

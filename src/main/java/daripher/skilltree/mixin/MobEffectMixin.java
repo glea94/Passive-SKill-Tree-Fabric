@@ -24,14 +24,14 @@ public abstract class MobEffectMixin {
         }
     }
 
-    // Factual Fix 1.21.4: Retain target descriptor map to bind safely into the nullable Entity overload signature
+    
     @Inject(method = "addEffect(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z", at = @At("RETURN"), require = 1)
     private void skilltree$onAddEffect(MobEffectInstance effectInstance, Entity source, CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValue()) {
             return;
         }
         LivingEntity self = (LivingEntity) (Object) this;
-        // Factual Fix 1.21.4: effectInstance.getEffect() now returns a Holder<MobEffect> which is correctly digested by self.getEffect()
+        
         MobEffectInstance activeInstance = self.getEffect(effectInstance.getEffect());
         if (activeInstance == null) {
             return;

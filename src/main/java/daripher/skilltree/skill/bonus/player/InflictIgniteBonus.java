@@ -43,7 +43,7 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
     @Override
     public void applyEffect(LivingEntity target, @Nullable LivingEntity source) {
         if (target.getRandom().nextFloat() < chance) {
-            // Aligned 1.21.4: Utilizes the official native Mojang mapping hook for environmental ignites
+            
             target.igniteForSeconds(duration);
         }
     }
@@ -85,7 +85,7 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
 
     @Override
     public MutableComponent getSimpleTooltip() {
-        // Aligned 1.21.4: Multi-argument variant providing ticks per second frame rate boundaries safely
+        
         String durationDescription = StringUtil.formatTickDuration(duration * 20, 20.0F);
         String targetDescription = eventListener.getTarget().name().toLowerCase(Locale.ROOT);
         String bonusDescription = getDescriptionId() + "." + targetDescription;
@@ -201,7 +201,7 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public InflictIgniteBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -211,7 +211,7 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof InflictIgniteBonus aBonus)) {

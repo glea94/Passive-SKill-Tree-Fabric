@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-/** Portage Fabric : logique 100% identique, seule la souscription à LivingHurtEvent change. */
+
 public class SkillBonusHandlerUtils {
     public static final String LAST_ATTACK_TARGET_TAG_NAME = "LastAttackTarget";
 

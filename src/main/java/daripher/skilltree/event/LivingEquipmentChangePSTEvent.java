@@ -5,7 +5,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
-/** Équivalent de net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent. */
+
 public class LivingEquipmentChangePSTEvent extends PSTEvent {
     private final LivingEntity entity;
     private final EquipmentSlot slot;

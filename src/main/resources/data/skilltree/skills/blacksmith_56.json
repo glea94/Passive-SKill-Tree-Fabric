@@ -1,6 +1,46 @@
 {
   "id": "skilltree:blacksmith_56",
-  "bonuses": [],
+  "bonuses": [
+    {
+      "type": "skilltree:crafted_item_bonus",
+      "item_condition": {
+        "equipment_type": "shield",
+        "type": "skilltree:equipment_type"
+      },
+      "item_bonus": {
+        "type": "skilltree:item_bonus_list",
+        "inner_bonuses": [
+          {
+            "type": "skilltree:skill_bonus",
+            "skill_bonus": {
+              "type": "skilltree:healing",
+              "chance": 1.0,
+              "amount": 1.0,
+              "event_listener": {
+                "cooldown": 100,
+                "type": "skilltree:ticking"
+              },
+              "percentage_healing": false
+            }
+          },
+          {
+            "type": "skilltree:skill_bonus",
+            "skill_bonus": {
+              "type": "skilltree:attribute",
+              "attribute": "minecraft:armor_toughness",
+              "id": "skilltree:f1429042-5db9-45df-a596-91c6f88d06ca",
+              "amount": 0.3,
+              "operation": "add_multiplied_base",
+              "player_condition": {
+                "reverse_logic": false,
+                "type": "skilltree:crouching"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
   "requirements": [],
   "directConnections": [
     "skilltree:blacksmith_53"
@@ -9,10 +49,12 @@
   "oneWayConnections": [],
   "tags": [],
   "backgroundTexture": "skilltree:textures/icons/background/keystone.png",
-  "iconTexture": "skilltree:textures/icons/void.png",
+  "iconTexture": "skilltree:textures/icons/blacksmith_subclass_2_life_notable_1.png",
   "borderTexture": "skilltree:textures/tooltip/lesser.png",
+  "titleColor": "",
   "positionX": 3.8146973E-6,
   "positionY": 144.00398,
   "buttonSize": 32,
-  "isStartingPoint": false
+  "isStartingPoint": false,
+  "isAlwaysStartingPoint": false
 }

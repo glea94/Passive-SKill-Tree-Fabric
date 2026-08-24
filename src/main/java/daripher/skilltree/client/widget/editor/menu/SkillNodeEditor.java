@@ -10,7 +10,7 @@ import daripher.skilltree.skill.PassiveSkill;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.requirement.SkillRequirement;
 import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 import org.jetbrains.annotations.Nullable;
@@ -59,7 +59,7 @@ public class SkillNodeEditor extends EditorMenu {
     private void createSkills(float angle, float distance, SkillFactory skillFactory) {
         editor.getSelectedSkills().forEach(skill -> createSkill(distance, angle, skill, skillFactory));
 
-        // Factual Fix 1.21.4: Map structural SkillFactory footprints to match SkillMirrorer's updated inner interface type
+        
         editor.getSkillMirrorer().createSkills(angle, distance, skillFactory::accept);
 
         editor.clearWidgets();
@@ -75,7 +75,7 @@ public class SkillNodeEditor extends EditorMenu {
     }
 
     private void createSkillCopy(float x, float y, PassiveSkill original) {
-        ResourceLocation skillTreeId = editor.getSkillTree().getId();
+        Identifier skillTreeId = editor.getSkillTree().getId();
         PassiveSkill skill = new PassiveSkill(createNewSkillId(skillTreeId), original.getSkillSize(), original.getFrameTexture(), original.getIconTexture(), original.getTooltipFrameTexture(), original.isStartingPoint());
         skill.setPosition(x, y);
         skill.setStartingPoint(original.isStartingPoint());
@@ -96,23 +96,10 @@ public class SkillNodeEditor extends EditorMenu {
     }
 
     private void createNewSkill(float x, float y, @Nullable PassiveSkill original) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        ResourceLocation background = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/icons/background/lesser.png");
-        ResourceLocation icon = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/icons/void.png");
-        ResourceLocation border = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/tooltip/lesser.png");
-        ResourceLocation skillTreeId = editor.getSkillTree().getId();
-=======
-=======
->>>>>>> Stashed changes
         Identifier background = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/icons/background/lesser.png");
         Identifier icon = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/icons/void.png");
         Identifier border = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/tooltip/lesser.png");
         Identifier skillTreeId = editor.getSkillTree().getId();
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         PassiveSkill skill = new PassiveSkill(createNewSkillId(skillTreeId), 16, background, icon, border, false);
         skill.setPosition(x, y);
         if (original != null && shouldConnect) {
@@ -124,19 +111,11 @@ public class SkillNodeEditor extends EditorMenu {
         SkillTreeEditorData.saveEditorSkillTree(editor.getSkillTree());
     }
 
-    public static ResourceLocation createNewSkillId(ResourceLocation skillTreeId) {
-        ResourceLocation id;
+    public static Identifier createNewSkillId(Identifier skillTreeId) {
+        Identifier id;
         int counter = 1;
         do {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            id = new ResourceLocation("skilltree", skillTreeId.getPath() + "_" + counter++);
-=======
             id = Identifier.fromNamespaceAndPath("skilltree", skillTreeId.getPath() + "_" + counter++);
->>>>>>> Stashed changes
-=======
-            id = Identifier.fromNamespaceAndPath("skilltree", skillTreeId.getPath() + "_" + counter++);
->>>>>>> Stashed changes
         } while (SkillTreeEditorData.getEditorSkill(id) != null);
         return id;
     }

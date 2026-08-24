@@ -32,31 +32,15 @@ import daripher.skilltree.skill.bonus.predicate.living.LivingEntityPredicate;
 import daripher.skilltree.skill.requirement.SkillRequirement;
 import daripher.skilltree.skill.requirement.StatRequirement;
 import net.minecraft.ChatFormatting;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import net.minecraft.client.gui.GuiGraphics;
-=======
-=======
->>>>>>> Stashed changes
 import net.minecraft.core.Holder;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
->>>>>>> Stashed changes
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import net.minecraft.resources.ResourceLocation;
-=======
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
->>>>>>> Stashed changes
-=======
-import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
->>>>>>> Stashed changes
 import net.minecraft.stats.StatType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -80,7 +64,7 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     private @NotNull EditorMenu selectedMenu = new MainEditorMenu(this);
 
     public SkillTreeEditor(SkillButtons skillButtons) {
-        // Factual Fix 1.21.4: WidgetGroup constructor strictly takes x, y, width, height
+        
         super(0, 0, 0, 0);
         this.skillButtons = skillButtons;
         this.skillSelector = new SkillSelector(this, skillButtons);
@@ -98,31 +82,15 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     }
 
     @Override
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        skillMirrorer.render(graphics, mouseX, mouseY, partialTick);
-        skillDragger.render(graphics, mouseX, mouseY, partialTick);
-        if (height > 0) {
-            graphics.fill(getX(), getY(), getX() + width, getY() + height, 0xDD000000);
-        }
-        super.render(graphics, mouseX, mouseY, partialTick);
-=======
-=======
->>>>>>> Stashed changes
     protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         skillMirrorer.extractRenderState(graphics, mouseX, mouseY, partialTick);
         skillDragger.extractRenderState(graphics, mouseX, mouseY, partialTick);
 
-        // Factual Fix 1.21.4: Replaced raw field access with encapsulated dimension getters
+        
         if (this.getHeight() > 0) {
             graphics.fill(getX(), getY(), getX() + this.getWidth(), getY() + this.getHeight(), 0xDD000000);
         }
         super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTick);
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     }
     @Override
     public boolean keyPressed(KeyEvent keyEvent) {
@@ -152,7 +120,7 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     }
 
     public Button addButton(int x, int y, int width, int height, Component message) {
-        // Factual Fix 1.21.4: Call your corrected custom button wrapper class directly without extraneous lambda parameters
+        
         return addWidget(new daripher.skilltree.client.widget.Button(getWidgetsX(x), getWidgetsY(y), width, height, message));
     }
 
@@ -186,15 +154,6 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
         return addWidget(new CheckBox(getWidgetsX(x), getWidgetsY(y), value));
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public TextureSelectionMenuButton addTextureSelectionMenu(int x, int y, int width, ResourceLocation currentValue, String folder) {
-        Collection<ResourceLocation> values = SkillTexturesData.getTexturesInFolder(folder);
-        x = getWidgetsX(x);
-        y = getWidgetsY(y);
-=======
-=======
->>>>>>> Stashed changes
     public TextureSelectionMenuButton addTextureSelectionMenu(int x, int y, int width, Identifier currentValue, String folder) {
         Collection<Identifier> values = SkillTexturesData.getTexturesInFolder(folder);
         int finalX = getWidgetsX(x);
@@ -233,19 +192,13 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     }
 
     private static @Nullable <T> StatRequirement createDefaultRequirement(StatType<T> statType) {
-        ResourceLocation statId = BuiltInRegistries.STAT_TYPE.getKey(statType);
+        Identifier statId = BuiltInRegistries.STAT_TYPE.getKey(statType);
         Registry<T> statRegistry = statType.getRegistry();
 
         T stat = statRegistry.stream().findFirst().orElse(null);
         if (stat == null) {
             return null;
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        return new StatRequirement(statId, statRegistry.getKey(stat), 1);
-=======
-=======
->>>>>>> Stashed changes
         Identifier entryId = statRegistry.getKey(stat);
         if (entryId == null) {
             return null;
@@ -298,14 +251,14 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
     }
 
     public SelectionMenuButton<MobEffect> addSelectionMenu(int x, int y, int width, MobEffect defaultValue) {
-        // Aligned 1.21.4: Direct type-safe stream gathering from registries
+        
         Collection<MobEffect> values = BuiltInRegistries.MOB_EFFECT.stream().toList();
         return addSelectionMenu(x, y, width, values).setValue(defaultValue)
                 .setElementNameGetter(e -> Component.literal(e.getDescriptionId()));
     }
 
     public SelectionMenuButton<Holder<MobEffect>> addSelectionMenu(int x, int y, int width, Holder<MobEffect> defaultValue) {
-        // Fix 26.2: MobEffect selection now flows through Holder<MobEffect> (effectInstance.getEffect() / registry entries)
+        
         Collection<Holder<MobEffect>> values = BuiltInRegistries.MOB_EFFECT.listElements()
                 .map(h -> (Holder<MobEffect>) h).toList();
         return addSelectionMenu(x, y, width, values).setValue(defaultValue)
@@ -440,7 +393,7 @@ public class SkillTreeEditor extends WidgetGroup<AbstractWidget> {
         skillButtons.getWidgets().removeIf(button -> button.skill == skill);
     }
 
-    public SkillButton getSkillButton(ResourceLocation skillId) {
+    public SkillButton getSkillButton(Identifier skillId) {
         return skillButtons.getWidgetById(skillId);
     }
 

@@ -15,7 +15,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 
 import java.util.List;
 
-/** Portage Fabric : logique identique. */
+
 public class EffectDurationBonusHandler {
     public static void register() {
         PSTEvents.MOB_EFFECT_ADDED.register(EffectDurationBonusHandler::applyEffectDurationBonuses);
@@ -36,11 +36,11 @@ public class EffectDurationBonusHandler {
         float durationMultiplier = 1f;
         MobEffectInstance effectInstance = event.getEffectInstance();
 
-        // Aligned 1.21.4: Map status effect holders down cleanly using value() to evaluate bonus layers
+        
         Holder<MobEffect> mobEffectHolder = effectInstance.getEffect();
         MobEffect mobEffect = mobEffectHolder.value();
 
-        // Outgoing effects, inflicted by players
+        
         if (playerEffectSource != null) {
             List<EffectDurationBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(playerEffectSource, EffectDurationBonus.class);
             for (EffectDurationBonus skillBonus : skillBonuses) {
@@ -49,7 +49,7 @@ public class EffectDurationBonusHandler {
                 }
             }
         }
-        // Incoming effects, inflicted onto players
+        
         if (target instanceof Player playerTarget) {
             List<EffectDurationBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(playerTarget, EffectDurationBonus.class);
             for (EffectDurationBonus skillBonus : skillBonuses) {

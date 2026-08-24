@@ -16,17 +16,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WorkbenchItemBonusRecipeBuilder {
-    private final ResourceLocation id;
+    private final Identifier id;
     private ItemStackPredicate baseItemStackPredicate;
     private final Map<Ingredient, Integer> ingredients = new HashMap<>();
     private boolean requiresPassiveSkill;
     private ItemBonus<?> itemBonus;
 
-    private WorkbenchItemBonusRecipeBuilder(ResourceLocation id) {
+    private WorkbenchItemBonusRecipeBuilder(Identifier id) {
         this.id = id;
     }
 
-    public static WorkbenchItemBonusRecipeBuilder create(ResourceLocation id) {
+    public static WorkbenchItemBonusRecipeBuilder create(Identifier id) {
         return new WorkbenchItemBonusRecipeBuilder(id);
     }
 
@@ -60,7 +60,7 @@ public class WorkbenchItemBonusRecipeBuilder {
         WorkbenchUpgradeBonusRecipe recipe =
                 new WorkbenchUpgradeBonusRecipe(id, baseItemStackPredicate, ingredients, requiresPassiveSkill, itemBonus);
 
-        // Factual Fix 1.21.4: Convert the Identifier into a modern type-safe ResourceKey for the recipe registry
+        
         ResourceKey<Recipe<?>> recipeKey = ResourceKey.create(Registries.RECIPE, id);
         recipeOutput.accept(recipeKey, recipe, null);
     }

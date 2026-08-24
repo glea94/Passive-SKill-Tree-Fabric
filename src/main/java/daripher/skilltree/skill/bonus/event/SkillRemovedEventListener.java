@@ -122,7 +122,7 @@ public class SkillRemovedEventListener implements SkillEventListener {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Updated signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             SkillRemovedEventListener listener = new SkillRemovedEventListener();
@@ -130,7 +130,7 @@ public class SkillRemovedEventListener implements SkillEventListener {
             return listener;
         }
 
-        // Factual Fix 1.21.4: Updated signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof SkillRemovedEventListener aListener)) {

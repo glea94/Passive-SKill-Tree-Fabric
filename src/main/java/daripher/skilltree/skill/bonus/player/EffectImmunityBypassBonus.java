@@ -140,7 +140,7 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
 
     private void addEnemyConditionWidgets(SkillTreeEditor editor, Consumer<EffectImmunityBypassBonus> consumer) {
         enemyCondition.addEditorWidgets(editor, c -> {
-            // Factual Fix: Corrected typo to assign condition to enemy condition instead of player condition
+            
             setEnemyCondition(c);
             consumer.accept(this.copy());
         });
@@ -196,7 +196,7 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
             return compoundTag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public EffectImmunityBypassBonus deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectPredicate mobEffectPredicate = NetworkHelper.readMobEffectCondition(buf);
@@ -206,7 +206,7 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             EffectImmunityBypassBonus validBonus = validateBonus(bonus);
@@ -224,7 +224,7 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
-            // Factual Fix 1.21.4: Removed legacy .value() call since MobEffects.POISON is a registry Holder
+            
             return new EffectImmunityBypassBonus(new MobEffectIdPredicate(MobEffects.POISON));
         }
     }

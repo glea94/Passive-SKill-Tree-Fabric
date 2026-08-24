@@ -80,14 +80,14 @@ public class SkillBonusesEditor extends EditorMenu {
             }
         });
         editor.saveSelectedSkills();
-        // Factual Fix 1.21.4: Use local previousMenu reference directly to protect layout consistency
+        
         editor.selectMenu(previousMenu);
     }
 
     private void addSkillBonus(SkillTreeEditor editor, SkillBonus<?> skillBonus) {
         editor.getSelectedSkills().forEach(s -> s.getBonuses().add(skillBonus.copy()));
         editor.saveSelectedSkills();
-        // Factual Fix 1.21.4: Ensure predictable backward navigation layout tasks
+        
         editor.selectMenu(previousMenu);
     }
 }

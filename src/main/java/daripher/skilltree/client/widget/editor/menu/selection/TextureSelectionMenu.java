@@ -6,14 +6,14 @@ import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.editor.menu.EditorMenu;
 import daripher.skilltree.client.widget.TextField;
 import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
 public class TextureSelectionMenu extends EditorMenu {
-    private @NotNull Consumer<ResourceLocation> responder = v -> {
+    private @NotNull Consumer<Identifier> responder = v -> {
     };
     private final TextureSelectionList selectionList;
     private final Runnable onInit;
@@ -36,7 +36,7 @@ public class TextureSelectionMenu extends EditorMenu {
         editor.addLabel(0, 0, "Folder", ChatFormatting.GOLD);
         editor.increaseHeight(19);
 
-        // Factual Fix 1.21.4: Extracted out of a fluid chain to safeguard text field type boundaries
+        
         TextField folderField = editor.addTextField(0, 0, 200, 14, texturesFolder);
         folderField.setSoftFilter(SkillTexturesData::isTextureFolder);
         folderField.setSuggestionProvider(SkillTexturesData::autocompleteFolderName);
@@ -51,7 +51,7 @@ public class TextureSelectionMenu extends EditorMenu {
         editor.addLabel(0, 0, "Search", ChatFormatting.GOLD);
         editor.increaseHeight(19);
 
-        // Factual Fix 1.21.4: Extracted out of a fluent chain to completely resolve the "void cannot be dereferenced" compilation error
+        
         TextField searchField = editor.addTextField(0, 0, 200, 14, "");
         searchField.setFocused(true);
         searchField.setResponder(selectionList::setSearchString);
@@ -67,7 +67,7 @@ public class TextureSelectionMenu extends EditorMenu {
         onInit.run();
     }
 
-    public TextureSelectionMenu setResponder(@NotNull Consumer<ResourceLocation> responder) {
+    public TextureSelectionMenu setResponder(@NotNull Consumer<Identifier> responder) {
         this.responder = responder;
         return this;
     }

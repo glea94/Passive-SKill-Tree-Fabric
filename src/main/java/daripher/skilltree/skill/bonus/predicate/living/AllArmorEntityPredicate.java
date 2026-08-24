@@ -121,13 +121,13 @@ public final class AllArmorEntityPredicate implements LivingEntityPredicate {
             return validPredicate;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new AllArmorEntityPredicate(NetworkHelper.readItemPredicate(buf));
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             AllArmorEntityPredicate validPredicate = validatePredicate(predicate);

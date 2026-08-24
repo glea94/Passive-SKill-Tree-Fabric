@@ -1,10 +1,18 @@
 {
   "id": "skilltree:blacksmith_1",
-  "bonuses": [],
+  "bonuses": [
+    {
+      "type": "skilltree:command",
+      "command": "recipe give @s skilltree:workbench",
+      "description": "skill.skilltree.blacksmith_1.unlock_workbench",
+      "event_listener": { "type": "skilltree:skill_learned" }
+    }
+  ],
   "requirements": [
     {
+      "type": "skilltree:stat_value",
       "statTypeId": "minecraft:crafted",
-      "statId": "minecraft:anvil",
+      "statId": "minecraft:smithing_table",
       "minValue": 1
     }
   ],
@@ -13,10 +21,12 @@
   "oneWayConnections": [],
   "tags": [],
   "backgroundTexture": "skilltree:textures/icons/background/class.png",
-  "iconTexture": "skilltree:textures/icons/void.png",
-  "borderTexture": "skilltree:textures/tooltip/lesser.png",
+  "iconTexture": "skilltree:textures/icons/blacksmith_class.png",
+  "borderTexture": "skilltree:textures/tooltip/notable.png",
+  "titleColor": "",
   "positionX": 0.0,
   "positionY": 0.0,
   "buttonSize": 24,
-  "isStartingPoint": true
+  "isStartingPoint": true,
+  "isAlwaysStartingPoint": false
 }

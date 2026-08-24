@@ -23,10 +23,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.permissions.PermissionSet;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -168,19 +164,9 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
     }
 
     private static CommandSourceStack createCommandSourceStack(Player player, ServerLevel level) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        return new CommandSourceStack(player, player.position(), player.getRotationVector(), level, 4, player.getName()
-=======
-        // Fix 1.21.11 : le paramètre de permission n'est plus un int (niveau 0-4) mais un PermissionSet (confirmé par décompilation
-        // de PermissionSet et de Commands). Le niveau 4 (owner, accès complet) d'origine équivaut à PermissionSet.ALL_PERMISSIONS
+        
+        
         return new CommandSourceStack(((ServerPlayer) player).commandSource(), player.position(), player.getRotationVector(), level, PermissionSet.ALL_PERMISSIONS, player.getName()
->>>>>>> Stashed changes
-=======
-        // Fix 1.21.11 : le paramètre de permission n'est plus un int (niveau 0-4) mais un PermissionSet (confirmé par décompilation
-        // de PermissionSet et de Commands). Le niveau 4 (owner, accès complet) d'origine équivaut à PermissionSet.ALL_PERMISSIONS
-        return new CommandSourceStack(((ServerPlayer) player).commandSource(), player.position(), player.getRotationVector(), level, PermissionSet.ALL_PERMISSIONS, player.getName()
->>>>>>> Stashed changes
                 .getString(), player.getDisplayName(), level.getServer(), player);
     }
 
@@ -228,7 +214,7 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public ExecuteCommandBonus deserialize(RegistryFriendlyByteBuf buf) {
             String command = buf.readUtf();
@@ -237,7 +223,7 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
             return new ExecuteCommandBonus(command, description, eventListener);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ExecuteCommandBonus aBonus)) {

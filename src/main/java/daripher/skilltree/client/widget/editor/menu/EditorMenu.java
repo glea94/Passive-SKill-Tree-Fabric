@@ -10,7 +10,7 @@ public abstract class EditorMenu extends WidgetGroup<AbstractWidget> {
     public final @Nullable EditorMenu previousMenu;
 
     public EditorMenu(SkillTreeEditor editor, @Nullable EditorMenu previousMenu) {
-        // Factual Fix 1.21.4: Direct assignment parameters matched with standard layout guidelines
+        
         super(0, 0, 0, 0);
         this.setX(0);
         this.setY(0);

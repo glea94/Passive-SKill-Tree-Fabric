@@ -6,7 +6,7 @@ import daripher.skilltree.init.PSTRegistries;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +38,7 @@ public interface SkillBonus<T extends SkillBonus<T>> extends Comparable<SkillBon
     Serializer getSerializer();
 
     default String getDescriptionId() {
-        ResourceLocation id = PSTRegistries.SKILL_BONUSES.get().getKey(getSerializer());
+        Identifier id = PSTRegistries.SKILL_BONUSES.get().getKey(getSerializer());
         Objects.requireNonNull(id);
         return "skill_bonus.%s.%s".formatted(id.getNamespace(), id.getPath());
     }

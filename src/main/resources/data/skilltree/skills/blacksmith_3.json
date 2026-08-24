@@ -2,35 +2,19 @@
   "id": "skilltree:blacksmith_3",
   "bonuses": [
     {
-      "type": "skilltree:damage_taken",
-      "amount": -0.02,
-      "operation": 1,
-      "player_multiplier": {
-        "type": "skilltree:none"
-      },
-      "attacker_multiplier": {
-        "type": "skilltree:none"
-      },
-      "player_condition": {
-        "item_condition": {
-          "equipment_type": "shield",
-          "type": "skilltree:equipment_type"
-        },
-        "type": "skilltree:has_item_equipped"
-      },
-      "damage_condition": {
-        "type": "skilltree:none"
-      },
-      "attacker_condition": {
-        "type": "skilltree:none"
+      "type": "skilltree:vanilla_recipe_unlock",
+      "item_condition": {
+        "equipment_type": "shield",
+        "type": "skilltree:equipment_type"
       }
     }
   ],
   "requirements": [
     {
-      "statTypeId": "minecraft:custom",
-      "statId": "minecraft:damage_blocked_by_shield",
-      "minValue": 100
+      "type": "skilltree:stat_value",
+      "statTypeId": "minecraft:broken",
+      "statId": "minecraft:shield",
+      "minValue": 1
     }
   ],
   "directConnections": [
@@ -40,10 +24,12 @@
   "oneWayConnections": [],
   "tags": [],
   "backgroundTexture": "skilltree:textures/icons/background/lesser.png",
-  "iconTexture": "skilltree:textures/icons/void.png",
+  "iconTexture": "skilltree:textures/icons/helmet_leather.png",
   "borderTexture": "skilltree:textures/tooltip/lesser.png",
+  "titleColor": "",
   "positionX": -31.175764,
   "positionY": 17.999002,
   "buttonSize": 16,
-  "isStartingPoint": false
+  "isStartingPoint": false,
+  "isAlwaysStartingPoint": false
 }

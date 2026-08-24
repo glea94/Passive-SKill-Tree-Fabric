@@ -207,7 +207,7 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public GrantExperienceBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -217,7 +217,7 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof GrantExperienceBonus aBonus)) {

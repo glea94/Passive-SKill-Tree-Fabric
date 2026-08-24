@@ -36,11 +36,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
     private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_vanilla_crafting_recipe");
 
     private @Nullable Pair<Ingredient, Integer> baseIngredient;
@@ -48,17 +43,17 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
     private final ItemStack result;
 
     public WorkbenchVanillaCraftingRecipe(RecipeHolder<CraftingRecipe> vanillaRecipeHolder, HolderLookup.Provider registryAccess) {
-        // Factual Fix 1.21.4: Extracted raw Identifier path out of the RecipeHolder's ResourceKey handle
+        
         super(vanillaRecipeHolder.id().identifier(), true);
         CraftingRecipe vanillaRecipe = vanillaRecipeHolder.value();
-        // Factual Fix 1.21.5 : CraftingRecipe#getResultItem(HolderLookup.Provider) a été retiré de l'interface Recipe<T>,
-        // remplacé par le système RecipeDisplay (confirmé par décompilation Fernflower de Recipe<T>, RecipeDisplay et
-        // SlotDisplay) : Recipe#display() -> List<RecipeDisplay>, RecipeDisplay#result() -> SlotDisplay,
-        // SlotDisplay#resolveForFirstStack(ContextMap) -> ItemStack. Ici on n'a qu'un HolderLookup.Provider (pas un
-        // Level), donc le ContextMap ne peut pas être construit via SlotDisplayContext.fromLevel(Level) comme dans
-        // WorkbenchMenu.java ; il est construit à la main avec la même API (ContextMap.Builder#withParameter/#create,
-        // confirmée par le corps décompilé de SlotDisplayContext.fromLevel) en ne renseignant que REGISTRIES, seule clé
-        // utilisée par les CraftingRecipe vanilla standards (FUEL_VALUES ne concerne que les recettes de fourneau).
+        
+        
+        
+        
+        
+        
+        
+        
         List<RecipeDisplay> vanillaDisplays = vanillaRecipe.display();
         ItemStack resolvedResult = ItemStack.EMPTY;
         if (!vanillaDisplays.isEmpty()) {
@@ -76,7 +71,7 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
         }
     }
 
-    private WorkbenchVanillaCraftingRecipe(@NotNull ResourceLocation id, @Nullable Pair<Ingredient, Integer> baseIngredient, Map<Ingredient, Integer> additionalIngredients, ItemStack result) {
+    private WorkbenchVanillaCraftingRecipe(@NotNull Identifier id, @Nullable Pair<Ingredient, Integer> baseIngredient, Map<Ingredient, Integer> additionalIngredients, ItemStack result) {
         super(id, true);
         this.result = result;
         this.baseIngredient = baseIngredient;
@@ -89,12 +84,12 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
         Map<IngredientKey, Ingredient> uniqueIngredients = new HashMap<>();
         Map<IngredientKey, Integer> ingredientCounts = new HashMap<>();
 
-        // Factual Fix 1.21.4: Read recipe ingredient configurations out of vanilla container placement lists
+        
         List<Ingredient> vanillaIngredients = vanillaRecipe.placementInfo().ingredients();
         for (Ingredient ingredient : vanillaIngredients) {
-            // Factual Fix 1.21.5 : ingredient.items() renvoie désormais directement un Stream<Holder<Item>>
-            // (confirmé par l'erreur de compilation "cannot find symbol: method stream() location: interface
-            // Stream<Holder<Item>>" -> le .stream() supplémentaire était appelé sur un Stream déjà construit)
+            
+            
+            
             List<ItemStack> matchingItemList = ingredient.items().map(Holder::value).map(ItemStack::new).toList();
             if (matchingItemList.isEmpty()) {
                 continue;
@@ -115,17 +110,6 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
     }
 
     @Override
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container, @NotNull RegistryAccess registryAccess) {
-        return getResult(container);
-    }
-
-    @Override
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     public boolean isValidBaseItem(ItemStack itemStack) {
         if (baseIngredient == null) {
             return false;
@@ -179,44 +163,27 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
         return baseIngredient;
     }
 
-    // Factual Fix 1.21.4: Resolve recipe book classification categories using type-safe registration lookups directly
+    
     @Override
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public @NotNull RecipeSerializer<?> getSerializer() {
-        return new Serializer();
-    }
-
-    public static class Serializer implements RecipeSerializer<WorkbenchVanillaCraftingRecipe> {
-        @Override
-        public @NotNull WorkbenchVanillaCraftingRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject jsonObject) {
-            throw new UnsupportedOperationException("Attempted to load an invalid recipe type.");
-        }
-
-        @Override
-        public @Nullable WorkbenchVanillaCraftingRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
-=======
-=======
->>>>>>> Stashed changes
     public @NotNull RecipeBookCategory recipeBookCategory() {
         return net.minecraft.world.item.crafting.RecipeBookCategories.CRAFTING_MISC;
     }
 
 
-    // Factual Fix 1.21.5 : le type de retour de Recipe#getSerializer() est désormais covariant. Le message du
-    // compilateur donne lui-même le type exact attendu ("RecipeSerializer<? extends Recipe<WorkbenchContainer>>"),
-    // donc ce correctif est sûr, sans décompilation nécessaire (même erreur/même fix que WorkbenchCraftingRecipe,
-    // WorkbenchUpgradeBonusRecipe, WorkbenchWeaponPoisoningRecipe listés dans le rapport de 76 erreurs).
+    
+    
+    
+    
     @Override
     public @NotNull RecipeSerializer<? extends Recipe<WorkbenchContainer>> getSerializer() {
         return Serializer.INSTANCE;
     }
 
     public static final class Serializer {
-        // CORRECTION 26.1.2 : RecipeSerializer<T> est désormais un record final, impossible à
-        // implémenter via "implements". On construit une instance directe avec CODEC/STREAM_CODEC,
-        // exposée en INSTANCE (non enregistrée dans PSTRecipeSerializers : cette recette reste
-        // purement synthétique, jamais chargée depuis un datapack).
+        
+        
+        
+        
         private static final MapCodec<WorkbenchVanillaCraftingRecipe> CODEC = new MapCodec<>() {
             @Override
             public <T> DataResult<WorkbenchVanillaCraftingRecipe> decode(DynamicOps<T> ops, MapLike<T> input) {
@@ -240,14 +207,10 @@ public class WorkbenchVanillaCraftingRecipe extends AbstractWorkbenchRecipe {
 
         public static final RecipeSerializer<WorkbenchVanillaCraftingRecipe> INSTANCE = new RecipeSerializer<>(CODEC, STREAM_CODEC);
 
-        // Factual Fix 1.21.5 : confirmé par décompilation Fernflower (net.minecraft.world.item.crafting.Ingredient) —
-        // Ingredient.STREAM_CODEC n'a jamais existé, c'est Ingredient.CONTENTS_STREAM_CODEC (déjà présent en 1.21.1)
-        // qui est le bon champ, inchangé en 1.21.5. Le renommage supposé lors du fix 1.21.4 était erroné.
+        
+        
+        
         private static @NotNull WorkbenchVanillaCraftingRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buf) {
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             Map<Ingredient, Integer> ingredients = new HashMap<>();
             int ingredientsCount = buf.readInt();
             for (int i = 0; i < ingredientsCount; i++) {

@@ -1,7 +1,35 @@
 {
   "id": "skilltree:blacksmith_31",
-  "bonuses": [],
-  "requirements": [],
+  "bonuses": [
+    {
+      "type": "skilltree:crafted_item_bonus",
+      "item_condition": {
+        "equipment_type": "melee_weapon",
+        "type": "skilltree:equipment_type"
+      },
+      "item_bonus": {
+        "type": "skilltree:item_bonus_list",
+        "inner_bonuses": [
+          {
+            "type": "skilltree:skill_bonus",
+            "skill_bonus": {
+              "type": "skilltree:attribute",
+              "attribute": "minecraft:attack_knockback",
+              "id": "skilltree:blacksmith_31_bonus",
+              "amount": 0.5,
+              "operation": "add_value"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "requirements": [
+    {
+      "type": "skilltree:learned_skill",
+      "skill_id": "skilltree:blacksmith_18"
+    }
+  ],
   "directConnections": [
     "skilltree:blacksmith_24"
   ],
@@ -9,10 +37,12 @@
   "oneWayConnections": [],
   "tags": [],
   "backgroundTexture": "skilltree:textures/icons/background/lesser.png",
-  "iconTexture": "skilltree:textures/icons/void.png",
+  "iconTexture": "skilltree:textures/icons/blacksmith_subclass_1_offensive_1.png",
   "borderTexture": "skilltree:textures/tooltip/lesser.png",
+  "titleColor": "",
   "positionX": 31.175764,
   "positionY": -125.99801,
   "buttonSize": 16,
-  "isStartingPoint": false
+  "isStartingPoint": false,
+  "isAlwaysStartingPoint": false
 }

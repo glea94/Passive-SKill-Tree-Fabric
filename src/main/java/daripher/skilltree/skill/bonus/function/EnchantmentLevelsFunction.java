@@ -40,7 +40,7 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
     }
 
     private int getEnchantLevels(Stream<ItemStack> items) {
-        // Aligned 1.21.4: Map the active enchantment levels safely via ItemEnchantments stream mapping loops
+        
         return items.map(item -> item.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY))
                 .mapToInt(enchantments -> enchantments.entrySet().stream().mapToInt(Object2IntMap.Entry::getIntValue).sum())
                 .reduce(Integer::sum).orElse(0);
@@ -176,14 +176,14 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return new EnchantmentLevelsFunction(itemStackPredicate);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof EnchantmentLevelsFunction aProvider)) {

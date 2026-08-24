@@ -1,6 +1,39 @@
 {
   "id": "skilltree:blacksmith_57",
-  "bonuses": [],
+  "bonuses": [
+    {
+      "type": "skilltree:crafted_item_bonus",
+      "item_condition": {
+        "equipment_type": "melee_weapon",
+        "type": "skilltree:equipment_type"
+      },
+      "item_bonus": {
+        "type": "skilltree:item_bonus_list",
+        "inner_bonuses": [
+          {
+            "type": "skilltree:skill_bonus",
+            "skill_bonus": {
+              "type": "skilltree:crit_chance",
+              "chance": 0.1,
+              "damage_condition": {
+                "type": "skilltree:melee"
+              }
+            }
+          },
+          {
+            "type": "skilltree:skill_bonus",
+            "skill_bonus": {
+              "type": "skilltree:crit_damage",
+              "amount": 0.15,
+              "damage_condition": {
+                "type": "skilltree:melee"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
   "requirements": [],
   "directConnections": [
     "skilltree:blacksmith_54"
@@ -9,10 +42,12 @@
   "oneWayConnections": [],
   "tags": [],
   "backgroundTexture": "skilltree:textures/icons/background/keystone.png",
-  "iconTexture": "skilltree:textures/icons/void.png",
+  "iconTexture": "skilltree:textures/icons/sword_bronze.png",
   "borderTexture": "skilltree:textures/tooltip/lesser.png",
+  "titleColor": "",
   "positionX": -124.70306,
   "positionY": -72.004,
   "buttonSize": 32,
-  "isStartingPoint": false
+  "isStartingPoint": false,
+  "isAlwaysStartingPoint": false
 }

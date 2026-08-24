@@ -23,7 +23,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import java.util.function.Consumer;
 
 public class AttributeValueFunction implements FloatFunction<AttributeValueFunction> {
-    // Aligned 1.21.4: Retain the registry Holder design pattern to query entity AttributeMap records efficiently
+    
     private Holder<Attribute> attribute;
 
     public AttributeValueFunction(Holder<Attribute> attribute) {
@@ -75,7 +75,7 @@ public class AttributeValueFunction implements FloatFunction<AttributeValueFunct
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<FloatFunction<?>> consumer) {
         editor.addLabel(0, 0, "Attribute", ChatFormatting.GREEN);
         editor.increaseHeight(19);
-        // Unwraps the Holder instance using .value() to safely populate the editor menu UI layer
+        
         editor.addSelectionMenu(0, 0, 200, attribute.value()).setResponder(selectedAttribute -> selectAttribute(consumer, selectedAttribute));
         editor.increaseHeight(19);
     }
@@ -84,7 +84,7 @@ public class AttributeValueFunction implements FloatFunction<AttributeValueFunct
         consumer.accept(this);
     }
 
-    // Aligned 1.21.4: Retains clean raw Attribute integration for backward-compatible editor support
+    
     public void setAttribute(Attribute attribute) {
         this.attribute = BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attribute);
     }
@@ -124,14 +124,14 @@ public class AttributeValueFunction implements FloatFunction<AttributeValueFunct
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             Attribute attribute = NetworkHelper.readAttribute(buf);
             return new AttributeValueFunction(BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attribute));
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof AttributeValueFunction aProvider)) {
@@ -142,7 +142,7 @@ public class AttributeValueFunction implements FloatFunction<AttributeValueFunct
 
         @Override
         public FloatFunction<?> createDefaultInstance() {
-            // Natively targets the vanilla registry reference wrapped seamlessly inside Java 21 bounds
+            
             return new AttributeValueFunction(Attributes.MAX_HEALTH);
         }
     }

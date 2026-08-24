@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Mixin(ClientAdvancements.class)
 public interface ClientAdvancementsAccessor {
-    // Factual Fix 1.21.4: Maps directly into the private advancement tracking progress container
+    
     @Accessor("progress")
     Map<AdvancementHolder, AdvancementProgress> getProgress();
 }

@@ -1,21 +1,15 @@
 package daripher.skilltree.client.widget.editor.menu.selection;
 
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Collection;
 
-public class TextureSelectionMenuButton extends SelectionMenuButton<ResourceLocation> {
+public class TextureSelectionMenuButton extends SelectionMenuButton<Identifier> {
     private final String texturesFolder;
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public TextureSelectionMenuButton(SkillTreeEditor editor, int x, int y, int width, String message, String texturesFolder, Collection<ResourceLocation> values) {
-=======
-=======
->>>>>>> Stashed changes
     public TextureSelectionMenuButton(SkillTreeEditor editor, int x, int y, int width, String message, String texturesFolder, Collection<Identifier> values) {
-        // Factual Fix 1.21.4: Remove layout coordinates x and y from parent widget constructor arguments
+        
         super(editor, x, y, width, message, values);
         this.setX(x);
         this.setY(y);

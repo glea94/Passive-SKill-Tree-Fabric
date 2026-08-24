@@ -24,13 +24,13 @@ public class EffectImmunityBypassBonusHandler {
         }
         List<EffectImmunityBypassBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(effectSource, EffectImmunityBypassBonus.class);
 
-        // Aligned 1.21.4: Map status effect holders down cleanly using value() to evaluate bypass filters
+        
         Holder<MobEffect> mobEffectHolder = event.getEffectInstance().getEffect();
         MobEffect mobEffect = mobEffectHolder.value();
 
         for (EffectImmunityBypassBonus skillBonus : skillBonuses) {
             if (skillBonus.shouldIgnoreEffectImmunity(mobEffect, effectSource, affectedEntity)) {
-                // Overrides the application result to force the effect onto the target entity
+                
                 event.setResult(MobEffectApplicablePSTEvent.Result.ALLOW);
                 return;
             }

@@ -1,6 +1,21 @@
 {
   "id": "skilltree:blacksmith_54",
-  "bonuses": [],
+  "bonuses": [
+    {
+      "type": "skilltree:attribute",
+      "attribute": "minecraft:attack_speed",
+      "id": "minecraft:d998ec53-a952-40d8-b05b-b1c0b47c3491",
+      "amount": 0.12,
+      "operation": "add_value",
+      "player_condition": {
+        "item_condition": {
+          "equipment_type": "melee_weapon",
+          "type": "skilltree:equipment_type"
+        },
+        "type": "skilltree:has_item_in_hand"
+      }
+    }
+  ],
   "requirements": [],
   "directConnections": [
     "skilltree:blacksmith_51"
@@ -9,10 +24,12 @@
   "oneWayConnections": [],
   "tags": [],
   "backgroundTexture": "skilltree:textures/icons/background/lesser.png",
-  "iconTexture": "skilltree:textures/icons/void.png",
+  "iconTexture": "skilltree:textures/icons/sword_iron.png",
   "borderTexture": "skilltree:textures/tooltip/lesser.png",
+  "titleColor": "",
   "positionX": -93.52729,
   "positionY": -90.003,
   "buttonSize": 16,
-  "isStartingPoint": false
+  "isStartingPoint": false,
+  "isAlwaysStartingPoint": false
 }

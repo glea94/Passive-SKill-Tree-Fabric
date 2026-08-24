@@ -135,7 +135,7 @@ public class IncomingDamageEventListener implements SkillEventListener {
 
     private void addTargetMultiplierWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         enemyMultiplier.addEditorWidgets(editor, multiplier -> {
-            // Factual Fix 1.21.4: Corrected copy-paste target mapping error to set the enemy multiplier field
+            
             setEnemyMultiplier(multiplier);
             consumer.accept(this);
         });
@@ -247,7 +247,7 @@ public class IncomingDamageEventListener implements SkillEventListener {
             listener.setPlayerCondition(SerializationHelper.deserializeLivingCondition(tag, "player_condition"));
             listener.setEnemyMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "enemy_multiplier"));
             listener.setPlayerMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier"));
-            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            
             listener.setTarget(SkillBonus.Target.valueOf(tag.getString("target").orElse("").toUpperCase(Locale.ROOT)));
             return listener;
         }
@@ -267,7 +267,7 @@ public class IncomingDamageEventListener implements SkillEventListener {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             IncomingDamageEventListener listener = new IncomingDamageEventListener();
@@ -280,7 +280,7 @@ public class IncomingDamageEventListener implements SkillEventListener {
             return listener;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof IncomingDamageEventListener aListener)) {

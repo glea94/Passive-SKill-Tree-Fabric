@@ -1,7 +1,7 @@
 package daripher.skilltree.client.widget.group;
 
 import daripher.skilltree.client.widget.TickingWidget;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.CharacterEvent;
@@ -21,16 +21,16 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     };
 
     public WidgetGroup(int x, int y, int width, int height) {
-        // Factual Fix 1.21.4: AbstractWidget constructor requires x, y, width, height, and message
+        
         super(x, y, width, height, Component.empty());
     }
 
     @Override
-    protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        widgetsCopy().forEach(widget -> widget.render(graphics, mouseX, mouseY, partialTick));
-        graphics.pose().pushPose();
-        graphics.pose().translate(0, 0, 1f);
-        graphics.pose().popPose();
+    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        widgetsCopy().forEach(widget -> widget.extractRenderState(graphics, mouseX, mouseY, partialTick));
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(0f, 0f);
+        graphics.pose().popMatrix();
     }
 
     @Override
@@ -158,7 +158,7 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
 
     public @Nullable T getWidgetAt(double mouseX, double mouseY) {
         for (T widget : widgets) {
-            // Factual Fix 1.21.4: Replaced legacy isVisible() with the public field check
+            
             if (!widget.visible) {
                 continue;
             }

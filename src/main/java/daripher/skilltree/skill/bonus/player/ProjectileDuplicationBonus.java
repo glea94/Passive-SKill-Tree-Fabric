@@ -208,7 +208,7 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public ProjectileDuplicationBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -218,7 +218,7 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ProjectileDuplicationBonus aBonus)) {

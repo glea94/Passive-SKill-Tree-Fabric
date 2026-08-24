@@ -1,5 +1,6 @@
 package daripher.skilltree.skill.bonus.player;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -20,11 +21,14 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -32,14 +36,27 @@ import java.util.function.Consumer;
 public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusBonus> {
     private @NotNull ItemStackPredicate itemStackPredicate;
     private @NotNull GroupedItemBonus itemBonuses;
+    private @NotNull List<Identifier> recipeIds;
 
     public CraftedItemBonusBonus(@NotNull ItemStackPredicate itemStackPredicate, @NotNull GroupedItemBonus itemBonuses) {
+        this(itemStackPredicate, itemBonuses, Collections.emptyList());
+    }
+
+    public CraftedItemBonusBonus(@NotNull ItemStackPredicate itemStackPredicate, @NotNull GroupedItemBonus itemBonuses, @NotNull List<Identifier> recipeIds) {
         this.itemStackPredicate = itemStackPredicate;
         this.itemBonuses = itemBonuses;
+        this.recipeIds = recipeIds;
     }
 
     public void itemCrafted(ItemStack craftResult) {
+        itemCrafted(craftResult, null);
+    }
+
+    public void itemCrafted(ItemStack craftResult, @Nullable Identifier usedRecipeId) {
         if (!itemStackPredicate.test(craftResult)) {
+            return;
+        }
+        if (!recipeIds.isEmpty() && (usedRecipeId == null || !recipeIds.contains(usedRecipeId))) {
             return;
         }
         ItemBonusHandler.addCraftingBonuses(craftResult, itemBonuses);
@@ -52,7 +69,7 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
 
     @Override
     public CraftedItemBonusBonus copy() {
-        return new CraftedItemBonusBonus(itemStackPredicate, itemBonuses);
+        return new CraftedItemBonusBonus(itemStackPredicate, itemBonuses, recipeIds);
     }
 
     @Override
@@ -65,7 +82,8 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
         if (!(other instanceof CraftedItemBonusBonus otherBonus)) {
             return false;
         }
-        return Objects.equals(otherBonus.itemStackPredicate, this.itemStackPredicate);
+        return Objects.equals(otherBonus.itemStackPredicate, this.itemStackPredicate)
+                && Objects.equals(otherBonus.recipeIds, this.recipeIds);
     }
 
     @Override
@@ -74,7 +92,7 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             throw new IllegalArgumentException();
         }
         GroupedItemBonus mergedItemBonuses = ItemBonusHandler.mergeGroupedItemBonuses(itemBonuses, otherBonus.itemBonuses);
-        return new CraftedItemBonusBonus(itemStackPredicate, mergedItemBonuses);
+        return new CraftedItemBonusBonus(itemStackPredicate, mergedItemBonuses, recipeIds);
     }
 
     @Override
@@ -144,6 +162,15 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
         this.itemStackPredicate = itemStackPredicate;
     }
 
+    public void setRecipeIds(@NotNull List<Identifier> recipeIds) {
+        this.recipeIds = recipeIds;
+    }
+
+    @NotNull
+    public List<Identifier> getRecipeIds() {
+        return recipeIds;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -153,12 +180,13 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             return false;
         }
         CraftedItemBonusBonus that = (CraftedItemBonusBonus) obj;
-        return Objects.equals(this.itemStackPredicate, that.itemStackPredicate);
+        return Objects.equals(this.itemStackPredicate, that.itemStackPredicate)
+                && Objects.equals(this.recipeIds, that.recipeIds);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(itemStackPredicate);
+        return Objects.hash(itemStackPredicate, recipeIds);
     }
 
     public static class Serializer implements SkillBonus.Serializer {
@@ -169,7 +197,12 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             if (!(itemBonus instanceof GroupedItemBonus itemBonuses)) {
                 throw new IllegalArgumentException();
             }
-            return new CraftedItemBonusBonus(condition, itemBonuses);
+            List<Identifier> recipeIds = new ArrayList<>();
+            if (json.has("recipe_ids")) {
+                JsonArray array = json.getAsJsonArray("recipe_ids");
+                array.forEach(element -> recipeIds.add(Identifier.parse(element.getAsString())));
+            }
+            return new CraftedItemBonusBonus(condition, itemBonuses, recipeIds);
         }
 
         @Override
@@ -179,6 +212,11 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             }
             SerializationHelper.serializeItemPredicate(json, aBonus.itemStackPredicate);
             SerializationHelper.serializeItemBonus(json, aBonus.itemBonuses);
+            if (!aBonus.recipeIds.isEmpty()) {
+                JsonArray array = new JsonArray();
+                aBonus.recipeIds.forEach(id -> array.add(id.toString()));
+                json.add("recipe_ids", array);
+            }
         }
 
         @Override
@@ -188,7 +226,15 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             if (!(itemBonus instanceof GroupedItemBonus itemBonuses)) {
                 throw new IllegalArgumentException();
             }
-            return new CraftedItemBonusBonus(condition, itemBonuses);
+            List<Identifier> recipeIds = new ArrayList<>();
+            tag.getString("recipe_ids").ifPresent(joined -> {
+                if (!joined.isEmpty()) {
+                    for (String part : joined.split(",")) {
+                        recipeIds.add(Identifier.parse(part));
+                    }
+                }
+            });
+            return new CraftedItemBonusBonus(condition, itemBonuses, recipeIds);
         }
 
         @Override
@@ -199,21 +245,32 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             CompoundTag tag = new CompoundTag();
             SerializationHelper.serializeItemPredicate(tag, aBonus.itemStackPredicate);
             SerializationHelper.serializeItemBonus(tag, aBonus.itemBonuses);
+            if (!aBonus.recipeIds.isEmpty()) {
+                StringBuilder joined = new StringBuilder();
+                for (int i = 0; i < aBonus.recipeIds.size(); i++) {
+                    if (i > 0) {
+                        joined.append(",");
+                    }
+                    joined.append(aBonus.recipeIds.get(i).toString());
+                }
+                tag.putString("recipe_ids", joined.toString());
+            }
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public CraftedItemBonusBonus deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             ItemBonus<?> itemBonus = NetworkHelper.readItemBonus(buf);
+            List<Identifier> recipeIds = NetworkHelper.readResourceLocations(buf);
             if (!(itemBonus instanceof GroupedItemBonus itemBonuses)) {
                 throw new IllegalArgumentException();
             }
-            return new CraftedItemBonusBonus(itemStackPredicate, itemBonuses);
+            return new CraftedItemBonusBonus(itemStackPredicate, itemBonuses, recipeIds);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof CraftedItemBonusBonus aBonus)) {
@@ -221,6 +278,7 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             }
             NetworkHelper.writeItemPredicate(buf, aBonus.itemStackPredicate);
             NetworkHelper.writeItemBonus(buf, aBonus.itemBonuses);
+            NetworkHelper.writeResourceLocations(buf, aBonus.recipeIds);
         }
 
         @Override
@@ -230,7 +288,7 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             ArrayList<ItemBonus<?>> itemBonusList = new ArrayList<>();
             itemBonusList.add(itemBonus);
             GroupedItemBonus itemBonuses = new GroupedItemBonus(itemBonusList);
-            return new CraftedItemBonusBonus(itemStackPredicate, itemBonuses);
+            return new CraftedItemBonusBonus(itemStackPredicate, itemBonuses, Collections.emptyList());
         }
     }
 }

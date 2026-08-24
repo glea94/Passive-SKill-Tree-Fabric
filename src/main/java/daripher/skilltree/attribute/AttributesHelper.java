@@ -1,20 +1,9 @@
 package daripher.skilltree.attribute;
 
 import daripher.skilltree.SkillTreeMod;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
-=======
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityTypes;
->>>>>>> Stashed changes
-=======
-import net.minecraft.core.Holder;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.EntityTypes;
->>>>>>> Stashed changes
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
@@ -34,7 +23,7 @@ public class AttributesHelper {
     }
 
     public static String getName(Attribute attribute) {
-        ResourceLocation id = BuiltInRegistries.ATTRIBUTE.getKey(attribute);
+        Identifier id = BuiltInRegistries.ATTRIBUTE.getKey(attribute);
         if (id == null) {
             SkillTreeMod.LOGGER.warn("Unregistered attribute: {}", attribute);
             return "unknown:unregistered_attribute";

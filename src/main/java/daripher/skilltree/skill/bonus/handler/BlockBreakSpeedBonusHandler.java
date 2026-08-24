@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
-/** Portage Fabric : logique identique, event.setNewSpeed remplace event.setNewSpeed (mêmes noms côté event maison). */
+
 public class BlockBreakSpeedBonusHandler {
     public static void register() {
         PSTEvents.BREAK_SPEED.register(BlockBreakSpeedBonusHandler::modifyBlockBreakSpeed);

@@ -3,7 +3,7 @@ package daripher.skilltree.data.client;
 import daripher.skilltree.SkillTreeMod;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
@@ -16,25 +16,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class SkillTexturesData implements IdentifiableResourceReloadListener {
-    private static final Map<String, Set<ResourceLocation>> FOLDER_TO_TEXTURES = new HashMap<>();
+    private static final Map<String, Set<Identifier>> FOLDER_TO_TEXTURES = new HashMap<>();
 
     public static void register() {
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SkillTexturesData());
     }
 
     @Override
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public ResourceLocation getFabricId() {
-        return new ResourceLocation(SkillTreeMod.MOD_ID, "skill_textures_reloader");
-=======
     public Identifier getFabricId() {
         return Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_textures_reloader");
->>>>>>> Stashed changes
-=======
-    public Identifier getFabricId() {
-        return Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_textures_reloader");
->>>>>>> Stashed changes
     }
 
     @Override
@@ -49,26 +39,12 @@ public class SkillTexturesData implements IdentifiableResourceReloadListener {
                 }, applyExecutor);
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    private static Map<String, Set<ResourceLocation>> scanTextures(ResourceManager resourceManager) {
-        Map<String, Set<ResourceLocation>> result = new HashMap<>();
-        Map<ResourceLocation, Resource> textures = resourceManager.listResources("textures", SkillTexturesData::isTexturePath);
-        List<ResourceLocation> textureLocations = textures.keySet().stream().toList();
-        for (ResourceLocation textureLocation : textureLocations) {
-=======
-=======
->>>>>>> Stashed changes
     private static Map<String, Set<Identifier>> scanTextures(ResourceManager resourceManager) {
         Map<String, Set<Identifier>> result = new HashMap<>();
 
         Map<Identifier, Resource> textures = resourceManager.listResources("textures", SkillTexturesData::isTexturePath);
         List<Identifier> textureLocations = textures.keySet().stream().toList();
         for (Identifier textureLocation : textureLocations) {
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             String folder = getTextureFolder(textureLocation);
             if (folder.isEmpty()) {
                 continue;
@@ -79,7 +55,7 @@ public class SkillTexturesData implements IdentifiableResourceReloadListener {
     }
 
     @NotNull
-    public static String getTextureFolder(ResourceLocation textureLocation) {
+    public static String getTextureFolder(Identifier textureLocation) {
         String path = textureLocation.getPath();
         int lastSlash = path.lastIndexOf('/');
         if (lastSlash <= 0) {
@@ -88,11 +64,11 @@ public class SkillTexturesData implements IdentifiableResourceReloadListener {
         return path.substring(0, lastSlash);
     }
 
-    private static boolean isTexturePath(ResourceLocation location) {
+    private static boolean isTexturePath(Identifier location) {
         return location.getPath().endsWith(".png");
     }
 
-    public static Set<ResourceLocation> getTexturesInFolder(String folder) {
+    public static Set<Identifier> getTexturesInFolder(String folder) {
         return FOLDER_TO_TEXTURES.getOrDefault(folder, Set.of());
     }
 

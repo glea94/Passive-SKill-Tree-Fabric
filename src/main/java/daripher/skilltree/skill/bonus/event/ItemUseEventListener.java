@@ -191,7 +191,7 @@ public class ItemUseEventListener implements SkillEventListener {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Updated signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
@@ -201,7 +201,7 @@ public class ItemUseEventListener implements SkillEventListener {
             return listener;
         }
 
-        // Factual Fix 1.21.4: Updated signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof ItemUseEventListener aListener)) {

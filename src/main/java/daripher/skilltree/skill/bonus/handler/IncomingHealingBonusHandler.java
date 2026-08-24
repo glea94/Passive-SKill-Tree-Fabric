@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
-/** Portage Fabric : logique identique. */
+
 public class IncomingHealingBonusHandler {
     public static void register() {
         PSTEvents.LIVING_HEAL.register(IncomingHealingBonusHandler::modifyIncomingHealing);

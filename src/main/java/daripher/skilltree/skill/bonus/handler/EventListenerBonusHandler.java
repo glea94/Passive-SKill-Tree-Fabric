@@ -76,7 +76,7 @@ public class EventListenerBonusHandler {
         });
     }
 
-    // Aligned 1.21.4: Safe generic cast arrays to map listener loops correctly under Java 21 boundaries
+    
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <T extends SkillEventListener> void triggerEvent(Player player, Class<T> listenerClass, BiConsumer<T, EventListenerBonus<?>> action) {
         List<EventListenerBonus> skillBonuses = SkillBonusProvider.getMergedSkillBonuses(player, EventListenerBonus.class);

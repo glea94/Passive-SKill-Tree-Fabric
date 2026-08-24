@@ -179,7 +179,7 @@ public class FoodLevelFunction implements FloatFunction<FoodLevelFunction> {
 
         @Override
         public FloatFunction<?> deserialize(CompoundTag tag) {
-            // Factual Fix 1.21.5 (confirmé par décompilation de CompoundTag) : getBoolean(String) retourne désormais Optional<Boolean> ; getBooleanOr(String, boolean) retrouve l'ancien comportement (false par défaut si absent)
+            
             boolean percentage = tag.getBooleanOr("percentage", false);
             boolean missing = tag.getBooleanOr("missing", false);
             return new FoodLevelFunction(percentage, missing);
@@ -196,7 +196,7 @@ public class FoodLevelFunction implements FloatFunction<FoodLevelFunction> {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             boolean percentage = buf.readBoolean();
@@ -204,7 +204,7 @@ public class FoodLevelFunction implements FloatFunction<FoodLevelFunction> {
             return new FoodLevelFunction(percentage, missing);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof FoodLevelFunction aProvider)) {

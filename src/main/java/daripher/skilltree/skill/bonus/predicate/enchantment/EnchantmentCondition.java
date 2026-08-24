@@ -1,13 +1,6 @@
 package daripher.skilltree.skill.bonus.predicate.enchantment;
 
 import daripher.skilltree.init.PSTRegistries;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
-=======
-=======
->>>>>>> Stashed changes
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
@@ -17,7 +10,7 @@ public interface EnchantmentCondition {
     boolean met(ItemStack stack);
 
     default String getDescriptionId() {
-        ResourceLocation id = PSTRegistries.ENCHANTMENT_CONDITIONS.get().getKey(getSerializer());
+        Identifier id = PSTRegistries.ENCHANTMENT_CONDITIONS.get().getKey(getSerializer());
         Objects.requireNonNull(id);
         return "enchantment_condition.%s.%s".formatted(id.getNamespace(), id.getPath());
     }

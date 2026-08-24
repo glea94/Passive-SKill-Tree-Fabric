@@ -5,20 +5,14 @@ import daripher.skilltree.skill.bonus.player.LootAmountModifierBonus;
 import it.unimi.dsi.fastutil.floats.Float2FloatMap;
 import it.unimi.dsi.fastutil.floats.Float2FloatOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
->>>>>>> Stashed changes
-=======
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.Registries;
->>>>>>> Stashed changes
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.jetbrains.annotations.NotNull;
@@ -26,37 +20,25 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class LootAmountModifierBonusHandler {
-    public static @NotNull ObjectArrayList<ItemStack> modifyLoot(ObjectArrayList<ItemStack> defaultLoot, LootContext lootContext, net.minecraft.resources.ResourceLocation lootTableId) {
+    public static @NotNull ObjectArrayList<ItemStack> modifyLoot(ObjectArrayList<ItemStack> defaultLoot, LootContext lootContext, net.minecraft.resources.Identifier lootTableId) {
         Player player = null;
         float lootAmountModifier = 0f;
         for (LootAmountModifierBonus.LootType lootType : LootAmountModifierBonus.LootType.values()) {
             if (!lootType.canAffect(lootContext, lootTableId)) {
                 continue;
             }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            if (lootContext.hasParam(LootContextParams.TOOL)) {
-                ItemStack tool = lootContext.getParam(LootContextParams.TOOL);
-                if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, tool) > 0) {
-=======
-=======
->>>>>>> Stashed changes
-            // Factual Fix 1.21.5 (confirmé par décompilation LootContext) : getParams() n'existe plus ; hasParam/getParam renommés hasParameter/getParameter, appelés directement sur lootContext
+            
             player = (Player) lootContext.getParameter(lootType.getPlayerLootContextParam());
             if (lootContext.hasParameter(LootContextParams.TOOL)) {
                 ItemInstance tool = lootContext.getParameter(LootContextParams.TOOL);
 
-                // Fix 26.1.2 (confirmé par décompilation LootContextParams/LootContext) : LootContextParams.TOOL est désormais un ContextKey<ItemInstance> (plus ItemStack directement).
-                // ItemInstance n'expose pas de raccourci getEnchantments() (juste count()/getMaxStackSize() + l'accès générique aux composants via DataComponentGetter),
-                // donc on lit le composant ENCHANTMENTS directement, comme Item.components().getOrDefault(...) le fait déjà ailleurs dans le code décompilé.
+                
+                
+                
                 int silkTouchLevel = tool.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY).getLevel(
                         player.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH)
                 );
                 if (silkTouchLevel > 0) {
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
                     return defaultLoot;
                 }
             }

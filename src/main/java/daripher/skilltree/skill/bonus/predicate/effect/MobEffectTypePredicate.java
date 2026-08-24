@@ -102,7 +102,7 @@ public final class MobEffectTypePredicate implements MobEffectPredicate {
 
         @Override
         public MobEffectTypePredicate deserialize(CompoundTag tag) {
-            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+            
             MobEffectType effectType = MobEffectType.fromName(tag.getString("effect_type").orElse(""));
             return new MobEffectTypePredicate(effectType);
         }
@@ -115,14 +115,14 @@ public final class MobEffectTypePredicate implements MobEffectPredicate {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public MobEffectTypePredicate deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectType effectType = MobEffectType.values()[buf.readInt()];
             return new MobEffectTypePredicate(effectType);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, MobEffectPredicate predicate) {
             MobEffectTypePredicate validPredicate = validatePredicate(predicate);

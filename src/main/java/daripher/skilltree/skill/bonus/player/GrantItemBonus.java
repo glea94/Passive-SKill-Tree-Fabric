@@ -15,7 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,10 +29,10 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
-    private ResourceLocation itemId;
+    private Identifier itemId;
     private int amount;
 
-    public GrantItemBonus(ResourceLocation itemId, int amount) {
+    public GrantItemBonus(Identifier itemId, int amount) {
         this.itemId = itemId;
         this.amount = amount;
     }
@@ -95,15 +95,7 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
             return Component.literal("Unknown item: " + itemId).withStyle(ChatFormatting.DARK_RED);
         }
         Style style = TooltipHelper.getSkillBonusStyle(isPositive());
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        Component itemDescription = item.getDescription();
-=======
         Component itemDescription = item.getName(item.getDefaultInstance());
->>>>>>> Stashed changes
-=======
-        Component itemDescription = item.getName(item.getDefaultInstance());
->>>>>>> Stashed changes
         if (amount > 1) {
             String amountDescription = TooltipHelper.formatNumber(amount);
             return Component.translatable(getDescriptionId() + ".amount", amountDescription, itemDescription).withStyle(style);
@@ -126,19 +118,19 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Item", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-        List<ResourceLocation> items = BuiltInRegistries.ITEM.entrySet().stream().map(Map.Entry::getKey).map(ResourceKey::location)
+        List<Identifier> items = BuiltInRegistries.ITEM.entrySet().stream().map(Map.Entry::getKey).map(ResourceKey::identifier)
                 .toList();
         editor.addSelectionMenu(0, 0, 200, items).setValue(itemId).setElementNameGetter(id -> Component.literal(id.toString()))
                 .setResponder(id -> selectItemId(id, consumer));
         editor.increaseHeight(19);
     }
 
-    private void selectItemId(ResourceLocation id, Consumer<GrantItemBonus> consumer) {
+    private void selectItemId(Identifier id, Consumer<GrantItemBonus> consumer) {
         setItemId(id);
         consumer.accept(this.copy());
     }
 
-    public void setItemId(ResourceLocation itemId) {
+    public void setItemId(Identifier itemId) {
         this.itemId = itemId;
     }
 
@@ -154,15 +146,7 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public GrantItemBonus deserialize(JsonObject json) throws JsonParseException {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            ResourceLocation itemId = new ResourceLocation(json.get("item_id").getAsString());
-=======
             Identifier itemId = Identifier.parse(json.get("item_id").getAsString());
->>>>>>> Stashed changes
-=======
-            Identifier itemId = Identifier.parse(json.get("item_id").getAsString());
->>>>>>> Stashed changes
             int amount = SerializationHelper.getElement(json, "amount").getAsInt();
             return new GrantItemBonus(itemId, amount);
         }
@@ -178,13 +162,6 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
 
         @Override
         public GrantItemBonus deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            ResourceLocation itemId = new ResourceLocation(tag.getString("item_id"));
-            int amount = tag.getInt("amount");
-=======
-=======
->>>>>>> Stashed changes
             Identifier itemId = Identifier.parse(tag.getString("item_id").orElse(""));
             int amount = tag.getInt("amount").orElse(0);
             return new GrantItemBonus(itemId, amount);
@@ -201,7 +178,7 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public GrantItemBonus deserialize(RegistryFriendlyByteBuf buf) {
             Identifier itemId = buf.readIdentifier();
@@ -209,13 +186,13 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
             return new GrantItemBonus(itemId, amount);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof GrantItemBonus aBonus)) {
                 throw new IllegalArgumentException();
             }
-            buf.writeResourceLocation(aBonus.itemId);
+            buf.writeIdentifier(aBonus.itemId);
             buf.writeInt(aBonus.amount);
         }
 
