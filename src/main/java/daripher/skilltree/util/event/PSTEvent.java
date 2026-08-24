@@ -1,6 +1,6 @@
 package daripher.skilltree.util.event;
 
-/** Reproduit net.minecraftforge.eventbus.api.Event : simple event annulable, base de tous nos events "maison". */
+
 public abstract class PSTEvent {
     private boolean canceled;
 

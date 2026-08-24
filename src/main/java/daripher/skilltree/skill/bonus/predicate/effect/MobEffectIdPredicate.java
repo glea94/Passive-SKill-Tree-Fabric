@@ -74,7 +74,7 @@ public final class MobEffectIdPredicate implements MobEffectPredicate {
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<MobEffectPredicate> consumer) {
         editor.addLabel(0, 0, "Effect Type", ChatFormatting.GREEN);
         editor.increaseHeight(19);
-        editor.addSelectionMenu(0, 0, 200, mobEffect.value()).setResponder(holder -> selectEffect(consumer, (Holder<MobEffect>) holder));
+        editor.addSelectionMenu(0, 0, 200, mobEffect).setResponder(holder -> selectEffect(consumer, holder));
         editor.increaseHeight(19);
     }
 

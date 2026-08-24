@@ -49,7 +49,7 @@ public final class CrouchingEntityPredicate implements LivingEntityPredicate {
 
     public void setReverseLogic(boolean reverseLogic, Consumer<LivingEntityPredicate> consumer) {
         this.reverseLogic = reverseLogic;
-        // Protected for modern multi-threaded client isolation profiles
+
         consumer.accept(new CrouchingEntityPredicate(this.reverseLogic));
     }
 
@@ -97,14 +97,14 @@ public final class CrouchingEntityPredicate implements LivingEntityPredicate {
             return compoundTag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             boolean reverseLogic = buf.readBoolean();
             return new CrouchingEntityPredicate(reverseLogic);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             CrouchingEntityPredicate validPredicate = validatePredicate(predicate);

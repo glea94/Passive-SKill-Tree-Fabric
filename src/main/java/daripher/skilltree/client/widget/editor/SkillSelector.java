@@ -27,29 +27,18 @@ public class SkillSelector extends AbstractWidget {
     private int selectionStartY;
 
     public SkillSelector(SkillTreeEditor editor, SkillButtons skillButtons) {
-        // Factual Fix 1.21.4: AbstractWidget constructor strictly requires x, y, width, height, and message
+
         super(0, 0, 0, 0, Component.empty());
         this.skillButtons = skillButtons;
         this.editor = editor;
-        // Factual Fix 1.21.4: Directly apply vanilla active field state to block method conflicts
+
         this.active = false;
     }
 
     @Override
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        if (active) {
-=======
     protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        // Factual Fix 1.21.4: Use direct active field lookup
+
         if (this.active) {
->>>>>>> Stashed changes
-=======
-    protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        // Factual Fix 1.21.4: Use direct active field lookup
-        if (this.active) {
->>>>>>> Stashed changes
             renderSelectionArea(graphics, mouseX, mouseY);
         }
         renderSelectedSkillsHighlight(graphics);
@@ -96,7 +85,7 @@ public class SkillSelector extends AbstractWidget {
             return false;
         }
         if (mouseButtonEvent.hasShiftDown()) {
-            // Factual Fix 1.21.4: Update interactive state via active field configuration
+
             this.active = true;
             selectionStartX = (int) mouseButtonEvent.x();
             selectionStartY = (int) mouseButtonEvent.y();
@@ -122,7 +111,7 @@ public class SkillSelector extends AbstractWidget {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent mouseButtonEvent) {
-        // Factual Fix 1.21.4: Use direct active field lookup
+
         if (this.active) {
             addSelectedSkills(mouseButtonEvent.x(), mouseButtonEvent.y());
             this.active = false;

@@ -1,16 +1,83 @@
 {
   "id": "skilltree:blacksmith_60",
-  "bonuses": [],
-  "requirements": [],
+  "bonuses": [
+    {
+      "type": "skilltree:crafted_item_bonus",
+      "item_condition": {
+        "equipment_type": "chestplate",
+        "type": "skilltree:equipment_type"
+      },
+      "recipe_ids": [
+        "skilltree:armor_fire_forging"
+      ],
+      "item_bonus": {
+        "type": "skilltree:item_bonus_list",
+        "inner_bonuses": [
+          {
+            "type": "skilltree:skill_bonus",
+            "skill_bonus": {
+              "type": "skilltree:damage_taken",
+              "amount": -0.3,
+              "operation": "add_multiplied_base",
+              "player_multiplier": {
+                "type": "skilltree:none"
+              },
+              "attacker_multiplier": {
+                "type": "skilltree:none"
+              },
+              "player_condition": {
+                "type": "skilltree:none"
+              },
+              "damage_condition": {
+                "type": "skilltree:fire"
+              },
+              "attacker_condition": {
+                "type": "skilltree:none"
+              }
+            }
+          },
+          {
+            "type": "skilltree:skill_bonus",
+            "skill_bonus": {
+              "type": "skilltree:inflict_effect",
+              "chance": 1.0,
+              "max_stacks": 0,
+              "effect": "minecraft:fire_resistance",
+              "duration": 1200,
+              "amplifier": 0,
+              "event_listener": {
+                "type": "skilltree:ticking",
+                "cooldown": 6000,
+                "player_condition": {
+                  "type": "skilltree:none"
+                },
+                "player_multiplier": {
+                  "type": "skilltree:none"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "requirements": [
+    {
+      "type": "skilltree:not_learned_skill",
+      "skill_id": "skilltree:blacksmith_58"
+    }
+  ],
   "directConnections": [],
   "longConnections": [],
   "oneWayConnections": [],
   "tags": [],
   "backgroundTexture": "skilltree:textures/icons/background/notable.png",
-  "iconTexture": "skilltree:textures/icons/void.png",
+  "iconTexture": "skilltree:textures/icons/blacksmith_subclass_2_life_1.png",
   "borderTexture": "skilltree:textures/tooltip/lesser.png",
+  "titleColor": "",
   "positionX": 93.525566,
   "positionY": -89.99103,
   "buttonSize": 20,
-  "isStartingPoint": false
+  "isStartingPoint": false,
+  "isAlwaysStartingPoint": false
 }

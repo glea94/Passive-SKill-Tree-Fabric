@@ -8,7 +8,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 
 public class PSTMobEffects {
-    // Aligned 1.21.4: Direct status effect linking via BuiltInRegistries.MOB_EFFECT
+
     public static final DeferredRegister<MobEffect> REGISTRY = DeferredRegister.create(BuiltInRegistries.MOB_EFFECT, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<MobEffect> LIQUID_FIRE = REGISTRY.register("liquid_fire", LiquidFireEffect::new);

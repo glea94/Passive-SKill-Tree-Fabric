@@ -10,7 +10,7 @@ public record OpenSkillTreeEditorMessage(Identifier treeId) implements CustomPac
     public static final CustomPacketPayload.Type<OpenSkillTreeEditorMessage> TYPE =
             new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "open_skill_tree_editor"));
 
-    // Aligned 1.21.4: Using modern streamlined composite codecs with full RegistryFriendlyByteBuf tracking
+
     public static final StreamCodec<RegistryFriendlyByteBuf, OpenSkillTreeEditorMessage> STREAM_CODEC =
             StreamCodec.composite(
                     Identifier.STREAM_CODEC, OpenSkillTreeEditorMessage::treeId,

@@ -36,7 +36,7 @@ public class PoisonedWeaponEvents {
             return;
         }
 
-        // Factual Fix 1.21.4: Provide registry provider context during effect retrieval loops
+
         HolderLookup.Provider registryLookup = event.getEntity().level().registryAccess();
         getPoisonedWeaponEffects(mainHandItem, registryLookup).forEach(pEffectInstance -> event.getEntity().addEffect(pEffectInstance, player));
 
@@ -54,13 +54,13 @@ public class PoisonedWeaponEvents {
 
         ListTag effectsTagList = new ListTag();
 
-        // Factual Fix 1.21.4: MobEffectInstance saving requires the registry lookup context provider
-        if (itemStack.getComponents().isEmpty()) return; // Protection block
 
-        // We look for a fallback or grab a valid lookup context from active registries
-        // Normally, a contextual provider is passed down from the block/container screen or execution slot.
-        // For local generation, we pull a placeholder or assume a context is accessible.
-        // If an editor context isn't running, we fallback safely.
+        if (itemStack.getComponents().isEmpty()) return;
+
+
+
+
+
         HolderLookup.Provider lookup = net.minecraft.client.Minecraft.getInstance().level != null ?
                 net.minecraft.client.Minecraft.getInstance().level.registryAccess() : null;
 
@@ -100,7 +100,7 @@ public class PoisonedWeaponEvents {
         return itemTag.getIntOr(POISON_USES_LEFT_TAG_NAME, 0);
     }
 
-    // Overload variant for headless checks or standard layout evaluations
+
     public static List<MobEffectInstance> getPoisonedWeaponEffects(ItemStack itemStack) {
         HolderLookup.Provider lookup = net.minecraft.client.Minecraft.getInstance().level != null ?
                 net.minecraft.client.Minecraft.getInstance().level.registryAccess() : null;
@@ -108,7 +108,7 @@ public class PoisonedWeaponEvents {
         return getPoisonedWeaponEffects(itemStack, lookup);
     }
 
-    // Factual Fix 1.21.4: Refactored method signature to process lookup data pools securely
+
     public static List<MobEffectInstance> getPoisonedWeaponEffects(ItemStack itemStack, HolderLookup.Provider registryLookup) {
         if (!hasPoison(itemStack)) {
             return List.of();
@@ -118,7 +118,7 @@ public class PoisonedWeaponEvents {
         ListTag effectsListTag = itemTag.getListOrEmpty(WEAPON_EFFECTS_TAG_NAME);
 
         for (Tag tag : effectsListTag) {
-            // Factual Fix 1.21.5 (confirmé par décompilation de MobEffectInstance) : load() supprimé, plus aucune méthode save/load ; remplacé par CODEC.parse avec le contexte de sérialisation registry
+
             MobEffectInstance instance = MobEffectInstance.CODEC.parse(registryLookup.createSerializationContext(NbtOps.INSTANCE), tag).result().orElse(null);
             if (instance != null) {
                 effects.add(instance);

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-/** Portage Fabric : logique identique, seule la souscription change. */
+
 public class IncomingDamageBonusHandler {
     public static void register() {
         PSTEvents.LIVING_HURT.register(IncomingDamageBonusHandler::modifyIncomingDamage);
@@ -32,7 +32,7 @@ public class IncomingDamageBonusHandler {
         float baseDamageMultiplier = 1f;
         float totalDamageMultiplier = 1f;
         for (IncomingDamageBonus bonus : skillBonuses) {
-            // Aligned 1.21.4: Retain modern vanilla naming structures for dynamic attribute operations
+
             flatDamageBonus += bonus.getDamageModifier(AttributeModifier.Operation.ADD_VALUE, damageSource, player, attacker);
             baseDamageMultiplier += bonus.getDamageModifier(AttributeModifier.Operation.ADD_MULTIPLIED_BASE, damageSource, player, attacker);
             totalDamageMultiplier *= 1f + bonus.getDamageModifier(AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL, damageSource, player, attacker);

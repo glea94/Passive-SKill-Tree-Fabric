@@ -200,7 +200,7 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public IncomingHealingBonus deserialize(RegistryFriendlyByteBuf buf) {
             IncomingHealingBonus bonus = new IncomingHealingBonus(buf.readFloat());
@@ -209,7 +209,7 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof IncomingHealingBonus aBonus)) {

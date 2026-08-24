@@ -12,15 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTLivingEntityPredicates {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "living_conditions");
-=======
     public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "living_conditions");
->>>>>>> Stashed changes
-=======
-    public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "living_conditions");
->>>>>>> Stashed changes
     public static final DeferredRegister<LivingEntityPredicate.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<LivingEntityPredicate.Serializer> NONE = REGISTRY.register("none", NoneLivingEntityPredicate.Serializer::new);
@@ -37,7 +29,7 @@ public class PSTLivingEntityPredicates {
     public static final RegistryObject<LivingEntityPredicate.Serializer> ALL_ARMOR = REGISTRY.register("all_armor", AllArmorEntityPredicate.Serializer::new);
 
     public static List<LivingEntityPredicate> conditionsList() {
-        // Alignment 1.21.4: Streams data structures through custom registry endpoints
+
         return PSTRegistries.LIVING_CONDITIONS.get().getValues().stream()
                 .map(LivingEntityPredicate.Serializer::createDefaultInstance)
                 .toList();

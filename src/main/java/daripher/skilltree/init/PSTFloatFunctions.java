@@ -11,15 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTFloatFunctions {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "numeric_value_providers");
-=======
     public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "numeric_value_providers");
->>>>>>> Stashed changes
-=======
-    public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "numeric_value_providers");
->>>>>>> Stashed changes
     public static final DeferredRegister<FloatFunction.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<FloatFunction.Serializer> ATTRIBUTE_VALUE = REGISTRY.register("attribute_value", AttributeValueFunction.Serializer::new);
@@ -34,7 +26,7 @@ public class PSTFloatFunctions {
 
     @SuppressWarnings("rawtypes")
     public static List<FloatFunction> providerList() {
-        // Alignment 1.21.4: Streams data structures through custom registry endpoints safely
+
         return PSTRegistries.FLOAT_FUNCTIONS.get().getValues().stream()
                 .map(FloatFunction.Serializer::createDefaultInstance)
                 .map(FloatFunction.class::cast)

@@ -327,14 +327,14 @@ public final class DamageConversionBonus implements SkillBonus<DamageConversionB
             SerializationHelper.serializeDamageCondition(tag, aBonus.originalDamageCondition, "original_damage");
             SerializationHelper.serializeDamageCondition(tag, aBonus.resultDamageCondition, "result_damage");
             SerializationHelper.serializeLivingMultiplier(tag, aBonus.playerMultiplier, "player_multiplier");
-            // Factual Fix: Corrected typo where playerMultiplier was serialized into enemy_multiplier
+
             SerializationHelper.serializeLivingMultiplier(tag, aBonus.targetMultiplier, "enemy_multiplier");
             SerializationHelper.serializeLivingCondition(tag, aBonus.playerCondition, "player_condition");
             SerializationHelper.serializeLivingCondition(tag, aBonus.targetCondition, "target_condition");
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public DamageConversionBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -348,7 +348,7 @@ public final class DamageConversionBonus implements SkillBonus<DamageConversionB
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof DamageConversionBonus aBonus)) {

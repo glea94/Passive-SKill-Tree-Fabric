@@ -334,7 +334,7 @@ public final class IncomingDamageBonus implements SkillBonus<IncomingDamageBonus
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public IncomingDamageBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -348,7 +348,7 @@ public final class IncomingDamageBonus implements SkillBonus<IncomingDamageBonus
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof IncomingDamageBonus aBonus)) {

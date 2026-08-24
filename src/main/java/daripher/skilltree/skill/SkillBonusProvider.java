@@ -65,7 +65,7 @@ public class SkillBonusProvider {
     private static <T> List<T> getEffectBonuses(Player player, Class<T> type) {
         List<T> bonuses = new ArrayList<>();
         for (MobEffectInstance e : player.getActiveEffects()) {
-            // Aligned 1.21.4: Direct registry Holder unwrapping via .value() before checking instanceof
+
             if (e.getEffect().value() instanceof SkillBonusEffect skillEffect) {
                 SkillBonus<?> bonus = skillEffect.getBonus().copy();
                 if (type.isInstance(bonus)) {
@@ -82,7 +82,8 @@ public class SkillBonusProvider {
     }
 
     private static <T> List<T> getItemBonuses(ItemStack stack, Class<T> type) {
-        List<ItemBonus<?>> itemBonuses = new ArrayList<>(ItemBonusHandler.getItemBonuses(stack));
+
+        List<ItemBonus<?>> itemBonuses = ItemBonusHandler.getItemBonuses(stack, EquipmentBonus.class);
         List<T> bonuses = new ArrayList<>();
         for (ItemBonus<?> itemBonus : itemBonuses) {
             if (itemBonus instanceof EquipmentBonus bonus) {

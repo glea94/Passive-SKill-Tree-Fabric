@@ -13,7 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 
-/** Portage Fabric : logique identique, event.isCrit() remplace vanillaCritical||result==ALLOW. */
+
 public class CriticalHitDamageBonusHandler {
     public static void register() {
         PSTEvents.CRITICAL_HIT.register(EventPriority.LOW, CriticalHitDamageBonusHandler::applyCritBonuses);
@@ -22,7 +22,7 @@ public class CriticalHitDamageBonusHandler {
 
     private static void applyCritBonuses(CriticalHitPSTEvent event) {
         Player player = event.getEntity();
-        // Fix 1.21.9 : isClientSide champ private, méthode isClientSide() confirmée par décompilation
+
         if (player.level().isClientSide()) {
             return;
         }
@@ -40,7 +40,7 @@ public class CriticalHitDamageBonusHandler {
     private static void applyIndirectHitCritDamage(LivingHurtPSTEvent event) {
         DamageSource damageSource = event.getSource();
         Entity directDamagingEntity = damageSource.getDirectEntity();
-        // Dégâts directs, gérés par la méthode au-dessus, on ignore ici
+
         if (directDamagingEntity instanceof Player) {
             return;
         }

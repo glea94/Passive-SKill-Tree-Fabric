@@ -22,12 +22,12 @@ public abstract class LivingEntityMixin {
     @Unique
     private boolean skilltree$hurtAmountModified;
 
-    // Factual Fix 1.21.4: Target shifted from "hurt" to "hurtServer", added ServerLevel parameter
+
     @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true, require = 1)
     private void skilltree$onHurtServerHead(ServerLevel level, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity self = (LivingEntity) (Object) this;
 
-        // 1) LivingAttackEvent: Intercept attack details before raw calculations
+
         LivingAttackPSTEvent attackEvent = new LivingAttackPSTEvent(self, source, amount);
         PSTEvents.LIVING_ATTACK.post(attackEvent);
         if (attackEvent.isCanceled()) {
@@ -37,7 +37,7 @@ public abstract class LivingEntityMixin {
             return;
         }
 
-        // 2) LivingHurtEvent: Allow modification or mitigation of the processed final values
+
         LivingHurtPSTEvent hurtEvent = new LivingHurtPSTEvent(self, source, amount);
         PSTEvents.LIVING_HURT.post(hurtEvent);
         if (hurtEvent.isCanceled()) {
@@ -50,7 +50,7 @@ public abstract class LivingEntityMixin {
         skilltree$modifiedHurtAmount = hurtEvent.getAmount();
     }
 
-    // Factual Fix 1.21.4: Refactored target from "hurt" to "hurtServer"
+
     @ModifyVariable(method = "hurtServer", at = @At("HEAD"), argsOnly = true, require = 1)
     private float skilltree$applyModifiedAmount(float amount) {
         return skilltree$hurtAmountModified ? skilltree$modifiedHurtAmount : amount;
@@ -79,13 +79,7 @@ public abstract class LivingEntityMixin {
         return skilltree$healAmountModified ? skilltree$modifiedHealAmount : amount;
     }
 
-    /**
-     * Portage Fabric de net.minecraftforge.event.entity.living.LivingEntityUseItemEvent.Finish.
-     * Injection simple à HEAD (avant que vanilla ne traite/échange l'item) : on capture l'item
-     * en cours d'utilisation via getUseItem() (accesseur public vanilla) et on notifie nos
-     * listeners. Pas de modification du comportement vanilla ici, juste une notification -
-     * technique la plus sûre possible (pas de cancellable, pas de capture de variable locale).
-     */
+    
     @Inject(method = "completeUsingItem", at = @At("HEAD"), require = 1)
     private void skilltree$onCompleteUsingItem(CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;
@@ -93,7 +87,7 @@ public abstract class LivingEntityMixin {
         if (usedItem.isEmpty()) {
             return;
         }
-        // Secure a localized detached copy to safely pass historical data down to your triggers
+
         PSTEvents.ITEM_USE_FINISH.post(new daripher.skilltree.event.LivingEntityUseItemFinishPSTEvent(self, usedItem.copy()));
     }
 }

@@ -144,7 +144,7 @@ public final class FloatFunctionMultiplier implements LivingMultiplier {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public LivingMultiplier deserialize(RegistryFriendlyByteBuf buf) {
             FloatFunction<?> valueProvider = NetworkHelper.readValueProvider(buf);
@@ -152,7 +152,7 @@ public final class FloatFunctionMultiplier implements LivingMultiplier {
             return new FloatFunctionMultiplier(valueProvider, divisor);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingMultiplier multiplier) {
             if (!(multiplier instanceof FloatFunctionMultiplier aMultiplier)) {
@@ -164,7 +164,7 @@ public final class FloatFunctionMultiplier implements LivingMultiplier {
 
         @Override
         public LivingMultiplier createDefaultInstance() {
-            // Aligned 1.21.4: Constructor cleanly maps the vanilla reference as a default instance parameter
+
             return new FloatFunctionMultiplier(new AttributeValueFunction(Attributes.MAX_HEALTH), 5f);
         }
     }

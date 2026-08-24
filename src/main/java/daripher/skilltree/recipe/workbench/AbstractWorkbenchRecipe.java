@@ -27,21 +27,10 @@ import java.util.Map;
 import java.util.Objects;
 
 public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContainer>, SkillRequiringRecipe {
-<<<<<<< Updated upstream
-    private final ResourceLocation id;
-    private final boolean requiresPassiveSkill;
-
-<<<<<<< Updated upstream
-    public AbstractWorkbenchRecipe(ResourceLocation id, boolean requiresPassiveSkill) {
-=======
     private Identifier id;
     private final boolean requiresPassiveSkill;
 
     protected AbstractWorkbenchRecipe(Identifier id, boolean requiresPassiveSkill) {
->>>>>>> Stashed changes
-=======
-    protected AbstractWorkbenchRecipe(Identifier id, boolean requiresPassiveSkill) {
->>>>>>> Stashed changes
         this.requiresPassiveSkill = requiresPassiveSkill;
         this.id = id;
     }
@@ -59,18 +48,9 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
     }
 
     public String getDescriptionId() {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        ResourceLocation id = BuiltInRegistries.RECIPE_SERIALIZER.getKey(getSerializer());
-        Objects.requireNonNull(id);
-        return "recipe.%s.%s".formatted(id.getNamespace(), id.getPath());
-=======
-=======
->>>>>>> Stashed changes
         Identifier serializerId = BuiltInRegistries.RECIPE_SERIALIZER.getKey(getSerializer());
         Objects.requireNonNull(serializerId);
         return "recipe.%s.%s".formatted(serializerId.getNamespace(), serializerId.getPath());
->>>>>>> Stashed changes
     }
 
     public boolean isLockedFor(@NotNull Player player) {
@@ -91,11 +71,6 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
 
     public abstract @NotNull ItemStack getResult(WorkbenchContainer workbenchContainer);
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
     @Override
     public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container) {
         return getResult(container);
@@ -111,10 +86,6 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
         return "";
     }
 
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     public abstract int requiredBaseItemAmount();
 
     public abstract @Nullable Pair<Ingredient, Integer> getBaseIngredient();
@@ -134,16 +105,6 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
         return width == 5 && height == 2;
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    @Override
-    public @NotNull ResourceLocation getId() {
-        return id;
-    }
-
-=======
-=======
->>>>>>> Stashed changes
     public @NotNull Identifier getId() {
         return id;
     }
@@ -152,7 +113,6 @@ public abstract class AbstractWorkbenchRecipe implements Recipe<WorkbenchContain
         this.id = id;
     }
 
->>>>>>> Stashed changes
     @Deprecated
     public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider registries) {
         return ItemStack.EMPTY;

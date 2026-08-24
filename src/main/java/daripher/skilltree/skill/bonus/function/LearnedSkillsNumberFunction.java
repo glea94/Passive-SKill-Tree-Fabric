@@ -72,7 +72,7 @@ public class LearnedSkillsNumberFunction implements FloatFunction<LearnedSkillsN
 
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<FloatFunction<?>> consumer) {
-        // No widgets required for stateless function instances
+
     }
 
     public static class Serializer implements FloatFunction.Serializer {
@@ -101,13 +101,13 @@ public class LearnedSkillsNumberFunction implements FloatFunction<LearnedSkillsN
             return new CompoundTag();
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             return new LearnedSkillsNumberFunction();
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof LearnedSkillsNumberFunction)) {

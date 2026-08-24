@@ -17,7 +17,7 @@ public class WorkbenchBaseSlot extends Slot {
 
     @Override
     public boolean mayPlace(@NotNull ItemStack itemStack) {
-        // Factual Fix 1.21.4: Adapt to the updated holder-centric menu lookup model
+
         RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder = container.menu.getSelectedRecipeHolder();
         if (selectedRecipeHolder == null) {
             return true;

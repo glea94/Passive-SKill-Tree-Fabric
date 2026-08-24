@@ -83,7 +83,7 @@ public final class NumericValueRequirement implements SkillRequirement<NumericVa
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
             FloatFunctionEntityPredicate condition = (FloatFunctionEntityPredicate) PSTLivingEntityPredicates.NUMERIC_VALUE.get()
@@ -91,7 +91,7 @@ public final class NumericValueRequirement implements SkillRequirement<NumericVa
             return new NumericValueRequirement(condition);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillRequirement<?> requirement) {
             if (requirement instanceof NumericValueRequirement aRequirement) {

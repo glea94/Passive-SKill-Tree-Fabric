@@ -118,13 +118,13 @@ public final class HasItemEquippedEntityPredicate implements LivingEntityPredica
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new HasItemEquippedEntityPredicate(NetworkHelper.readItemPredicate(buf));
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             HasItemEquippedEntityPredicate validPredicate = validatePredicate(predicate);

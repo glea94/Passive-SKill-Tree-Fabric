@@ -4,13 +4,7 @@
     {
       "type": "skilltree:damage_taken",
       "amount": -0.02,
-      "operation": 1,
-      "player_multiplier": {
-        "type": "skilltree:none"
-      },
-      "attacker_multiplier": {
-        "type": "skilltree:none"
-      },
+      "operation": "add_value",
       "player_condition": {
         "item_condition": {
           "equipment_type": "shield",
@@ -20,17 +14,15 @@
       },
       "damage_condition": {
         "type": "skilltree:none"
-      },
-      "attacker_condition": {
-        "type": "skilltree:none"
       }
     }
   ],
   "requirements": [
     {
+      "type": "skilltree:stat_value",
       "statTypeId": "minecraft:custom",
       "statId": "minecraft:damage_blocked_by_shield",
-      "minValue": 1000
+      "minValue": 1500
     }
   ],
   "directConnections": [
@@ -40,10 +32,12 @@
   "oneWayConnections": [],
   "tags": [],
   "backgroundTexture": "skilltree:textures/icons/background/lesser.png",
-  "iconTexture": "skilltree:textures/icons/void.png",
+  "iconTexture": "skilltree:textures/icons/helmet_leather.png",
   "borderTexture": "skilltree:textures/tooltip/lesser.png",
+  "titleColor": "",
   "positionX": -93.52729,
   "positionY": 53.99701,
   "buttonSize": 16,
-  "isStartingPoint": false
+  "isStartingPoint": false,
+  "isAlwaysStartingPoint": false
 }

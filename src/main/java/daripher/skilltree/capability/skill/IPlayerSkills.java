@@ -6,7 +6,7 @@ import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerPlayer;
 
-// Ajout explicite de Component en plus de AutoSyncedComponent pour la robustesse de l'API V6
+
 public interface IPlayerSkills extends Component, AutoSyncedComponent {
     NonNullList<PassiveSkill> getPlayerSkills();
 

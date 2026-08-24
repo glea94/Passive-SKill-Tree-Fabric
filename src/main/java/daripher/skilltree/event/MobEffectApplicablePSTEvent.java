@@ -4,11 +4,7 @@ import daripher.skilltree.util.event.PSTEvent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
-/**
- * Équivalent de net.minecraftforge.event.entity.living.MobEffectEvent.Applicable. Reproduit le
- * système Result de Forge (ALLOW/DENY/DEFAULT) : le dernier appel à setResult() qui n'est pas
- * DEFAULT l'emporte, comme côté Forge.
- */
+
 public class MobEffectApplicablePSTEvent extends PSTEvent {
     public enum Result { ALLOW, DEFAULT, DENY }
 

@@ -1,13 +1,5 @@
 plugins {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-	id 'fabric-loom' version '1.14.10'
-=======
 	id 'net.fabricmc.fabric-loom' version '1.17.19'
->>>>>>> Stashed changes
-=======
-	id 'net.fabricmc.fabric-loom' version '1.17.19'
->>>>>>> Stashed changes
 	id 'maven-publish'
 }
 
@@ -41,29 +33,6 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${minecraft_version}"
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-	// Mappings officiels Mojang (PAS Yarn) : tout le code de ce portage utilise les noms Mojang
-	// (ChatFormatting, ResourceLocation, LivingEntity...), hérités directement de la source Forge
-	// d'origine (Forge utilise Mojmap depuis des années, pas les noms Yarn). Utiliser Yarn ici
-	// causerait un mismatch total entre le code et les mappings - repéré et corrigé le 23/07/2026.
-	mappings loom.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:${loader_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
-	modImplementation "maven.modrinth:lOOpEntO:9PvB3nqH"
-	// Cardinal Components API -> équivalent Fabric du système de Capabilities Forge
-	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cardinal_components_version}"
-	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cardinal_components_version}"
-
-	// Trinkets API -> équivalent Fabric de Curios (choix confirmé pour la compat accessoires)
-	// Bascule vers Modrinth : maven.terraformersmc.com renvoyait une erreur 502 persistante.
-	// Coordonnées confirmées par toi depuis la page de téléchargement officielle Modrinth (3.7.2).
-	modImplementation "maven.modrinth:5aaWibi9:AHxQGtuC"
-
-	// AttributeFix (dépendance obligatoire dans le mod d'origine) - build Fabric 1.20.1 21.0.4,
-	// coordonnées Modrinth vérifiées (maven.modrinth:<slug-id>:<version-id>)
-	modImplementation "maven.modrinth:lOOpEntO:Y42wjyly"
-=======
 	
 	implementation "net.fabricmc:fabric-loader:${loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
@@ -72,25 +41,11 @@ dependencies {
 	implementation "org.ladysnake.cardinal-components-api:cardinal-components-base:8.0.1"
 	implementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:8.0.1"
 
-=======
-	
-	implementation "net.fabricmc:fabric-loader:${loader_version}"
-	implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
-
-	// CARDINAL COMPONENTS API 8.0.1
-	implementation "org.ladysnake.cardinal-components-api:cardinal-components-base:8.0.1"
-	implementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:8.0.1"
-
->>>>>>> Stashed changes
 	// TRINKETS CANARY via variables gradle.properties
 	implementation "maven.modrinth:${trinkets_id}:${trinkets_version}"
 
 	// ATTRIBUTEFIX via variables gradle.properties
 	implementation "maven.modrinth:${attributefix_id}:${attributefix_version}"
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 }
 
 loom {
@@ -120,33 +75,14 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-	it.options.release = 17
-=======
 	it.options.release = 25
 	it.options.compilerArgs.addAll(["-Xmaxerrs", "1000"])
->>>>>>> Stashed changes
-=======
-	it.options.release = 25
-	it.options.compilerArgs.addAll(["-Xmaxerrs", "1000"])
->>>>>>> Stashed changes
 }
 
 java {
 	withSourcesJar()
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
-=======
 	sourceCompatibility = JavaVersion.VERSION_25
 	targetCompatibility = JavaVersion.VERSION_25
->>>>>>> Stashed changes
-=======
-	sourceCompatibility = JavaVersion.VERSION_25
-	targetCompatibility = JavaVersion.VERSION_25
->>>>>>> Stashed changes
 }
 
 sourceSets {
@@ -161,19 +97,9 @@ tasks.withType(AbstractCopyTask).configureEach {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
 java {
 	withSourcesJar()
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(25)
 	}
-<<<<<<< Updated upstream
 }
->>>>>>> Stashed changes
-=======
-}
->>>>>>> Stashed changes

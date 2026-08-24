@@ -28,7 +28,7 @@ public class SelectionMenu<T> extends EditorMenu {
         editor.increaseHeight(29);
 
         if (requiresSearch) {
-            // Factual Fix 1.21.4: Extracted out of a single fluent chain to fully resolve the "void cannot be dereferenced" compilation error
+
             TextField searchField = editor.addTextField(0, 0, 200, 14, "");
             searchField.setHint("Search");
             searchField.setFocused(true);

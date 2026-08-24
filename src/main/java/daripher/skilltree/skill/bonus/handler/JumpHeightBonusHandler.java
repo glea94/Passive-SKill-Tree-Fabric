@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
-/** Portage Fabric : logique identique. */
+
 public class JumpHeightBonusHandler {
     public static void register() {
         PSTEvents.LIVING_FALL.register(JumpHeightBonusHandler::reduceFallDistance);
@@ -31,7 +31,7 @@ public class JumpHeightBonusHandler {
         if (multiplier <= 1) {
             return;
         }
-        // Safely updates the fall trajectory threshold on the event capsule pipeline
+
         event.setDistance(event.getDistance() / multiplier);
     }
 }

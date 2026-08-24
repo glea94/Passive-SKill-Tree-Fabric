@@ -197,7 +197,7 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public HealthReservationBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -207,7 +207,7 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof HealthReservationBonus aBonus)) {

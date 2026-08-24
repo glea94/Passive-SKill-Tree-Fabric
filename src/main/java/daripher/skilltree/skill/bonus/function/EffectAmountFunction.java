@@ -30,7 +30,7 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
 
     @Override
     public float apply(LivingEntity entity) {
-        // Aligned 1.21.4: Map the active active status instances down to registry Holders
+
         List<Holder<MobEffect>> effects = entity.getActiveEffects().stream().map(MobEffectInstance::getEffect).toList();
         return switch (effectType) {
             case ANY -> effects.size();
@@ -137,7 +137,7 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
 
         @Override
         public FloatFunction<?> deserialize(CompoundTag tag) {
-            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+
             MobEffectType type = MobEffectType.fromName(tag.getString("effect_type").orElse(""));
             return new EffectAmountFunction(type);
         }
@@ -152,14 +152,14 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectType type = MobEffectType.values()[buf.readInt()];
             return new EffectAmountFunction(type);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof EffectAmountFunction aProvider)) {

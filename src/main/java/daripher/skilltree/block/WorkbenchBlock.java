@@ -25,26 +25,26 @@ public class WorkbenchBlock extends Block {
     private static final Component CONTAINER_TITLE = Component.translatable("container.upgrade");
 
     public WorkbenchBlock() {
-        // Changement 1.21.5 : comme pour Item.Properties, Block.Properties exige désormais
-        // que l'id soit connu avant la construction du Block (Objects.requireNonNull(this.id,
-        // "Block id not set") dans AbstractBlock.Properties). Même pattern que WisdomScrollItem/
-        // ModBlockItem, avec Registries.BLOCK au lieu de Registries.ITEM.
+
+
+
+
         super(Properties.of().setId(ResourceKey.create(Registries.BLOCK, DeferredRegister.currentId()))
                 .mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)
                 .ignitedByLava());
     }
 
-    // Changement 1.21.4 : Signature et retours d'InteractionResult mis à jour
+
     @SuppressWarnings("deprecation")
     @Override
     protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState blockState, Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult blockHitResult) {
-        // Fix 1.21.9 : le champ isClientSide est désormais private dans Level, méthode isClientSide() confirmée par décompilation
+
         if (level.isClientSide()) {
-            // Utilise la nouvelle structure ou l'instance statique de succès côté client
+
             return InteractionResult.SUCCESS;
         } else {
             player.openMenu(blockState.getMenuProvider(level, blockPos));
-            // InteractionResult.SUCCESS est le comportement standard pour l'ouverture d'un GUI serveur
+
             return InteractionResult.SUCCESS;
         }
     }

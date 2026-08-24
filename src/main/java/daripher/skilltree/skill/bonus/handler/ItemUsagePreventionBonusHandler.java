@@ -15,22 +15,13 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-/**
- * Portage Fabric.
- * - preventItemUsage(AttackEntityEvent) -> AttackEntityCallback (Fabric API, équivalent natif direct)
- * - preventItemUsage(PlayerInteractEvent) -> UseItemCallback (Fabric API)
- * - preventItemEquipping (LivingEquipmentChangeEvent) -> PSTEvents.LIVING_EQUIPMENT_CHANGE : porté.
- * - addPreventedUsageTooltip (RenderTooltipEvent.GatherComponents) -> PSTEvents.ITEM_TOOLTIP :
- *   porté en réutilisant le même event que ItemTooltipEvent (RenderTooltipEvent.GatherComponents
- *   donnait accès à des éléments enrichis Either<Component,image> côté Forge, mais ce handler
- *   n'ajoute qu'un simple Component texte - simplification légitime, sans perte pour ce cas).
- */
+
 public class ItemUsagePreventionBonusHandler {
-    // Recursion protection, identique à l'original
+
     private static boolean isProcessingRejection;
 
     public static void register() {
-        // Aligned 1.21.4: Direct registration of interaction overrides targeting the native Fabric pipeline
+
         AttackEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
             ItemStack mainHandItem = player.getMainHandItem();
             if (shouldPreventItemUsage(player, mainHandItem)) {

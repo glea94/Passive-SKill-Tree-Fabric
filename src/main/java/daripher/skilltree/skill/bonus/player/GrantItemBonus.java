@@ -95,15 +95,7 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
             return Component.literal("Unknown item: " + itemId).withStyle(ChatFormatting.DARK_RED);
         }
         Style style = TooltipHelper.getSkillBonusStyle(isPositive());
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        Component itemDescription = item.getDescription();
-=======
         Component itemDescription = item.getName(item.getDefaultInstance());
->>>>>>> Stashed changes
-=======
-        Component itemDescription = item.getName(item.getDefaultInstance());
->>>>>>> Stashed changes
         if (amount > 1) {
             String amountDescription = TooltipHelper.formatNumber(amount);
             return Component.translatable(getDescriptionId() + ".amount", amountDescription, itemDescription).withStyle(style);
@@ -154,15 +146,7 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public GrantItemBonus deserialize(JsonObject json) throws JsonParseException {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            ResourceLocation itemId = new ResourceLocation(json.get("item_id").getAsString());
-=======
             Identifier itemId = Identifier.parse(json.get("item_id").getAsString());
->>>>>>> Stashed changes
-=======
-            Identifier itemId = Identifier.parse(json.get("item_id").getAsString());
->>>>>>> Stashed changes
             int amount = SerializationHelper.getElement(json, "amount").getAsInt();
             return new GrantItemBonus(itemId, amount);
         }
@@ -178,16 +162,8 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
 
         @Override
         public GrantItemBonus deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            ResourceLocation itemId = new ResourceLocation(tag.getString("item_id"));
-            int amount = tag.getInt("amount");
-=======
-=======
->>>>>>> Stashed changes
             Identifier itemId = Identifier.parse(tag.getString("item_id").orElse(""));
             int amount = tag.getInt("amount").orElse(0);
->>>>>>> Stashed changes
             return new GrantItemBonus(itemId, amount);
         }
 
@@ -202,22 +178,15 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
-<<<<<<< Updated upstream
-        public GrantItemBonus deserialize(FriendlyByteBuf buf) {
-            ResourceLocation itemId = buf.readResourceLocation();
-            int duration = buf.readInt();
-            return new GrantItemBonus(itemId, duration);
-=======
         public GrantItemBonus deserialize(RegistryFriendlyByteBuf buf) {
             Identifier itemId = buf.readIdentifier();
             int amount = buf.readInt();
             return new GrantItemBonus(itemId, amount);
->>>>>>> Stashed changes
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof GrantItemBonus aBonus)) {

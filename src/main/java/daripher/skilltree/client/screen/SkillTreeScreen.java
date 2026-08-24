@@ -1,13 +1,6 @@
 package daripher.skilltree.client.screen;
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+import daripher.skilltree.client.widget.NavigationArrowButton;
 import daripher.skilltree.client.widget.SkillTreeWidgets;
 import daripher.skilltree.mixin.AbstractWidgetAccessor;
 import daripher.skilltree.client.widget.skill.SkillButtons;
@@ -24,28 +17,24 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
 import net.minecraft.client.renderer.RenderPipelines;
->>>>>>> Stashed changes
-=======
-import net.minecraft.client.renderer.RenderPipelines;
->>>>>>> Stashed changes
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundClientCommandPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2fStack;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-// CORRECTION 1.21.1: Removed 'implements StatsUpdateListener' completely
+
 public class SkillTreeScreen extends Screen {
     public static final int BACKGROUND_SIZE = 2048;
+    private static final int NAV_ARROW_SIZE = 16;
     private final PassiveSkillTree skillTree;
     private final SkillButtons skillButtons;
     private final SkillTreeWidgets skillTreeWidgets;
@@ -53,15 +42,55 @@ public class SkillTreeScreen extends Screen {
     private int prevMouseX;
     private int prevMouseY;
     private boolean statsUpdated;
+    private @Nullable Identifier prevTreeId;
+    private @Nullable Identifier nextTreeId;
+    private @Nullable NavigationArrowButton prevButton;
+    private @Nullable NavigationArrowButton nextButton;
 
     public SkillTreeScreen(Identifier skillTreeId) {
         super(Component.empty());
         this.skillTree = SkillTreesReloader.getSkillTreeById(skillTreeId);
-        // Fix 1.21.11 : this.minecraft est désormais final, déjà assigné par le constructeur de Screen (super(...)) - assignation manuelle retirée
+
         this.skillButtons = new SkillButtons(skillTree, () -> renderAnimation);
         this.skillTreeWidgets = new SkillTreeWidgets(getLocalPlayer(), skillButtons, skillTree);
         this.skillButtons.setRebuildFunc(this::rebuildWidgets);
         this.skillTreeWidgets.setRebuildFunc(this::rebuildWidgets);
+        updateNavigationTreeIds();
+    }
+
+
+
+    private void updateNavigationTreeIds() {
+        List<Identifier> orderedIds = SkillTreesReloader.getOrderedSkillTreeIds();
+        int index = orderedIds.indexOf(skillTree.getId());
+        if (index < 0) {
+            prevTreeId = null;
+            nextTreeId = null;
+            return;
+        }
+        prevTreeId = index > 0 ? orderedIds.get(index - 1) : null;
+        nextTreeId = index < orderedIds.size() - 1 ? orderedIds.get(index + 1) : null;
+    }
+
+    private void switchToTree(Identifier skillTreeId) {
+        Objects.requireNonNull(this.minecraft).setScreen(new SkillTreeScreen(skillTreeId));
+    }
+
+
+
+    private void addNavigationArrows() {
+        prevButton = null;
+        nextButton = null;
+        if (prevTreeId != null) {
+            Identifier targetId = prevTreeId;
+            prevButton = new NavigationArrowButton(4, height / 2 - NAV_ARROW_SIZE / 2, NAV_ARROW_SIZE, NAV_ARROW_SIZE, false);
+            prevButton.setPressFunc(b -> switchToTree(targetId));
+        }
+        if (nextTreeId != null) {
+            Identifier targetId = nextTreeId;
+            nextButton = new NavigationArrowButton(width - 4 - NAV_ARROW_SIZE, height / 2 - NAV_ARROW_SIZE / 2, NAV_ARROW_SIZE, NAV_ARROW_SIZE, true);
+            nextButton.setPressFunc(b -> switchToTree(targetId));
+        }
     }
 
     @Override
@@ -84,6 +113,7 @@ public class SkillTreeScreen extends Screen {
         calculateMaxScroll();
         addRenderableWidget(skillTreeWidgets);
         addRenderableWidget(skillButtons);
+        addNavigationArrows();
     }
 
     private void addSkillButtons() {
@@ -113,18 +143,18 @@ public class SkillTreeScreen extends Screen {
     @Override
     public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         renderAnimation += partialTick;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-        // Fix 1.21.5 : la méthode renderBackground prend uniquement GuiGraphicsExtractor en paramètre (pattern déjà validé dans SkillTreeEditorScreen.java / SkillTreeSelectionScreen.java)
->>>>>>> Stashed changes
-=======
-        // Fix 1.21.5 : la méthode renderBackground prend uniquement GuiGraphicsExtractor en paramètre (pattern déjà validé dans SkillTreeEditorScreen.java / SkillTreeSelectionScreen.java)
->>>>>>> Stashed changes
+
         renderBackground(graphics);
         skillButtons.extractRenderState(graphics, mouseX, mouseY, partialTick);
         renderOverlay(graphics);
         skillTreeWidgets.extractRenderState(graphics, mouseX, mouseY, partialTick);
+
+        if (prevButton != null) {
+            prevButton.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        }
+        if (nextButton != null) {
+            nextButton.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        }
         float tooltipX = mouseX + (prevMouseX - mouseX) * partialTick;
         float tooltipY = mouseY + (prevMouseY - mouseY) * partialTick;
         skillButtons.renderTooltip(graphics, tooltipX, tooltipY);
@@ -137,10 +167,20 @@ public class SkillTreeScreen extends Screen {
         if (skillTreeWidgets.mouseClicked(mouseButtonEvent, doubleClick)) {
             return true;
         }
-        return skillButtons.mouseClicked(mouseButtonEvent, doubleClick);
+        if (skillButtons.mouseClicked(mouseButtonEvent, doubleClick)) {
+            return true;
+        }
+
+        if (prevButton != null && prevButton.isMouseOver(mouseButtonEvent.x(), mouseButtonEvent.y())) {
+            return prevButton.mouseClicked(mouseButtonEvent, doubleClick);
+        }
+        if (nextButton != null && nextButton.isMouseOver(mouseButtonEvent.x(), mouseButtonEvent.y())) {
+            return nextButton.mouseClicked(mouseButtonEvent, doubleClick);
+        }
+        return false;
     }
 
-    // CORRECTION 1.21.1: Replaces legacy onStatsUpdated updates inline during widget ticks safely
+
     @Override
     public void tick() {
         if (!statsUpdated) {
@@ -176,40 +216,19 @@ public class SkillTreeScreen extends Screen {
         return skillTreeWidgets.charTyped(characterEvent);
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    private void renderOverlay(GuiGraphics graphics) {
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_overlay.png");
-        RenderSystem.enableBlend();
-        graphics.blit(texture, 0, 0, 0, 0F, 0F, width, height, width, height);
-        RenderSystem.disableBlend();
-    }
-
-    @Override
-    public void renderBackground(GuiGraphics graphics) {
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/skill_tree_background.png");
-        PoseStack poseStack = graphics.pose();
-        poseStack.pushPose();
-=======
-=======
->>>>>>> Stashed changes
     private void renderOverlay(GuiGraphicsExtractor graphics) {
-        // CORRECTION 1.21.1: Modern factory constructor pattern
+
         Identifier texture = Identifier.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_overlay.png");
-        // Fix 1.21.8 : RenderPipelines.GUI_TEXTURED gère déjà le blending, pas besoin de RenderSystem.enableBlend()/disableBlend()
+
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, width, height, width, height);
     }
 
-    // Fix 1.21.5 : renderBackground n'est plus surchargeable avec l'ancienne signature (GuiGraphicsExtractor, int, int, float) -> plus de @Override, signature réduite à (GuiGraphicsExtractor)
+
     public void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
-        // CORRECTION 1.21.1: Modern factory constructor pattern
+
         Identifier texture = Identifier.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_background.png");
         Matrix3x2fStack poseStack = graphics.pose();
         poseStack.pushMatrix();
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         float x = skillButtons.getScrollX();
         float y = skillButtons.getScrollY();
         if (ClientConfig.skill_tree_background_parallax) {
@@ -218,18 +237,8 @@ public class SkillTreeScreen extends Screen {
         }
         poseStack.translate(x, y);
         int size = BACKGROUND_SIZE;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        graphics.blit(texture, (width - size) / 2, (height - size) / 2, 0, 0F, 0F, size, size, size, size);
-        poseStack.popPose();
-=======
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (width - size) / 2, (height - size) / 2, 0F, 0F, size, size, size, size);
         poseStack.popMatrix();
->>>>>>> Stashed changes
-=======
-        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (width - size) / 2, (height - size) / 2, 0F, 0F, size, size, size, size);
-        poseStack.popMatrix();
->>>>>>> Stashed changes
     }
 
     @Override

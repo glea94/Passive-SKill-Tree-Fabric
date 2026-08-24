@@ -46,7 +46,7 @@ public class MainEditorMenu extends EditorMenu {
             SkillTreeEditorData.saveEditorSkillTree(skillTree);
         });
         selectedSkills.clear();
-        // Factual Fix 1.21.4: Clear widgets tracking layouts before telling the screen to rebuild
+
         editor.clearWidgets();
         editor.rebuildWidgets();
     }

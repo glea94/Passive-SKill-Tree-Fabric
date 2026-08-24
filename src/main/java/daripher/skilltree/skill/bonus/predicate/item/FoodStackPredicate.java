@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 public record FoodStackPredicate() implements ItemStackPredicate {
     @Override
     public boolean test(ItemStack stack) {
-        // Aligned 1.21.4: Direct native check using modern component infrastructure
+
         return stack.has(DataComponents.FOOD);
     }
 
@@ -57,13 +57,13 @@ public record FoodStackPredicate() implements ItemStackPredicate {
             return new CompoundTag();
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new FoodStackPredicate();
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof FoodStackPredicate)) {

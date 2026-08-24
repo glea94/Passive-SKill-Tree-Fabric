@@ -1,8 +1,5 @@
 package daripher.skilltree.network.message;
 
-<<<<<<< Updated upstream
-import net.minecraft.network.FriendlyByteBuf;
-=======
 import daripher.skilltree.SkillTreeMod;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -13,12 +10,11 @@ public class GainSkillPointMessage implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<GainSkillPointMessage> TYPE =
             new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "gain_skill_point"));
 
-    // Factual Fix 1.21.4: Update StreamCodec signature to utilize the mandatory RegistryFriendlyByteBuf structure
+
     public static final StreamCodec<RegistryFriendlyByteBuf, GainSkillPointMessage> STREAM_CODEC = StreamCodec.of(
             (buf, msg) -> msg.encode(buf),
             buf -> decode(buf)
     );
->>>>>>> Stashed changes
 
     public GainSkillPointMessage() {
     }
@@ -28,7 +24,7 @@ public class GainSkillPointMessage implements CustomPacketPayload {
     }
 
     public void encode(RegistryFriendlyByteBuf buf) {
-        // Aucune donnée à envoyer, identique à la structure d'origine
+
     }
 
     @Override

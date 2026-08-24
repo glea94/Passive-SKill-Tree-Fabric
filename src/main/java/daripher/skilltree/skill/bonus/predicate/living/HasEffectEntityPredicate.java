@@ -69,7 +69,7 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
         editor.addLabel(0, 0, "Effect", ChatFormatting.GREEN);
         editor.addLabel(150, 0, "Level", ChatFormatting.GREEN);
         editor.increaseHeight(19);
-        editor.addSelectionMenu(0, 0, 145, effect.value()).setResponder(h -> selectEffect(consumer, (Holder<MobEffect>) h));
+        editor.addSelectionMenu(0, 0, 145, effect).setResponder(h -> selectEffect(consumer, h));
         editor.addNumericTextField(150, 0, 50, 14, amplifier).setNumericFilter(value -> value >= 0 && value == value.intValue())
                 .setNumericResponder(value -> selectAmplifier(consumer, value));
         editor.increaseHeight(19);

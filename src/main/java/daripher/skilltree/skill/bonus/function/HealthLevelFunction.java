@@ -177,7 +177,7 @@ public class HealthLevelFunction implements FloatFunction<HealthLevelFunction> {
 
         @Override
         public FloatFunction<?> deserialize(CompoundTag tag) {
-            // Factual Fix 1.21.5 (confirmé par décompilation de CompoundTag) : getBoolean(String) retourne désormais Optional<Boolean> ; getBooleanOr(String, boolean) retrouve l'ancien comportement (false par défaut si absent)
+
             boolean percentage = tag.getBooleanOr("percentage", false);
             boolean missing = tag.getBooleanOr("missing", false);
             return new HealthLevelFunction(percentage, missing);
@@ -194,7 +194,7 @@ public class HealthLevelFunction implements FloatFunction<HealthLevelFunction> {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             boolean percentage = buf.readBoolean();
@@ -202,7 +202,7 @@ public class HealthLevelFunction implements FloatFunction<HealthLevelFunction> {
             return new HealthLevelFunction(percentage, missing);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof HealthLevelFunction aProvider)) {

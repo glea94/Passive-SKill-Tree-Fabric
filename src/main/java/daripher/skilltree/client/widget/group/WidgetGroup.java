@@ -21,7 +21,7 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     };
 
     public WidgetGroup(int x, int y, int width, int height) {
-        // Factual Fix 1.21.4: AbstractWidget constructor requires x, y, width, height, and message
+
         super(x, y, width, height, Component.empty());
     }
 
@@ -158,7 +158,7 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
 
     public @Nullable T getWidgetAt(double mouseX, double mouseY) {
         for (T widget : widgets) {
-            // Factual Fix 1.21.4: Replaced legacy isVisible() with the public field check
+
             if (!widget.visible) {
                 continue;
             }

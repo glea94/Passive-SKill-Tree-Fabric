@@ -4,13 +4,7 @@ import net.minecraft.resources.Identifier;
 
 import java.util.function.Supplier;
 
-/**
- * Remplace net.minecraftforge.registries.RegistryObject.
- * Contrairement à la version Forge, la valeur est déjà connue au moment de la création
- * (l'enregistrement Fabric est immédiat, pas différé sur un event bus), mais l'API .get()
- * est conservée à l'identique pour que tous les appels existants dans le mod continuent
- * de compiler sans modification.
- */
+
 public class RegistryObject<T> implements Supplier<T> {
     private final Identifier id;
     private final T value;

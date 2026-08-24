@@ -9,10 +9,10 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 
 public class PSTMenuTypes {
-    // Aligned 1.21.4: Direct registry linking with BuiltInRegistries.MENU
+
     public static final DeferredRegister<MenuType<?>> REGISTRY = DeferredRegister.create(BuiltInRegistries.MENU, SkillTreeMod.MOD_ID);
 
-    // Artisan Workbench container type registration
+
     public static final RegistryObject<MenuType<WorkbenchMenu>> ARTISAN_WORKBENCH = REGISTRY.register("artisan_workbench",
             () -> new MenuType<>(WorkbenchMenu::new, FeatureFlags.DEFAULT_FLAGS));
 }

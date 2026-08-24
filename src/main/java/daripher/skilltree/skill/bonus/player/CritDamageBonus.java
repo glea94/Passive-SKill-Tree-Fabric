@@ -299,7 +299,7 @@ public final class CritDamageBonus implements SkillBonus<CritDamageBonus> {
             CompoundTag tag = new CompoundTag();
             tag.putFloat("amount", aBonus.amount);
             SerializationHelper.serializeLivingMultiplier(tag, aBonus.playerMultiplier, "player_multiplier");
-            // Factual Fix: Corrected typo where playerMultiplier was serialized into enemy_multiplier
+
             SerializationHelper.serializeLivingMultiplier(tag, aBonus.targetMultiplier, "enemy_multiplier");
             SerializationHelper.serializeLivingCondition(tag, aBonus.playerCondition, "player_condition");
             SerializationHelper.serializeDamageCondition(tag, aBonus.damageCondition);
@@ -307,7 +307,7 @@ public final class CritDamageBonus implements SkillBonus<CritDamageBonus> {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public CritDamageBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -320,7 +320,7 @@ public final class CritDamageBonus implements SkillBonus<CritDamageBonus> {
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof CritDamageBonus aBonus)) {

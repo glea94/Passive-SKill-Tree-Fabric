@@ -171,7 +171,7 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
 
     @Override
     public boolean isPositive() {
-        // Aligned 1.21.4: Safe registry lookup unwrapping to inspect category metadata securely
+        
         return chance > 0 ^ eventListener.getTarget() == Target.PLAYER ^ effectInstance.getEffect()
                 .value().getCategory() != MobEffectCategory.HARMFUL;
     }
@@ -187,8 +187,8 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
         editor.addLabel(0, 0, "Effect", ChatFormatting.GOLD);
         editor.addLabel(150, 0, "Chance", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-        // Aligned 1.21.4: Passes the type-safe unwrap hook to the interface screen selection pipeline
-        editor.addSelectionMenu(0, 0, 145, effectInstance.getEffect().value()).setResponder(holder -> selectEffect(consumer, (Holder<MobEffect>) holder));
+        
+        editor.addSelectionMenu(0, 0, 145, effectInstance.getEffect()).setResponder(holder -> selectEffect(consumer, holder));
 
         editor.addNumericTextField(150, 0, 50, 14, chance).setNumericResponder(value -> selectChance(consumer, value));
         editor.increaseHeight(19);
@@ -317,7 +317,7 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public InflictMobEffectBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -328,7 +328,7 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof InflictMobEffectBonus aBonus)) {
@@ -342,7 +342,7 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
-            // Factual Fix 1.21.4: Maps a clean default instance using the type-safe registry identifier format
+            
             return new InflictMobEffectBonus(0.05f, new MobEffectInstance(MobEffects.POISON, 100), 1);
         }
     }

@@ -49,7 +49,7 @@ public final class DualWieldingEntityPredicate implements LivingEntityPredicate 
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer) {
         weaponPredicate.addEditorWidgets(editor, predicate -> {
             setWeaponPredicate(predicate);
-            // Protected copy configuration for safe UI tick thread isolation
+
             consumer.accept(new DualWieldingEntityPredicate(this.weaponPredicate));
         });
     }
@@ -100,13 +100,13 @@ public final class DualWieldingEntityPredicate implements LivingEntityPredicate 
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new DualWieldingEntityPredicate(NetworkHelper.readItemPredicate(buf));
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             DualWieldingEntityPredicate validPredicate = validatePredicate(predicate);

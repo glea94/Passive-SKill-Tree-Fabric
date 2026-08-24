@@ -5,19 +5,9 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
 
 plugins {
 	id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
 
-<<<<<<< Updated upstream
 rootProject.name = 'Passive-Skill-Tree-Fabric-26.1.2'
->>>>>>> Stashed changes
-=======
-rootProject.name = 'Passive-Skill-Tree-Fabric-26.1.2'
->>>>>>> Stashed changes

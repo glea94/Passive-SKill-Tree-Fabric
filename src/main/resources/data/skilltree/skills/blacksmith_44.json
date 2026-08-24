@@ -1,6 +1,45 @@
 {
   "id": "skilltree:blacksmith_44",
-  "bonuses": [],
+  "bonuses": [
+    {
+      "type": "skilltree:crafted_item_bonus",
+      "item_condition": {
+        "equipment_type": "helmet",
+        "type": "skilltree:equipment_type"
+      },
+      "recipe_ids": [
+        "skilltree:armor_fire_forging"
+      ],
+      "item_bonus": {
+        "type": "skilltree:item_bonus_list",
+        "inner_bonuses": [
+          {
+            "type": "skilltree:skill_bonus",
+            "skill_bonus": {
+              "type": "skilltree:damage_taken",
+              "amount": -0.25,
+              "operation": "add_multiplied_base",
+              "player_multiplier": {
+                "type": "skilltree:none"
+              },
+              "attacker_multiplier": {
+                "type": "skilltree:none"
+              },
+              "player_condition": {
+                "type": "skilltree:none"
+              },
+              "damage_condition": {
+                "type": "skilltree:fire"
+              },
+              "attacker_condition": {
+                "type": "skilltree:none"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
   "requirements": [],
   "directConnections": [
     "skilltree:blacksmith_41",
@@ -10,10 +49,12 @@
   "oneWayConnections": [],
   "tags": [],
   "backgroundTexture": "skilltree:textures/icons/background/lesser.png",
-  "iconTexture": "skilltree:textures/icons/void.png",
+  "iconTexture": "skilltree:textures/icons/blacksmith_subclass_2.png",
   "borderTexture": "skilltree:textures/tooltip/lesser.png",
+  "titleColor": "",
   "positionX": 93.52729,
   "positionY": -53.99402,
   "buttonSize": 16,
-  "isStartingPoint": false
+  "isStartingPoint": false,
+  "isAlwaysStartingPoint": false
 }

@@ -51,7 +51,7 @@ public final class LethalPoisonBonus implements SkillBonus<LethalPoisonBonus> {
 
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<LethalPoisonBonus> consumer) {
-        // Stateless placeholder for panel config widgets
+
     }
 
     public static class Serializer implements SkillBonus.Serializer {
@@ -80,13 +80,13 @@ public final class LethalPoisonBonus implements SkillBonus<LethalPoisonBonus> {
             return new CompoundTag();
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public LethalPoisonBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new LethalPoisonBonus();
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof LethalPoisonBonus)) {

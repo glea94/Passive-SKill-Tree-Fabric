@@ -1,13 +1,6 @@
 package daripher.skilltree.client.widget;
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
 import net.minecraft.client.renderer.RenderPipelines;
->>>>>>> Stashed changes
-=======
-import net.minecraft.client.renderer.RenderPipelines;
->>>>>>> Stashed changes
 import daripher.skilltree.capability.skill.IPlayerSkills;
 import daripher.skilltree.capability.skill.PlayerSkillsProvider;
 import daripher.skilltree.client.screen.ScreenHelper;
@@ -54,27 +47,12 @@ public class ProgressBar extends Button {
     protected void renderBackground(GuiGraphicsExtractor graphics) {
         float experienceProgress = getExperienceProgress();
         int filledBarWidth = (int) (experienceProgress * 183);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/progress_bars.png");
-        graphics.blit(texture, getX() + 26, getY() + 7, 0, 0, 182, 5);
-        if (filledBarWidth == 0) {
-            return;
-        }
-        graphics.blit(texture, getX() + 26, getY() + 7, 0, 5, filledBarWidth, 5);
-=======
-=======
->>>>>>> Stashed changes
         Identifier texture = Identifier.parse("skilltree:textures/screen/progress_bars.png");
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX() + 26, getY() + 7, 0F, 0F, 182, 5, 256, 256);
         if (filledBarWidth == 0) {
             return;
         }
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX() + 26, getY() + 7, 0F, 5F, filledBarWidth, 5, 256, 256);
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     }
 
     protected void renderProgress(GuiGraphicsExtractor graphics) {
@@ -84,12 +62,12 @@ public class ProgressBar extends Button {
             Objects.requireNonNull(player);
             long exp = ExpHelper.getPlayerExp(player);
             String text = exp + "/" + cost;
-            // Factual Fix 1.21.4: Replace legacy width field access with standard encapsulated getWidth()
+
             ScreenHelper.drawCenteredOutlinedText(graphics, text, getX() + this.getWidth() / 2, getTextY(), 0xFCE266);
         } else {
             float experienceProgress = getExperienceProgress();
             String text = (int) (experienceProgress * 100) + "%";
-            // Factual Fix 1.21.4: Replace legacy width field access with standard encapsulated getWidth()
+
             ScreenHelper.drawCenteredOutlinedText(graphics, text, getX() + this.getWidth() / 2, getTextY(), 0xFCE266);
         }
     }
@@ -100,7 +78,7 @@ public class ProgressBar extends Button {
             currentLevel--;
         }
         int nextLevel = currentLevel + 1;
-        // Factual Fix 1.21.4: Replace legacy width field access with standard encapsulated getWidth()
+
         ScreenHelper.drawCenteredOutlinedText(graphics, "" + nextLevel, getX() + this.getWidth() - 17, getTextY(), 0xFCE266);
     }
 

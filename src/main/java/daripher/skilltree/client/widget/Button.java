@@ -2,20 +2,10 @@ package daripher.skilltree.client.widget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import net.minecraft.client.gui.GuiGraphics;
-=======
-=======
->>>>>>> Stashed changes
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.renderer.RenderPipelines;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -44,16 +34,6 @@ public class Button extends net.minecraft.client.gui.components.Button {
         renderText(graphics);
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    protected void renderBackground(@NotNull GuiGraphics graphics) {
-        ResourceLocation texture = new ResourceLocation("skilltree:textures/screen/widgets.png");
-        int v = getTextureVariant() * 14;
-        graphics.blit(texture, getX(), getY(), 0, v, width / 2, height);
-        graphics.blit(texture, getX() + width / 2, getY(), -width / 2, v, width / 2, height);
-=======
-=======
->>>>>>> Stashed changes
     protected void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
         Identifier texture = Identifier.parse("skilltree:textures/screen/widgets.png");
         int v = getTextureVariant() * 14;
@@ -62,30 +42,14 @@ public class Button extends net.minecraft.client.gui.components.Button {
 
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), 0F, v, currentWidth / 2, currentHeight, 256, 256);
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX() + currentWidth / 2, getY(), (256 - currentWidth / 2F), v, currentWidth / 2, currentHeight, 256, 256);
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     }
 
     protected void renderText(@NotNull GuiGraphicsExtractor graphics) {
         Minecraft minecraft = Minecraft.getInstance();
         Font font = minecraft.font;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        int textColor = 0xFFFFFF; // couleur de texte par défaut vanilla (setFGColor n'est jamais appelé dans le mod)
-        textColor |= Mth.ceil(alpha * 255F) << 24;
-        graphics.drawCenteredString(font, getMessage(), getX() + width / 2, getY() + (height - 8) / 2, textColor);
-=======
         int textColor = 0xFFFFFF;
         textColor |= Mth.ceil(this.alpha * 255F) << 24;
         graphics.centeredText(font, getMessage(), getX() + this.getWidth() / 2, getY() + (this.getHeight() - 8) / 2, textColor);
->>>>>>> Stashed changes
-=======
-        int textColor = 0xFFFFFF;
-        textColor |= Mth.ceil(this.alpha * 255F) << 24;
-        graphics.centeredText(font, getMessage(), getX() + this.getWidth() / 2, getY() + (this.getHeight() - 8) / 2, textColor);
->>>>>>> Stashed changes
     }
 
     protected int getTextureVariant() {

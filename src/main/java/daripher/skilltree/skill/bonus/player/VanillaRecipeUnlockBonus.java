@@ -8,6 +8,7 @@ import daripher.skilltree.data.serializers.SerializationHelper;
 import daripher.skilltree.init.PSTSkillBonuses;
 import daripher.skilltree.network.NetworkHelper;
 import daripher.skilltree.recipe.workbench.WorkbenchVanillaCraftingRecipe;
+import daripher.skilltree.recipe.workbench.WorkbenchVanillaSmithingRecipe;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.predicate.item.ItemStackPredicate;
 import daripher.skilltree.skill.bonus.predicate.item.NoneItemStackPredicate;
@@ -30,6 +31,10 @@ public class VanillaRecipeUnlockBonus implements SkillBonus<VanillaRecipeUnlockB
     }
 
     public boolean canUnlockRecipe(WorkbenchVanillaCraftingRecipe recipe) {
+        return itemStackPredicate.test(recipe.getResult());
+    }
+
+    public boolean canUnlockRecipe(WorkbenchVanillaSmithingRecipe recipe) {
         return itemStackPredicate.test(recipe.getResult());
     }
 
@@ -143,14 +148,14 @@ public class VanillaRecipeUnlockBonus implements SkillBonus<VanillaRecipeUnlockB
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public VanillaRecipeUnlockBonus deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return new VanillaRecipeUnlockBonus(itemStackPredicate);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof VanillaRecipeUnlockBonus aBonus)) {

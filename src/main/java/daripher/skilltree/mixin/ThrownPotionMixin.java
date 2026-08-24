@@ -1,4 +1,4 @@
-// Fichier : src/main/java/daripher/skilltree/mixin/ThrownPotionMixin.java
+
 package daripher.skilltree.mixin;
 
 import daripher.skilltree.skill.bonus.handler.SelfSplashImmunityBonusHandler;
@@ -6,21 +6,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import net.minecraft.world.entity.projectile.ItemSupplier;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
-import net.minecraft.world.entity.projectile.ThrownPotion;
-=======
 import net.minecraft.world.entity.projectile.throwableitemprojectile.AbstractThrownPotion;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownSplashPotion;
->>>>>>> Stashed changes
-=======
-import net.minecraft.world.entity.projectile.throwableitemprojectile.AbstractThrownPotion;
-import net.minecraft.world.entity.projectile.ItemSupplier;
-import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownSplashPotion;
->>>>>>> Stashed changes
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
@@ -58,7 +46,7 @@ public abstract class ThrownPotionMixin extends AbstractThrownPotion implements 
         if (!SelfSplashImmunityBonusHandler.isPlayerImmuneToOwnSplashPotions(player)) {
             return baseTargets;
         }
-        // Factual Fix 1.21.4: Wrap into a mutable ArrayList to prevent a runtime UnsupportedOperationException
+
         List<T> mutableTargets = new ArrayList<>(baseTargets);
         mutableTargets.removeIf(owner::equals);
         return mutableTargets;

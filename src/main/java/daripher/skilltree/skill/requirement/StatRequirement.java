@@ -40,30 +40,25 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
 
     @Override
     public boolean test(Player player) {
-        // Factual Fix 1.21.4: Registry get() returns an Optional<Holder.Reference<T>>, unwrap with map()
+
         StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(statTypeId).map(Holder::value).orElse(null);
-        Objects.requireNonNull(statType);
+
+        if (statType == null) {
+            return false;
+        }
         int statValue = getStatValue(player, statType);
         return statValue >= minValue;
     }
 
     @Override
     public MutableComponent getTooltip() {
-        // Factual Fix 1.21.4: Registry get() returns an Optional<Holder.Reference<T>>, unwrap with map()
+
         StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(statTypeId).map(Holder::value).orElse(null);
         if (statType == null) {
             return Component.translatable("Unknown stat type: " + statTypeId).withStyle(ChatFormatting.RED);
         }
         if (statType == Stats.CUSTOM) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            ResourceLocation originalStatId = Stats.CUSTOM.getRegistry().get(statId);
-=======
             Identifier originalStatId = Stats.CUSTOM.getRegistry().get(statId).map(Holder::value).orElse(null);
->>>>>>> Stashed changes
-=======
-            Identifier originalStatId = Stats.CUSTOM.getRegistry().get(statId).map(Holder::value).orElse(null);
->>>>>>> Stashed changes
             if (originalStatId == null) {
                 return Component.literal("Unknown stat: " + statId).withStyle(ChatFormatting.RED);
             }
@@ -102,29 +97,24 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         StatsCounter playerStats = getPlayerStats(player);
         int statValue;
         if (statType == Stats.CUSTOM) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            ResourceLocation originalStatId = Stats.CUSTOM.getRegistry().get(statId);
-=======
             Identifier originalStatId = Stats.CUSTOM.getRegistry().get(statId).map(Holder::value).orElse(null);
->>>>>>> Stashed changes
-=======
-            Identifier originalStatId = Stats.CUSTOM.getRegistry().get(statId).map(Holder::value).orElse(null);
->>>>>>> Stashed changes
             if (originalStatId == null) {
                 return 0;
             }
             statValue = playerStats.getValue(Stats.CUSTOM, originalStatId);
         } else {
             T stat = statType.getRegistry().get(statId).map(Holder::value).orElse(null);
-            Objects.requireNonNull(stat);
+
+            if (stat == null) {
+                return 0;
+            }
             statValue = playerStats.getValue(statType, stat);
         }
         return statValue;
     }
 
     private StatsCounter getPlayerStats(Player player) {
-        // Fix 1.21.9 : isClientSide champ private, méthode isClientSide() confirmée par décompilation
+
         if (player.level().isClientSide()) {
             return getClientPlayerStats(player);
         }
@@ -147,7 +137,17 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         editor.increaseHeight(19);
 
         StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(getStatTypeId()).map(Holder::value).orElse(null);
-        Objects.requireNonNull(statType);
+
+        if (statType == null) {
+            editor.addLabel(0, 0, "Unknown stat type: " + getStatTypeId(), ChatFormatting.RED);
+            editor.increaseHeight(19);
+            editor.addLabel(0, 0, "Min Value", ChatFormatting.GOLD);
+            editor.increaseHeight(19);
+            editor.addNumericTextField(0, 0, 50, 14, minValue).setNumericFilter(value -> value == value.intValue())
+                    .setNumericResponder(value -> selectMinValue(consumer, value));
+            editor.increaseHeight(19);
+            return;
+        }
         Set<Identifier> statIds = statType.getRegistry().keySet();
         editor.addSelectionMenu(0, 0, 200, statIds).setValue(getStatId()).setElementNameGetter(v -> Component.literal(v.toString()))
                 .setResponder(v -> selectStat(consumer, v));
@@ -171,7 +171,11 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
     private void selectStatType(Consumer<StatRequirement> consumer, Identifier statTypeId) {
         setStatTypeId(statTypeId);
         StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(getStatTypeId()).map(Holder::value).orElse(null);
-        Objects.requireNonNull(statType);
+
+        if (statType == null) {
+            consumer.accept(this.copy());
+            return;
+        }
         Set<Identifier> statIds = statType.getRegistry().keySet();
         statIds.stream().findFirst().ifPresent(this::setStatId);
         consumer.accept(this.copy());
@@ -227,18 +231,8 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
     public static class Serializer implements SkillRequirement.Serializer {
         @Override
         public SkillRequirement<?> deserialize(JsonObject json) throws JsonParseException {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            ResourceLocation statTypeId = new ResourceLocation(json.get("statTypeId").getAsString());
-            ResourceLocation statId = new ResourceLocation(json.get("statId").getAsString());
-=======
             Identifier statTypeId = Identifier.parse(json.get("statTypeId").getAsString());
             Identifier statId = Identifier.parse(json.get("statId").getAsString());
->>>>>>> Stashed changes
-=======
-            Identifier statTypeId = Identifier.parse(json.get("statTypeId").getAsString());
-            Identifier statId = Identifier.parse(json.get("statId").getAsString());
->>>>>>> Stashed changes
             int minValue = json.get("minValue").getAsInt();
             return new StatRequirement(statTypeId, statId, minValue);
         }
@@ -254,16 +248,10 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
 
         @Override
         public SkillRequirement<?> deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-            ResourceLocation statTypeId = new ResourceLocation(tag.getString("statTypeId"));
-            ResourceLocation statId = new ResourceLocation(tag.getString("statId"));
-            int minValue = tag.getInt("minValue");
-=======
-            // Factual Fix 1.21.5: getString/getInt renvoient désormais Optional<T>
+
             Identifier statTypeId = Identifier.parse(tag.getString("statTypeId").orElse(""));
             Identifier statId = Identifier.parse(tag.getString("statId").orElse(""));
             int minValue = tag.getInt("minValue").orElse(0);
->>>>>>> Stashed changes
             return new StatRequirement(statTypeId, statId, minValue);
         }
 
@@ -279,18 +267,9 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         }
 
         @Override
-<<<<<<< Updated upstream
-        public SkillRequirement<?> deserialize(FriendlyByteBuf buf) {
-            ResourceLocation statTypeId = new ResourceLocation(buf.readUtf());
-            ResourceLocation statId = new ResourceLocation(buf.readUtf());
-=======
         public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
             Identifier statTypeId = Identifier.parse(buf.readUtf());
             Identifier statId = Identifier.parse(buf.readUtf());
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             int minValue = buf.readInt();
             return new StatRequirement(statTypeId, statId, minValue);
         }
@@ -306,13 +285,9 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
 
         @Override
         public SkillRequirement<?> createDefaultInstance() {
-<<<<<<< Updated upstream
-            return new StatRequirement(BuiltInRegistries.STAT_TYPE.getKey(Stats.CUSTOM), Stats.DEATHS, 1);
-=======
-            // Factual Fix 1.21.4: Resolve custom stat type using its direct official registry identifier location to fix argument mismatch
+
             Identifier customStatType = Stats.CUSTOM.getRegistry().key().identifier();
             return new StatRequirement(customStatType, Stats.DEATHS, 1);
->>>>>>> Stashed changes
         }
     }
 }

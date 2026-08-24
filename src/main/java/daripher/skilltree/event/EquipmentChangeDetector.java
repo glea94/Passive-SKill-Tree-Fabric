@@ -10,17 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.WeakHashMap;
 
-/**
- * Portage Fabric de net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent, sans
- * équivalent Fabric API ni point d'injection vanilla unique (Forge lui-même le détecte par
- * comparaison à chaque tick en interne, pas via un event vanilla natif - il n'y a donc pas de
- * perte de fidélité à utiliser la même technique ici).
- * <p>
- * Portée volontairement limitée aux joueurs (pas toutes les LivingEntity comme Forge) : vérifié
- * dans le code d'origine du mod, les deux seuls usages (ItemBonusHandler, ItemUsagePreventionBonusHandler)
- * ne traitent que des instances Player. Élargir à toutes les entités vivantes serait possible si
- * un besoin apparaît plus tard (même technique, itérer les entités au lieu des joueurs).
- */
+
 public class EquipmentChangeDetector {
     private static final Map<UUID, EnumMap<EquipmentSlot, ItemStack>> lastKnownEquipment = new WeakHashMap<>();
 
@@ -38,7 +28,7 @@ public class EquipmentChangeDetector {
             ItemStack current = player.getItemBySlot(slot);
             ItemStack before = previous.getOrDefault(slot, ItemStack.EMPTY);
 
-            // Factual Fix 1.21.4: Replace obsolete legacy matches() with modern standard components-aware equivalence check
+
             if (!ItemStack.isSameItemSameComponents(before, current)) {
                 previous.put(slot, current.copy());
                 PSTEvents.LIVING_EQUIPMENT_CHANGE.post(new LivingEquipmentChangePSTEvent(player, slot, before, current));

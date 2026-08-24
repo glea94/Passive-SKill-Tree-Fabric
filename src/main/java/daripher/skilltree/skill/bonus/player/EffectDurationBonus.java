@@ -365,7 +365,7 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored network signature from FriendlyByteBuf to RegistryFriendlyByteBuf to fulfill global interface requirements
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof EffectDurationBonus aBonus)) {

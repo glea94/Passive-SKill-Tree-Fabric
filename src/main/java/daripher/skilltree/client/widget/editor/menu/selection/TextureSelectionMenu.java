@@ -36,7 +36,7 @@ public class TextureSelectionMenu extends EditorMenu {
         editor.addLabel(0, 0, "Folder", ChatFormatting.GOLD);
         editor.increaseHeight(19);
 
-        // Factual Fix 1.21.4: Extracted out of a fluid chain to safeguard text field type boundaries
+
         TextField folderField = editor.addTextField(0, 0, 200, 14, texturesFolder);
         folderField.setSoftFilter(SkillTexturesData::isTextureFolder);
         folderField.setSuggestionProvider(SkillTexturesData::autocompleteFolderName);
@@ -51,7 +51,7 @@ public class TextureSelectionMenu extends EditorMenu {
         editor.addLabel(0, 0, "Search", ChatFormatting.GOLD);
         editor.increaseHeight(19);
 
-        // Factual Fix 1.21.4: Extracted out of a fluent chain to completely resolve the "void cannot be dereferenced" compilation error
+
         TextField searchField = editor.addTextField(0, 0, 200, 14, "");
         searchField.setFocused(true);
         searchField.setResponder(selectionList::setSearchString);

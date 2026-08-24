@@ -15,15 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTEnchantmentPredicates {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "enchantment_conditions");
-=======
     public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "enchantment_conditions");
->>>>>>> Stashed changes
-=======
-    public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "enchantment_conditions");
->>>>>>> Stashed changes
     public static final DeferredRegister<EnchantmentCondition.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<EnchantmentCondition.Serializer> NONE = REGISTRY.register("none", NoneEnchantmentCondition.Serializer::new);
@@ -31,7 +23,7 @@ public class PSTEnchantmentPredicates {
     public static final RegistryObject<EnchantmentCondition.Serializer> WEAPON = REGISTRY.register("weapon", WeaponEnchantmentCondition.Serializer::new);
 
     public static List<EnchantmentCondition> conditionsList() {
-        // Alignment 1.21.4: Safely streams custom criteria registry maps
+
         return PSTRegistries.ENCHANTMENT_CONDITIONS.get().getValues().stream()
                 .map(EnchantmentCondition.Serializer::createDefaultInstance)
                 .toList();

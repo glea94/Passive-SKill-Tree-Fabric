@@ -25,7 +25,7 @@ public final class EnchantedStackPredicate implements ItemStackPredicate {
 
     @Override
     public boolean test(ItemStack stack) {
-        // Aligned 1.21.4: Utilizes the optimized vanilla capability state lookup
+
         return stack.isEnchanted() && itemStackPredicate.test(stack);
     }
 
@@ -116,13 +116,13 @@ public final class EnchantedStackPredicate implements ItemStackPredicate {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new EnchantedStackPredicate(NetworkHelper.readItemPredicate(buf));
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof EnchantedStackPredicate aCondition)) {

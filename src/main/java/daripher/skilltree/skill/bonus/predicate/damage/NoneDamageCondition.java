@@ -46,13 +46,13 @@ public enum NoneDamageCondition implements DamageCondition {
             return new CompoundTag();
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public DamageCondition deserialize(RegistryFriendlyByteBuf buf) {
             return NoneDamageCondition.INSTANCE;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, DamageCondition condition) {
             if (condition != NoneDamageCondition.INSTANCE) {

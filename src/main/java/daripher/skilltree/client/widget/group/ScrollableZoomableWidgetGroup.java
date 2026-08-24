@@ -17,7 +17,7 @@ public class ScrollableZoomableWidgetGroup<T extends AbstractWidget> extends Wid
     private float zoom = 1F;
 
     public ScrollableZoomableWidgetGroup(int pX, int pY, int pWidth, int pHeight) {
-        // Factual Fix 1.21.4: Refactored to cleanly cascade parameters into your updated WidgetGroup parent constructor
+
         super(pX, pY, pWidth, pHeight);
     }
 

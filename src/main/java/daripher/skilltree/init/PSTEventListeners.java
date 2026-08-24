@@ -11,15 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class PSTEventListeners {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public static final ResourceLocation REGISTRY_ID = new ResourceLocation(SkillTreeMod.MOD_ID, "event_listeners");
-=======
     public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "event_listeners");
->>>>>>> Stashed changes
-=======
-    public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "event_listeners");
->>>>>>> Stashed changes
     public static final DeferredRegister<SkillEventListener.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
 
     public static final RegistryObject<SkillEventListener.Serializer> ATTACK = REGISTRY.register("attack", OutgoingDamageEventListener.Serializer::new);
@@ -34,7 +26,7 @@ public class PSTEventListeners {
     public static final RegistryObject<SkillEventListener.Serializer> CRITICAL_HIT = REGISTRY.register("critical_hit", CriticalHitEventListener.Serializer::new);
 
     public static List<SkillEventListener> eventsList() {
-        // Alignment 1.21.4: Safely streams data structures through your custom criteria registry map
+
         return PSTRegistries.EVENT_LISTENERS.get().getValues().stream()
                 .map(SkillEventListener.Serializer::createDefaultInstance)
                 .toList();

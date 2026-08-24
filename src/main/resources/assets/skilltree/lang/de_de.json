@@ -293,7 +293,7 @@
   "item.skilltree.wisdom_scroll": "Schriftrolle der Weisheit",
   "item.skilltree.wisdom_scroll.tooltip": "Gewährt einen Skillpunkt",
   "itemGroup.skilltree": "Skillbaum",
-  "key.categories.skilltree": "Skillbaum",
+  "key.category.skilltree.main": "Skillbaum",
   "key.display_skill_tree": "Skillbaum Öffnen",
   "potion.superior": "überlegene %s",
   "quiver.capacity": "• Kann bis zu %s Pfeile halten",

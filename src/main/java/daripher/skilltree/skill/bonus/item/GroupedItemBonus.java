@@ -3,30 +3,21 @@ package daripher.skilltree.skill.bonus.item;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
-import daripher.skilltree.client.widget.editor.menu.EditorMenu;
-import daripher.skilltree.client.widget.editor.menu.bonuses.ItemBonusEditor;
-import daripher.skilltree.client.widget.editor.menu.selection.SelectionList;
-import daripher.skilltree.client.widget.editor.menu.selection.SelectionMenu;
-import daripher.skilltree.client.widget.editor.menu.selection.TextSelectionList;
 import daripher.skilltree.init.PSTItemBonuses;
 import daripher.skilltree.init.PSTRegistries;
-import daripher.skilltree.init.PSTSkillBonuses;
 import daripher.skilltree.network.NetworkHelper;
-import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.player.AttributeBonus;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
-import org.jetbrains.annotations.Nullable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -98,68 +89,45 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
         return Objects.hash(innerBonuses);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+
+
+
+
+
+
+
+
+
+
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<GroupedItemBonus> consumer) {
-        ItemBonus<?> defaultBonus = PSTItemBonuses.SKILL_BONUS.get().createDefaultInstance();
-        editor.addSelectionMenu(0, 0, 90, defaultBonus).setResponder(itemBonus -> {
-            addItemBonus(editor, itemBonus);
-            consumer.accept(this);
-        }).setMessage(Component.literal("Add"));
-        editor.increaseHeight(29);
-        for (int i = 0; i < getInnerBonuses().size(); i++) {
-            final int bonusIndex = i;
-            ItemBonus selectedItemBonus = getInnerBonuses().get(i);
-            MutableComponent tooltip = getFullTooltip().get(0);
-            String message = tooltip.getString();
-            message = TooltipHelper.getTrimmedString(message, 190);
-            editor.addButton(0, 0, 200, 14, message).setPressFunc(button -> {
-                ItemBonusEditor itemBonusEditor = new ItemBonusEditor(editor, editor.getSelectedMenu(), bonus -> skillBonusChanged(bonus, bonusIndex, consumer), () -> selectedItemBonus);
-                editor.selectMenu(itemBonusEditor);
-            });
-            editor.increaseHeight(19);
+        try {
+            Class<?> editorClass = Class.forName(
+                    "daripher.skilltree.client.widget.editor.menu.bonuses.GroupedItemBonusEditor");
+            Method method = editorClass.getMethod(
+                    "addEditorWidgets", GroupedItemBonus.class, SkillTreeEditor.class, Consumer.class);
+            method.invoke(null, this, editor, consumer);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException("Failed to open GroupedItemBonus editor widgets", e);
         }
-    }
-
-    private void skillBonusChanged(@Nullable ItemBonus<?> itemBonus, int selectedBonusIndex, Consumer<GroupedItemBonus> consumer) {
-        if (itemBonus == null) {
-            deleteSelectedItemBonuses(selectedBonusIndex);
-        } else {
-            setItemBonuses(itemBonus, selectedBonusIndex);
-        }
-        consumer.accept(this.copy());
-    }
-
-    private void setItemBonuses(ItemBonus<?> bonus, int selectedBonusIndex) {
-        innerBonuses.set(selectedBonusIndex, bonus);
-    }
-
-    private void deleteSelectedItemBonuses(int selectedBonusIndex) {
-        if (getInnerBonuses().size() > selectedBonusIndex) {
-            getInnerBonuses().remove(selectedBonusIndex);
-        }
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private void addItemBonus(SkillTreeEditor editor, ItemBonus<?> itemBonus) {
-        final EditorMenu previousMenu = editor.getSelectedMenu().previousMenu;
-        if (itemBonus instanceof EquipmentBonus equipmentBonus) {
-            SelectionList<SkillBonus> skillBonusSelectionList = new TextSelectionList<>(0, 0, 190, 14, PSTSkillBonuses.defaultInstances()).setRows(8)
-                    .setNameGetter(bonus -> Component.literal(PSTSkillBonuses.getName(bonus)))
-                    .selectElement(equipmentBonus.getSkillBonus());
-            editor.selectMenu(new SelectionMenu<>(editor, editor.getSelectedMenu(), skillBonusSelectionList, () -> {
-            }).setResponder(skillBonus -> {
-                innerBonuses.add(new EquipmentBonus(skillBonus));
-                editor.selectMenu(previousMenu);
-            }));
-            return;
-        }
-        innerBonuses.add(itemBonus);
-        editor.selectMenu(previousMenu);
     }
 
     public List<? extends ItemBonus<?>> getInnerBonuses() {
         return innerBonuses;
+    }
+
+    public void addInnerBonus(ItemBonus<?> bonus) {
+        innerBonuses.add(bonus);
+    }
+
+    public void setInnerBonus(int index, ItemBonus<?> bonus) {
+        innerBonuses.set(index, bonus);
+    }
+
+    public void removeInnerBonus(int index) {
+        if (innerBonuses.size() > index) {
+            innerBonuses.remove(index);
+        }
     }
 
     @Override
@@ -174,15 +142,7 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             for (int i = 0; i < innerBonusesJson.size(); i++) {
                 JsonObject innerBonusTag = innerBonusesJson.get(i).getAsJsonObject();
                 String serializerIdString = innerBonusTag.get("type").getAsString();
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-                ResourceLocation serializerId = new ResourceLocation(serializerIdString);
-=======
                 Identifier serializerId = Identifier.parse(serializerIdString);
->>>>>>> Stashed changes
-=======
-                Identifier serializerId = Identifier.parse(serializerIdString);
->>>>>>> Stashed changes
                 ItemBonus.Serializer serializer = PSTRegistries.ITEM_BONUSES.get().getValue(serializerId);
                 Objects.requireNonNull(serializer, "Unknown item bonus: " + serializerId);
                 ItemBonus<?> innerBonus = serializer.deserialize(innerBonusTag);
@@ -216,16 +176,8 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             ListTag innerBonusesTag = tag.getList("inner_bonuses").orElseGet(ListTag::new);
             for (Tag value : innerBonusesTag) {
                 CompoundTag innerBonusTag = (CompoundTag) value;
-<<<<<<< Updated upstream
-                String type = innerBonusTag.getString("type");
-                ResourceLocation serializerId = new ResourceLocation(type);
-=======
                 String type = innerBonusTag.getString("type").orElseThrow();
                 Identifier serializerId = Identifier.parse(type);
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
                 ItemBonus.Serializer serializer = PSTRegistries.ITEM_BONUSES.get().getValue(serializerId);
                 Objects.requireNonNull(serializer, "Unknown item bonus: " + serializerId);
                 innerBonuses.add(serializer.deserialize(innerBonusTag));
@@ -253,7 +205,7 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public ItemBonus<?> deserialize(RegistryFriendlyByteBuf buf) {
             ArrayList<ItemBonus<?>> innerBonuses = new ArrayList<>();
@@ -264,7 +216,7 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             return new GroupedItemBonus(innerBonuses);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemBonus<?> bonus) {
             if (!(bonus instanceof GroupedItemBonus aBonus)) {
@@ -278,13 +230,9 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
 
         @Override
         public ItemBonus<?> createDefaultInstance() {
-<<<<<<< Updated upstream
-            AttributeModifier defaultModifier = new AttributeModifier("Default Modifier", 1, AttributeModifier.Operation.ADDITION);
-=======
-            // Aligned 1.21.4: Explicit clean resource-keyed declaration matching modern Mojang attribute modifier conventions
+
             AttributeModifier defaultModifier = new AttributeModifier(Identifier.parse("skilltree:default_modifier"), 1, AttributeModifier.Operation.ADD_VALUE);
 
->>>>>>> Stashed changes
             ItemBonus<?> bonus1 = new EquipmentBonus(new AttributeBonus(Attributes.ARMOR, defaultModifier));
             ItemBonus<?> bonus2 = new EquipmentBonus(new AttributeBonus(Attributes.ARMOR_TOUGHNESS, defaultModifier));
             ArrayList<ItemBonus<?>> bonuses = new ArrayList<>();

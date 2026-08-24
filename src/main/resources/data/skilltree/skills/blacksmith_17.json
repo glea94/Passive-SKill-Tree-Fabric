@@ -1,19 +1,37 @@
 {
   "id": "skilltree:blacksmith_17",
-  "bonuses": [],
-  "requirements": [],
+  "bonuses": [
+    {
+      "type": "skilltree:vanilla_recipe_unlock",
+      "item_condition": {
+        "equipment_type": "ranged_weapon",
+        "type": "skilltree:equipment_type"
+      }
+    }
+  ],
+  "requirements": [
+    {
+      "type": "skilltree:stat_value",
+      "statTypeId": "minecraft:crafted",
+      "statId": "minecraft:arrow",
+      "minValue": 8
+    }
+  ],
   "directConnections": [
     "skilltree:blacksmith_4"
   ],
   "longConnections": [],
   "oneWayConnections": [],
-  "tags": [],
+  "tags": [
+    "New Tag"
+  ],
   "backgroundTexture": "skilltree:textures/icons/background/lesser.png",
-  "iconTexture": "skilltree:textures/icons/void.png",
+  "iconTexture": "skilltree:textures/icons/bow_emerald.png",
   "borderTexture": "skilltree:textures/tooltip/lesser.png",
   "titleColor": "",
-  "positionX": 8.817457E-15,
+  "positionX": 8.817457e-15,
   "positionY": -72.0,
   "buttonSize": 16,
-  "isStartingPoint": false
+  "isStartingPoint": false,
+  "isAlwaysStartingPoint": false
 }

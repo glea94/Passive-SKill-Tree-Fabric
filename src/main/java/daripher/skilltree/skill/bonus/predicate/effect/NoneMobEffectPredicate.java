@@ -62,13 +62,13 @@ public enum NoneMobEffectPredicate implements MobEffectPredicate {
             return new CompoundTag();
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public MobEffectPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return NoneMobEffectPredicate.INSTANCE;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, MobEffectPredicate condition) {
             if (condition != NoneMobEffectPredicate.INSTANCE) {

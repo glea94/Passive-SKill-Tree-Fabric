@@ -4,7 +4,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class ExpHelper {
     public static long getPlayerExp(Player player) {
-        // Accurately merges completed level experience points with progressive fractional bar values
+
         return levelsToXP(player.experienceLevel) + Math.round(player.experienceProgress * player.getXpNeededForNextLevel());
     }
 

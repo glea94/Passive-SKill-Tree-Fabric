@@ -15,13 +15,13 @@ import java.util.stream.Stream;
 public enum TrinketsCompatibility {
     INSTANCE;
 
-    // Registers accessory slot bonus serializer within the active registration tree
+
     public static final RegistryObject<SkillBonus.Serializer> TRINKET_SLOTS_BONUS = PSTSkillBonuses.REGISTRY.register("curio_slots", TrinketSlotsBonus.Serializer::new);
 
     public Stream<ItemStack> getTrinkets(LivingEntity living) {
         List<ItemStack> trinkets = new ArrayList<>();
 
-        // Safely map and grab item elements from all active slot inventory grids
+
         TrinketsApi.getTrinketComponent(living).ifPresent(component -> {
             component.getAllEquipped().forEach(pair -> trinkets.add(pair.getB()));
         });

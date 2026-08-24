@@ -25,29 +25,12 @@ import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.Objects;
 
-/**
- * Portage Fabric de LanguageProvider (Forge) vers FabricLanguageProvider (Fabric Data Generation API).
- * Correctif (31/07/2026) : en 1.21.1, FabricLanguageProvider attend un constructeur à 3 arguments
- * avec un CompletableFuture<HolderLookup.Provider> registryLookup, et generateTranslations prend
- * désormais ce HolderLookup.Provider en premier argument, en plus du TranslationBuilder.
- */
 public abstract class PSTTranslationProvider extends FabricLanguageProvider {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public PSTTranslationProvider(FabricDataOutput dataOutput, String locale) {
-        super(dataOutput, locale);
-=======
-=======
->>>>>>> Stashed changes
     protected HolderLookup.Provider registries;
 
     public PSTTranslationProvider(
             FabricPackOutput dataOutput, String locale, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(dataOutput, locale, registryLookup);
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     }
 
     @Override
@@ -78,8 +61,8 @@ public abstract class PSTTranslationProvider extends FabricLanguageProvider {
         add(attribute.getDescriptionId(), name);
     }
 
-    // Portage Fabric : LanguageProvider (Forge) avait ces surcharges nativement, pas
-    // FabricLanguageProvider/TranslationBuilder (qui n'a que add(String, String)) - redéfinies ici.
+    
+    
     protected void add(Item item, String name) {
         add(item.getDescriptionId(), name);
     }
@@ -96,6 +79,15 @@ public abstract class PSTTranslationProvider extends FabricLanguageProvider {
         addSkill(skillTree, skillId1, name);
         addSkill(skillTree, skillId2, name);
         addSkill(skillTree, skillId3, name);
+    }
+
+    
+    
+    protected void addSkills(String skillTree, int skillId1, int skillId2, int skillId3, int skillId4, String name) {
+        addSkill(skillTree, skillId1, name);
+        addSkill(skillTree, skillId2, name);
+        addSkill(skillTree, skillId3, name);
+        addSkill(skillTree, skillId4, name);
     }
 
     protected void add(LivingEntityPredicate.Serializer condition, String value) {

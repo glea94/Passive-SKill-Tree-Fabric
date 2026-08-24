@@ -12,14 +12,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerLevel;
->>>>>>> Stashed changes
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -68,54 +62,43 @@ public class ArrowRetrievalChanceBonusHandler {
         }
         LivingEntity target = event.getEntity();
         CompoundTag targetPersistentData = PersistentDataProvider.get(target);
-<<<<<<< Updated upstream
-        ListTag stuckArrowsTag = targetPersistentData.getList(STUCK_ARROWS_TAG_NAME, Tag.TAG_COMPOUND);
-        stuckArrowsTag.add(arrowStack.save(new CompoundTag()));
-=======
-        // Factual Fix 1.21.5: CompoundTag#getList(name, type) supprimé -> getList(name) renvoyant Optional<ListTag>
-        // A VERIFIER en IntelliJ : confirme que getList(String) retourne bien Optional<ListTag>
+
+
         ListTag stuckArrowsTag = targetPersistentData.getList(STUCK_ARROWS_TAG_NAME).orElse(new ListTag());
 
         HolderLookup.Provider registries = player.level().registryAccess();
-        // Factual Fix 1.21.8 : ItemStack#save(Provider, CompoundTag) supprimé.
-        // A VERIFIER en IntelliJ : confirme que HolderLookup.Provider#createSerializationContext(DynamicOps<T>)
-        // renvoie bien RegistryOps<T> et que Codec#encodeStart(DynamicOps<T>, A) est toujours applicable ainsi sur ItemStack.CODEC.
+
+
+
         RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
         Tag arrowTag = ItemStack.CODEC.encodeStart(ops, arrowStack).getOrThrow(IllegalStateException::new);
 
         stuckArrowsTag.add(arrowTag);
->>>>>>> Stashed changes
         targetPersistentData.put(STUCK_ARROWS_TAG_NAME, stuckArrowsTag);
     }
 
     private static void retrieveArrows(LivingEntity entity) {
         CompoundTag entityPersistentData = PersistentDataProvider.get(entity);
-        // Factual Fix 1.21.5: CompoundTag#getList(name, type) supprimé -> getList(name) renvoyant Optional<ListTag>
+
         ListTag arrowsTag = entityPersistentData.getList(STUCK_ARROWS_TAG_NAME).orElse(new ListTag());
         if (arrowsTag.isEmpty()) {
             return;
         }
-<<<<<<< Updated upstream
-        for (Tag tag : arrowsTag) {
-            ItemStack arrowStack = ItemStack.of((CompoundTag) tag);
-            entity.spawnAtLocation(arrowStack);
-=======
 
         HolderLookup.Provider registries = entity.level().registryAccess();
-        // Factual Fix 1.21.8 : ItemStack.parse(Provider, Tag) statique supprimé.
-        // A VERIFIER en IntelliJ : confirme que HolderLookup.Provider#createSerializationContext(DynamicOps<T>)
-        // renvoie bien RegistryOps<T> et que Codec#parse(DynamicOps<T>, T) est toujours applicable ainsi sur ItemStack.CODEC.
+
+
+
         RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
         for (Tag tag : arrowsTag) {
             ItemStack arrowStack = ItemStack.CODEC.parse(ops, tag).result().orElse(ItemStack.EMPTY);
             if (arrowStack.isEmpty()) {
                 continue;
             }
-            // Factual Fix 1.21.4: Supply the ServerLevel parameter context to satisfy modern spawnAtLocation requirements
+
             if (entity.level() instanceof ServerLevel serverLevel) {
                 entity.spawnAtLocation(serverLevel, arrowStack);
             }
->>>>>>> Stashed changes
         }
     }
 }

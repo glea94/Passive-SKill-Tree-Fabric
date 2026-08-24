@@ -40,7 +40,7 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
 
     @Override
     public void applyEffect(LivingEntity target, @Nullable LivingEntity source) {
-        // Aligned 1.21.4: Direct registry Holder unwrapping via .value() remains exact standard for Predicate tests
+
         target.getActiveEffects().stream()
                 .map(MobEffectInstance::getEffect)
                 .filter(holder -> effectPredicate.test(holder.value()))
@@ -214,7 +214,7 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public RemoveMobEffectBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -223,7 +223,7 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
             return new RemoveMobEffectBonus(amount, effectPredicate, eventListener);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RemoveMobEffectBonus aBonus)) {

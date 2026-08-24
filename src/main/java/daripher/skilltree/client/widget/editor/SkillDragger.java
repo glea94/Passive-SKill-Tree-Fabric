@@ -18,7 +18,7 @@ public class SkillDragger extends AbstractWidget {
     private double totalDragY;
 
     public SkillDragger(SkillTreeEditor editor) {
-        // Factual Fix 1.21.4: AbstractWidget constructor strictly requires x, y, width, height, and message
+
         super(0, 0, 0, 0, Component.empty());
         this.editor = editor;
     }
@@ -28,16 +28,6 @@ public class SkillDragger extends AbstractWidget {
         if (showGrid) {
             int width = editor.getScreenWidth();
             int height = editor.getScreenHeight();
-<<<<<<< Updated upstream
-            float gridSizeX = this.gridSizeX * editor.getZoom();
-            float gridSizeY = this.gridSizeY * editor.getZoom();
-            float gridCenterX = width / 2f + editor.getScrollX() % gridSizeX;
-            float gridCenterY = height / 2f + editor.getScrollY() % gridSizeY;
-            graphics.pose().pushPose();
-            graphics.pose().translate(gridCenterX, gridCenterY, -1);
-            for (int i = -width / 2 / (int) gridSizeX; i < width / gridSizeX; i++) {
-                float x = gridSizeX * i;
-=======
             float gridX = this.gridSizeX * editor.getZoom();
             float gridY = this.gridSizeY * editor.getZoom();
             float gridCenterX = width / 2f + editor.getScrollX() % gridX;
@@ -46,7 +36,6 @@ public class SkillDragger extends AbstractWidget {
             graphics.pose().translate(gridCenterX, gridCenterY);
             for (int i = -width / 2 / (int) gridX; i < width / gridX; i++) {
                 float x = gridX * i;
->>>>>>> Stashed changes
                 graphics.fill((int) (-1 + x), -height, (int) (1 + x), height, 0x55CFCFCF);
             }
             for (int i = -height / 2 / (int) gridY - 1; i < height / gridY; i++) {

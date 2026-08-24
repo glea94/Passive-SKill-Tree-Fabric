@@ -12,7 +12,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-/** Portage Fabric : EntityJoinLevelEvent -> ServerEntityEvents.ENTITY_LOAD (voir EntityLoadHelper pour loadedFromDisk()). */
+
 public class ProjectileSpeedBonusHandler {
     public static final String IS_SPED_UP_TAG_NAME = "IS_SPED_UP";
 

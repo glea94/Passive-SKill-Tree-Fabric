@@ -4,7 +4,7 @@ import daripher.skilltree.util.event.PSTEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-/** Équivalent de net.minecraftforge.event.AnvilUpdateEvent. */
+
 public class AnvilUpdatePSTEvent extends PSTEvent {
     private final Player player;
     private final ItemStack left;
@@ -35,7 +35,7 @@ public class AnvilUpdatePSTEvent extends PSTEvent {
     }
 
     public void setOutput(ItemStack output) {
-        // En 1.21.4, s'assurer de passer une copie propre si vous mutez des composants de données
+
         this.output = output != null ? output : ItemStack.EMPTY;
     }
 }

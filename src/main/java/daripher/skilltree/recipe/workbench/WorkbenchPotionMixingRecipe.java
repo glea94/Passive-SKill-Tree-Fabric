@@ -5,29 +5,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import daripher.skilltree.init.PSTRecipeSerializers;
 import daripher.skilltree.inventory.menu.WorkbenchContainer;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
-=======
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
->>>>>>> Stashed changes
-=======
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
->>>>>>> Stashed changes
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -53,34 +36,13 @@ import java.util.stream.Stream;
 public class WorkbenchPotionMixingRecipe extends AbstractWorkbenchRecipe {
     public static final String IS_MIXTURE_TAG_NAME = "isMixture";
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public WorkbenchPotionMixingRecipe(ResourceLocation id, boolean requiresPassiveSkill) {
-=======
     private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_potion_mixing_recipe");
 
     public WorkbenchPotionMixingRecipe(Identifier id, boolean requiresPassiveSkill) {
->>>>>>> Stashed changes
-=======
-    private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_potion_mixing_recipe");
-
-    public WorkbenchPotionMixingRecipe(Identifier id, boolean requiresPassiveSkill) {
->>>>>>> Stashed changes
         super(id, requiresPassiveSkill);
     }
 
     @Override
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public @NotNull ItemStack assemble(@NotNull WorkbenchContainer container, @NotNull RegistryAccess registryAccess) {
-        return getResult(container);
-    }
-
-    @Override
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     public boolean isValidBaseItem(ItemStack itemStack) {
         return isValidPotion(itemStack);
     }
@@ -212,36 +174,14 @@ public class WorkbenchPotionMixingRecipe extends AbstractWorkbenchRecipe {
         return PSTRecipeSerializers.WORKBENCH_POTION_MIXING.get();
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public static class Serializer implements RecipeSerializer<WorkbenchPotionMixingRecipe> {
-        @Override
-        public @NotNull WorkbenchPotionMixingRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject jsonObject) {
-            boolean requiresPassiveSkill = jsonObject.get("requires_passive_skill").getAsBoolean();
-            return new WorkbenchPotionMixingRecipe(id, requiresPassiveSkill);
-        }
-
-        @Override
-        public @Nullable WorkbenchPotionMixingRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
-=======
     public static final class Serializer {
-        // CORRECTION 26.1.2 : RecipeSerializer<T> est désormais un record final, impossible à
-        // implémenter via "implements". On construit une instance directe avec CODEC/STREAM_CODEC,
-        // exposée en INSTANCE et utilisée par PSTRecipeSerializers pour l'enregistrement.
+        
+        
+        
         private static final MapCodec<WorkbenchPotionMixingRecipe> CODEC = Codec.BOOL.fieldOf("requires_passive_skill")
                 .xmap(requiresPassiveSkill -> new WorkbenchPotionMixingRecipe(UNKNOWN_ID, requiresPassiveSkill),
                         AbstractWorkbenchRecipe::hasPassiveSkillRequirement);
 
-=======
-    public static final class Serializer {
-        // CORRECTION 26.1.2 : RecipeSerializer<T> est désormais un record final, impossible à
-        // implémenter via "implements". On construit une instance directe avec CODEC/STREAM_CODEC,
-        // exposée en INSTANCE et utilisée par PSTRecipeSerializers pour l'enregistrement.
-        private static final MapCodec<WorkbenchPotionMixingRecipe> CODEC = Codec.BOOL.fieldOf("requires_passive_skill")
-                .xmap(requiresPassiveSkill -> new WorkbenchPotionMixingRecipe(UNKNOWN_ID, requiresPassiveSkill),
-                        AbstractWorkbenchRecipe::hasPassiveSkillRequirement);
-
->>>>>>> Stashed changes
         private static final StreamCodec<RegistryFriendlyByteBuf, WorkbenchPotionMixingRecipe> STREAM_CODEC = StreamCodec.of(
                 Serializer::toNetwork, Serializer::fromNetwork
         );
@@ -249,10 +189,6 @@ public class WorkbenchPotionMixingRecipe extends AbstractWorkbenchRecipe {
         public static final RecipeSerializer<WorkbenchPotionMixingRecipe> INSTANCE = new RecipeSerializer<>(CODEC, STREAM_CODEC);
 
         private static @NotNull WorkbenchPotionMixingRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buf) {
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             boolean requiresPassiveSkill = buf.readBoolean();
             return new WorkbenchPotionMixingRecipe(UNKNOWN_ID, requiresPassiveSkill);
         }

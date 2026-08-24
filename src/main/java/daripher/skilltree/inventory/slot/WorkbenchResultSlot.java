@@ -1,7 +1,10 @@
 package daripher.skilltree.inventory.slot;
 
+import daripher.skilltree.init.PSTStats;
 import daripher.skilltree.inventory.menu.WorkbenchContainer;
 import daripher.skilltree.recipe.workbench.AbstractWorkbenchRecipe;
+import daripher.skilltree.skill.bonus.predicate.item.EquipmentPredicate;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
@@ -45,7 +48,7 @@ public class WorkbenchResultSlot extends Slot {
     }
 
     private void repeatQuickCraft() {
-        // Factual Fix 1.21.4: Update lookups to match the holder-centric menu model
+
         RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder = workbenchContainer.menu.getSelectedRecipeHolder();
         if (selectedRecipeHolder == null) {
             return;
@@ -68,7 +71,12 @@ public class WorkbenchResultSlot extends Slot {
             }
         }
         for (int i = 0; i < additionalCrafts; i++) {
-            player.addItem(selectedRecipe.assemble(workbenchContainer));
+            ItemStack craftedStack = selectedRecipe.assemble(workbenchContainer);
+            player.addItem(craftedStack);
+
+
+
+            awardCraftingStats(craftedStack, craftedStack.getCount());
             consumeMaterials();
         }
     }
@@ -81,11 +89,22 @@ public class WorkbenchResultSlot extends Slot {
     @Override
     protected void checkTakeAchievements(@NotNull ItemStack itemStack) {
         if (removeCount > 0) {
-            // Factual Fix 1.21.5 (confirmé par le message d'erreur du compilateur) : ItemStack#onCraftedBy ne prend plus de Level, signature réduite à (Player, int)
-            itemStack.onCraftedBy(player, removeCount);
+            awardCraftingStats(itemStack, removeCount);
             consumeMaterials();
         }
         removeCount = 0;
+    }
+
+    
+    private void awardCraftingStats(@NotNull ItemStack itemStack, int count) {
+        if (count <= 0) {
+            return;
+        }
+        player.awardStat(Stats.ITEM_CRAFTED.get(itemStack.getItem()), count);
+        if (EquipmentPredicate.isRangedWeapon(itemStack)) {
+            player.awardStat(PSTStats.rangedWeaponCrafted(), count);
+        }
+        itemStack.onCraftedBy(player, count);
     }
 
     @Override
@@ -94,7 +113,7 @@ public class WorkbenchResultSlot extends Slot {
     }
 
     private void consumeMaterials() {
-        // Factual Fix 1.21.4: Update lookups to match the holder-centric menu model
+
         RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder = workbenchContainer.menu.getSelectedRecipeHolder();
         if (selectedRecipeHolder == null) {
             return;

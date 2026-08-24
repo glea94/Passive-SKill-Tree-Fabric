@@ -161,7 +161,7 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
             return compoundTag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public EffectImmunityBonus deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectPredicate mobEffectPredicate = NetworkHelper.readMobEffectCondition(buf);
@@ -170,7 +170,7 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             EffectImmunityBonus validBonus = validateBonus(bonus);
@@ -187,7 +187,7 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
-            // Factual Fix 1.21.4: Removed deprecated .value() call since MobEffects.POISON is a native registry Holder
+
             return new EffectImmunityBonus(new MobEffectIdPredicate(MobEffects.POISON));
         }
     }

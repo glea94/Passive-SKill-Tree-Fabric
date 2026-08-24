@@ -245,7 +245,7 @@ public final class EnchantingExperienceRefundBonus implements SkillBonus<Enchant
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public EnchantingExperienceRefundBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -256,7 +256,7 @@ public final class EnchantingExperienceRefundBonus implements SkillBonus<Enchant
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof EnchantingExperienceRefundBonus aBonus)) {

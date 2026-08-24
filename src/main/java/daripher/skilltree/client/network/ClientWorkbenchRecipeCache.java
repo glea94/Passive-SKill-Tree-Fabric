@@ -6,11 +6,7 @@ import net.minecraft.resources.Identifier;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * 1.21.5 : remplace les anciens appels client à Minecraft.getInstance().level.getRecipeManager() /
- * Minecraft.getInstance().getConnection().getRecipeManager(), tous deux supprimés. Rempli côté client
- * à la réception de SyncWorkbenchRecipesMessage (voir ClientNetworking).
- */
+
 public class ClientWorkbenchRecipeCache {
     private static List<AbstractWorkbenchRecipe> recipes = List.of();
 

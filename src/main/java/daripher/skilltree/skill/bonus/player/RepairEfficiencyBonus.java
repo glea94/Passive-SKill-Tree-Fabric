@@ -187,13 +187,13 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public RepairEfficiencyBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new RepairEfficiencyBonus(NetworkHelper.readItemPredicate(buf), buf.readFloat());
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RepairEfficiencyBonus aBonus)) {

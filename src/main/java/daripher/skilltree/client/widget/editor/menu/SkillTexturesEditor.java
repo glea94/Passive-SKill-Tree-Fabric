@@ -36,7 +36,7 @@ public class SkillTexturesEditor extends EditorMenu {
             editor.increaseHeight(19);
             String textureFolder = SkillTexturesData.getTextureFolder(texture);
 
-            // Texture menus bind dynamically to user interactions in 1.21.4 layout grids
+
             editor.addTextureSelectionMenu(0, 0, 200, texture, textureFolder)
                     .setElementTextureSize(elementTextureWidth, elementTextureHeight)
                     .setSelectionListGridSize(rows, columns)

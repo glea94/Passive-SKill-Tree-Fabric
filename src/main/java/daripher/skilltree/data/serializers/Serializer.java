@@ -14,9 +14,9 @@ public interface Serializer<T> {
 
     CompoundTag serialize(T object);
 
-    // Factual Fix 1.21.4: Refactored binary stream signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
     T deserialize(RegistryFriendlyByteBuf buf);
 
-    // Factual Fix 1.21.4: Refactored binary stream signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
     void serialize(RegistryFriendlyByteBuf buf, T object);
 }

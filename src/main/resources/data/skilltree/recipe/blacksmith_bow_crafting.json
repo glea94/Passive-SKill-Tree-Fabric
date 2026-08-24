@@ -1,0 +1,22 @@
+{
+  "type": "skilltree:workbench_crafting",
+  "requires_passive_skill": true,
+  "base_ingredient": {
+    "ingredient": "minecraft:stick",
+    "required_amount": 3
+  },
+  "additionalIngredients": [
+    {
+      "ingredient": "minecraft:string",
+      "required_amount": 3
+    },
+    {
+      "ingredient": "minecraft:amethyst_shard",
+      "required_amount": 1
+    }
+  ],
+  "result": {
+    "item": "minecraft:bow",
+    "count": 1
+  }
+}

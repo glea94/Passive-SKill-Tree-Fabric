@@ -61,13 +61,13 @@ public class ArmorEnchantmentCondition implements EnchantmentCondition {
             return new CompoundTag();
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public EnchantmentCondition deserialize(RegistryFriendlyByteBuf buf) {
             return new ArmorEnchantmentCondition();
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, EnchantmentCondition condition) {
             if (!(condition instanceof ArmorEnchantmentCondition)) {

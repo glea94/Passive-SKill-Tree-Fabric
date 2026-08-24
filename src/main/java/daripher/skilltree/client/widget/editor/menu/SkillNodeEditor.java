@@ -59,7 +59,7 @@ public class SkillNodeEditor extends EditorMenu {
     private void createSkills(float angle, float distance, SkillFactory skillFactory) {
         editor.getSelectedSkills().forEach(skill -> createSkill(distance, angle, skill, skillFactory));
 
-        // Factual Fix 1.21.4: Map structural SkillFactory footprints to match SkillMirrorer's updated inner interface type
+
         editor.getSkillMirrorer().createSkills(angle, distance, skillFactory::accept);
 
         editor.clearWidgets();
@@ -96,23 +96,10 @@ public class SkillNodeEditor extends EditorMenu {
     }
 
     private void createNewSkill(float x, float y, @Nullable PassiveSkill original) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        ResourceLocation background = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/icons/background/lesser.png");
-        ResourceLocation icon = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/icons/void.png");
-        ResourceLocation border = new ResourceLocation(SkillTreeMod.MOD_ID, "textures/tooltip/lesser.png");
-        ResourceLocation skillTreeId = editor.getSkillTree().getId();
-=======
-=======
->>>>>>> Stashed changes
         Identifier background = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/icons/background/lesser.png");
         Identifier icon = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/icons/void.png");
         Identifier border = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/tooltip/lesser.png");
         Identifier skillTreeId = editor.getSkillTree().getId();
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         PassiveSkill skill = new PassiveSkill(createNewSkillId(skillTreeId), 16, background, icon, border, false);
         skill.setPosition(x, y);
         if (original != null && shouldConnect) {
@@ -128,15 +115,7 @@ public class SkillNodeEditor extends EditorMenu {
         Identifier id;
         int counter = 1;
         do {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            id = new ResourceLocation("skilltree", skillTreeId.getPath() + "_" + counter++);
-=======
             id = Identifier.fromNamespaceAndPath("skilltree", skillTreeId.getPath() + "_" + counter++);
->>>>>>> Stashed changes
-=======
-            id = Identifier.fromNamespaceAndPath("skilltree", skillTreeId.getPath() + "_" + counter++);
->>>>>>> Stashed changes
         } while (SkillTreeEditorData.getEditorSkill(id) != null);
         return id;
     }

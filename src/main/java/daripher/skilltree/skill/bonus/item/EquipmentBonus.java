@@ -127,18 +127,9 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
 
         @Override
         public ItemBonus<?> deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-            CompoundTag skillBonusTag = tag.getCompound("skill_bonus");
-            String type = skillBonusTag.getString("type");
-            ResourceLocation serializerId = new ResourceLocation(type);
-=======
             CompoundTag skillBonusTag = tag.getCompound("skill_bonus").orElseThrow();
             String type = skillBonusTag.getString("type").orElseThrow();
             Identifier serializerId = Identifier.parse(type);
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             SkillBonus.Serializer serializer = PSTRegistries.SKILL_BONUSES.get().getValue(serializerId);
             Objects.requireNonNull(serializer, "Unknown skill bonus: " + serializerId);
             SkillBonus<?> skillBonus = serializer.deserialize(skillBonusTag);
@@ -161,13 +152,13 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public ItemBonus<?> deserialize(RegistryFriendlyByteBuf buf) {
             return new EquipmentBonus(NetworkHelper.readSkillBonus(buf));
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemBonus<?> bonus) {
             if (!(bonus instanceof EquipmentBonus aBonus)) {

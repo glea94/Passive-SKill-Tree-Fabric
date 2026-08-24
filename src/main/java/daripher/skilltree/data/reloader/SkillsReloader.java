@@ -30,18 +30,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-public class SkillsReloader extends SimpleJsonResourceReloadListener implements IdentifiableResourceReloadListener {
-    public static final Gson GSON = new GsonBuilder().registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
-            .registerTypeAdapter(SkillBonus.class, new SkillBonusSerializer())
-            .registerTypeAdapter(SkillRequirement.class, new SkillRequirementSerializer())
-            .registerTypeAdapter(MutableComponent.class, new Component.Serializer()).setPrettyPrinting().create();
-    private static final Map<ResourceLocation, PassiveSkill> SKILLS = new HashMap<>();
-=======
-=======
->>>>>>> Stashed changes
-// Factual Fix 1.21.4: Extends SimplePreparableReloadListener to safely retain custom GSON configs since SimpleJsonResourceReloadListener dropped Gson constructors
+
 public class SkillsReloader extends SimplePreparableReloadListener<Map<Identifier, JsonElement>> implements IdentifiableResourceReloadListener {
     public static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(Identifier.class, new com.google.gson.TypeAdapter<Identifier>() {
@@ -64,28 +53,14 @@ public class SkillsReloader extends SimplePreparableReloadListener<Map<Identifie
             .create();
 
     private static final Map<Identifier, PassiveSkill> SKILLS = new HashMap<>();
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
     public SkillsReloader() {
         super();
     }
 
     @Override
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public ResourceLocation getFabricId() {
-        return new ResourceLocation(daripher.skilltree.SkillTreeMod.MOD_ID, "skills_reloader");
-=======
     public Identifier getFabricId() {
         return Identifier.fromNamespaceAndPath(daripher.skilltree.SkillTreeMod.MOD_ID, "skills_reloader");
->>>>>>> Stashed changes
-=======
-    public Identifier getFabricId() {
-        return Identifier.fromNamespaceAndPath(daripher.skilltree.SkillTreeMod.MOD_ID, "skills_reloader");
->>>>>>> Stashed changes
     }
 
     public static void register() {
@@ -96,38 +71,21 @@ public class SkillsReloader extends SimplePreparableReloadListener<Map<Identifie
         return SKILLS;
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public static @Nullable PassiveSkill getSkillById(ResourceLocation id) {
-=======
-=======
->>>>>>> Stashed changes
     public static Collection<Identifier> getSkillIds() {
         return SKILLS.keySet();
     }
 
     public static @Nullable PassiveSkill getSkillById(Identifier id) {
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         return SKILLS.get(id);
     }
 
-    // Factual Fix 1.21.4: Parameter signature refactored from FriendlyByteBuf to RegistryFriendlyByteBuf to sync packet networks
+
     public static void loadFromByteBuf(RegistryFriendlyByteBuf buf) {
         SKILLS.clear();
         NetworkHelper.readPassiveSkills(buf).forEach(s -> SKILLS.put(s.getId(), s));
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    @Override
-    protected void apply(Map<ResourceLocation, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
-=======
-=======
->>>>>>> Stashed changes
-    // Factual Fix 1.21.4: Implement prepare step for scanning json resources out of the skills namespace directory manually
+
     @Override
     protected Map<Identifier, JsonElement> prepare(ResourceManager resourceManager, ProfilerFiller profilerFiller) {
         Map<Identifier, JsonElement> map = new HashMap<>();
@@ -152,7 +110,6 @@ public class SkillsReloader extends SimplePreparableReloadListener<Map<Identifie
 
     @Override
     protected void apply(Map<Identifier, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
->>>>>>> Stashed changes
         SKILLS.clear();
         map.forEach(this::readSkill);
     }

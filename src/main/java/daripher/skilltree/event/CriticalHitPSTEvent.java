@@ -4,12 +4,7 @@ import daripher.skilltree.util.event.PSTEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
-/**
- * Équivalent de net.minecraftforge.event.entity.player.CriticalHitEvent.
- * Remplace event.getResult()==ALLOW (forcer un crit) par isForcedCrit()/setForcedCrit(true),
- * et damageMultiplier par getDamageMultiplier()/setDamageMultiplier() - même rôle, noms adaptés
- * puisqu'on n'a pas le système Result (ALLOW/DENY/DEFAULT) générique de Forge ici.
- */
+
 public class CriticalHitPSTEvent extends PSTEvent {
     private final Player player;
     private final Entity target;

@@ -213,7 +213,7 @@ public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBon
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public ProjectileSpeedBonus deserialize(RegistryFriendlyByteBuf buf) {
             LivingEntityPredicate playerCondition = NetworkHelper.readLivingCondition(buf);
@@ -221,7 +221,7 @@ public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBon
             return new ProjectileSpeedBonus(buf.readFloat()).setPlayerCondition(playerCondition).setPlayerMultiplier(playerMultiplier);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ProjectileSpeedBonus aBonus)) {

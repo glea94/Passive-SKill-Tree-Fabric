@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
-/** Portage Fabric : @SubscribeEvent -> enregistrement explicite sur PSTEvents.LIVING_HURT (voir mixin LivingEntityMixin). Logique interne identique. */
+
 public class OutgoingDamageBonusHandler {
     public static void register() {
         PSTEvents.LIVING_HURT.register(OutgoingDamageBonusHandler::modifyOutgoingDamage);
@@ -30,7 +30,7 @@ public class OutgoingDamageBonusHandler {
         float baseDamageMultiplier = 1f;
         float totalDamageMultiplier = 1f;
         for (OutgoingDamageBonus bonus : skillBonuses) {
-            // Aligned 1.21.4: Retain unified naming structures for dynamic attribute operations
+
             flatDamageBonus += bonus.getDamageModifier(AttributeModifier.Operation.ADD_VALUE, damageSource, player, target);
             baseDamageMultiplier += bonus.getDamageModifier(AttributeModifier.Operation.ADD_MULTIPLIED_BASE, damageSource, player, target);
             totalDamageMultiplier *= 1f + bonus.getDamageModifier(AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL, damageSource, player, target);

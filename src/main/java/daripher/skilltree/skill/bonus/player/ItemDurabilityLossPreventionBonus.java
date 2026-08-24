@@ -244,7 +244,7 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public ItemDurabilityLossPreventionBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -255,7 +255,7 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
             return bonus;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemDurabilityLossPreventionBonus aBonus)) {

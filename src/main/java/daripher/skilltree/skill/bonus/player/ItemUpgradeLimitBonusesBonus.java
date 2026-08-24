@@ -180,13 +180,13 @@ public final class ItemUpgradeLimitBonusesBonus implements SkillBonus<ItemUpgrad
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public ItemUpgradeLimitBonusesBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new ItemUpgradeLimitBonusesBonus(NetworkHelper.readItemPredicate(buf), buf.readInt());
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemUpgradeLimitBonusesBonus aBonus)) {

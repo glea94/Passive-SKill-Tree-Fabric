@@ -17,7 +17,7 @@ public class EditBoxAccessor {
 
     static {
         try {
-            // Target specific fields cleanly by name under official Mojang / Yarn mappings
+
             try {
                 displayPosField = EditBox.class.getDeclaredField("displayPos");
             } catch (NoSuchFieldException e) {
@@ -30,12 +30,12 @@ public class EditBoxAccessor {
                 try { highlightPosField = EditBox.class.getDeclaredField("selectionStart"); } catch (Exception ignored) {}
             }
 
-            // Factual Fix 1.21.4: Target maxLength field to bypass strict private visibility errors
+
             try {
                 maxLengthField = EditBox.class.getDeclaredField("maxLength");
             } catch (NoSuchFieldException ignored) {}
 
-            // Factual Fix 1.21.4: Target suggestion field to bypass strict private visibility errors
+
             try {
                 suggestionField = EditBox.class.getDeclaredField("suggestion");
             } catch (NoSuchFieldException ignored) {}
@@ -45,7 +45,7 @@ public class EditBoxAccessor {
             if (maxLengthField != null) maxLengthField.setAccessible(true);
             if (suggestionField != null) suggestionField.setAccessible(true);
 
-            // Locate text layout formatter functions safely
+
             for (Field field : EditBox.class.getDeclaredFields()) {
                 if (field.getType() == BiFunction.class) {
                     field.setAccessible(true);
@@ -54,7 +54,7 @@ public class EditBoxAccessor {
                 }
             }
 
-            // Secure method loop against zero-argument methods to avoid ArrayIndexOutOfBoundsException
+
             for (Method method : EditBox.class.getDeclaredMethods()) {
                 if (method.getParameterCount() == 5) {
                     Class<?>[] types = method.getParameterTypes();
@@ -88,12 +88,12 @@ public class EditBoxAccessor {
     }
 
     public int getMaxLength() {
-        // Factual Fix 1.21.4: Safely read private maxLength variable using reflection field mirrors
+
         try { return maxLengthField != null ? maxLengthField.getInt(instance) : 80; } catch (Exception e) { return 80; }
     }
 
     public String getSuggestion() {
-        // Factual Fix 1.21.4: Safely read private suggestion variable using reflection field mirrors
+
         try { return (suggestionField != null && suggestionField.get(instance) != null) ? (String) suggestionField.get(instance) : ""; } catch (Exception e) { return ""; }
     }
 

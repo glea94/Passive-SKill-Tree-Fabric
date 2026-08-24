@@ -189,7 +189,7 @@ public final class ExperienceGainMultiplierBonus implements SkillBonus<Experienc
         @Override
         public ExperienceGainMultiplierBonus deserialize(CompoundTag tag) {
             float multiplier = tag.getFloatOr("multiplier", 0f);
-            // Factual Fix 1.21.5: getString renvoie désormais Optional<String>
+
             ExperienceSource experienceSource = ExperienceSource.byName(tag.getString("experience_source").orElse(""));
             LivingMultiplier playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             return new ExperienceGainMultiplierBonus(multiplier, experienceSource, playerMultiplier);
@@ -207,7 +207,7 @@ public final class ExperienceGainMultiplierBonus implements SkillBonus<Experienc
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public ExperienceGainMultiplierBonus deserialize(RegistryFriendlyByteBuf buf) {
             float multiplier = buf.readFloat();
@@ -216,7 +216,7 @@ public final class ExperienceGainMultiplierBonus implements SkillBonus<Experienc
             return new ExperienceGainMultiplierBonus(multiplier, experienceSource, playerMultiplier);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ExperienceGainMultiplierBonus aBonus)) {

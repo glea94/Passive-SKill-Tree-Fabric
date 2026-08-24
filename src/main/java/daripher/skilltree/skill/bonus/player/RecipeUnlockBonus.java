@@ -14,17 +14,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeManager;
-=======
 import net.minecraft.resources.Identifier;
->>>>>>> Stashed changes
-=======
-import net.minecraft.resources.Identifier;
->>>>>>> Stashed changes
 
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
@@ -90,18 +80,8 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<RecipeUnlockBonus> consumer) {
         editor.addLabel(0, 0, "Recipe ID", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        ClientLevel clientLevel = Minecraft.getInstance().level;
-        Objects.requireNonNull(clientLevel);
-        RecipeManager recipesManager = clientLevel.getRecipeManager();
-        List<ResourceLocation> artisanRecipes = recipesManager.getAllRecipesFor(PSTRecipeTypes.WORKBENCH).stream().map(Recipe::getId)
-=======
-=======
->>>>>>> Stashed changes
         List<Identifier> artisanRecipes = ClientWorkbenchRecipeCache.getAll().stream()
                 .map(AbstractWorkbenchRecipe::getId)
->>>>>>> Stashed changes
                 .toList();
         editor.addSelectionMenu(0, 0, 200, artisanRecipes).setValue(recipeId).setResponder(id -> selectRecipeId(editor, consumer, id));
         editor.increaseHeight(19);
@@ -142,15 +122,7 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public RecipeUnlockBonus deserialize(JsonObject json) throws JsonParseException {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            ResourceLocation recipeId = new ResourceLocation(json.get("recipe_id").getAsString());
-=======
             Identifier recipeId = Identifier.parse(json.get("recipe_id").getAsString());
->>>>>>> Stashed changes
-=======
-            Identifier recipeId = Identifier.parse(json.get("recipe_id").getAsString());
->>>>>>> Stashed changes
             return new RecipeUnlockBonus(recipeId);
         }
 
@@ -164,15 +136,7 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
 
         @Override
         public RecipeUnlockBonus deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            ResourceLocation recipeId = new ResourceLocation(tag.getString("recipe_id"));
-=======
             Identifier recipeId = Identifier.parse(tag.getString("recipe_id").orElseThrow());
->>>>>>> Stashed changes
-=======
-            Identifier recipeId = Identifier.parse(tag.getString("recipe_id").orElseThrow());
->>>>>>> Stashed changes
             return new RecipeUnlockBonus(recipeId);
         }
 
@@ -186,22 +150,14 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
-<<<<<<< Updated upstream
-        public RecipeUnlockBonus deserialize(FriendlyByteBuf buf) {
-            ResourceLocation recipeId = new ResourceLocation(buf.readUtf());
-=======
         public RecipeUnlockBonus deserialize(RegistryFriendlyByteBuf buf) {
             Identifier recipeId = Identifier.parse(buf.readUtf());
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             return new RecipeUnlockBonus(recipeId);
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RecipeUnlockBonus aBonus)) {
@@ -212,15 +168,7 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            return new RecipeUnlockBonus(new ResourceLocation("unknown_recipe"));
-=======
             return new RecipeUnlockBonus(Identifier.parse("unknown_recipe"));
->>>>>>> Stashed changes
-=======
-            return new RecipeUnlockBonus(Identifier.parse("unknown_recipe"));
->>>>>>> Stashed changes
         }
     }
 }

@@ -17,7 +17,7 @@ public abstract class LivingVisibilityMixin {
         PSTEvents.LIVING_VISIBILITY.post(event);
 
         if (event.getVisibilityModifier() != 1.0) {
-            // Apply cumulative multiplication to the return value, mirroring legacy Forge behaviors
+
             cir.setReturnValue(cir.getReturnValue() * event.getVisibilityModifier());
         }
     }

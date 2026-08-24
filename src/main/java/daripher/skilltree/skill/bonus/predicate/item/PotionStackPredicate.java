@@ -154,13 +154,13 @@ public final class PotionStackPredicate implements ItemStackPredicate {
             return tag;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new PotionStackPredicate(NetworkHelper.readEnum(buf, Type.class));
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof PotionStackPredicate aCondition)) {

@@ -7,7 +7,6 @@ import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.init.predicate.PSTItemPredicates;
 import daripher.skilltree.init.PSTTags;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -123,8 +122,9 @@ public class EquipmentPredicate implements ItemStackPredicate {
         return stack.is(ItemTags.SWORDS);
     }
 
+    
     public static boolean isTool(ItemStack stack) {
-        return stack.has(DataComponents.TOOL);
+        return isPickaxe(stack) || isShovel(stack) || isHoe(stack);
     }
 
     public static boolean isHoe(ItemStack stack) {

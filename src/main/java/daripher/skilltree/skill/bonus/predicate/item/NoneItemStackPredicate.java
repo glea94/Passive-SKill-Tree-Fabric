@@ -46,13 +46,13 @@ public enum NoneItemStackPredicate implements ItemStackPredicate {
             return new CompoundTag();
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return NoneItemStackPredicate.INSTANCE;
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (condition != NoneItemStackPredicate.INSTANCE) {

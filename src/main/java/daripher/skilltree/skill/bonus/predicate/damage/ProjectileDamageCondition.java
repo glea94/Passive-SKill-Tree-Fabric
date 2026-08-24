@@ -58,13 +58,13 @@ public record ProjectileDamageCondition() implements DamageCondition {
             return new CompoundTag();
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public DamageCondition deserialize(RegistryFriendlyByteBuf buf) {
             return new ProjectileDamageCondition();
         }
 
-        // Factual Fix 1.21.4: Refactored signature from FriendlyByteBuf to RegistryFriendlyByteBuf
+
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, DamageCondition condition) {
             if (!(condition instanceof ProjectileDamageCondition)) {
