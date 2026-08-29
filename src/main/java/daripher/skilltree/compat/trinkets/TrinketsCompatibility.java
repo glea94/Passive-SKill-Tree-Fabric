@@ -12,19 +12,9 @@ import java.util.List;
 import java.util.stream.Stream;
 public enum TrinketsCompatibility {
     INSTANCE;
-<<<<<<< Updated upstream
-
-    
-=======
->>>>>>> Stashed changes
     public static final RegistryObject<SkillBonus.Serializer> TRINKET_SLOTS_BONUS = PSTSkillBonuses.REGISTRY.register("curio_slots", TrinketSlotsBonus.Serializer::new);
     public Stream<ItemStack> getTrinkets(LivingEntity living) {
         List<ItemStack> trinkets = new ArrayList<>();
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         for (TrinketSlotAccess slot : TrinketsApi.getAttachment(living).allEquipped(false)) {
             trinkets.add(slot.get());
         }

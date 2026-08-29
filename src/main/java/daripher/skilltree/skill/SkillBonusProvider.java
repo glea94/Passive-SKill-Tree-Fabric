@@ -1,5 +1,4 @@
 package daripher.skilltree.skill;
-
 import daripher.skilltree.capability.skill.PlayerSkillsProvider;
 import daripher.skilltree.effect.SkillBonusEffect;
 import daripher.skilltree.entity.player.PlayerHelper;
@@ -11,11 +10,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 public class SkillBonusProvider {
     public static <T> List<T> getSkillBonuses(@NotNull Player player, Class<T> type) {
         if (!PlayerSkillsProvider.hasSkills(player)) {
@@ -27,11 +24,9 @@ public class SkillBonusProvider {
         bonuses.addAll(getEquipmentBonuses(player, type));
         return bonuses;
     }
-
     public static <T> List<T> getMergedSkillBonuses(@NotNull Player player, Class<T> type) {
         return mergeSkillBonuses(getSkillBonuses(player, type));
     }
-
     @NotNull
     @SuppressWarnings({"rawtypes", "unchecked", "SuspiciousMethodCalls"})
     private static <T> List<T> mergeSkillBonuses(List<T> bonuses) {
@@ -48,7 +43,6 @@ public class SkillBonusProvider {
         }
         return mergedBonuses;
     }
-
     private static <T> List<T> getSkillTreeBonuses(Player player, Class<T> type) {
         List<T> list = new ArrayList<>();
         for (PassiveSkill skill : PlayerSkillsProvider.get(player).getPlayerSkills()) {
@@ -61,11 +55,9 @@ public class SkillBonusProvider {
         }
         return list;
     }
-
     private static <T> List<T> getEffectBonuses(Player player, Class<T> type) {
         List<T> bonuses = new ArrayList<>();
         for (MobEffectInstance e : player.getActiveEffects()) {
-
             if (e.getEffect().value() instanceof SkillBonusEffect skillEffect) {
                 SkillBonus<?> bonus = skillEffect.getBonus().copy();
                 if (type.isInstance(bonus)) {
@@ -76,19 +68,10 @@ public class SkillBonusProvider {
         }
         return bonuses;
     }
-
     private static <T> List<T> getEquipmentBonuses(Player player, Class<T> type) {
         return PlayerHelper.getAllEquipment(player).map(s -> getItemBonuses(s, type)).flatMap(List::stream).toList();
     }
-<<<<<<< Updated upstream
-
     private static <T> List<T> getItemBonuses(ItemStack stack, Class<T> type) {
-
-
-
-=======
-    private static <T> List<T> getItemBonuses(ItemStack stack, Class<T> type) {
->>>>>>> Stashed changes
         List<ItemBonus<?>> itemBonuses = ItemBonusHandler.getItemBonuses(stack, EquipmentBonus.class);
         List<T> bonuses = new ArrayList<>();
         for (ItemBonus<?> itemBonus : itemBonuses) {

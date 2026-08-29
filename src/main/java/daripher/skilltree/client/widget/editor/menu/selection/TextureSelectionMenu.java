@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget.editor.menu.selection;
-
 import daripher.skilltree.data.client.SkillTexturesData;
 import daripher.skilltree.mixin.AbstractWidgetAccessor;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -9,9 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.function.Consumer;
-
 public class TextureSelectionMenu extends EditorMenu {
     private @NotNull Consumer<Identifier> responder = v -> {
     };
@@ -20,14 +17,12 @@ public class TextureSelectionMenu extends EditorMenu {
     private final String texturesFolder;
     private int selectionListRows = 10;
     private int selectionListColumns = 10;
-
     public TextureSelectionMenu(SkillTreeEditor editor, @Nullable EditorMenu previousMenu, TextureSelectionList selectionList, String texturesFolder, Runnable onInit) {
         super(editor, previousMenu);
         this.selectionList = selectionList;
         this.onInit = onInit;
         this.texturesFolder = texturesFolder;
     }
-
     @Override
     public void init() {
         clearWidgets();
@@ -35,11 +30,6 @@ public class TextureSelectionMenu extends EditorMenu {
         editor.increaseHeight(29);
         editor.addLabel(0, 0, "Folder", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         TextField folderField = editor.addTextField(0, 0, 200, 14, texturesFolder);
         folderField.setSoftFilter(SkillTexturesData::isTextureFolder);
         folderField.setSuggestionProvider(SkillTexturesData::autocompleteFolderName);
@@ -49,20 +39,13 @@ public class TextureSelectionMenu extends EditorMenu {
             selectionList.setRows(selectionListRows);
             ((AbstractWidgetAccessor) (Object) editor).setHeight(selectionList.getY() + selectionList.getHeight() + 10);
         });
-
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Search", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         TextField searchField = editor.addTextField(0, 0, 200, 14, "");
         searchField.setFocused(true);
         searchField.setResponder(selectionList::setSearchString);
         editor.increaseHeight(29);
-
         selectionList.setX(editor.getWidgetsX(0));
         selectionList.setY(editor.getWidgetsY(0));
         selectionList.setColumns(selectionListColumns);
@@ -72,12 +55,10 @@ public class TextureSelectionMenu extends EditorMenu {
         addWidget(selectionList);
         onInit.run();
     }
-
     public TextureSelectionMenu setResponder(@NotNull Consumer<Identifier> responder) {
         this.responder = responder;
         return this;
     }
-
     public TextureSelectionMenu setSelectionListGridSize(int rows, int columns) {
         this.selectionListRows = rows;
         this.selectionListColumns = columns;

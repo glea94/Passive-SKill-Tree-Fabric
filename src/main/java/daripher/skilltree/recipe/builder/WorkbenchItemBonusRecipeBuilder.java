@@ -1,5 +1,4 @@
 package daripher.skilltree.recipe.builder;
-
 import daripher.skilltree.recipe.workbench.WorkbenchUpgradeBonusRecipe;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.item.ItemBonus;
@@ -11,63 +10,47 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.Ingredient;
-
 import java.util.HashMap;
 import java.util.Map;
-
 public class WorkbenchItemBonusRecipeBuilder {
     private final Identifier id;
     private ItemStackPredicate baseItemStackPredicate;
     private final Map<Ingredient, Integer> ingredients = new HashMap<>();
     private boolean requiresPassiveSkill;
     private ItemBonus<?> itemBonus;
-
     private WorkbenchItemBonusRecipeBuilder(Identifier id) {
         this.id = id;
     }
-
     public static WorkbenchItemBonusRecipeBuilder create(Identifier id) {
         return new WorkbenchItemBonusRecipeBuilder(id);
     }
-
     public WorkbenchItemBonusRecipeBuilder setBaseItemCondition(ItemStackPredicate baseItemStackPredicate) {
         this.baseItemStackPredicate = baseItemStackPredicate;
         return this;
     }
-
     public WorkbenchItemBonusRecipeBuilder addIngredients(Ingredient ingredient, int requiredAmount) {
         this.ingredients.put(ingredient, requiredAmount);
         return this;
     }
-
     public WorkbenchItemBonusRecipeBuilder setRequiresPassiveSkill() {
         this.requiresPassiveSkill = true;
         return this;
     }
-
     public WorkbenchItemBonusRecipeBuilder setItemBonus(ItemBonus<?> itemBonus) {
         this.itemBonus = itemBonus;
         return this;
     }
-
     public WorkbenchItemBonusRecipeBuilder setItemBonus(SkillBonus<?> skillBonus) {
         this.itemBonus = new EquipmentBonus(skillBonus);
         return this;
     }
-
     public void save(RecipeOutput recipeOutput) {
         validate();
         WorkbenchUpgradeBonusRecipe recipe =
                 new WorkbenchUpgradeBonusRecipe(id, baseItemStackPredicate, ingredients, requiresPassiveSkill, itemBonus);
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         ResourceKey<Recipe<?>> recipeKey = ResourceKey.create(Registries.RECIPE, id);
         recipeOutput.accept(recipeKey, recipe, null);
     }
-
     private void validate() {
         if (baseItemStackPredicate == null) {
             throw new IllegalStateException("No base item condition set for recipe " + id);

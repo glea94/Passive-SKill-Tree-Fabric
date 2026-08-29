@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.living;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -16,22 +15,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class HasItemInHandEntityPredicate implements LivingEntityPredicate {
     private @NotNull ItemStackPredicate itemStackPredicate;
-
     public HasItemInHandEntityPredicate(@NotNull ItemStackPredicate itemStackPredicate) {
         this.itemStackPredicate = itemStackPredicate;
     }
-
     @Override
     public boolean test(LivingEntity living) {
         return itemStackPredicate.test(living.getMainHandItem()) || itemStackPredicate.test(living.getOffhandItem());
     }
-
     @Override
     public MutableComponent getTooltip(MutableComponent bonusTooltip, SkillBonus.Target target) {
         String key = getDescriptionId();
@@ -39,12 +33,10 @@ public final class HasItemInHandEntityPredicate implements LivingEntityPredicate
         Component itemDescription = itemStackPredicate.getTooltip();
         return Component.translatable(key, bonusTooltip, targetDescription, itemDescription);
     }
-
     @Override
     public LivingEntityPredicate.Serializer getSerializer() {
         return PSTLivingEntityPredicates.HAS_ITEM_IN_HAND.get();
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer) {
         editor.addLabel(0, 0, "Item Predicate", ChatFormatting.GREEN);
@@ -53,20 +45,17 @@ public final class HasItemInHandEntityPredicate implements LivingEntityPredicate
                 .setMenuInitFunc(() -> addItemPredicateWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addItemPredicateWidgets(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer) {
         itemStackPredicate.addEditorWidgets(editor, predicate -> {
             setItemPredicate(predicate);
             consumer.accept(this.copy());
         });
     }
-
     private void selectItemPredicate(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer, ItemStackPredicate predicate) {
         setItemPredicate(predicate);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -78,37 +67,30 @@ public final class HasItemInHandEntityPredicate implements LivingEntityPredicate
         HasItemInHandEntityPredicate that = (HasItemInHandEntityPredicate) o;
         return Objects.equals(itemStackPredicate, that.itemStackPredicate);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(itemStackPredicate);
     }
-
     public void setItemPredicate(@NotNull ItemStackPredicate itemStackPredicate) {
         this.itemStackPredicate = itemStackPredicate;
     }
-
     public HasItemInHandEntityPredicate copy() {
         return new HasItemInHandEntityPredicate(this.itemStackPredicate);
     }
-
     public static class Serializer implements LivingEntityPredicate.Serializer {
         @Override
         public LivingEntityPredicate deserialize(JsonObject json) throws JsonParseException {
             return new HasItemInHandEntityPredicate(SerializationHelper.deserializeItemPredicate(json));
         }
-
         @Override
         public void serialize(JsonObject json, LivingEntityPredicate predicate) {
             HasItemInHandEntityPredicate validPredicate = validatePredicate(predicate);
             SerializationHelper.serializeItemPredicate(json, validPredicate.itemStackPredicate);
         }
-
         @Override
         public LivingEntityPredicate deserialize(CompoundTag tag) {
             return new HasItemInHandEntityPredicate(SerializationHelper.deserializeItemPredicate(tag));
         }
-
         @Override
         public CompoundTag serialize(LivingEntityPredicate predicate) {
             HasItemInHandEntityPredicate validPredicate = validatePredicate(predicate);
@@ -116,33 +98,21 @@ public final class HasItemInHandEntityPredicate implements LivingEntityPredicate
             SerializationHelper.serializeItemPredicate(tag, validPredicate.itemStackPredicate);
             return tag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new HasItemInHandEntityPredicate(NetworkHelper.readItemPredicate(buf));
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             HasItemInHandEntityPredicate validPredicate = validatePredicate(predicate);
             NetworkHelper.writeItemPredicate(buf, validPredicate.itemStackPredicate);
         }
-
         private static @NotNull HasItemInHandEntityPredicate validatePredicate(LivingEntityPredicate predicate) {
             if (!(predicate instanceof HasItemInHandEntityPredicate validPredicate)) {
                 throw new IllegalArgumentException("Expected HasItemInHandEntityPredicate, got: " + predicate);
             }
             return validPredicate;
         }
-
         @Override
         public LivingEntityPredicate createDefaultInstance() {
             return new HasItemInHandEntityPredicate(NoneItemStackPredicate.INSTANCE);

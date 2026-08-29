@@ -2,8 +2,8 @@
   "id": "skilltree:blacksmith_6",
   "bonuses": [
     {
-      "type": "skilltree:block_break_speed",
-      "multiplier": 0.1
+      "type": "skilltree:recipe_unlock",
+      "recipe_id": "skilltree:blacksmith_bashing_shield_crafting"
     }
   ],
   "requirements": [

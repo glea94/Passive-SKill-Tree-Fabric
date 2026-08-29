@@ -1,5 +1,4 @@
 package daripher.skilltree;
-
 import daripher.skilltree.command.PSTCommands;
 import daripher.skilltree.compat.trinkets.TrinketsCompatibility;
 import daripher.skilltree.config.ServerConfig;
@@ -15,11 +14,9 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 public class SkillTreeMod implements ModInitializer {
     public static final String MOD_ID = "skilltree";
     public static final Logger LOGGER = LogManager.getLogger(SkillTreeMod.MOD_ID);
-
     @Override
     public void onInitialize() {
         registerModRegistries();
@@ -29,11 +26,9 @@ public class SkillTreeMod implements ModInitializer {
         registerCommands();
         registerCompatibilities();
     }
-
     private static void registerModRegistries() {
         touch(PSTRegistries.class);
         touch(PSTStats.class);
-
         touch(PSTItems.class);
         touch(PSTBlocks.class);
         touch(PSTMobEffects.class);
@@ -56,17 +51,14 @@ public class SkillTreeMod implements ModInitializer {
         touch(PSTFloatFunctions.class);
         touch(PSTSkillRequirements.class);
         touch(PSTItemBonuses.class);
-
         PSTBrewingRecipes.addRecipes();
         PSTLootModifiers.register();
         SkillsReloader.register();
         SkillTreesReloader.register();
     }
-
     private static void registerConfigs() {
         ServerConfig.load();
     }
-
     private static void registerEventHandlers() {
         OutgoingDamageBonusHandler.register();
         IncomingDamageBonusHandler.register();
@@ -84,6 +76,8 @@ public class SkillTreeMod implements ModInitializer {
         DamageAvoidanceBonusHandler.register();
         CheatDeathBonusHandler.register();
         daripher.skilltree.event.PoisonedWeaponEvents.register();
+        daripher.skilltree.event.MaceMasteryEvents.register();
+        daripher.skilltree.event.ShieldBashEvents.register();
         EffectImmunityBonusHandler.register();
         EffectImmunityBypassBonusHandler.register();
         EffectDurationBonusHandler.register();
@@ -99,23 +93,19 @@ public class SkillTreeMod implements ModInitializer {
         ItemUsageSpeedBonusHandler.register();
         daripher.skilltree.event.PlayerJoinEventHandler.register();
     }
-
     private static void registerCommands() {
         PSTCommands.register();
     }
-
     private static void registerNetwork() {
         PSTNetworkChannels.register();
         ServerNetworking.register();
     }
-
     private static void registerCompatibilities() {
         if (FabricLoader.getInstance().isModLoaded("trinkets")) {
             LOGGER.info("Trinkets detected, enabling accessory slot compatibility");
         }
         touch(TrinketsCompatibility.class);
     }
-
     private static void touch(Class<?> clazz) {
         try {
             Class.forName(clazz.getName(), true, clazz.getClassLoader());

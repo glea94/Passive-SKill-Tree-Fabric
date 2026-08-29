@@ -1,31 +1,22 @@
 package daripher.skilltree.client.widget.editor.menu.selection;
-
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Collection;
 import java.util.Locale;
-
 public class TextSelectionList<T> extends SelectionList<T> {
     public TextSelectionList(int x, int y, int elementWidth, int elementHeight, Collection<T> elementsList) {
         super(x, y, elementWidth, elementHeight, elementsList);
     }
-
     @Override
     protected void renderElement(@NotNull GuiGraphicsExtractor graphics, int elementIndex, int x, int y) {
         T element = getDisplayedElements().get(elementIndex);
         String elementName = getElementName(element);
         String selectedElementName = getElementName(getSelectedElement());
         int textColor = ARGB.opaque(elementName.equals(selectedElementName) ? 0x55ff55 : 0xe0e0e0);
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         elementName = TooltipHelper.getTrimmedString(elementName, this.getWidth() - 10);
         Font font = Minecraft.getInstance().font;
         String lowerCase = elementName.toLowerCase(Locale.ROOT);
@@ -41,7 +32,6 @@ public class TextSelectionList<T> extends SelectionList<T> {
             graphics.text(font, elementName, textX, textY, textColor);
         }
     }
-
     private void drawPartiallyHighlightedString(@NotNull GuiGraphicsExtractor graphics, Font font, String string, int x, int y, int highlightStart, int highlightEnd, int textColor, int highlightColor) {
         String split1 = string.substring(0, highlightStart);
         graphics.text(font, split1, x, y, textColor);

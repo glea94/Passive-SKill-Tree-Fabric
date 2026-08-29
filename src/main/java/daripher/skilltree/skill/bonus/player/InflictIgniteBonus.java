@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -19,54 +18,41 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-
 import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class InflictIgniteBonus implements EventListenerBonus<InflictIgniteBonus> {
     private float chance;
     private int duration;
     private SkillEventListener eventListener;
-
     public InflictIgniteBonus(float chance, int duration, SkillEventListener eventListener) {
         this.chance = chance;
         this.duration = duration;
         this.eventListener = eventListener;
     }
-
     public InflictIgniteBonus(float chance, int duration) {
         this(chance, duration, new OutgoingDamageEventListener());
     }
-
     @Override
     public void applyEffect(LivingEntity target, @Nullable LivingEntity source) {
         if (target.getRandom().nextFloat() < chance) {
-<<<<<<< Updated upstream
-            
-=======
->>>>>>> Stashed changes
             target.igniteForSeconds(duration);
         }
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.INFLICT_IGNITE.get();
     }
-
     @Override
     public InflictIgniteBonus copy() {
         return new InflictIgniteBonus(chance, duration, eventListener);
     }
-
     @Override
     public InflictIgniteBonus multiply(double multiplier) {
         chance *= (float) multiplier;
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof InflictIgniteBonus otherBonus)) {
@@ -77,7 +63,6 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
         }
         return Objects.equals(otherBonus.eventListener, this.eventListener);
     }
-
     @Override
     public SkillBonus<EventListenerBonus<InflictIgniteBonus>> merge(SkillBonus<?> other) {
         if (!(other instanceof InflictIgniteBonus otherBonus)) {
@@ -85,13 +70,8 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
         }
         return new InflictIgniteBonus(otherBonus.chance + this.chance, duration, eventListener);
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
-<<<<<<< Updated upstream
-        
-=======
->>>>>>> Stashed changes
         String durationDescription = StringUtil.formatTickDuration(duration * 20, 20.0F);
         String targetDescription = eventListener.getTarget().name().toLowerCase(Locale.ROOT);
         String bonusDescription = getDescriptionId() + "." + targetDescription;
@@ -105,17 +85,14 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
         tooltip = eventListener.getTooltip(tooltip);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return chance > 0 ^ eventListener.getTarget() == Target.PLAYER;
     }
-
     @Override
     public SkillEventListener getEventListener() {
         return eventListener;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<InflictIgniteBonus>> consumer) {
         editor.addLabel(0, 0, "Chance", ChatFormatting.GOLD);
@@ -137,35 +114,28 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
             consumer.accept(this.copy());
         });
     }
-
     private void selectEventListener(SkillTreeEditor editor, Consumer<EventListenerBonus<InflictIgniteBonus>> consumer, SkillEventListener eventListener) {
         setEventListener(eventListener);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectDuration(Consumer<EventListenerBonus<InflictIgniteBonus>> consumer, Double value) {
         setDuration(value.intValue());
         consumer.accept(this.copy());
     }
-
     private void selectChance(Consumer<EventListenerBonus<InflictIgniteBonus>> consumer, Double value) {
         setChance(value.floatValue());
         consumer.accept(this.copy());
     }
-
     public void setEventListener(SkillEventListener eventListener) {
         this.eventListener = eventListener;
     }
-
     public void setChance(float chance) {
         this.chance = chance;
     }
-
     public void setDuration(int duration) {
         this.duration = duration;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public InflictIgniteBonus deserialize(JsonObject json) throws JsonParseException {
@@ -175,7 +145,6 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
             bonus.eventListener = SerializationHelper.deserializeEventListener(json);
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof InflictIgniteBonus aBonus)) {
@@ -185,7 +154,6 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
             json.addProperty("duration", aBonus.duration);
             SerializationHelper.serializeEventListener(json, aBonus.eventListener);
         }
-
         @Override
         public InflictIgniteBonus deserialize(CompoundTag tag) {
             float chance = tag.getFloatOr("chance", 0f);
@@ -194,7 +162,6 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
             bonus.eventListener = SerializationHelper.deserializeEventListener(tag);
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof InflictIgniteBonus aBonus)) {
@@ -206,11 +173,6 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
             SerializationHelper.serializeEventListener(tag, aBonus.eventListener);
             return tag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public InflictIgniteBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -219,11 +181,6 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
             bonus.eventListener = NetworkHelper.readEventListener(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof InflictIgniteBonus aBonus)) {
@@ -233,7 +190,6 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
             buf.writeInt(aBonus.duration);
             NetworkHelper.writeEventListener(buf, aBonus.eventListener);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new InflictIgniteBonus(0.05f, 5);

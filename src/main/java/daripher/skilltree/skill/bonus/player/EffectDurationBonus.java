@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -24,11 +23,9 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
-
 public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus> {
     private MobEffectPredicate effectPredicate;
     private float duration;
@@ -37,13 +34,11 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
     private SkillBonus.Target target;
     private @NotNull LivingMultiplier enemyMultiplier = NoneLivingMultiplier.INSTANCE;
     private @NotNull LivingEntityPredicate enemyCondition = NoneLivingEntityPredicate.INSTANCE;
-
     public EffectDurationBonus(MobEffectPredicate effectPredicate, float duration, SkillBonus.Target target) {
         this.effectPredicate = effectPredicate;
         this.duration = duration;
         this.target = target;
     }
-
     public float getDurationModifier(MobEffect mobEffect, @Nullable Player effectSource, LivingEntity entity) {
         if (!effectPredicate.test(mobEffect)) {
             return 0f;
@@ -63,12 +58,10 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
         }
         return duration * playerMultiplier.getValue(entity) * enemyMultiplier.getValue(entity);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.EFFECT_DURATION.get();
     }
-
     @Override
     public EffectDurationBonus copy() {
         EffectDurationBonus bonus = new EffectDurationBonus(effectPredicate, duration, target);
@@ -78,13 +71,11 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
         bonus.enemyMultiplier = this.enemyMultiplier;
         return bonus;
     }
-
     @Override
     public EffectDurationBonus multiply(double multiplier) {
         duration = (float) (duration * multiplier);
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof EffectDurationBonus otherBonus)) {
@@ -107,7 +98,6 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
         }
         return otherBonus.effectPredicate == this.effectPredicate;
     }
-
     @Override
     public SkillBonus<EffectDurationBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof EffectDurationBonus otherBonus)) {
@@ -120,7 +110,6 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
         mergedBonus.enemyMultiplier = this.enemyMultiplier;
         return mergedBonus;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         Component effectTypeDescription = effectPredicate.getTooltip("plural");
@@ -133,7 +122,6 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
         tooltip = enemyCondition.getTooltip(tooltip, target);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         boolean durationIncreases = duration > 0;
@@ -141,8 +129,6 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
         boolean affectsNonHarmfulEffects = !effectPredicate.testsForHarmfulEffects();
         return durationIncreases ^ affectsSelf ^ affectsNonHarmfulEffects;
     }
-
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<EffectDurationBonus> consumer) {
         editor.addLabel(110, 0, "Duration", ChatFormatting.GOLD);
@@ -184,117 +170,96 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
             editor.increaseHeight(19);
         }
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<EffectDurationBonus> consumer, LivingMultiplier multiplier) {
         setPlayerMultiplier(multiplier);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<EffectDurationBonus> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectEnemyMultiplier(SkillTreeEditor editor, Consumer<EffectDurationBonus> consumer, LivingMultiplier multiplier) {
         setEnemyMultiplier(multiplier);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectEnemyCondition(SkillTreeEditor editor, Consumer<EffectDurationBonus> consumer, LivingEntityPredicate condition) {
         setEnemyCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectEffectPredicate(SkillTreeEditor editor, Consumer<EffectDurationBonus> consumer, MobEffectPredicate effectPredicate) {
         setEffectPredicate(effectPredicate);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectDuration(Consumer<EffectDurationBonus> consumer, Double duration) {
         setDuration(duration.floatValue());
         consumer.accept(this.copy());
     }
-
     private void selectTarget(SkillTreeEditor editor, Consumer<EffectDurationBonus> consumer, SkillBonus.Target target) {
         setTarget(target);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addEffectPredicateWidgets(SkillTreeEditor editor, Consumer<EffectDurationBonus> consumer) {
         effectPredicate.addEditorWidgets(editor, predicate -> {
             setEffectPredicate(predicate);
             consumer.accept(this.copy());
         });
     }
-
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<EffectDurationBonus> consumer) {
         playerCondition.addEditorWidgets(editor, c -> {
             setPlayerCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     private void addPlayerMultiplierWidgets(SkillTreeEditor editor, Consumer<EffectDurationBonus> consumer) {
         playerMultiplier.addEditorWidgets(editor, m -> {
             setPlayerMultiplier(m);
             consumer.accept(this.copy());
         });
     }
-
     private void addEnemyConditionWidgets(SkillTreeEditor editor, Consumer<EffectDurationBonus> consumer) {
         enemyCondition.addEditorWidgets(editor, c -> {
             setPlayerCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     private void addEnemyMultiplierWidgets(SkillTreeEditor editor, Consumer<EffectDurationBonus> consumer) {
         enemyMultiplier.addEditorWidgets(editor, m -> {
             setPlayerMultiplier(m);
             consumer.accept(this.copy());
         });
     }
-
     public void setDuration(float duration) {
         this.duration = duration;
     }
-
     public void setEffectPredicate(MobEffectPredicate effectPredicate) {
         this.effectPredicate = effectPredicate;
     }
-
     public SkillBonus<?> setPlayerCondition(LivingEntityPredicate condition) {
         this.playerCondition = condition;
         return this;
     }
-
     public SkillBonus<?> setPlayerMultiplier(LivingMultiplier multiplier) {
         this.playerMultiplier = multiplier;
         return this;
     }
-
     public void setTarget(Target target) {
         this.target = target;
     }
-
     public void setEnemyCondition(@NotNull LivingEntityPredicate enemyCondition) {
         this.enemyCondition = enemyCondition;
     }
-
     public void setEnemyMultiplier(@NotNull LivingMultiplier enemyMultiplier) {
         this.enemyMultiplier = enemyMultiplier;
     }
-
     public Target getTarget() {
         return target;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public EffectDurationBonus deserialize(JsonObject json) throws JsonParseException {
@@ -308,7 +273,6 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
             bonus.enemyCondition = SerializationHelper.deserializeLivingCondition(json, "enemy_condition");
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof EffectDurationBonus aBonus)) {
@@ -322,7 +286,6 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
             SerializationHelper.serializeLivingMultiplier(json, aBonus.enemyMultiplier, "enemy_multiplier");
             SerializationHelper.serializeLivingCondition(json, aBonus.enemyCondition, "enemy_condition");
         }
-
         @Override
         public EffectDurationBonus deserialize(CompoundTag tag) {
             MobEffectPredicate effectPredicate = SerializationHelper.deserializeMobEffectCondition(tag, "effect_predicate");
@@ -335,7 +298,6 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
             bonus.enemyCondition = SerializationHelper.deserializeLivingCondition(tag, "enemy_condition");
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof EffectDurationBonus aBonus)) {
@@ -351,7 +313,6 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
             SerializationHelper.serializeLivingCondition(tag, aBonus.enemyCondition, "enemy_condition");
             return tag;
         }
-
         @Override
         public EffectDurationBonus deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectPredicate effectPredicate = NetworkHelper.readMobEffectCondition(buf);
@@ -364,11 +325,6 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
             bonus.enemyCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof EffectDurationBonus aBonus)) {
@@ -382,8 +338,6 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
             NetworkHelper.writeLivingMultiplier(buf, aBonus.enemyMultiplier);
             NetworkHelper.writeLivingCondition(buf, aBonus.enemyCondition);
         }
-
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new EffectDurationBonus(new MobEffectTypePredicate(MobEffectType.BENEFICIAL), 0.1f, Target.PLAYER);

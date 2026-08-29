@@ -1,17 +1,13 @@
 package daripher.skilltree.client.widget.editor.menu;
-
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.skill.SkillConnection;
 import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.resources.Identifier;
-
 import java.util.List;
-
 public class SkillConnectionsEditor extends EditorMenu {
     public SkillConnectionsEditor(SkillTreeEditor editor, EditorMenu previousMenu) {
         super(editor, previousMenu);
     }
-
     @Override
     public void init() {
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
@@ -32,7 +28,6 @@ public class SkillConnectionsEditor extends EditorMenu {
         }
         editor.increaseHeight(19);
     }
-
     private boolean selectedSkillsConnected() {
         PassiveSkill[] selectedSkills = editor.getSelectedSkills().toArray(new PassiveSkill[0]);
         for (int i = 0; i < selectedSkills.length - 1; i++) {
@@ -44,14 +39,12 @@ public class SkillConnectionsEditor extends EditorMenu {
         }
         return true;
     }
-
     private boolean skillsConnected(PassiveSkill first, PassiveSkill second) {
         return first.getDirectConnections().contains(second.getId()) || second.getDirectConnections()
                 .contains(first.getId()) || first.getLongConnections().contains(second.getId()) || second.getLongConnections()
                 .contains(first.getId()) || first.getOneWayConnections().contains(second.getId()) || second.getOneWayConnections()
                 .contains(first.getId());
     }
-
     private void disconnectSelectedSkills() {
         PassiveSkill[] selectedSkills = editor.getSelectedSkills().toArray(new PassiveSkill[0]);
         for (int i = 0; i < selectedSkills.length - 1; i++) {
@@ -65,16 +58,9 @@ public class SkillConnectionsEditor extends EditorMenu {
             skill2.getOneWayConnections().remove(skill1.getId());
         }
         editor.saveSelectedSkills();
-<<<<<<< Updated upstream
-
-        
-        
-=======
->>>>>>> Stashed changes
         editor.clearWidgets();
         editor.rebuildWidgets();
     }
-
     private void connectSelectedSkills(SkillConnection.Type connectionType) {
         PassiveSkill[] selectedSkills = editor.getSelectedSkills().toArray(new PassiveSkill[0]);
         for (int i = 0; i < selectedSkills.length - 1; i++) {
@@ -87,11 +73,6 @@ public class SkillConnectionsEditor extends EditorMenu {
             connections.add(selectedSkills[i + 1].getId());
         }
         editor.saveSelectedSkills();
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         editor.clearWidgets();
         editor.rebuildWidgets();
     }

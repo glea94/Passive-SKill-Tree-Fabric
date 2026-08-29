@@ -1,0 +1,26 @@
+{
+  "id": "skilltree:mace_mastery_9",
+  "bonuses": [],
+  "requirements": [
+    {
+      "type": "skilltree:mace_mastery_kills",
+      "min_kills": 135
+    }
+  ],
+  "directConnections": [
+    "skilltree:mace_mastery_6"
+  ],
+  "longConnections": [],
+  "oneWayConnections": [],
+  "tags": [],
+  "backgroundTexture": "skilltree:textures/icons/background/notable.png",
+  "iconTexture": "skilltree:textures/icons/mace_mastery.png",
+  "borderTexture": "skilltree:textures/tooltip/lesser.png",
+  "titleColor": "",
+  "positionX": 38.952396,
+  "positionY": -153.23811,
+  "buttonSize": 18,
+  "isStartingPoint": false,
+  "isAlwaysStartingPoint": false,
+  "cost": 0
+}

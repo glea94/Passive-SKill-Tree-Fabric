@@ -1,5 +1,4 @@
 package daripher.skilltree.client.screen;
-
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.client.widget.skill.SkillButton;
 import daripher.skilltree.client.widget.skill.SkillConnection;
@@ -14,19 +13,12 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
-
 import java.util.ArrayList;
 import java.util.List;
-
 public class ScreenHelper {
     public static void drawCenteredOutlinedText(GuiGraphicsExtractor graphics, String text, int x, int y, int color) {
         Font font = Minecraft.getInstance().font;
         x -= font.width(text) / 2;
-<<<<<<< Updated upstream
-        
-        
-=======
->>>>>>> Stashed changes
         int outlineColor = ARGB.opaque(0);
         int textColor = ARGB.opaque(color);
         graphics.text(font, text, x + 1, y, outlineColor, false);
@@ -35,14 +27,12 @@ public class ScreenHelper {
         graphics.text(font, text, x, y - 1, outlineColor, false);
         graphics.text(font, text, x, y, textColor, false);
     }
-
     public static void drawRectangle(GuiGraphicsExtractor graphics, int x, int y, int width, int height, int color) {
         graphics.fill(x, y, x + width, y + 1, color);
         graphics.fill(x, y + height - 1, x + width, y + height, color);
         graphics.fill(x, y + 1, x + 1, y + height - 1, color);
         graphics.fill(x + width - 1, y + 1, x + width, y + height - 1, color);
     }
-
     public static float getAngleBetweenButtons(Button button1, Button button2) {
         float x1 = button1.getX() + button1.getWidth() / 2F;
         float y1 = button1.getY() + button1.getHeight() / 2F;
@@ -50,7 +40,6 @@ public class ScreenHelper {
         float y2 = button2.getY() + button2.getHeight() / 2F;
         return (float) Mth.atan2(y2 - y1, x2 - x1);
     }
-
     public static float getDistanceBetweenButtons(Button button1, Button button2) {
         float x1 = button1.getX() + button1.getWidth() / 2F;
         float y1 = button1.getY() + button1.getHeight() / 2F;
@@ -58,14 +47,21 @@ public class ScreenHelper {
         float y2 = button2.getY() + button2.getHeight() / 2F;
         return Mth.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     }
-
     public static void renderSkillTooltip(PassiveSkillTree skillTree, SkillButton button, GuiGraphicsExtractor graphics, float x, float y, int width, int height) {
         Font font = Minecraft.getInstance().font;
         int maxWidth = width - 10;
+        // Les descriptions longues (nœuds combinant plusieurs enchantements/effets
+        // spéciaux, ex. Mace Mastery) tenaient auparavant sur une seule ligne géante
+        // car le seuil de wrap était la largeur de l'écran entière (maxWidth) - jamais
+        // atteint en pratique. On ne réduit le wrap qu'à moitié de maxWidth, et
+        // seulement pour les lignes qui dépassent déjà ce seuil réduit : les
+        // descriptions courtes (majorité des nœuds blacksmith/hunter/etc.) restent sur
+        // une seule ligne, inchangées.
+        int wrapWidth = maxWidth / 2;
         List<MutableComponent> tooltip = new ArrayList<>();
         for (MutableComponent component : button.getSkillTooltip(skillTree)) {
-            if (font.width(component) > maxWidth) {
-                tooltip.addAll(TooltipHelper.split(component, font, maxWidth));
+            if (font.width(component) > wrapWidth) {
+                tooltip.addAll(TooltipHelper.split(component, font, wrapWidth));
             } else {
                 tooltip.add(component);
             }
@@ -98,19 +94,11 @@ public class ScreenHelper {
             tooltipY = 5;
         }
         graphics.pose().pushMatrix();
-<<<<<<< Updated upstream
-        
-=======
->>>>>>> Stashed changes
         graphics.pose().translate(tooltipX, tooltipY);
         graphics.fill(1, 4, (int) (tooltipWidth - 1), tooltipHeight + 4, 0xDD000000);
         int textX = 5;
         int textY = 2;
         Identifier texture = button.skill.getTooltipFrameTexture();
-<<<<<<< Updated upstream
-        
-=======
->>>>>>> Stashed changes
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, -4, -4, 0F, 0F, 21, 20, 110, 20);
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (int) (tooltipWidth + 4 - 21), -4, 89F, 0F, 21, 20, 110, 20);
         int centerWidth = (int) (tooltipWidth + 8 - 42);
@@ -122,11 +110,6 @@ public class ScreenHelper {
             centerWidth -= partWidth;
         }
         MutableComponent title = tooltip.remove(0);
-<<<<<<< Updated upstream
-        
-        
-=======
->>>>>>> Stashed changes
         graphics.centeredText(font, title, (int) (tooltipWidth / 2), textY, ARGB.opaque(0xFFFFFF));
         textY += 19;
         for (MutableComponent component : tooltip) {
@@ -135,42 +118,27 @@ public class ScreenHelper {
         }
         graphics.pose().popMatrix();
     }
-
     public static void renderGatewayConnection(GuiGraphicsExtractor graphics, SkillConnection connection, boolean highlighted, float zoom, float animation) {
         Identifier texture = Identifier.parse("skilltree:textures/screen/long_connection.png");
         graphics.pose().pushMatrix();
         SkillButton button1 = connection.getFirstButton();
         SkillButton button2 = connection.getSecondButton();
-
         double connectionX = button1.getX() + button1.getWidth() / 2F;
         double connectionY = button1.getY() + button1.getHeight() / 2F;
-<<<<<<< Updated upstream
-        
-        graphics.pose().translate((float) connectionX, (float) connectionY);
-        float rotation = ScreenHelper.getAngleBetweenButtons(button1, button2);
-        
-        graphics.pose().rotate(rotation);
-        int length = (int) (ScreenHelper.getDistanceBetweenButtons(button1, button2) / zoom);
-        
-=======
         graphics.pose().translate((float) connectionX, (float) connectionY);
         float rotation = ScreenHelper.getAngleBetweenButtons(button1, button2);
         graphics.pose().rotate(rotation);
         int length = (int) (ScreenHelper.getDistanceBetweenButtons(button1, button2) / zoom);
->>>>>>> Stashed changes
         graphics.pose().scale(zoom, zoom);
-
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, -8, -animation, highlighted ? 0F : 6F, length, 6, 30, 12);
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 2, animation, highlighted ? 0F : 6F, length, 6, 30, 12);
         graphics.pose().popMatrix();
     }
-
     public static void renderOneWayConnection(GuiGraphicsExtractor graphics, SkillConnection connection, boolean highlighted, float zoom, float animation) {
         Identifier texture = Identifier.parse("skilltree:textures/screen/one_way_connection.png");
         graphics.pose().pushMatrix();
         SkillButton button1 = connection.getFirstButton();
         SkillButton button2 = connection.getSecondButton();
-
         double connectionX = button1.getX() + button1.getWidth() / 2F;
         double connectionY = button1.getY() + button1.getHeight() / 2F;
         graphics.pose().translate((float) connectionX, (float) connectionY);
@@ -178,17 +146,14 @@ public class ScreenHelper {
         graphics.pose().rotate(rotation);
         int length = (int) (ScreenHelper.getDistanceBetweenButtons(button1, button2) / zoom);
         graphics.pose().scale(zoom, zoom);
-
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, -3, -animation, highlighted ? 0F : 6F, length, 6, 30, 12);
         graphics.pose().popMatrix();
     }
-
     public static void renderConnection(GuiGraphicsExtractor graphics, SkillConnection connection, float zoom, float animation) {
         Identifier texture = Identifier.parse("skilltree:textures/screen/direct_connection.png");
         graphics.pose().pushMatrix();
         SkillButton button1 = connection.getFirstButton();
         SkillButton button2 = connection.getSecondButton();
-
         double connectionX = button1.getX() + button1.getWidth() / 2F;
         double connectionY = button1.getY() + button1.getHeight() / 2F;
         graphics.pose().translate((float) connectionX, (float) connectionY);
@@ -197,14 +162,9 @@ public class ScreenHelper {
         int length = (int) ScreenHelper.getDistanceBetweenButtons(button1, button2);
         boolean highlighted = button1.skillLearned && button2.skillLearned;
         graphics.pose().scale(1F, zoom);
-
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, -3, 0F, highlighted ? 0F : 6F, length, 6, 50, 12);
         boolean shouldAnimate = button1.skillLearned && button2.canLearn || button2.skillLearned && button1.canLearn;
         if (!highlighted && shouldAnimate) {
-<<<<<<< Updated upstream
-            
-=======
->>>>>>> Stashed changes
             int tintColor = ARGB.color((Mth.sin(animation / 3F) + 1) / 2, -1);
             graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, -3, 0F, 0F, length, 6, 50, 12, tintColor);
         }

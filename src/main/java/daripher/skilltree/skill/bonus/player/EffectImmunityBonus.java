@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -20,52 +19,42 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
-
 public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus> {
     private @NotNull MobEffectPredicate effectPredicate;
     private @NotNull LivingEntityPredicate playerCondition = NoneLivingEntityPredicate.INSTANCE;
-
     public EffectImmunityBonus(@NotNull MobEffectPredicate effectPredicate) {
         this.effectPredicate = effectPredicate;
     }
-
     public boolean shouldProvideImmunity(MobEffect mobEffect, LivingEntity entity) {
         if (!effectPredicate.test(mobEffect)) {
             return false;
         }
         return playerCondition.test(entity);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.EFFECT_IMMUNITY.get();
     }
-
     @Override
     public EffectImmunityBonus copy() {
         EffectImmunityBonus copy = new EffectImmunityBonus(effectPredicate);
         copy.playerCondition = playerCondition;
         return copy;
     }
-
     @Override
     public EffectImmunityBonus multiply(double multiplier) {
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         return false;
     }
-
     @Override
     public SkillBonus<EffectImmunityBonus> merge(SkillBonus<?> other) {
         return this;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         Component effectTypeDescription = effectPredicate.getTooltip("plural");
@@ -73,12 +62,10 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
         tooltip = playerCondition.getTooltip(tooltip, Target.PLAYER);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return effectPredicate.testsForHarmfulEffects();
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<EffectImmunityBonus> consumer) {
         editor.addLabel(0, 0, "Effect Condition", ChatFormatting.GOLD);
@@ -93,13 +80,11 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
                 .setMenuInitFunc(() -> addPlayerConditionWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<EffectImmunityBonus> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectEffectPredicate(SkillTreeEditor editor, Consumer<EffectImmunityBonus> consumer, MobEffectPredicate effectPredicate) {
         setEffectPredicate(effectPredicate);
         consumer.accept(this.copy());
@@ -111,23 +96,19 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
             consumer.accept(this.copy());
         });
     }
-
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<EffectImmunityBonus> consumer) {
         playerCondition.addEditorWidgets(editor, c -> {
             setPlayerCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     public void setEffectPredicate(@NotNull MobEffectPredicate effectPredicate) {
         this.effectPredicate = effectPredicate;
     }
-
     public SkillBonus<?> setPlayerCondition(LivingEntityPredicate condition) {
         this.playerCondition = condition;
         return this;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public EffectImmunityBonus deserialize(JsonObject json) throws JsonParseException {
@@ -136,14 +117,12 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(json, "player_condition");
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             EffectImmunityBonus validBonus = validateBonus(bonus);
             SerializationHelper.serializeMobEffectCondition(json, validBonus.effectPredicate, "mob_effect_predicate");
             SerializationHelper.serializeLivingCondition(json, validBonus.playerCondition, "player_condition");
         }
-
         @Override
         public EffectImmunityBonus deserialize(CompoundTag tag) {
             MobEffectPredicate mobEffectPredicate = SerializationHelper.deserializeMobEffectCondition(tag, "mob_effect_predicate");
@@ -151,7 +130,6 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             EffectImmunityBonus validBonus = validateBonus(bonus);
@@ -160,11 +138,6 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
             SerializationHelper.serializeLivingCondition(compoundTag, validBonus.playerCondition, "player_condition");
             return compoundTag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public EffectImmunityBonus deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectPredicate mobEffectPredicate = NetworkHelper.readMobEffectCondition(buf);
@@ -172,31 +145,20 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
             bonus.playerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             EffectImmunityBonus validBonus = validateBonus(bonus);
             NetworkHelper.writeMobEffectCondition(buf, validBonus.effectPredicate);
             NetworkHelper.writeLivingCondition(buf, validBonus.playerCondition);
         }
-
         private EffectImmunityBonus validateBonus(SkillBonus<?> bonus) {
             if (!(bonus instanceof EffectImmunityBonus validBonus)) {
                 throw new IllegalArgumentException();
             }
             return validBonus;
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
-<<<<<<< Updated upstream
-            
-=======
->>>>>>> Stashed changes
             return new EffectImmunityBonus(new MobEffectIdPredicate(MobEffects.POISON));
         }
     }

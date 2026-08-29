@@ -1,15 +1,11 @@
 package daripher.skilltree.client.widget.editor.menu;
-
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.ChatFormatting;
-
 public class SkillButtonEditor extends EditorMenu {
-
     public SkillButtonEditor(SkillTreeEditor editor, EditorMenu previousMenu) {
         super(editor, previousMenu);
     }
-
     @Override
     public void init() {
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
@@ -68,7 +64,6 @@ public class SkillButtonEditor extends EditorMenu {
             editor.increaseHeight(19);
         }
     }
-
     private void setSkillsSize(double size) {
         editor.getSelectedSkills().forEach(skill -> {
             skill.setButtonSize((int) size);
@@ -78,7 +73,6 @@ public class SkillButtonEditor extends EditorMenu {
         editor.updateSkillConnections();
         editor.saveSelectedSkills();
     }
-
     private void setSkillPosition(float x, float y) {
         PassiveSkill selectedSkill = editor.getFirstSelectedSkill();
         if (selectedSkill == null) {
@@ -90,12 +84,10 @@ public class SkillButtonEditor extends EditorMenu {
         editor.updateSkillConnections();
         editor.saveSelectedSkills();
     }
-
     private void setSkillsTitle(String title) {
         editor.getSelectedSkills().forEach(skill -> skill.setTitle(title));
         editor.saveSelectedSkills();
     }
-
     private void setSkillsTitleColor(String color) {
         if (color.startsWith("#")) {
             color = color.substring(1);

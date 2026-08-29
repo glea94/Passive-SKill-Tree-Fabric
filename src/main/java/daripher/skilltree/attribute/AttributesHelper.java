@@ -1,5 +1,4 @@
 package daripher.skilltree.attribute;
-
 import daripher.skilltree.SkillTreeMod;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
@@ -8,10 +7,8 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.core.registries.BuiltInRegistries;
-
 import java.util.Collection;
 import java.util.List;
-
 public class AttributesHelper {
     public static Collection<Attribute> playerAttributesList() {
         if (!DefaultAttributes.hasSupplier(EntityTypes.PLAYER)) {
@@ -21,7 +18,6 @@ public class AttributesHelper {
         AttributeSupplier attributeSupplier = DefaultAttributes.getSupplier(EntityTypes.PLAYER);
         return BuiltInRegistries.ATTRIBUTE.listElements().filter(attributeSupplier::hasAttribute).map(Holder.Reference::value).toList();
     }
-
     public static String getName(Attribute attribute) {
         Identifier id = BuiltInRegistries.ATTRIBUTE.getKey(attribute);
         if (id == null) {

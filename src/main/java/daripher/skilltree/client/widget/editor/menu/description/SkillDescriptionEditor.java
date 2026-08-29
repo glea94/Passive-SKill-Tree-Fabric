@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget.editor.menu.description;
-
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.editor.menu.EditorMenu;
@@ -8,15 +7,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-
 import java.util.ArrayList;
 import java.util.List;
-
 public class SkillDescriptionEditor extends EditorMenu {
     public SkillDescriptionEditor(SkillTreeEditor editor, EditorMenu previousMenu) {
         super(editor, previousMenu);
     }
-
     @Override
     public void init() {
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
@@ -49,7 +45,6 @@ public class SkillDescriptionEditor extends EditorMenu {
         editor.addConfirmationButton(110, 0, 90, 14, "Clear", "Confirm").setPressFunc(b -> removeSelectedSkillsDescription());
         editor.increaseHeight(19);
     }
-
     private boolean canEditDescription() {
         PassiveSkill selectedSkill = editor.getFirstSelectedSkill();
         if (selectedSkill == null) {
@@ -78,7 +73,6 @@ public class SkillDescriptionEditor extends EditorMenu {
         }
         return true;
     }
-
     private void regenerateSkillsDescription() {
         editor.getSelectedSkills().forEach(skill -> skill.setDescription(null));
         editor.saveSelectedSkills();
@@ -87,15 +81,9 @@ public class SkillDescriptionEditor extends EditorMenu {
             editor.getSkillButton(skill.getId()).addSkillBonusTooltip(description);
             skill.setDescription(description);
         });
-<<<<<<< Updated upstream
-        
-        
-=======
->>>>>>> Stashed changes
         editor.clearWidgets();
         editor.rebuildWidgets();
     }
-
     private void addSelectedSkillsDescriptionLine() {
         editor.getSelectedSkills().forEach(skill -> {
             List<MutableComponent> description = skill.getDescription();
@@ -109,7 +97,6 @@ public class SkillDescriptionEditor extends EditorMenu {
         editor.clearWidgets();
         editor.rebuildWidgets();
     }
-
     private void removeSelectedSkillsDescription() {
         editor.getSelectedSkills().forEach(skill -> skill.setDescription(null));
         editor.saveSelectedSkills();

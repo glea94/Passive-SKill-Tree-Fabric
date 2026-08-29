@@ -2,8 +2,28 @@
   "id": "skilltree:blacksmith_15",
   "bonuses": [
     {
-      "type": "skilltree:block_break_speed",
-      "multiplier": 0.3
+      "type": "skilltree:inflict_damage",
+      "chance": 1.0,
+      "damage": 4.0,
+      "damage_type": {
+        "type": "skilltree:thorns"
+      },
+      "event_listener": {
+        "type": "skilltree:block",
+        "target": "enemy",
+        "player_condition": {
+          "type": "skilltree:none"
+        },
+        "enemy_condition": {
+          "type": "skilltree:none"
+        },
+        "player_multiplier": {
+          "type": "skilltree:none"
+        },
+        "enemy_multiplier": {
+          "type": "skilltree:none"
+        }
+      }
     }
   ],
   "requirements": [],

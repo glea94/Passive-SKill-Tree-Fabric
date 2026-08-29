@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -19,29 +18,24 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealthBonus> {
     private float chance;
     private float amount;
     private SkillEventListener eventListener;
     private boolean isPercentageHealing;
-
     public RestoreHealthBonus(float chance, float amount, SkillEventListener eventListener, boolean isPercentageHealing) {
         this.chance = chance;
         this.amount = amount;
         this.eventListener = eventListener;
         this.isPercentageHealing = isPercentageHealing;
     }
-
     public RestoreHealthBonus(float chance, float amount) {
         this(chance, amount, new OutgoingDamageEventListener().setTarget(Target.PLAYER), false);
     }
-
     @Override
     public void applyEffect(LivingEntity target, @Nullable LivingEntity source) {
         if (target.getRandom().nextFloat() < chance) {
@@ -55,17 +49,14 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
             target.heal(healAmount);
         }
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.HEALING.get();
     }
-
     @Override
     public RestoreHealthBonus copy() {
         return new RestoreHealthBonus(chance, amount, eventListener, isPercentageHealing);
     }
-
     @Override
     public RestoreHealthBonus multiply(double multiplier) {
         if (chance == 1) {
@@ -75,7 +66,6 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
         }
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof RestoreHealthBonus otherBonus)) {
@@ -89,7 +79,6 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
         }
         return Objects.equals(otherBonus.eventListener, this.eventListener);
     }
-
     @Override
     public RestoreHealthBonus merge(SkillBonus<?> other) {
         if (!(other instanceof RestoreHealthBonus otherBonus)) {
@@ -100,7 +89,6 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
         }
         return new RestoreHealthBonus(otherBonus.chance + this.chance, amount, eventListener, isPercentageHealing);
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         String targetDescription = eventListener.getTarget().name().toLowerCase(Locale.ROOT);
@@ -121,12 +109,10 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
         tooltip = eventListener.getTooltip(tooltip);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return chance > 0 ^ eventListener.getTarget() == Target.ENEMY;
     }
-
     @Override
     public SkillEventListener getEventListener() {
         return eventListener;
@@ -150,52 +136,42 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
                 .setMenuInitFunc(() -> addEventListenerWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addEventListenerWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<RestoreHealthBonus>> consumer) {
         eventListener.addEditorWidgets(editor, listener -> {
             setEventListener(listener);
             consumer.accept(this.copy());
         });
     }
-
     private void selectEventListener(SkillTreeEditor editor, Consumer<EventListenerBonus<RestoreHealthBonus>> consumer, SkillEventListener eventListener) {
         setEventListener(eventListener);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectPercentageHealing(SkillTreeEditor editor, Consumer<EventListenerBonus<RestoreHealthBonus>> consumer, boolean isPercentageHealing) {
         setPercentageHealing(isPercentageHealing);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectAmount(Consumer<EventListenerBonus<RestoreHealthBonus>> consumer, Double value) {
         setAmount(value.floatValue());
         consumer.accept(this.copy());
     }
-
     private void selectChance(Consumer<EventListenerBonus<RestoreHealthBonus>> consumer, Double value) {
         setChance(value.floatValue());
         consumer.accept(this.copy());
     }
-
     public void setPercentageHealing(boolean percentageHealing) {
         isPercentageHealing = percentageHealing;
     }
-
     public void setEventListener(SkillEventListener eventListener) {
         this.eventListener = eventListener;
     }
-
     public void setChance(float chance) {
         this.chance = chance;
     }
-
     public void setAmount(float amount) {
         this.amount = amount;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public RestoreHealthBonus deserialize(JsonObject json) throws JsonParseException {
@@ -208,7 +184,6 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
             }
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof RestoreHealthBonus aBonus)) {
@@ -219,7 +194,6 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
             SerializationHelper.serializeEventListener(json, aBonus.eventListener);
             json.addProperty("percentage_healing", aBonus.isPercentageHealing);
         }
-
         @Override
         public RestoreHealthBonus deserialize(CompoundTag tag) {
             float chance = tag.getFloatOr("chance", 0f);
@@ -231,7 +205,6 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
             }
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof RestoreHealthBonus aBonus)) {
@@ -244,11 +217,6 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
             tag.putBoolean("percentage_healing", aBonus.isPercentageHealing);
             return tag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public RestoreHealthBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -258,11 +226,6 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
             bonus.isPercentageHealing = buf.readBoolean();
             return bonus;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RestoreHealthBonus aBonus)) {
@@ -273,7 +236,6 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
             NetworkHelper.writeEventListener(buf, aBonus.eventListener);
             buf.writeBoolean(aBonus.isPercentageHealing);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new RestoreHealthBonus(0.05f, 5);

@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.requirement;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.capability.skill.PlayerSkillsProvider;
@@ -17,18 +16,14 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
-
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
-
 public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillRequirement> {
     private Identifier skillId;
-
     public LearnedSkillRequirement(Identifier skillId) {
         this.skillId = skillId;
     }
-
     @Override
     public boolean test(Player player) {
         if (!PlayerSkillsProvider.hasSkills(player)) {
@@ -37,13 +32,11 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
         NonNullList<PassiveSkill> skills = PlayerSkillsProvider.get(player).getPlayerSkills();
         return skills.stream().map(PassiveSkill::getId).anyMatch(skillId::equals);
     }
-
     @Override
     public MutableComponent getTooltip() {
         Component skillTitle = TooltipHelper.getSkillTitle(skillId).withStyle(Style.EMPTY.withColor(0xFFD75F));
         return Component.translatable(getDescriptionId(), skillTitle);
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<LearnedSkillRequirement> consumer) {
         editor.addLabel(0, 0, "Skill ID", ChatFormatting.GOLD);
@@ -53,21 +46,17 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
                 .setResponder(v -> selectSkillId(consumer, v));
         editor.increaseHeight(19);
     }
-
     private void selectSkillId(Consumer<LearnedSkillRequirement> consumer, Identifier id) {
         setSkillId(id);
         consumer.accept(this);
     }
-
     public void setSkillId(Identifier skillId) {
         this.skillId = skillId;
     }
-
     @Override
     public LearnedSkillRequirement copy() {
         return new LearnedSkillRequirement(skillId);
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -79,45 +68,34 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
         LearnedSkillRequirement that = (LearnedSkillRequirement) o;
         return Objects.equals(skillId, that.skillId);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(skillId);
     }
-
     public Identifier getSkillId() {
         return skillId;
     }
-
     @Override
     public SkillRequirement.Serializer getSerializer() {
         return PSTSkillRequirements.LEARNED_SKILL.get();
     }
-
     public static class Serializer implements SkillRequirement.Serializer {
         @Override
         public SkillRequirement<?> deserialize(JsonObject json) throws JsonParseException {
             Identifier id = Identifier.parse(json.get("skill_id").getAsString());
             return new LearnedSkillRequirement(id);
         }
-
         @Override
         public void serialize(JsonObject json, SkillRequirement<?> requirement) {
             if (requirement instanceof LearnedSkillRequirement aRequirement) {
                 json.addProperty("skill_id", aRequirement.skillId.toString());
             }
         }
-
         @Override
         public SkillRequirement<?> deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-            
-=======
->>>>>>> Stashed changes
             Identifier id = Identifier.parse(tag.getString("skill_id").orElse(""));
             return new LearnedSkillRequirement(id);
         }
-
         @Override
         public CompoundTag serialize(SkillRequirement<?> requirement) {
             CompoundTag tag = new CompoundTag();
@@ -126,28 +104,17 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
             }
             return tag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
             Identifier id = Identifier.parse(buf.readUtf());
             return new LearnedSkillRequirement(id);
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillRequirement<?> requirement) {
             if (requirement instanceof LearnedSkillRequirement aRequirement) {
                 buf.writeUtf(aRequirement.skillId.toString());
             }
         }
-
         @Override
         public SkillRequirement<?> createDefaultInstance() {
             return new LearnedSkillRequirement(Identifier.parse("skilltree:hunter_1"));

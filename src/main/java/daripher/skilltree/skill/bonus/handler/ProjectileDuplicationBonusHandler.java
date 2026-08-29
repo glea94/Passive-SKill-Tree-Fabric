@@ -1,6 +1,4 @@
-
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.entity.persistentdata.PersistentDataProvider;
 import daripher.skilltree.event.LivingHurtPSTEvent;
 import daripher.skilltree.event.PSTEvents;
@@ -24,13 +22,9 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
-
 import java.util.List;
-
-
 public class ProjectileDuplicationBonusHandler {
     public static final String IS_DUPLICATED_TAG_NAME = "IS_DUPLICATED";
-
     public static void register() {
         ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
             if (!(entity instanceof Projectile projectile)) {
@@ -47,7 +41,6 @@ public class ProjectileDuplicationBonusHandler {
         });
         PSTEvents.LIVING_HURT.register(EventPriority.HIGH, ProjectileDuplicationBonusHandler::removeInvulnerabilityTicksForDupedProjectiles);
     }
-
     private static void duplicateProjectiles(Projectile projectile, ServerLevel level, Player player) {
         CompoundTag projectileTag = PersistentDataProvider.get(projectile);
         if (projectileTag.getBooleanOr(IS_DUPLICATED_TAG_NAME, false)) {
@@ -73,7 +66,6 @@ public class ProjectileDuplicationBonusHandler {
         }
         spawnDuplicateProjectiles(projectile, level, player, projectileAmount);
     }
-
     private static void spawnDuplicateProjectiles(Projectile originalProjectile, ServerLevel level, Player player, int projectileAmount) {
         float spreadAngle = 5f;
         for (int i = 0; i < projectileAmount; i++) {
@@ -83,7 +75,6 @@ public class ProjectileDuplicationBonusHandler {
             spawnDuplicateProjectileWithOffset(originalProjectile, player, level, angleOffset);
         }
     }
-
     private static void spawnDuplicateProjectileWithOffset(Projectile original, Player player, ServerLevel level, float angleOffset) {
         EntityType<?> projectileType = original.getType();
         Projectile duplicate = (Projectile) projectileType.create(level, EntitySpawnReason.TRIGGERED);
@@ -104,13 +95,7 @@ public class ProjectileDuplicationBonusHandler {
             AbstractArrow originalArrow = (AbstractArrow) original;
             duplicateArrow.pickup = AbstractArrow.Pickup.DISALLOWED;
             ItemStack weaponItem = originalArrow.getWeaponItem();
-<<<<<<< Updated upstream
-
-            
-=======
->>>>>>> Stashed changes
             EnchantmentHelper.onProjectileSpawned(level, weaponItem != null ? weaponItem : ItemStack.EMPTY, duplicateArrow, item -> {});
-
             AbstractArrowAccessor originalArrowAccessor = (AbstractArrowAccessor) originalArrow;
             duplicateArrow.setBaseDamage(originalArrowAccessor.getBaseDamage());
         } else if (duplicate instanceof AbstractThrownPotion potion) {
@@ -119,7 +104,6 @@ public class ProjectileDuplicationBonusHandler {
         }
         level.addFreshEntity(duplicate);
     }
-
     private static Vec3 rotateVector(Vec3 vector, double angleDegrees) {
         double angleRadians = Math.toRadians(angleDegrees);
         double cos = Math.cos(angleRadians);
@@ -128,7 +112,6 @@ public class ProjectileDuplicationBonusHandler {
         double z = vector.x * sin + vector.z * cos;
         return new Vec3(x, vector.y, z);
     }
-
     private static void removeInvulnerabilityTicksForDupedProjectiles(LivingHurtPSTEvent event) {
         DamageSource damageSource = event.getSource();
         if (!(damageSource.getDirectEntity() instanceof Projectile projectile)) {

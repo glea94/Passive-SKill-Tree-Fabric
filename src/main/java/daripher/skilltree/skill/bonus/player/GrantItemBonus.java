@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.data.client.SkillTreeEditorData;
@@ -22,21 +21,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Holder;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
     private Identifier itemId;
     private int amount;
-
     public GrantItemBonus(Identifier itemId, int amount) {
         this.itemId = itemId;
         this.amount = amount;
     }
-
     @Override
     public void onSkillLearned(ServerPlayer player, boolean firstTime) {
         if (firstTime) {
@@ -55,23 +50,19 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
             }
         }
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.GRANT_ITEM.get();
     }
-
     @Override
     public GrantItemBonus copy() {
         return new GrantItemBonus(itemId, amount);
     }
-
     @Override
     public GrantItemBonus multiply(double multiplier) {
         amount = (int) (amount * multiplier);
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof GrantItemBonus otherBonus)) {
@@ -79,7 +70,6 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
         }
         return Objects.equals(otherBonus.itemId, this.itemId);
     }
-
     @Override
     public GrantItemBonus merge(SkillBonus<?> other) {
         if (!(other instanceof GrantItemBonus otherBonus)) {
@@ -87,7 +77,6 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
         }
         return new GrantItemBonus(itemId, amount + otherBonus.amount);
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         Item item = BuiltInRegistries.ITEM.get(itemId).map(Holder::value).orElse(null);
@@ -103,12 +92,10 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
             return Component.translatable(getDescriptionId(), itemDescription).withStyle(style);
         }
     }
-
     @Override
     public boolean isPositive() {
         return true;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<GrantItemBonus> consumer) {
         editor.addLabel(0, 0, "Amount", ChatFormatting.GOLD);
@@ -124,25 +111,20 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
                 .setResponder(id -> selectItemId(id, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectItemId(Identifier id, Consumer<GrantItemBonus> consumer) {
         setItemId(id);
         consumer.accept(this.copy());
     }
-
     public void setItemId(Identifier itemId) {
         this.itemId = itemId;
     }
-
     private void selectAmount(Consumer<GrantItemBonus> consumer, Double value) {
         setAmount(value.intValue());
         consumer.accept(this.copy());
     }
-
     public void setAmount(int amount) {
         this.amount = amount;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public GrantItemBonus deserialize(JsonObject json) throws JsonParseException {
@@ -150,7 +132,6 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
             int amount = SerializationHelper.getElement(json, "amount").getAsInt();
             return new GrantItemBonus(itemId, amount);
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof GrantItemBonus aBonus)) {
@@ -159,14 +140,12 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
             json.addProperty("item_id", aBonus.itemId.toString());
             json.addProperty("amount", aBonus.amount);
         }
-
         @Override
         public GrantItemBonus deserialize(CompoundTag tag) {
             Identifier itemId = Identifier.parse(tag.getString("item_id").orElse(""));
             int amount = tag.getInt("amount").orElse(0);
             return new GrantItemBonus(itemId, amount);
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof GrantItemBonus aBonus)) {
@@ -177,22 +156,12 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
             tag.putInt("amount", aBonus.amount);
             return tag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public GrantItemBonus deserialize(RegistryFriendlyByteBuf buf) {
             Identifier itemId = buf.readIdentifier();
             int amount = buf.readInt();
             return new GrantItemBonus(itemId, amount);
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof GrantItemBonus aBonus)) {
@@ -201,7 +170,6 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
             buf.writeIdentifier(aBonus.itemId);
             buf.writeInt(aBonus.amount);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new GrantItemBonus(BuiltInRegistries.ITEM.getKey(Items.DIAMOND), 64);

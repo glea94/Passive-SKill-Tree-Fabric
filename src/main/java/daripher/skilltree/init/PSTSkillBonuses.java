@@ -1,5 +1,4 @@
 package daripher.skilltree.init;
-
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.skill.bonus.SkillBonus;
@@ -7,14 +6,11 @@ import daripher.skilltree.skill.bonus.player.*;
 import net.minecraft.resources.Identifier;
 import daripher.skilltree.util.registry.DeferredRegister;
 import daripher.skilltree.util.registry.RegistryObject;
-
 import java.util.List;
 import java.util.Objects;
-
 public class PSTSkillBonuses {
     public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_bonuses");
     public static final DeferredRegister<SkillBonus.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
-
     public static final RegistryObject<SkillBonus.Serializer> ATTRIBUTE = REGISTRY.register("attribute", AttributeBonus.Serializer::new);
     public static final RegistryObject<SkillBonus.Serializer> COMMAND = REGISTRY.register("command", ExecuteCommandBonus.Serializer::new);
     public static final RegistryObject<SkillBonus.Serializer> DAMAGE = REGISTRY.register("damage", OutgoingDamageBonus.Serializer::new);
@@ -58,17 +54,14 @@ public class PSTSkillBonuses {
     public static final RegistryObject<SkillBonus.Serializer> BROKEN = REGISTRY.register("broken", BrokenSkillBonus.Serializer::new);
     public static final RegistryObject<SkillBonus.Serializer> REMOVE_EFFECT = REGISTRY.register("remove_effect", RemoveMobEffectBonus.Serializer::new);
     public static final RegistryObject<SkillBonus.Serializer> CHEAT_DEATH = REGISTRY.register("cheat_death", CheatDeathBonus.Serializer::new);
-
     @SuppressWarnings("rawtypes")
     public static List<SkillBonus> defaultInstances() {
-
         return PSTRegistries.SKILL_BONUSES.get().getValues().stream()
                 .map(SkillBonus.Serializer::createDefaultInstance)
                 .map(SkillBonus.class::cast)
                 .filter(Objects::nonNull)
                 .toList();
     }
-
     public static String getName(SkillBonus<?> bonus) {
         Identifier id = PSTRegistries.SKILL_BONUSES.get().getKey(bonus.getSerializer());
         return TooltipHelper.idToName(Objects.requireNonNull(id).getPath());

@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -10,71 +9,54 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-
 import java.util.function.Consumer;
-
 public final class SelfSplashImmuneBonus implements SkillBonus<SelfSplashImmuneBonus> {
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.SELF_SPLASH_IMMUNE.get();
     }
-
     @Override
     public SelfSplashImmuneBonus copy() {
         return new SelfSplashImmuneBonus();
     }
-
     @Override
     public SelfSplashImmuneBonus multiply(double multiplier) {
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         return other instanceof SelfSplashImmuneBonus;
     }
-
     @Override
     public SkillBonus<SelfSplashImmuneBonus> merge(SkillBonus<?> other) {
         return this;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         return Component.translatable(getDescriptionId()).withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return true;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<SelfSplashImmuneBonus> consumer) {
-<<<<<<< Updated upstream
-        
-=======
->>>>>>> Stashed changes
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public SelfSplashImmuneBonus deserialize(JsonObject json) throws JsonParseException {
             return new SelfSplashImmuneBonus();
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof SelfSplashImmuneBonus)) {
                 throw new IllegalArgumentException();
             }
         }
-
         @Override
         public SelfSplashImmuneBonus deserialize(CompoundTag tag) {
             return new SelfSplashImmuneBonus();
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof SelfSplashImmuneBonus)) {
@@ -82,27 +64,16 @@ public final class SelfSplashImmuneBonus implements SkillBonus<SelfSplashImmuneB
             }
             return new CompoundTag();
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public SelfSplashImmuneBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new SelfSplashImmuneBonus();
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof SelfSplashImmuneBonus)) {
                 throw new IllegalArgumentException();
             }
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new SelfSplashImmuneBonus();

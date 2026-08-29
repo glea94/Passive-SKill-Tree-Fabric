@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -22,50 +21,38 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-
 import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobEffectBonus> {
     private MobEffectPredicate effectPredicate;
     private SkillEventListener eventListener;
     private float chance;
-
     public RemoveMobEffectBonus(float chance, MobEffectPredicate effectPredicate, SkillEventListener eventListener) {
         this.chance = chance;
         this.effectPredicate = effectPredicate;
         this.eventListener = eventListener;
     }
-
     @Override
     public void applyEffect(LivingEntity target, @Nullable LivingEntity source) {
-<<<<<<< Updated upstream
-        
-=======
->>>>>>> Stashed changes
         target.getActiveEffects().stream()
                 .map(MobEffectInstance::getEffect)
                 .filter(holder -> effectPredicate.test(holder.value()))
                 .forEach(target::removeEffect);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.REMOVE_EFFECT.get();
     }
-
     @Override
     public RemoveMobEffectBonus copy() {
         return new RemoveMobEffectBonus(chance, effectPredicate, eventListener);
     }
-
     @Override
     public RemoveMobEffectBonus multiply(double multiplier) {
         float chance = (float) (this.chance * multiplier);
         return new RemoveMobEffectBonus(chance, effectPredicate, eventListener);
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof RemoveMobEffectBonus otherBonus)) {
@@ -76,7 +63,6 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
         }
         return Objects.equals(otherBonus.eventListener, this.eventListener);
     }
-
     @Override
     public SkillBonus<EventListenerBonus<RemoveMobEffectBonus>> merge(SkillBonus<?> other) {
         if (!(other instanceof RemoveMobEffectBonus otherBonus)) {
@@ -85,7 +71,6 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
         float chance = this.chance + otherBonus.chance;
         return new RemoveMobEffectBonus(chance, effectPredicate, eventListener);
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         Component effectDescription = effectPredicate.getTooltip("plural");
@@ -102,12 +87,10 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
         tooltip = eventListener.getTooltip(tooltip);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public void gatherInfo(Consumer<MutableComponent> consumer) {
         TooltipHelper.consumeTranslated(effectPredicate.getDescriptionId() + ".info", consumer);
     }
-
     @Override
     public boolean isPositive() {
         return chance > 0 ^ eventListener.getTarget() == Target.PLAYER ^ effectPredicate.testsForHarmfulEffects();
@@ -116,7 +99,6 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
     public SkillEventListener getEventListener() {
         return eventListener;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<RemoveMobEffectBonus>> consumer) {
         editor.addLabel(0, 0, "Effect", ChatFormatting.GOLD);
@@ -134,50 +116,41 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
                 .setMenuInitFunc(() -> addEventListenerWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addEventListenerWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<RemoveMobEffectBonus>> consumer) {
         eventListener.addEditorWidgets(editor, listener -> {
             setEventListener(listener);
             consumer.accept(this.copy());
         });
     }
-
     private void selectEventListener(SkillTreeEditor editor, Consumer<EventListenerBonus<RemoveMobEffectBonus>> consumer, SkillEventListener eventListener) {
         setEventListener(eventListener);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectChance(Consumer<EventListenerBonus<RemoveMobEffectBonus>> consumer, Double value) {
         setChance(value.floatValue());
         consumer.accept(this.copy());
     }
-
     private void selectEffectPredicate(SkillTreeEditor editor, Consumer<EventListenerBonus<RemoveMobEffectBonus>> consumer, MobEffectPredicate effectPredicate) {
         setEffectPredicate(effectPredicate);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addEffectPredicateWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<RemoveMobEffectBonus>> consumer) {
         effectPredicate.addEditorWidgets(editor, predicate -> {
             setEffectPredicate(predicate);
             consumer.accept(this.copy());
         });
     }
-
     public void setChance(float chance) {
         this.chance = chance;
     }
-
     public void setEffectPredicate(MobEffectPredicate effectPredicate) {
         this.effectPredicate = effectPredicate;
     }
-
     public void setEventListener(SkillEventListener eventListener) {
         this.eventListener = eventListener;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public RemoveMobEffectBonus deserialize(JsonObject json) throws JsonParseException {
@@ -186,7 +159,6 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
             SkillEventListener eventListener = SerializationHelper.deserializeEventListener(json);
             return new RemoveMobEffectBonus(chance, effectPredicate, eventListener);
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof RemoveMobEffectBonus aBonus)) {
@@ -196,7 +168,6 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
             SerializationHelper.serializeMobEffectCondition(json, aBonus.effectPredicate, "effect_condition");
             SerializationHelper.serializeEventListener(json, aBonus.eventListener);
         }
-
         @Override
         public RemoveMobEffectBonus deserialize(CompoundTag tag) {
             float chance = tag.getFloatOr("chance", 0f);
@@ -204,7 +175,6 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
             SkillEventListener eventListener = SerializationHelper.deserializeEventListener(tag);
             return new RemoveMobEffectBonus(chance, effectPredicate, eventListener);
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof RemoveMobEffectBonus aBonus)) {
@@ -216,11 +186,6 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
             SerializationHelper.serializeEventListener(tag, aBonus.eventListener);
             return tag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public RemoveMobEffectBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -228,11 +193,6 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
             SkillEventListener eventListener = NetworkHelper.readEventListener(buf);
             return new RemoveMobEffectBonus(amount, effectPredicate, eventListener);
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RemoveMobEffectBonus aBonus)) {
@@ -242,7 +202,6 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
             NetworkHelper.writeMobEffectCondition(buf, aBonus.effectPredicate);
             NetworkHelper.writeEventListener(buf, aBonus.eventListener);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new RemoveMobEffectBonus(0.05f, new MobEffectTypePredicate(MobEffectType.HARMFUL), new OutgoingDamageEventListener());

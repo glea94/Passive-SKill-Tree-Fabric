@@ -1,19 +1,15 @@
 package daripher.skilltree.init;
-
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.skill.bonus.event.*;
 import net.minecraft.resources.Identifier;
 import daripher.skilltree.util.registry.DeferredRegister;
 import daripher.skilltree.util.registry.RegistryObject;
-
 import java.util.List;
 import java.util.Objects;
-
 public class PSTEventListeners {
     public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "event_listeners");
     public static final DeferredRegister<SkillEventListener.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
-
     public static final RegistryObject<SkillEventListener.Serializer> ATTACK = REGISTRY.register("attack", OutgoingDamageEventListener.Serializer::new);
     public static final RegistryObject<SkillEventListener.Serializer> BLOCK = REGISTRY.register("block", ShieldBlockEventListener.Serializer::new);
     public static final RegistryObject<SkillEventListener.Serializer> EVASION = REGISTRY.register("evasion", EvasionEventListener.Serializer::new);
@@ -24,18 +20,11 @@ public class PSTEventListeners {
     public static final RegistryObject<SkillEventListener.Serializer> SKILL_REMOVED = REGISTRY.register("skill_removed", SkillRemovedEventListener.Serializer::new);
     public static final RegistryObject<SkillEventListener.Serializer> TICKING = REGISTRY.register("ticking", TickingEventListener.Serializer::new);
     public static final RegistryObject<SkillEventListener.Serializer> CRITICAL_HIT = REGISTRY.register("critical_hit", CriticalHitEventListener.Serializer::new);
-<<<<<<< Updated upstream
-
     public static List<SkillEventListener> eventsList() {
-        
-=======
-    public static List<SkillEventListener> eventsList() {
->>>>>>> Stashed changes
         return PSTRegistries.EVENT_LISTENERS.get().getValues().stream()
                 .map(SkillEventListener.Serializer::createDefaultInstance)
                 .toList();
     }
-
     public static String getName(SkillEventListener eventType) {
         Identifier id = PSTRegistries.EVENT_LISTENERS.get().getKey(eventType.getSerializer());
         return TooltipHelper.idToName(Objects.requireNonNull(id).getPath());

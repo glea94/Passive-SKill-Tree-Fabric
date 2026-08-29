@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget.editor.menu.tags;
-
 import daripher.skilltree.data.client.SkillTreeEditorData;
 import daripher.skilltree.client.widget.NumericTextField;
 import daripher.skilltree.client.widget.TextField;
@@ -7,18 +6,14 @@ import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.editor.menu.EditorMenu;
 import daripher.skilltree.skill.PassiveSkillTree;
 import org.apache.commons.lang3.tuple.Pair;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 public class SkillTagLimitsEditor extends EditorMenu {
     private final List<Pair<TextField, NumericTextField>> widgetPairs = new ArrayList<>();
-
     public SkillTagLimitsEditor(SkillTreeEditor editor, EditorMenu previousMenu) {
         super(editor, previousMenu);
     }
-
     @Override
     public void init() {
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
@@ -46,11 +41,6 @@ public class SkillTagLimitsEditor extends EditorMenu {
             limitEditor.setNumericFilter(d -> d >= 0).setNumericResponder(v -> {
                 saveFunc.run();
                 if (v == 0) {
-<<<<<<< Updated upstream
-                    
-                    
-=======
->>>>>>> Stashed changes
                     editor.clearWidgets();
                     editor.rebuildWidgets();
                 }

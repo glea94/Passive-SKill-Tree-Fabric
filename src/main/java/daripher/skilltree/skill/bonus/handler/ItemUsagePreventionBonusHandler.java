@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.event.ItemTooltipPSTEvent;
 import daripher.skilltree.event.LivingEquipmentChangePSTEvent;
 import daripher.skilltree.event.PSTEvents;
@@ -12,21 +11,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-
 import java.util.List;
-
-
 public class ItemUsagePreventionBonusHandler {
-<<<<<<< Updated upstream
-    
-    private static boolean isProcessingRejection;
-
-    public static void register() {
-        
-=======
     private static boolean isProcessingRejection;
     public static void register() {
->>>>>>> Stashed changes
         AttackEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
             ItemStack mainHandItem = player.getMainHandItem();
             if (shouldPreventItemUsage(player, mainHandItem)) {
@@ -34,7 +22,6 @@ public class ItemUsagePreventionBonusHandler {
             }
             return InteractionResult.PASS;
         });
-
         UseItemCallback.EVENT.register((player, level, hand) -> {
             ItemStack itemStack = player.getItemInHand(hand);
             if (shouldPreventItemUsage(player, itemStack)) {
@@ -42,11 +29,9 @@ public class ItemUsagePreventionBonusHandler {
             }
             return InteractionResult.PASS;
         });
-
         PSTEvents.LIVING_EQUIPMENT_CHANGE.register(ItemUsagePreventionBonusHandler::preventItemEquipping);
         PSTEvents.ITEM_TOOLTIP.register(ItemUsagePreventionBonusHandler::addPreventedUsageTooltip);
     }
-
     private static void preventItemEquipping(LivingEquipmentChangePSTEvent event) {
         if (isProcessingRejection) {
             return;
@@ -73,7 +58,6 @@ public class ItemUsagePreventionBonusHandler {
             }
         }
     }
-
     private static void addPreventedUsageTooltip(ItemTooltipPSTEvent event) {
         Player player = event.getEntity();
         if (player == null) {
@@ -85,7 +69,6 @@ public class ItemUsagePreventionBonusHandler {
             event.getToolTip().add(tooltip);
         }
     }
-
     public static boolean shouldPreventItemUsage(Player player, ItemStack itemStack) {
         List<PreventItemUsageBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(player, PreventItemUsageBonus.class);
         for (PreventItemUsageBonus bonus : skillBonuses) {

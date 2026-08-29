@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -19,44 +18,35 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-
-
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBonus> {
     private float multiplier;
     private @NotNull LivingEntityPredicate playerCondition = NoneLivingEntityPredicate.INSTANCE;
     private @NotNull LivingMultiplier playerMultiplier = NoneLivingMultiplier.INSTANCE;
-
     public BlockBreakSpeedBonus(float multiplier) {
         this.multiplier = multiplier;
     }
-
     public float getMultiplier(Player player) {
         if (!playerCondition.test(player)) {
             return 0f;
         }
         return multiplier * playerMultiplier.getValue(player);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.BLOCK_BREAK_SPEED.get();
     }
-
     @Override
     public BlockBreakSpeedBonus copy() {
         return new BlockBreakSpeedBonus(multiplier).setPlayerCondition(playerCondition).setPlayerMultiplier(playerMultiplier);
     }
-
     @Override
     public BlockBreakSpeedBonus multiply(double multiplier) {
         this.multiplier = (float) (this.multiplier * multiplier);
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof BlockBreakSpeedBonus otherBonus)) {
@@ -67,7 +57,6 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
         }
         return Objects.equals(otherBonus.playerMultiplier, this.playerMultiplier);
     }
-
     @Override
     public SkillBonus<BlockBreakSpeedBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof BlockBreakSpeedBonus otherBonus)) {
@@ -76,7 +65,6 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
         return new BlockBreakSpeedBonus(otherBonus.multiplier + this.multiplier).setPlayerCondition(playerCondition)
                 .setPlayerMultiplier(playerMultiplier);
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         MutableComponent bonusTooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), multiplier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
@@ -84,12 +72,10 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
         bonusTooltip = playerMultiplier.getTooltip(bonusTooltip, Target.PLAYER);
         return bonusTooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return multiplier > 0;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<BlockBreakSpeedBonus> consumer) {
         editor.addLabel(0, 0, "Multiplier", ChatFormatting.GOLD);
@@ -113,52 +99,43 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<BlockBreakSpeedBonus> consumer, LivingMultiplier multiplier) {
         setPlayerMultiplier(multiplier);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectMultiplier(Consumer<BlockBreakSpeedBonus> consumer, Double value) {
         setMultiplier(value.floatValue());
         consumer.accept(this.copy());
     }
-
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<BlockBreakSpeedBonus> consumer) {
         playerCondition.addEditorWidgets(editor, c -> {
             setPlayerCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     private void addPlayerMultiplierWidgets(SkillTreeEditor editor, Consumer<BlockBreakSpeedBonus> consumer) {
         playerMultiplier.addEditorWidgets(editor, m -> {
             setPlayerMultiplier(m);
             consumer.accept(this.copy());
         });
     }
-
     public BlockBreakSpeedBonus setPlayerCondition(@NotNull LivingEntityPredicate playerCondition) {
         this.playerCondition = playerCondition;
         return this;
     }
-
     public BlockBreakSpeedBonus setPlayerMultiplier(@NotNull LivingMultiplier playerMultiplier) {
         this.playerMultiplier = playerMultiplier;
         return this;
     }
-
     public BlockBreakSpeedBonus setMultiplier(float multiplier) {
         this.multiplier = multiplier;
         return this;
     }
-
     @NotNull
     public LivingEntityPredicate getPlayerCondition() {
         return playerCondition;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -170,12 +147,10 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
         BlockBreakSpeedBonus that = (BlockBreakSpeedBonus) o;
         return Float.compare(multiplier, that.multiplier) == 0 && Objects.equals(playerCondition, that.playerCondition) && Objects.equals(playerMultiplier, that.playerMultiplier);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(multiplier, playerCondition, playerMultiplier);
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public BlockBreakSpeedBonus deserialize(JsonObject json) throws JsonParseException {
@@ -193,7 +168,6 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
             SerializationHelper.serializeLivingCondition(json, aBonus.playerCondition, "player_condition");
             SerializationHelper.serializeLivingMultiplier(json, aBonus.playerMultiplier, "player_multiplier");
         }
-
         @Override
         public BlockBreakSpeedBonus deserialize(CompoundTag tag) {
             float multiplier = tag.getFloatOr("multiplier", 0f);
@@ -201,7 +175,6 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
             LivingMultiplier playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             return new BlockBreakSpeedBonus(multiplier).setPlayerCondition(playerCondition).setPlayerMultiplier(playerMultiplier);
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof BlockBreakSpeedBonus aBonus)) {
@@ -213,22 +186,12 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
             tag.putFloat("multiplier", aBonus.multiplier);
             return tag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public BlockBreakSpeedBonus deserialize(RegistryFriendlyByteBuf buf) {
             LivingEntityPredicate playerCondition = NetworkHelper.readLivingCondition(buf);
             LivingMultiplier playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
             return new BlockBreakSpeedBonus(buf.readFloat()).setPlayerCondition(playerCondition).setPlayerMultiplier(playerMultiplier);
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof BlockBreakSpeedBonus aBonus)) {
@@ -238,7 +201,6 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
             NetworkHelper.writeLivingMultiplier(buf, aBonus.playerMultiplier);
             buf.writeFloat(aBonus.multiplier);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new BlockBreakSpeedBonus(0.1f);

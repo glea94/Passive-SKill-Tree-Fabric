@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.item;
-
 import com.google.common.collect.ImmutableList;
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -26,29 +25,21 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
 public class ItemBonusHandler {
     public static final String UPGRADE_BONUSES_TAG_NAME = "UpgradeBonuses";
     public static final String CRAFTING_BONUSES_TAG_NAME = "CraftingBonuses";
-
     public static void register() {
         PSTEvents.LIVING_EQUIPMENT_CHANGE.register(ItemBonusHandler::addEquipmentAttributeBonuses);
         PSTEvents.ITEM_TOOLTIP.register(ItemBonusHandler::addItemBonusTooltips);
-
-
         net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayer serverPlayer = handler.getPlayer();
             if (serverPlayer != null) {
-
                 server.execute(() -> {
                     refreshPlayerEquipmentBonuses(serverPlayer);
-
-
                     ClientboundUpdateAttributesPacket packet = new ClientboundUpdateAttributesPacket(
                             serverPlayer.getId(),
                             serverPlayer.getAttributes().getSyncableAttributes()
@@ -58,7 +49,6 @@ public class ItemBonusHandler {
             }
         });
     }
-
     private static void addItemBonusTooltips(ItemTooltipPSTEvent event) {
         List<Component> toolTip = event.getToolTip();
         List<ItemBonus<?>> itemBonuses = getItemBonuses(event.getItemStack(), ItemBonus.class);
@@ -74,7 +64,6 @@ public class ItemBonusHandler {
             }
         }
     }
-
     private static void addEquipmentAttributeBonuses(LivingEquipmentChangePSTEvent event) {
         LivingEntity entity = event.getEntity();
         if (!(entity instanceof Player)) {
@@ -83,11 +72,8 @@ public class ItemBonusHandler {
         EquipmentSlot slot = event.getSlot();
         ItemStack fromStack = event.getFrom();
         ItemStack toStack = event.getTo();
-
         List<ItemBonus<?>> fromBonuses = getItemBonuses(fromStack, EquipmentBonus.class);
         List<ItemBonus<?>> toBonuses = getItemBonuses(toStack, EquipmentBonus.class);
-
-
         for (ItemBonus<?> itemBonus : fromBonuses) {
             EquipmentBonus bonus = (EquipmentBonus) itemBonus;
             if (!(bonus.getSkillBonus() instanceof AttributeBonus attributeBonus)) {
@@ -100,13 +86,10 @@ public class ItemBonusHandler {
             Identifier baseId = attributeBonus.getModifier().id();
             Identifier scopedId = getSlotScopedModifierId(baseId, slot);
             attributeInstance.removeModifier(scopedId);
-
             if (attributeInstance.hasModifier(baseId)) {
                 attributeInstance.removeModifier(baseId);
             }
         }
-
-
         for (ItemBonus<?> itemBonus : toBonuses) {
             EquipmentBonus bonus = (EquipmentBonus) itemBonus;
             if (!(bonus.getSkillBonus() instanceof AttributeBonus attributeBonus)) {
@@ -129,24 +112,19 @@ public class ItemBonusHandler {
             attributeInstance.addTransientModifier(scopedModifier);
         }
     }
-
-    
     public static void refreshPlayerEquipmentBonuses(Player player) {
         if (player == null || player.level().isClientSide()) {
             return;
         }
-
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             ItemStack stack = player.getItemBySlot(slot);
             if (stack.isEmpty()) {
                 continue;
             }
-
             List<ItemBonus<?>> equipmentBonuses = getItemBonuses(stack, EquipmentBonus.class);
             if (equipmentBonuses.isEmpty()) {
                 continue;
             }
-
             for (ItemBonus<?> itemBonus : equipmentBonuses) {
                 EquipmentBonus bonus = (EquipmentBonus) itemBonus;
                 if (!(bonus.getSkillBonus() instanceof AttributeBonus attributeBonus)) {
@@ -155,27 +133,21 @@ public class ItemBonusHandler {
                 if (attributeBonus.isDynamic()) {
                     continue;
                 }
-
                 AttributeInstance attributeInstance = player.getAttribute(attributeBonus.getAttribute());
                 if (attributeInstance == null) {
                     continue;
                 }
-
                 Identifier baseId = attributeBonus.getModifier().id();
                 Identifier scopedId = getSlotScopedModifierId(baseId, slot);
-
-
                 if (attributeInstance.hasModifier(scopedId)) {
                     attributeInstance.removeModifier(scopedId);
                 }
-
                 AttributeModifier baseModifier = attributeBonus.getModifier();
                 AttributeModifier scopedModifier = new AttributeModifier(scopedId, baseModifier.amount(), baseModifier.operation());
                 attributeInstance.addTransientModifier(scopedModifier);
             }
         }
     }
-
     private static Identifier getSlotScopedModifierId(Identifier baseId, EquipmentSlot slot) {
         return Identifier.fromNamespaceAndPath(baseId.getNamespace(), baseId.getPath() + "_" + slot.name().toLowerCase());
     }
@@ -193,7 +165,6 @@ public class ItemBonusHandler {
         craftingBonuses.add(itemBonuses);
         setCraftingBonuses(itemStack, craftingBonuses);
     }
-
     public static List<ItemBonus<?>> getItemBonuses(ItemStack itemStack) {
         if (!itemStack.has(DataComponents.CUSTOM_DATA)) {
             return ImmutableList.of();
@@ -203,15 +174,12 @@ public class ItemBonusHandler {
         list.addAll(getCraftingBonuses(itemStack));
         return list;
     }
-
     private static List<ItemBonus<?>> getCraftingBonuses(ItemStack itemStack) {
         return getBonusesFromTag(itemStack, CRAFTING_BONUSES_TAG_NAME);
     }
-
     private static List<ItemBonus<?>> getUpgradeBonuses(ItemStack itemStack) {
         return getBonusesFromTag(itemStack, UPGRADE_BONUSES_TAG_NAME);
     }
-
     private static List<ItemBonus<?>> getBonusesFromTag(ItemStack itemStack, String subTagName) {
         CompoundTag stackTag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         List<ItemBonus<?>> itemBonuses = new ArrayList<>();
@@ -223,7 +191,6 @@ public class ItemBonusHandler {
         bonusesTagList.stream().map(CompoundTag.class::cast).forEach(bonusTag -> itemBonuses.add(deserializeBonus(bonusTag)));
         return itemBonuses;
     }
-
     public static List<ItemBonus<?>> getItemBonuses(ItemStack stack, Class<?> type) {
         List<ItemBonus<?>> bonuses = new ArrayList<>();
         for (ItemBonus<?> bonus : getItemBonuses(stack)) {
@@ -235,7 +202,6 @@ public class ItemBonusHandler {
         }
         return bonuses.stream().filter(type::isInstance).toList();
     }
-
     private static List<? extends ItemBonus<?>> getItemBonuses(GroupedItemBonus listBonus) {
         List<ItemBonus<?>> bonuses = new ArrayList<>();
         for (ItemBonus<?> bonus : listBonus.getInnerBonuses()) {
@@ -248,15 +214,12 @@ public class ItemBonusHandler {
         }
         return bonuses;
     }
-
     public static void setUpgradeBonuses(ItemStack stack, List<ItemBonus<?>> bonuses) {
         setTagBonuses(stack, bonuses, UPGRADE_BONUSES_TAG_NAME);
     }
-
     public static void setCraftingBonuses(ItemStack stack, List<ItemBonus<?>> bonuses) {
         setTagBonuses(stack, bonuses, CRAFTING_BONUSES_TAG_NAME);
     }
-
     private static void setTagBonuses(ItemStack stack, List<ItemBonus<?>> bonuses, String tagName) {
         ListTag bonusesTagList = new ListTag();
         for (ItemBonus<?> itemBonus : bonuses) {
@@ -264,7 +227,6 @@ public class ItemBonusHandler {
         }
         CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.put(tagName, bonusesTagList));
     }
-
     private static CompoundTag serializeBonus(ItemBonus<? extends ItemBonus<?>> bonus) {
         ItemBonus.Serializer serializer = bonus.getSerializer();
         CompoundTag bonusTag = serializer.serialize(bonus);
@@ -272,7 +234,6 @@ public class ItemBonusHandler {
         bonusTag.putString("type", Objects.requireNonNull(id).toString());
         return bonusTag;
     }
-
     private static ItemBonus<?> deserializeBonus(CompoundTag tag) {
         if (!tag.contains("type")) {
             return null;
@@ -290,7 +251,6 @@ public class ItemBonusHandler {
             return null;
         }
     }
-
     public static int getCraftedBonusLimit(ItemStack itemStack, @Nullable Player player) {
         int limit = 1;
         if (player != null) {
@@ -300,7 +260,6 @@ public class ItemBonusHandler {
         }
         return limit;
     }
-
     @NotNull
     @SuppressWarnings({"rawtypes", "unchecked", "SuspiciousMethodCalls"})
     public static <T> List<T> mergeItemBonuses(List<T> bonuses) {
@@ -311,7 +270,6 @@ public class ItemBonusHandler {
                     .map(ItemBonus.class::cast)
                     .filter(itemBonus::canMerge)
                     .findAny();
-
             if (mergeTarget.isPresent()) {
                 mergedBonuses.remove(mergeTarget.get());
                 mergedBonuses.add((T) mergeTarget.get().copy().merge(itemBonus));
@@ -321,7 +279,6 @@ public class ItemBonusHandler {
         }
         return mergedBonuses;
     }
-
     public static GroupedItemBonus mergeGroupedItemBonuses(GroupedItemBonus itemBonus1, GroupedItemBonus itemBonus2) {
         ArrayList<ItemBonus<?>> innerBonuses = new ArrayList<>();
         innerBonuses.addAll(itemBonus1.getInnerBonuses());

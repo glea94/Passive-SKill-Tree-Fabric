@@ -1,5 +1,4 @@
 package daripher.skilltree.client.tooltip;
-
 import daripher.skilltree.data.reloader.SkillsReloader;
 import daripher.skilltree.effect.SkillBonusEffect;
 import daripher.skilltree.client.network.ClientWorkbenchRecipeCache;
@@ -17,7 +16,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import org.jetbrains.annotations.NotNull;
-
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -25,7 +23,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public class TooltipHelper {
     private static final Style SKILL_BONUS_STYLE = Style.EMPTY.withColor(0x7B7BE5);
     private static final Style SKILL_BONUS_STYLE_NEGATIVE = Style.EMPTY.withColor(0xE25A5A);
@@ -39,9 +36,7 @@ public class TooltipHelper {
     private static final Style CLASS_TITLE_STYLE = Style.EMPTY.withColor(0xFFD75F);
     private static final Style KEYSTONE_TITLE_STYLE = Style.EMPTY.withColor(0xEB7530);
     private static final Style GATEWAY_TITLE_STYLE = Style.EMPTY.withColor(0x849696);
-
     private static final DecimalFormat ATTRIBUTE_MODIFIER_FORMAT = new DecimalFormat("#.##", DecimalFormatSymbols.getInstance(Locale.ROOT));
-
     public static Component getEffectTooltip(MobEffectInstance effect) {
         Component effectDescription;
         if (effect.getEffect().value() instanceof SkillBonusEffect skillEffect) {
@@ -56,7 +51,6 @@ public class TooltipHelper {
         }
         return effectDescription;
     }
-
     public static Component getOperationName(AttributeModifier.Operation operation) {
         return Component.literal(switch (operation) {
             case ADD_VALUE -> "Addition";
@@ -64,7 +58,6 @@ public class TooltipHelper {
             case ADD_MULTIPLIED_TOTAL -> "Multiply Total";
         });
     }
-
     public static MutableComponent getOptionalTooltip(String descriptionId, String subtype, Object... args) {
         String key = "%s.%s".formatted(descriptionId, subtype);
         MutableComponent tooltip = Component.translatable(key, args);
@@ -73,14 +66,12 @@ public class TooltipHelper {
         }
         return Component.translatable(descriptionId, args);
     }
-
     public static void consumeTranslated(String descriptionId, Consumer<MutableComponent> consumer) {
         MutableComponent tooltip = Component.translatable(descriptionId);
         if (!tooltip.getString().equals(descriptionId)) {
             consumer.accept(tooltip);
         }
     }
-
     public static MutableComponent getSkillBonusTooltip(Component bonusDescription, double amount, AttributeModifier.Operation operation) {
         float multiplier = 1;
         if (operation != AttributeModifier.Operation.ADD_VALUE) {
@@ -91,14 +82,12 @@ public class TooltipHelper {
             visibleAmount *= -1;
         }
         String operationDescription = amount > 0 ? "plus" : "take";
-
         int operationId = switch (operation) {
             case ADD_VALUE -> 0;
             case ADD_MULTIPLIED_BASE -> 1;
             case ADD_MULTIPLIED_TOTAL -> 2;
         };
         operationDescription = "attribute.modifier." + operationDescription + "." + operationId;
-
         String multiplierDescription = formatNumber(visibleAmount);
         return Component.translatable(operationDescription, multiplierDescription, bonusDescription);
     }
@@ -109,27 +98,21 @@ public class TooltipHelper {
         }
         return formatted;
     }
-
     public static MutableComponent getSkillBonusTooltip(String bonus, double amount, AttributeModifier.Operation operation) {
         return getSkillBonusTooltip(Component.translatable(bonus), amount, operation);
     }
-
     public static Style getSkillBonusStyle(boolean positive) {
         return positive ? SKILL_BONUS_STYLE : SKILL_BONUS_STYLE_NEGATIVE;
     }
-
     public static Style getSkillRequirementStyle(boolean finished) {
         return finished ? SKILL_REQUIREMENT_STYLE : SKILL_REQUIREMENT_STYLE_UNFINISHED;
     }
-
     public static Style getSkillBonusSecondStyle(boolean positive) {
         return positive ? SKILL_BONUS_SECOND_STYLE : SKILL_BONUS_SECOND_STYLE_NEGATIVE;
     }
-
     public static Style getItemUpgradeStyle() {
         return ITEM_UPGRADE_STYLE;
     }
-
     public static MutableComponent getTextureName(Identifier location) {
         String texture = location.getPath();
         texture = texture.substring(texture.lastIndexOf("/") + 1);
@@ -137,11 +120,9 @@ public class TooltipHelper {
         texture = TooltipHelper.idToName(texture);
         return Component.literal(texture);
     }
-
     public static MutableComponent getTargetName(SkillBonus.Target target) {
         return Component.literal(TooltipHelper.idToName(target.name().toLowerCase(Locale.ROOT)));
     }
-
     @NotNull
     public static String idToName(String path) {
         if (path.isEmpty()) {
@@ -161,7 +142,6 @@ public class TooltipHelper {
         }
         return name.substring(1);
     }
-
     public static List<MutableComponent> split(MutableComponent component, Font font, int maxWidth) {
         String[] split = component.getString().split(" ");
         if (split.length < 2) {
@@ -181,7 +161,6 @@ public class TooltipHelper {
         components.add(Component.literal(line).withStyle(component.getStyle()));
         return components;
     }
-
     @NotNull
     public static String getTrimmedString(Font font, String message, int maxWidth) {
         if (font.width(message) > maxWidth) {
@@ -192,7 +171,6 @@ public class TooltipHelper {
         }
         return message;
     }
-
     @NotNull
     public static String getTrimmedString(String message, int maxWidth) {
         return getTrimmedString(Minecraft.getInstance().font, message, maxWidth);
@@ -200,11 +178,9 @@ public class TooltipHelper {
     public static Component getSlotTooltip(String slotName, String type) {
         return Component.translatable("curio.slot.%s.%s".formatted(slotName, type));
     }
-
     public static Component getSlotTooltip(String slotName) {
         return Component.translatable("curio.slot.%s".formatted(slotName));
     }
-
     public static MutableComponent getSkillTitle(@NotNull PassiveSkill skill) {
         MutableComponent title;
         if (skill.getTitle().isEmpty()) {
@@ -216,7 +192,6 @@ public class TooltipHelper {
         }
         return title.withStyle(getSkillTitleStyle(skill));
     }
-
     public static MutableComponent getSkillTitle(Identifier skillId) {
         PassiveSkill skill = SkillsReloader.getSkillById(skillId);
         if (skill == null) {
@@ -224,7 +199,6 @@ public class TooltipHelper {
         }
         return getSkillTitle(skill);
     }
-
     public static Style getSkillTitleStyle(PassiveSkill skill) {
         String titleColor = skill.getTitleColor();
         if (titleColor.isEmpty()) {
@@ -243,11 +217,9 @@ public class TooltipHelper {
             }
         }
     }
-
     public static Component getRecipeTooltip(@NotNull AbstractWorkbenchRecipe recipe) {
         return recipe.getShortDescription();
     }
-
     public static Component getRecipeTooltip(Identifier recipeId) {
         AbstractWorkbenchRecipe recipe = ClientWorkbenchRecipeCache.getById(recipeId).orElse(null);
         if (recipe == null) {
@@ -255,7 +227,6 @@ public class TooltipHelper {
         }
         return getRecipeTooltip(recipe);
     }
-
     public static String getRecipeDescriptionId(Identifier recipeId) {
         AbstractWorkbenchRecipe recipe = ClientWorkbenchRecipeCache.getById(recipeId).orElse(null);
         if (recipe == null) {

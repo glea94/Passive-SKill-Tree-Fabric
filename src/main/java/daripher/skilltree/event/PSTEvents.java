@@ -1,7 +1,5 @@
 package daripher.skilltree.event;
-
 import daripher.skilltree.util.event.PSTEventBus;
-
 public class PSTEvents {
     public static final PSTEventBus<LivingHurtPSTEvent> LIVING_HURT = new PSTEventBus<>();
     public static final PSTEventBus<CriticalHitPSTEvent> CRITICAL_HIT = new PSTEventBus<>();

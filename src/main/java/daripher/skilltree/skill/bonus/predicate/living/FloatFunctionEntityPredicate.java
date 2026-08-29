@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.living;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -17,22 +16,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
     private FloatFunction<?> valueProvider;
     private float requiredValue;
     private Logic logic;
-
     public FloatFunctionEntityPredicate(FloatFunction<?> valueProvider, float requiredValue, Logic logic) {
         this.valueProvider = valueProvider;
         this.requiredValue = requiredValue;
         this.logic = logic;
     }
-
     @Override
     public boolean test(LivingEntity living) {
         float value = valueProvider.apply(living);
@@ -44,17 +39,14 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
             case AT_MOST -> value <= requiredValue;
         };
     }
-
     @Override
     public MutableComponent getTooltip(MutableComponent bonusTooltip, SkillBonus.Target target) {
         return valueProvider.getPredicateTooltip(target, logic, bonusTooltip, requiredValue);
     }
-
     @Override
     public LivingEntityPredicate.Serializer getSerializer() {
         return PSTLivingEntityPredicates.NUMERIC_VALUE.get();
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer) {
         editor.addLabel(0, 0, "Value Type", ChatFormatting.GREEN);
@@ -70,27 +62,22 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
         editor.addNumericTextField(100, 0, 50, 14, requiredValue).setNumericResponder(value -> selectRequiredValue(consumer, value));
         editor.increaseHeight(19);
     }
-
     private void addValueProviderWidgets(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer) {
         valueProvider.addEditorWidgets(editor, provider -> selectValueProvider(editor, consumer, provider));
     }
-
     private void selectRequiredValue(Consumer<LivingEntityPredicate> consumer, Double value) {
         setRequiredValue(value.floatValue());
         consumer.accept(this.copy());
     }
-
     private void selectValueProvider(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer, FloatFunction<?> provider) {
         setValueProvider(provider);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectLogic(Consumer<LivingEntityPredicate> consumer, Logic logic) {
         setLogic(logic);
         consumer.accept(this.copy());
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -112,39 +99,27 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
     public int hashCode() {
         return Objects.hash(valueProvider, requiredValue, logic);
     }
-
     public void setValueProvider(FloatFunction<?> provider) {
         this.valueProvider = provider;
     }
-
     public void setRequiredValue(float requiredValue) {
         this.requiredValue = requiredValue;
     }
-
     public void setLogic(Logic logic) {
         this.logic = logic;
     }
-
     public FloatFunction<?> getValueProvider() {
         return valueProvider;
     }
-
     public Logic getLogic() {
         return logic;
     }
-
     public float getRequiredValue() {
         return requiredValue;
     }
-<<<<<<< Updated upstream
-
-    
-=======
->>>>>>> Stashed changes
     public FloatFunctionEntityPredicate copy() {
         return new FloatFunctionEntityPredicate(valueProvider, requiredValue, logic);
     }
-
     public static class Serializer implements LivingEntityPredicate.Serializer {
         @Override
         public LivingEntityPredicate deserialize(JsonObject json) throws JsonParseException {
@@ -153,7 +128,6 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
             Logic logic = Logic.valueOf(json.get("logic").getAsString());
             return new FloatFunctionEntityPredicate(valueProvider, requiredValue, logic);
         }
-
         @Override
         public void serialize(JsonObject json, LivingEntityPredicate predicate) {
             FloatFunctionEntityPredicate validPredicate = validatePredicate(predicate);
@@ -161,19 +135,13 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
             json.addProperty("required_value", validPredicate.requiredValue);
             json.addProperty("logic", validPredicate.logic.name());
         }
-
         @Override
         public LivingEntityPredicate deserialize(CompoundTag tag) {
             FloatFunction<?> valueProvider = SerializationHelper.deserializeValueProvider(tag);
             float requiredValue = tag.getFloatOr("required_value", 0f);
-<<<<<<< Updated upstream
-            
-=======
->>>>>>> Stashed changes
             Logic logic = Logic.valueOf(tag.getString("logic").orElse(""));
             return new FloatFunctionEntityPredicate(valueProvider, requiredValue, logic);
         }
-
         @Override
         public CompoundTag serialize(LivingEntityPredicate predicate) {
             FloatFunctionEntityPredicate validPredicate = validatePredicate(predicate);
@@ -183,11 +151,6 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
             tag.putString("logic", validPredicate.logic.name());
             return tag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             FloatFunction<?> valueProvider = NetworkHelper.readValueProvider(buf);
@@ -195,11 +158,6 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
             Logic logic = Logic.values()[buf.readInt()];
             return new FloatFunctionEntityPredicate(valueProvider, requiredValue, logic);
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             FloatFunctionEntityPredicate validPredicate = validatePredicate(predicate);
@@ -207,27 +165,22 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
             buf.writeFloat(validPredicate.requiredValue);
             buf.writeInt(validPredicate.logic.ordinal());
         }
-
         private static @NotNull FloatFunctionEntityPredicate validatePredicate(LivingEntityPredicate predicate) {
             if (!(predicate instanceof FloatFunctionEntityPredicate validPredicate)) {
                 throw new IllegalArgumentException("Expected FloatFunctionEntityPredicate, got: " + predicate);
             }
             return validPredicate;
         }
-
         @Override
         public LivingEntityPredicate createDefaultInstance() {
             return new FloatFunctionEntityPredicate(new HealthLevelFunction(true, false), 1, Logic.EQUAL);
         }
     }
-
     public enum Logic {
         MORE, LESS, EQUAL, AT_LEAST, AT_MOST;
-
         public String getName() {
             return name().toLowerCase(Locale.ROOT);
         }
-
         public Component getTooltip(String subtype, Object... args) {
             String predicateDescriptionId = PSTLivingEntityPredicates.NUMERIC_VALUE.get().createDefaultInstance().getDescriptionId();
             String key = predicateDescriptionId + "." + getName();

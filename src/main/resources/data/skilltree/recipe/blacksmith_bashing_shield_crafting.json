@@ -1,0 +1,22 @@
+{
+  "type": "skilltree:workbench_crafting",
+  "requires_passive_skill": true,
+  "base_ingredient": {
+    "ingredient": "minecraft:iron_ingot",
+    "required_amount": 1
+  },
+  "additionalIngredients": [
+    {
+      "ingredient": "minecraft:oak_planks",
+      "required_amount": 6
+    },
+    {
+      "ingredient": "minecraft:amethyst_shard",
+      "required_amount": 1
+    }
+  ],
+  "result": {
+    "item": "minecraft:shield",
+    "count": 1
+  }
+}

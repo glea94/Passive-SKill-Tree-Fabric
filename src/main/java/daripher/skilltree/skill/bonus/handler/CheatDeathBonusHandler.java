@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import com.mojang.serialization.Codec;
 import daripher.skilltree.entity.persistentdata.PersistentDataProvider;
 import daripher.skilltree.event.LivingHurtPSTEvent;
@@ -11,16 +10,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
-
 import java.util.List;
-
 public class CheatDeathBonusHandler {
     private static final String LAST_TRIGGER_TAG_NAME = "BulwarkResolveLastTrigger";
-
     public static void register() {
         PSTEvents.LIVING_HURT.register(EventPriority.LOWEST, CheatDeathBonusHandler::preventFatalDamage);
     }
-
     private static void preventFatalDamage(LivingHurtPSTEvent event) {
         if (!(event.getEntity() instanceof Player player) || player.level().isClientSide()) {
             return;
@@ -47,12 +42,10 @@ public class CheatDeathBonusHandler {
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
         player.level().broadcastEntityEvent(player, (byte) 35);
     }
-
     private static long getLastTrigger(Player player) {
         CompoundTag data = PersistentDataProvider.get(player);
         return data.read(LAST_TRIGGER_TAG_NAME, Codec.LONG).orElse(Long.MIN_VALUE / 2);
     }
-
     private static void setLastTrigger(Player player, long gameTime) {
         CompoundTag data = PersistentDataProvider.get(player);
         data.store(LAST_TRIGGER_TAG_NAME, Codec.LONG, gameTime);

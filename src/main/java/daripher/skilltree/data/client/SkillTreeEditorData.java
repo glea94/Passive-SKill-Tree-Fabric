@@ -1,5 +1,4 @@
 package daripher.skilltree.data.client;
-
 import com.google.gson.JsonIOException;
 import com.google.gson.stream.JsonReader;
 import daripher.skilltree.SkillTreeMod;
@@ -14,7 +13,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.fabricmc.loader.api.FabricLoader;
-
 import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.FileReader;
@@ -26,17 +24,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 public class SkillTreeEditorData {
     private static final Map<Identifier, PassiveSkill> EDITOR_PASSIVE_SKILLS = new HashMap<>();
     private static final Map<Identifier, PassiveSkillTree> EDITOR_TREES = new HashMap<>();
     private static final Set<Identifier> EDITOR_TREES_IDS = new HashSet<>();
     private static boolean loadedIDs = false;
-
     public static PassiveSkill getEditorSkill(Identifier id) {
         return EDITOR_PASSIVE_SKILLS.get(id);
     }
-
     public static @Nullable PassiveSkillTree getOrCreateEditorTree(Identifier treeId) {
         try {
             createSkillTreesSaveFolders(treeId);
@@ -83,7 +78,6 @@ public class SkillTreeEditorData {
             return null;
         }
     }
-
     private static void createSkillTreesSaveFolders(Identifier treeId) {
         File folder = getSkillTreeSavesFolder(treeId);
         try {
@@ -94,15 +88,6 @@ public class SkillTreeEditorData {
         }
     }
     private static void generatePackMcmetaFile(File file) {
-<<<<<<< Updated upstream
-        
-        
-        
-        
-        
-        
-=======
->>>>>>> Stashed changes
         String fileContents = """
                 {
                   "pack": {
@@ -122,7 +107,6 @@ public class SkillTreeEditorData {
             throw new RuntimeException("Failed to generate pack.mcmeta", exception);
         }
     }
-
     private static void loadOrCreateEditorSkill(Identifier skillId) {
         createSkillsSaveFolder(skillId);
         if (!getSkillSaveFile(skillId).exists()) {
@@ -135,7 +119,6 @@ public class SkillTreeEditorData {
             loadEditorSkill(skillId);
         }
     }
-
     private static void createSkillsSaveFolder(Identifier skillId) {
         File folder = getSkillSavesFolder(skillId);
         try {
@@ -145,7 +128,6 @@ public class SkillTreeEditorData {
             SkillTreeMod.LOGGER.error(errorMessage, exception);
         }
     }
-
     public static void saveEditorSkillTree(PassiveSkillTree skillTree) {
         createSkillTreesSaveFolders(skillTree.getId());
         File file = getSkillTreeSaveFile(skillTree.getId());
@@ -157,7 +139,6 @@ public class SkillTreeEditorData {
             sendChatMessage(exception.getMessage(), ChatFormatting.DARK_RED);
         }
     }
-
     public static void loadEditorSkillTree(Identifier treeId) throws IOException {
         File file = getSkillTreeSaveFile(treeId);
         PassiveSkillTree skillTree;
@@ -171,7 +152,6 @@ public class SkillTreeEditorData {
         }
         EDITOR_TREES.put(treeId, skillTree);
     }
-
     public static void saveEditorSkill(PassiveSkill skill) {
         createSkillsSaveFolder(skill.getId());
         File file = getSkillSaveFile(skill.getId());
@@ -183,7 +163,6 @@ public class SkillTreeEditorData {
             sendChatMessage(exception.getMessage(), ChatFormatting.DARK_RED);
         }
     }
-
     public static void loadEditorSkill(Identifier skillId) {
         PassiveSkill skill;
         try {
@@ -208,37 +187,29 @@ public class SkillTreeEditorData {
         }
         EDITOR_PASSIVE_SKILLS.remove(skill.getId());
     }
-
     private static File getEditorDataFolder() {
         return new File(getEditorFolder(), "data");
     }
-
     private static File getEditorFolder() {
         return new File(FabricLoader.getInstance().getGameDir().toFile(), "skilltree/editor");
     }
-
     private static File getSkillSavesFolder(Identifier skillId) {
         return new File(getEditorDataFolder(), skillId.getNamespace() + "/skills");
     }
-
     private static File getSkillTreeSavesFolder(Identifier skillTreeId) {
         return new File(getEditorDataFolder(), skillTreeId.getNamespace() + "/skill_trees");
     }
-
     private static File getSkillSaveFile(Identifier skillId) {
         return new File(getSkillSavesFolder(skillId), skillId.getPath() + ".json");
     }
-
     private static File getSkillTreeSaveFile(Identifier skillTreeId) {
         return new File(getSkillTreeSavesFolder(skillTreeId), skillTreeId.getPath() + ".json");
     }
-
     private static <T> T readFromFile(Class<T> objectType, File file) throws IOException {
         try (JsonReader reader = new JsonReader(new FileReader(file, StandardCharsets.UTF_8))) {
             return SkillsReloader.GSON.fromJson(reader, objectType);
         }
     }
-
     public static void sendChatMessage(String text, ChatFormatting... styles) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
@@ -250,7 +221,6 @@ public class SkillTreeEditorData {
             player.sendSystemMessage(chatMessage);
         }
     }
-
     public static Set<Identifier> getEditorTreesIDs() {
         if (loadedIDs) {
             return EDITOR_TREES_IDS;

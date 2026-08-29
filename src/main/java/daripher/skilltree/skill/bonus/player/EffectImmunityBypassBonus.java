@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -21,20 +20,16 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
-
 public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunityBypassBonus> {
     private @NotNull MobEffectPredicate effectPredicate;
     private @NotNull LivingEntityPredicate playerCondition = NoneLivingEntityPredicate.INSTANCE;
     private @NotNull LivingEntityPredicate enemyCondition = NoneLivingEntityPredicate.INSTANCE;
-
     public EffectImmunityBypassBonus(@NotNull MobEffectPredicate effectPredicate) {
         this.effectPredicate = effectPredicate;
     }
-
     public boolean shouldIgnoreEffectImmunity(MobEffect mobEffect, @Nullable Player effectSource, LivingEntity entity) {
         if (!effectPredicate.test(mobEffect)) {
             return false;
@@ -44,12 +39,10 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
         }
         return effectSource == null || playerCondition.test(effectSource);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.IGNORE_EFFECT_IMMUNITY.get();
     }
-
     @Override
     public EffectImmunityBypassBonus copy() {
         EffectImmunityBypassBonus copy = new EffectImmunityBypassBonus(effectPredicate);
@@ -57,22 +50,18 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
         copy.enemyCondition = enemyCondition;
         return copy;
     }
-
     @Override
     public EffectImmunityBypassBonus multiply(double multiplier) {
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         return false;
     }
-
     @Override
     public SkillBonus<EffectImmunityBypassBonus> merge(SkillBonus<?> other) {
         return this;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         Component effectTypeDescription = effectPredicate.getTooltip("plural");
@@ -81,12 +70,10 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
         tooltip = enemyCondition.getTooltip(tooltip, Target.PLAYER);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return true;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<EffectImmunityBypassBonus> consumer) {
         editor.addLabel(0, 0, "Effect Condition", ChatFormatting.GOLD);
@@ -106,25 +93,21 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
                 .setMenuInitFunc(() -> addEnemyConditionWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<EffectImmunityBypassBonus> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectEnemyCondition(SkillTreeEditor editor, Consumer<EffectImmunityBypassBonus> consumer, LivingEntityPredicate condition) {
         setEnemyCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectEffectPredicate(SkillTreeEditor editor, Consumer<EffectImmunityBypassBonus> consumer, MobEffectPredicate effectPredicate) {
         setEffectPredicate(effectPredicate);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addEffectPredicateWidgets(SkillTreeEditor editor, Consumer<EffectImmunityBypassBonus> consumer) {
         effectPredicate.addEditorWidgets(editor, predicate -> {
             setEffectPredicate(predicate);
@@ -137,31 +120,22 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
             consumer.accept(this.copy());
         });
     }
-
     private void addEnemyConditionWidgets(SkillTreeEditor editor, Consumer<EffectImmunityBypassBonus> consumer) {
         enemyCondition.addEditorWidgets(editor, c -> {
-<<<<<<< Updated upstream
-            
-=======
->>>>>>> Stashed changes
             setEnemyCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     public void setEffectPredicate(@NotNull MobEffectPredicate effectPredicate) {
         this.effectPredicate = effectPredicate;
     }
-
     public SkillBonus<?> setPlayerCondition(LivingEntityPredicate condition) {
         this.playerCondition = condition;
         return this;
     }
-
     public void setEnemyCondition(@NotNull LivingEntityPredicate enemyCondition) {
         this.enemyCondition = enemyCondition;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public EffectImmunityBypassBonus deserialize(JsonObject json) throws JsonParseException {
@@ -171,7 +145,6 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
             bonus.enemyCondition = SerializationHelper.deserializeLivingCondition(json, "enemy_condition");
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             EffectImmunityBypassBonus validBonus = validateBonus(bonus);
@@ -179,7 +152,6 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
             SerializationHelper.serializeLivingCondition(json, validBonus.playerCondition, "player_condition");
             SerializationHelper.serializeLivingCondition(json, validBonus.enemyCondition, "enemy_condition");
         }
-
         @Override
         public EffectImmunityBypassBonus deserialize(CompoundTag tag) {
             MobEffectPredicate mobEffectPredicate = SerializationHelper.deserializeMobEffectCondition(tag, "mob_effect_predicate");
@@ -188,7 +160,6 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
             bonus.enemyCondition = SerializationHelper.deserializeLivingCondition(tag, "enemy_condition");
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             EffectImmunityBypassBonus validBonus = validateBonus(bonus);
@@ -198,11 +169,6 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
             SerializationHelper.serializeLivingCondition(compoundTag, validBonus.enemyCondition, "enemy_condition");
             return compoundTag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public EffectImmunityBypassBonus deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectPredicate mobEffectPredicate = NetworkHelper.readMobEffectCondition(buf);
@@ -211,11 +177,6 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
             bonus.enemyCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             EffectImmunityBypassBonus validBonus = validateBonus(bonus);
@@ -223,20 +184,14 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
             NetworkHelper.writeLivingCondition(buf, validBonus.playerCondition);
             NetworkHelper.writeLivingCondition(buf, validBonus.enemyCondition);
         }
-
         private EffectImmunityBypassBonus validateBonus(SkillBonus<?> bonus) {
             if (!(bonus instanceof EffectImmunityBypassBonus validBonus)) {
                 throw new IllegalArgumentException();
             }
             return validBonus;
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
-<<<<<<< Updated upstream
-            
-=======
->>>>>>> Stashed changes
             return new EffectImmunityBypassBonus(new MobEffectIdPredicate(MobEffects.POISON));
         }
     }

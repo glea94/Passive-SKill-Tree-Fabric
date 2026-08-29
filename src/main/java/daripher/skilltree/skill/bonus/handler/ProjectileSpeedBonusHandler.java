@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.entity.persistentdata.PersistentDataProvider;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.ProjectileSpeedBonus;
@@ -9,13 +8,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec3;
-
 import java.util.List;
-
-
 public class ProjectileSpeedBonusHandler {
     public static final String IS_SPED_UP_TAG_NAME = "IS_SPED_UP";
-
     public static void register() {
         ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
             if (!(entity instanceof Projectile projectile)) {
@@ -30,7 +25,6 @@ public class ProjectileSpeedBonusHandler {
             applyProjectileSpeedBonus(projectile, player);
         });
     }
-
     private static void applyProjectileSpeedBonus(Projectile projectile, Player player) {
         CompoundTag projectileTag = PersistentDataProvider.get(projectile);
         if (projectileTag.getBoolean(IS_SPED_UP_TAG_NAME).orElse(false)) {

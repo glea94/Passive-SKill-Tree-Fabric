@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.living;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -16,22 +15,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class DualWieldingEntityPredicate implements LivingEntityPredicate {
     private @NotNull ItemStackPredicate weaponPredicate;
-
     public DualWieldingEntityPredicate(@NotNull ItemStackPredicate weaponPredicate) {
         this.weaponPredicate = weaponPredicate;
     }
-
     @Override
     public boolean test(LivingEntity living) {
         return PlayerHelper.getItemsInHands(living).allMatch(weaponPredicate);
     }
-
     @Override
     public MutableComponent getTooltip(MutableComponent bonusTooltip, SkillBonus.Target target) {
         String key = getDescriptionId();
@@ -39,24 +33,17 @@ public final class DualWieldingEntityPredicate implements LivingEntityPredicate 
         Component itemDescription = weaponPredicate.getTooltip();
         return Component.translatable(key, bonusTooltip, targetDescription, itemDescription);
     }
-
     @Override
     public LivingEntityPredicate.Serializer getSerializer() {
         return PSTLivingEntityPredicates.DUAL_WIELDING.get();
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer) {
         weaponPredicate.addEditorWidgets(editor, predicate -> {
             setWeaponPredicate(predicate);
-<<<<<<< Updated upstream
-            
-=======
->>>>>>> Stashed changes
             consumer.accept(new DualWieldingEntityPredicate(this.weaponPredicate));
         });
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -68,33 +55,27 @@ public final class DualWieldingEntityPredicate implements LivingEntityPredicate 
         DualWieldingEntityPredicate that = (DualWieldingEntityPredicate) o;
         return Objects.equals(weaponPredicate, that.weaponPredicate);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(weaponPredicate);
     }
-
     public void setWeaponPredicate(@NotNull ItemStackPredicate weaponPredicate) {
         this.weaponPredicate = weaponPredicate;
     }
-
     public static class Serializer implements LivingEntityPredicate.Serializer {
         @Override
         public LivingEntityPredicate deserialize(JsonObject json) throws JsonParseException {
             return new DualWieldingEntityPredicate(SerializationHelper.deserializeItemPredicate(json));
         }
-
         @Override
         public void serialize(JsonObject json, LivingEntityPredicate predicate) {
             DualWieldingEntityPredicate validPredicate = validatePredicate(predicate);
             SerializationHelper.serializeItemPredicate(json, validPredicate.weaponPredicate);
         }
-
         @Override
         public LivingEntityPredicate deserialize(CompoundTag tag) {
             return new DualWieldingEntityPredicate(SerializationHelper.deserializeItemPredicate(tag));
         }
-
         @Override
         public CompoundTag serialize(LivingEntityPredicate predicate) {
             DualWieldingEntityPredicate validPredicate = validatePredicate(predicate);
@@ -102,33 +83,21 @@ public final class DualWieldingEntityPredicate implements LivingEntityPredicate 
             SerializationHelper.serializeItemPredicate(tag, validPredicate.weaponPredicate);
             return tag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new DualWieldingEntityPredicate(NetworkHelper.readItemPredicate(buf));
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             DualWieldingEntityPredicate validPredicate = validatePredicate(predicate);
             NetworkHelper.writeItemPredicate(buf, validPredicate.weaponPredicate);
         }
-
         private static @NotNull DualWieldingEntityPredicate validatePredicate(LivingEntityPredicate predicate) {
             if (!(predicate instanceof DualWieldingEntityPredicate validPredicate)) {
                 throw new IllegalArgumentException("Expected DualWieldingEntityPredicate, got: " + predicate);
             }
             return validPredicate;
         }
-
         @Override
         public LivingEntityPredicate createDefaultInstance() {
             return new DualWieldingEntityPredicate(new EquipmentPredicate(EquipmentPredicate.Type.WEAPON));

@@ -1,45 +1,27 @@
 package daripher.skilltree.inventory.menu;
-
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
-
 import java.util.HashMap;
 import java.util.Map;
-
-
 public class WorkbenchContainer extends SimpleContainer implements RecipeInput {
     public final WorkbenchMenu menu;
-<<<<<<< Updated upstream
-
     public WorkbenchContainer(WorkbenchMenu menu) {
-        
-=======
-    public WorkbenchContainer(WorkbenchMenu menu) {
->>>>>>> Stashed changes
         super(10);
         this.menu = menu;
     }
-
     public Player getPlayer() {
         return menu.getPlayer();
     }
-
     public ItemStack getBaseItem() {
         return getItem(0);
     }
-<<<<<<< Updated upstream
-
-    
-=======
->>>>>>> Stashed changes
     @Override
     public int size() {
         return this.getContainerSize();
     }
-
     public boolean hasIngredients(Map<Ingredient, Integer> ingredients) {
         Map<Ingredient, Integer> remaining = new HashMap<>(ingredients);
         for (int i = 1; i < this.getContainerSize(); i++) {

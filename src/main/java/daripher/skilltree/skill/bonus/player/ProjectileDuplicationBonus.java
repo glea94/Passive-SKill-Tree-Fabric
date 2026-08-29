@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -21,32 +20,26 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDuplicationBonus> {
     private float chance;
     private @NotNull LivingMultiplier playerMultiplier = NoneLivingMultiplier.INSTANCE;
     private @NotNull LivingEntityPredicate playerCondition = NoneLivingEntityPredicate.INSTANCE;
-
     public ProjectileDuplicationBonus(float chance) {
         this.chance = chance;
     }
-
     public float getDuplicationChance(Player player) {
         if (!playerCondition.test(player)) {
             return 0f;
         }
         return chance * playerMultiplier.getValue(player);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.PROJECTILE_DUPLICATION.get();
     }
-
     @Override
     public ProjectileDuplicationBonus copy() {
         ProjectileDuplicationBonus bonus = new ProjectileDuplicationBonus(chance);
@@ -54,13 +47,11 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
         bonus.playerCondition = this.playerCondition;
         return bonus;
     }
-
     @Override
     public ProjectileDuplicationBonus multiply(double multiplier) {
         chance *= (float) multiplier;
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof ProjectileDuplicationBonus otherBonus)) {
@@ -71,7 +62,6 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
         }
         return Objects.equals(otherBonus.playerCondition, this.playerCondition);
     }
-
     @Override
     public SkillBonus<ProjectileDuplicationBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof ProjectileDuplicationBonus otherBonus)) {
@@ -83,7 +73,6 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
         mergedBonus.playerCondition = this.playerCondition;
         return mergedBonus;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         MutableComponent tooltip;
@@ -98,12 +87,10 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
         tooltip = playerCondition.getTooltip(tooltip, Target.PLAYER);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return chance > 0;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<ProjectileDuplicationBonus> consumer) {
         editor.addLabel(0, 0, "Chance", ChatFormatting.GOLD);
@@ -122,12 +109,10 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
                 .setMenuInitFunc(() -> addPlayerMultiplierWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectChance(Consumer<ProjectileDuplicationBonus> consumer, Double value) {
         setChance(value.floatValue());
         consumer.accept(this.copy());
     }
-
     private void addPlayerMultiplierWidgets(SkillTreeEditor editor, Consumer<ProjectileDuplicationBonus> consumer) {
         playerMultiplier.addEditorWidgets(editor, multiplier -> {
             setPlayerMultiplier(multiplier);
@@ -139,34 +124,28 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<ProjectileDuplicationBonus> consumer) {
         playerCondition.addEditorWidgets(editor, c -> {
             setPlayerCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<ProjectileDuplicationBonus> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     public SkillBonus<?> setPlayerCondition(LivingEntityPredicate condition) {
         this.playerCondition = condition;
         return this;
     }
-
     public SkillBonus<?> setPlayerMultiplier(LivingMultiplier multiplier) {
         this.playerMultiplier = multiplier;
         return this;
     }
-
     public void setChance(float chance) {
         this.chance = chance;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public ProjectileDuplicationBonus deserialize(JsonObject json) throws JsonParseException {
@@ -176,7 +155,6 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(json, "player_condition");
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof ProjectileDuplicationBonus aBonus)) {
@@ -186,7 +164,6 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
             SerializationHelper.serializeLivingMultiplier(json, aBonus.playerMultiplier, "player_multiplier");
             SerializationHelper.serializeLivingCondition(json, aBonus.playerCondition, "player_condition");
         }
-
         @Override
         public ProjectileDuplicationBonus deserialize(CompoundTag tag) {
             float chance = tag.getFloatOr("chance", 0f);
@@ -195,7 +172,6 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof ProjectileDuplicationBonus aBonus)) {
@@ -207,11 +183,6 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
             SerializationHelper.serializeLivingCondition(tag, aBonus.playerCondition, "player_condition");
             return tag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public ProjectileDuplicationBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -220,11 +191,6 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
             bonus.playerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ProjectileDuplicationBonus aBonus)) {
@@ -234,7 +200,6 @@ public final class ProjectileDuplicationBonus implements SkillBonus<ProjectileDu
             NetworkHelper.writeLivingMultiplier(buf, aBonus.playerMultiplier);
             NetworkHelper.writeLivingCondition(buf, aBonus.playerCondition);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new ProjectileDuplicationBonus(0.1f).setPlayerCondition(new HasItemEquippedEntityPredicate(new EquipmentPredicate(EquipmentPredicate.Type.RANGED_WEAPON)));

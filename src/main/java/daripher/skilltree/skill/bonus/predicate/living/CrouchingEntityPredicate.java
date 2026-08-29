@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.living;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -11,34 +10,27 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
-
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class CrouchingEntityPredicate implements LivingEntityPredicate {
     private boolean reverseLogic;
-
     public CrouchingEntityPredicate(boolean reverseLogic) {
         this.reverseLogic = reverseLogic;
     }
-
     @Override
     public boolean test(LivingEntity living) {
         return living.isCrouching() ^ reverseLogic;
     }
-
     @Override
     public MutableComponent getTooltip(MutableComponent bonusTooltip, SkillBonus.Target target) {
         String key = getDescriptionId();
         MutableComponent targetDescription = Component.translatable("%s%s.target.%s".formatted(key, reverseLogic ? ".reverse" : "", target.getName()));
         return Component.translatable(key, bonusTooltip, targetDescription);
     }
-
     @Override
     public LivingEntityPredicate.Serializer getSerializer() {
         return PSTLivingEntityPredicates.CROUCHING.get();
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer) {
         editor.addLabel(0, 0, "Reverse Logic", ChatFormatting.GOLD);
@@ -46,16 +38,10 @@ public final class CrouchingEntityPredicate implements LivingEntityPredicate {
         editor.addCheckBox(0, 0, reverseLogic).setResponder(value -> setReverseLogic(value, consumer));
         editor.increaseHeight(19);
     }
-
     public void setReverseLogic(boolean reverseLogic, Consumer<LivingEntityPredicate> consumer) {
         this.reverseLogic = reverseLogic;
-<<<<<<< Updated upstream
-        
-=======
->>>>>>> Stashed changes
         consumer.accept(new CrouchingEntityPredicate(this.reverseLogic));
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -67,31 +53,26 @@ public final class CrouchingEntityPredicate implements LivingEntityPredicate {
         CrouchingEntityPredicate that = (CrouchingEntityPredicate) o;
         return reverseLogic == that.reverseLogic;
     }
-
     @Override
     public int hashCode() {
         return Objects.hashCode(reverseLogic);
     }
-
     public static class Serializer implements LivingEntityPredicate.Serializer {
         @Override
         public LivingEntityPredicate deserialize(JsonObject json) throws JsonParseException {
             boolean reverseLogic = json.has("reverse_logic") && json.get("reverse_logic").getAsBoolean();
             return new CrouchingEntityPredicate(reverseLogic);
         }
-
         @Override
         public void serialize(JsonObject json, LivingEntityPredicate predicate) {
             CrouchingEntityPredicate validPredicate = validatePredicate(predicate);
             json.addProperty("reverse_logic", validPredicate.reverseLogic);
         }
-
         @Override
         public LivingEntityPredicate deserialize(CompoundTag tag) {
             boolean reverseLogic = tag.getBoolean("reverse_logic").orElse(false);
             return new CrouchingEntityPredicate(reverseLogic);
         }
-
         @Override
         public CompoundTag serialize(LivingEntityPredicate predicate) {
             CrouchingEntityPredicate validPredicate = validatePredicate(predicate);
@@ -99,34 +80,22 @@ public final class CrouchingEntityPredicate implements LivingEntityPredicate {
             compoundTag.putBoolean("reverse_logic", validPredicate.reverseLogic);
             return compoundTag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             boolean reverseLogic = buf.readBoolean();
             return new CrouchingEntityPredicate(reverseLogic);
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             CrouchingEntityPredicate validPredicate = validatePredicate(predicate);
             buf.writeBoolean(validPredicate.reverseLogic);
         }
-
         private static CrouchingEntityPredicate validatePredicate(LivingEntityPredicate predicate) {
             if (!(predicate instanceof CrouchingEntityPredicate validPredicate)) {
                 throw new IllegalArgumentException("Expected CrouchingEntityPredicate, got: " + predicate);
             }
             return validPredicate;
         }
-
         @Override
         public LivingEntityPredicate createDefaultInstance() {
             return new CrouchingEntityPredicate(false);

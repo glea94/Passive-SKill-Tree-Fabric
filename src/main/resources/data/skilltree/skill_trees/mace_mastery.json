@@ -1,0 +1,18 @@
+{
+  "skillIds": [
+    "skilltree:mace_mastery_1",
+    "skilltree:mace_mastery_2",
+    "skilltree:mace_mastery_3",
+    "skilltree:mace_mastery_4",
+    "skilltree:mace_mastery_5",
+    "skilltree:mace_mastery_6",
+    "skilltree:mace_mastery_7",
+    "skilltree:mace_mastery_8",
+    "skilltree:mace_mastery_9",
+    "skilltree:mace_mastery_10",
+    "skilltree:mace_mastery_11"
+  ],
+  "id": "skilltree:mace_mastery",
+  "skillLimitations": {},
+  "hidden": true
+}

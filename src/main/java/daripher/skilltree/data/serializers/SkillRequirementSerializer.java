@@ -1,14 +1,11 @@
 package daripher.skilltree.data.serializers;
-
 import com.google.gson.*;
 import daripher.skilltree.init.PSTRegistries;
 import daripher.skilltree.init.PSTSkillRequirements;
 import daripher.skilltree.skill.requirement.SkillRequirement;
 import net.minecraft.resources.Identifier;
-
 import java.lang.reflect.Type;
 import java.util.Objects;
-
 public class SkillRequirementSerializer implements JsonSerializer<SkillRequirement<?>>, JsonDeserializer<SkillRequirement<?>> {
     @Override
     public SkillRequirement<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -20,17 +17,11 @@ public class SkillRequirementSerializer implements JsonSerializer<SkillRequireme
         } else {
             type = jsonObj.get("type").getAsString();
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         Identifier serializerId = Identifier.parse(type);
         SkillRequirement.Serializer serializer = PSTRegistries.SKILL_REQUIREMENTS.get().getValue(serializerId);
         Objects.requireNonNull(serializer, "Unknown skill requirement: " + serializerId);
         return serializer.deserialize(jsonObj);
     }
-
     @Override
     public JsonElement serialize(SkillRequirement<?> src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject json = new JsonObject();

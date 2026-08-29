@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.event.LivingHurtPSTEvent;
 import daripher.skilltree.event.PSTEvents;
 import daripher.skilltree.skill.SkillBonusProvider;
@@ -9,15 +8,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
-
-
 public class IncomingDamageBonusHandler {
     public static void register() {
         PSTEvents.LIVING_HURT.register(IncomingDamageBonusHandler::modifyIncomingDamage);
     }
-
     private static void modifyIncomingDamage(LivingHurtPSTEvent event) {
         DamageSource damageSource = event.getSource();
         LivingEntity attacker = getAttacker(damageSource);
@@ -32,10 +27,6 @@ public class IncomingDamageBonusHandler {
         float baseDamageMultiplier = 1f;
         float totalDamageMultiplier = 1f;
         for (IncomingDamageBonus bonus : skillBonuses) {
-<<<<<<< Updated upstream
-            
-=======
->>>>>>> Stashed changes
             flatDamageBonus += bonus.getDamageModifier(AttributeModifier.Operation.ADD_VALUE, damageSource, player, attacker);
             baseDamageMultiplier += bonus.getDamageModifier(AttributeModifier.Operation.ADD_MULTIPLIED_BASE, damageSource, player, attacker);
             totalDamageMultiplier *= 1f + bonus.getDamageModifier(AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL, damageSource, player, attacker);
@@ -46,7 +37,6 @@ public class IncomingDamageBonusHandler {
         amount *= totalDamageMultiplier;
         event.setAmount(amount);
     }
-
     private static @Nullable LivingEntity getAttacker(DamageSource damageSource) {
         if (!(damageSource.getEntity() instanceof LivingEntity attacker)) {
             return null;

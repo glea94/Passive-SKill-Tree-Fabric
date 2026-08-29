@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -18,32 +17,26 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class HealthReservationBonus implements SkillBonus<HealthReservationBonus> {
     private float amount;
     private @NotNull LivingMultiplier playerMultiplier = NoneLivingMultiplier.INSTANCE;
     private @NotNull LivingEntityPredicate playerCondition = NoneLivingEntityPredicate.INSTANCE;
-
     public HealthReservationBonus(float amount) {
         this.amount = amount;
     }
-
     public float getAmount(Player player) {
         if (!playerCondition.test(player)) {
             return 0f;
         }
         return amount * playerMultiplier.getValue(player);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.HEALTH_RESERVATION.get();
     }
-
     @Override
     public HealthReservationBonus copy() {
         HealthReservationBonus bonus = new HealthReservationBonus(amount);
@@ -51,13 +44,11 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
         bonus.playerCondition = this.playerCondition;
         return bonus;
     }
-
     @Override
     public HealthReservationBonus multiply(double multiplier) {
         amount *= (float) multiplier;
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof HealthReservationBonus otherBonus)) {
@@ -68,7 +59,6 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
         }
         return Objects.equals(otherBonus.playerCondition, this.playerCondition);
     }
-
     @Override
     public SkillBonus<HealthReservationBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof HealthReservationBonus otherBonus)) {
@@ -79,7 +69,6 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
         mergedBonus.playerCondition = this.playerCondition;
         return mergedBonus;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), amount, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
@@ -87,12 +76,10 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
         tooltip = playerCondition.getTooltip(tooltip, Target.PLAYER);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return amount < 0;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<HealthReservationBonus> consumer) {
         editor.addLabel(0, 0, "Amount", ChatFormatting.GOLD);
@@ -117,45 +104,37 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<HealthReservationBonus> consumer, LivingMultiplier multiplier) {
         setPlayerMultiplier(multiplier);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<HealthReservationBonus> consumer) {
         playerCondition.addEditorWidgets(editor, condition -> {
             setPlayerCondition(condition);
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<HealthReservationBonus> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectAmount(Consumer<HealthReservationBonus> consumer, Double value) {
         setAmount(value.floatValue());
         consumer.accept(this.copy());
     }
-
     public SkillBonus<?> setPlayerCondition(LivingEntityPredicate condition) {
         this.playerCondition = condition;
         return this;
     }
-
     public SkillBonus<?> setPlayerMultiplier(LivingMultiplier multiplier) {
         this.playerMultiplier = multiplier;
         return this;
     }
-
     public void setAmount(float amount) {
         this.amount = amount;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public HealthReservationBonus deserialize(JsonObject json) throws JsonParseException {
@@ -165,7 +144,6 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(json, "player_condition");
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof HealthReservationBonus aBonus)) {
@@ -175,7 +153,6 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
             SerializationHelper.serializeLivingMultiplier(json, aBonus.playerMultiplier, "player_multiplier");
             SerializationHelper.serializeLivingCondition(json, aBonus.playerCondition, "player_condition");
         }
-
         @Override
         public HealthReservationBonus deserialize(CompoundTag tag) {
             float amount = tag.getFloatOr("amount", 0f);
@@ -184,7 +161,6 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof HealthReservationBonus aBonus)) {
@@ -196,11 +172,6 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
             SerializationHelper.serializeLivingCondition(tag, aBonus.playerCondition, "player_condition");
             return tag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public HealthReservationBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -209,11 +180,6 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
             bonus.playerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof HealthReservationBonus aBonus)) {
@@ -223,7 +189,6 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
             NetworkHelper.writeLivingMultiplier(buf, aBonus.playerMultiplier);
             NetworkHelper.writeLivingCondition(buf, aBonus.playerCondition);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new HealthReservationBonus(0.05f);

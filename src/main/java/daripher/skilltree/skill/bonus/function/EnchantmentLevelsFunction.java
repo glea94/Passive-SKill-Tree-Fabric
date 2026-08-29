@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.function;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -20,36 +19,25 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
-
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-
 public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevelsFunction> {
     private @NotNull ItemStackPredicate itemStackPredicate;
-
     public EnchantmentLevelsFunction(@NotNull ItemStackPredicate itemStackPredicate) {
         this.itemStackPredicate = itemStackPredicate;
     }
-
     @Override
     public float apply(LivingEntity entity) {
         return getEnchantLevels(PlayerHelper.getAllEquipment(entity).filter(itemStackPredicate));
     }
-<<<<<<< Updated upstream
-
     private int getEnchantLevels(Stream<ItemStack> items) {
-        
-=======
-    private int getEnchantLevels(Stream<ItemStack> items) {
->>>>>>> Stashed changes
         return items.map(item -> item.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY))
                 .mapToInt(enchantments -> enchantments.entrySet().stream().mapToInt(Object2IntMap.Entry::getIntValue).sum())
                 .reduce(Integer::sum).orElse(0);
     }
-
     @Override
     public MutableComponent getMultiplierTooltip(SkillBonus.Target target, float divisor, Component bonusTooltip) {
         String key = "%s.multiplier.%s".formatted(getDescriptionId(), target.getName());
@@ -61,7 +49,6 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
             return Component.translatable(key, bonusTooltip, itemDescription);
         }
     }
-
     @Override
     public MutableComponent getPredicateTooltip(SkillBonus.Target target, FloatFunctionEntityPredicate.Logic logic, Component bonusTooltip, float requiredValue) {
         String key = "%s.condition.%s".formatted(getDescriptionId(), target.getName());
@@ -81,7 +68,6 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
         Component logicDescription = logic.getTooltip("enchantment_amount", valueDescription);
         return Component.translatable(key, bonusTooltip, logicDescription, levelsDescription, itemDescription);
     }
-
     @Override
     public MutableComponent getRequirementTooltip(FloatFunctionEntityPredicate.Logic logic, float requiredValue) {
         String key = "%s.requirement".formatted(getDescriptionId());
@@ -105,7 +91,6 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
     public FloatFunction.Serializer getSerializer() {
         return PSTFloatFunctions.ENCHANTMENT_LEVELS.get();
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<FloatFunction<?>> consumer) {
         editor.addLabel(0, 0, "Item Condition", ChatFormatting.GREEN);
@@ -114,20 +99,17 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
                 .setMenuInitFunc(() -> addItemConditionWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addItemConditionWidgets(SkillTreeEditor editor, Consumer<FloatFunction<?>> consumer) {
         itemStackPredicate.addEditorWidgets(editor, condition -> {
             setItemCondition(condition);
             consumer.accept(this);
         });
     }
-
     private void selectItemCondition(SkillTreeEditor editor, Consumer<FloatFunction<?>> consumer, ItemStackPredicate condition) {
         setItemCondition(condition);
         consumer.accept(this);
         editor.rebuildWidgets();
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -139,23 +121,19 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
         EnchantmentLevelsFunction that = (EnchantmentLevelsFunction) o;
         return Objects.equals(itemStackPredicate, that.itemStackPredicate);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(itemStackPredicate);
     }
-
     public void setItemCondition(@NotNull ItemStackPredicate itemStackPredicate) {
         this.itemStackPredicate = itemStackPredicate;
     }
-
     public static class Serializer implements FloatFunction.Serializer {
         @Override
         public FloatFunction<?> deserialize(JsonObject json) throws JsonParseException {
             ItemStackPredicate itemStackPredicate = SerializationHelper.deserializeItemPredicate(json);
             return new EnchantmentLevelsFunction(itemStackPredicate);
         }
-
         @Override
         public void serialize(JsonObject json, FloatFunction<?> provider) {
             if (!(provider instanceof EnchantmentLevelsFunction aProvider)) {
@@ -163,13 +141,11 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
             }
             SerializationHelper.serializeItemPredicate(json, aProvider.itemStackPredicate);
         }
-
         @Override
         public FloatFunction<?> deserialize(CompoundTag tag) {
             ItemStackPredicate itemStackPredicate = SerializationHelper.deserializeItemPredicate(tag);
             return new EnchantmentLevelsFunction(itemStackPredicate);
         }
-
         @Override
         public CompoundTag serialize(FloatFunction<?> provider) {
             if (!(provider instanceof EnchantmentLevelsFunction aProvider)) {
@@ -179,21 +155,11 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
             SerializationHelper.serializeItemPredicate(tag, aProvider.itemStackPredicate);
             return tag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return new EnchantmentLevelsFunction(itemStackPredicate);
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof EnchantmentLevelsFunction aProvider)) {
@@ -201,7 +167,6 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
             }
             NetworkHelper.writeItemPredicate(buf, aProvider.itemStackPredicate);
         }
-
         @Override
         public FloatFunction<?> createDefaultInstance() {
             return new EnchantmentLevelsFunction(new EquipmentPredicate(EquipmentPredicate.Type.WEAPON));

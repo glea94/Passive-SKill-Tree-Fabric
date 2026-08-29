@@ -1,5 +1,4 @@
 package daripher.skilltree.recipe.workbench;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -26,58 +25,44 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
 public class WorkbenchWeaponPoisoningRecipe extends AbstractWorkbenchRecipe {
-    
-    
-    
     private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_weapon_poisoning_recipe");
-
     private final int maxUses;
-
     public WorkbenchWeaponPoisoningRecipe(Identifier id, boolean requiresPassiveSkill, int maxUses) {
         super(id, requiresPassiveSkill);
         this.maxUses = maxUses;
     }
-
     @Override
     public boolean isValidBaseItem(ItemStack itemStack) {
         return EquipmentPredicate.isMeleeWeapon(itemStack);
     }
-
     @Override
     public boolean isValidIngredient(ItemStack itemStack) {
         return isValidPoison(itemStack);
     }
-
     private boolean isValidPoison(ItemStack itemStack) {
         PotionContents potionContents = itemStack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
         Stream<MobEffectInstance> effectsStream = StreamSupport.stream(potionContents.getAllEffects().spliterator(), false);
         return effectsStream.anyMatch(mobEffectInstance -> mobEffectInstance.getEffect().value().getCategory() == MobEffectCategory.HARMFUL);
     }
-
     @Override
     public Pair<Ingredient, Integer> getBaseIngredient() {
         return Pair.of(getMeleeWeaponIngredient(), 1);
     }
-
     private Ingredient getMeleeWeaponIngredient() {
         Collection<Item> items = com.google.common.collect.Lists.newArrayList(BuiltInRegistries.ITEM);
         Stream<ItemStack> meleeWeapons = items.stream().map(ItemStack::new).filter(EquipmentPredicate::isMeleeWeapon);
         return Ingredient.of(meleeWeapons.map(ItemStack::getItem));
     }
-
     @Override
     public Map<Ingredient, Integer> getAdditionalIngredients(ItemStack baseIngredient) {
         return Map.of(getPoisonIngredient(), 1);
     }
-
     private Ingredient getPoisonIngredient() {
         Item baseItem = Items.POTION;
         Collection<Potion> availablePotions = com.google.common.collect.Lists.newArrayList(BuiltInRegistries.POTION);
@@ -85,7 +70,6 @@ public class WorkbenchWeaponPoisoningRecipe extends AbstractWorkbenchRecipe {
         Stream<ItemStack> suitablePotionStacks = harmfulPotions.map(potion -> getPotionStack(baseItem, potion));
         return Ingredient.of(suitablePotionStacks.map(ItemStack::getItem));
     }
-
     private static boolean isHarmfulPotion(Potion potion) {
         List<MobEffectInstance> effects = potion.getEffects();
         for (MobEffectInstance mobEffectInstance : effects) {
@@ -95,18 +79,15 @@ public class WorkbenchWeaponPoisoningRecipe extends AbstractWorkbenchRecipe {
         }
         return false;
     }
-
     private static @NotNull ItemStack getPotionStack(Item baseItem, Potion potion) {
         ItemStack itemStack = new ItemStack(baseItem);
         itemStack.set(DataComponents.POTION_CONTENTS, new PotionContents(BuiltInRegistries.POTION.wrapAsHolder(potion)));
         return itemStack;
     }
-
     @Override
     public Component getShortDescription() {
         return Component.translatable(getDescriptionId());
     }
-
     @Override
     public @NotNull ItemStack getResult(WorkbenchContainer workbenchContainer) {
         ItemStack weaponStack = workbenchContainer.getBaseItem();
@@ -115,43 +96,26 @@ public class WorkbenchWeaponPoisoningRecipe extends AbstractWorkbenchRecipe {
         PoisonedWeaponEvents.setPoisonedWeaponEffects(resultItemStack, potionStack, maxUses);
         return resultItemStack;
     }
-
     @Override
     public int requiredBaseItemAmount() {
         return 1;
     }
-
     @Override
     public @NotNull RecipeSerializer<WorkbenchWeaponPoisoningRecipe> getSerializer() {
         return PSTRecipeSerializers.WORKBENCH_WEAPON_POISONING.get();
     }
-
     public static final class Serializer {
-        
-        
-        
-        
-        
-        
         private static final MapCodec<WorkbenchWeaponPoisoningRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Codec.BOOL.fieldOf("requires_passive_skill").forGetter(AbstractWorkbenchRecipe::hasPassiveSkillRequirement),
                 Codec.INT.fieldOf("max_uses").forGetter(recipe -> recipe.maxUses)
         ).apply(instance, (requiresPassiveSkill, maxUses) ->
-                
                 new WorkbenchWeaponPoisoningRecipe(UNKNOWN_ID, requiresPassiveSkill, maxUses)
         ));
-
-        
-        
-        
-        
         private static final StreamCodec<RegistryFriendlyByteBuf, WorkbenchWeaponPoisoningRecipe> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.BOOL, AbstractWorkbenchRecipe::hasPassiveSkillRequirement,
                 ByteBufCodecs.VAR_INT, recipe -> recipe.maxUses,
-                
                 (requiresPassiveSkill, maxUses) -> new WorkbenchWeaponPoisoningRecipe(UNKNOWN_ID, requiresPassiveSkill, maxUses)
         );
-
         public static final RecipeSerializer<WorkbenchWeaponPoisoningRecipe> INSTANCE = new RecipeSerializer<>(CODEC, STREAM_CODEC);
     }
 }

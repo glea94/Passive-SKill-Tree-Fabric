@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.item;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -17,27 +16,19 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
     private final ArrayList<ItemBonus<?>> innerBonuses;
-
     public GroupedItemBonus(ArrayList<ItemBonus<?>> innerBonuses) {
         this.innerBonuses = innerBonuses;
     }
-
     @Override
     public boolean canMerge(ItemBonus<?> other) {
         return other instanceof GroupedItemBonus;
     }
-
     @Override
     public GroupedItemBonus merge(ItemBonus<?> other) {
         if (!(other instanceof GroupedItemBonus otherBonus)) {
@@ -45,23 +36,19 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
         }
         return ItemBonusHandler.mergeGroupedItemBonuses(this, otherBonus);
     }
-
     @Override
     public GroupedItemBonus copy() {
         return new GroupedItemBonus(new ArrayList<>(innerBonuses.stream().map(ItemBonus::copy).toList()));
     }
-
     @Override
     public GroupedItemBonus multiply(double multiplier) {
         innerBonuses.forEach(bonus -> bonus.multiply(multiplier));
         return this;
     }
-
     @Override
     public ItemBonus.Serializer getSerializer() {
         return PSTItemBonuses.ITEM_BONUS_LIST.get();
     }
-
     @Override
     public List<MutableComponent> getFullTooltip() {
         List<MutableComponent> fullTooltip = new ArrayList<>();
@@ -70,12 +57,10 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
         }
         return fullTooltip;
     }
-
     @Override
     public boolean isPositive() {
         return innerBonuses.stream().anyMatch(ItemBonus::isPositive);
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -91,39 +76,24 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
     public int hashCode() {
         return Objects.hash(innerBonuses);
     }
-<<<<<<< Updated upstream
-
-
-
-
-
-
-
-=======
->>>>>>> Stashed changes
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<GroupedItemBonus> consumer) {
         GroupedItemBonusEditor.addEditorWidgets(this, editor, consumer);
     }
-
     public List<? extends ItemBonus<?>> getInnerBonuses() {
         return innerBonuses;
     }
-
     public void addInnerBonus(ItemBonus<?> bonus) {
         innerBonuses.add(bonus);
     }
-
     public void setInnerBonus(int index, ItemBonus<?> bonus) {
         innerBonuses.set(index, bonus);
     }
-
     public void removeInnerBonus(int index) {
         if (innerBonuses.size() > index) {
             innerBonuses.remove(index);
         }
     }
-
     @Override
     public String toString() {
         return "GroupedItemBonus[" + "innerBonuses=" + innerBonuses + ']';
@@ -144,7 +114,6 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             }
             return new GroupedItemBonus(innerBonuses);
         }
-
         @Override
         public void serialize(JsonObject json, ItemBonus<?> bonus) {
             if (!(bonus instanceof GroupedItemBonus aBonus)) {
@@ -163,7 +132,6 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             }
             json.add("inner_bonuses", innerBonusesJson);
         }
-
         @Override
         public ItemBonus<?> deserialize(CompoundTag tag) {
             ArrayList<ItemBonus<?>> innerBonuses = new ArrayList<>();
@@ -178,7 +146,6 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             }
             return new GroupedItemBonus(innerBonuses);
         }
-
         @Override
         public CompoundTag serialize(ItemBonus<?> bonus) {
             if (!(bonus instanceof GroupedItemBonus aBonus)) {
@@ -198,8 +165,6 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             tag.put("inner_bonuses", innerBonusesTag);
             return tag;
         }
-
-
         @Override
         public ItemBonus<?> deserialize(RegistryFriendlyByteBuf buf) {
             ArrayList<ItemBonus<?>> innerBonuses = new ArrayList<>();
@@ -209,8 +174,6 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
             }
             return new GroupedItemBonus(innerBonuses);
         }
-
-
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemBonus<?> bonus) {
             if (!(bonus instanceof GroupedItemBonus aBonus)) {
@@ -221,12 +184,9 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
                 NetworkHelper.writeItemBonus(buf, aBonus.innerBonuses.get(i));
             }
         }
-
         @Override
         public ItemBonus<?> createDefaultInstance() {
-
             AttributeModifier defaultModifier = new AttributeModifier(Identifier.parse("skilltree:default_modifier"), 1, AttributeModifier.Operation.ADD_VALUE);
-
             ItemBonus<?> bonus1 = new EquipmentBonus(new AttributeBonus(Attributes.ARMOR, defaultModifier));
             ItemBonus<?> bonus2 = new EquipmentBonus(new AttributeBonus(Attributes.ARMOR_TOUGHNESS, defaultModifier));
             ArrayList<ItemBonus<?>> bonuses = new ArrayList<>();

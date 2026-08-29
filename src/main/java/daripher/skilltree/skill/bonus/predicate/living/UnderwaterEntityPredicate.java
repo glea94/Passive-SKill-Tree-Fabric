@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.living;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTLivingEntityPredicates;
@@ -10,27 +9,22 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
-
 import java.util.Objects;
-
 public record UnderwaterEntityPredicate() implements LivingEntityPredicate {
     @Override
     public boolean test(LivingEntity living) {
         return living.isEyeInFluid(FluidTags.WATER);
     }
-
     @Override
     public MutableComponent getTooltip(MutableComponent bonusTooltip, SkillBonus.Target target) {
         String key = getDescriptionId();
         MutableComponent targetDescription = Component.translatable("%s.target.%s".formatted(key, target.getName()));
         return Component.translatable(key, bonusTooltip, targetDescription);
     }
-
     @Override
     public LivingEntityPredicate.Serializer getSerializer() {
         return PSTLivingEntityPredicates.UNDERWATER.get();
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -38,58 +32,41 @@ public record UnderwaterEntityPredicate() implements LivingEntityPredicate {
         }
         return o != null && getClass() == o.getClass();
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(getSerializer());
     }
-
     public static class Serializer implements LivingEntityPredicate.Serializer {
         @Override
         public LivingEntityPredicate deserialize(JsonObject json) throws JsonParseException {
             return new UnderwaterEntityPredicate();
         }
-
         @Override
         public void serialize(JsonObject json, LivingEntityPredicate predicate) {
             validatePredicate(predicate);
         }
-
         @Override
         public LivingEntityPredicate deserialize(CompoundTag tag) {
             return new UnderwaterEntityPredicate();
         }
-
         @Override
         public CompoundTag serialize(LivingEntityPredicate predicate) {
             validatePredicate(predicate);
             return new CompoundTag();
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new UnderwaterEntityPredicate();
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             validatePredicate(predicate);
         }
-
         private static void validatePredicate(LivingEntityPredicate predicate) {
             if (!(predicate instanceof UnderwaterEntityPredicate)) {
                 throw new IllegalArgumentException("Expected UnderwaterEntityPredicate, got: " + predicate);
             }
         }
-
         @Override
         public LivingEntityPredicate createDefaultInstance() {
             return new UnderwaterEntityPredicate();

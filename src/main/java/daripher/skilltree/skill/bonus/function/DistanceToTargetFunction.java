@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.function;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -15,9 +14,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-
 import java.util.function.Consumer;
-
 public class DistanceToTargetFunction implements FloatFunction<DistanceToTargetFunction> {
     @Override
     public float apply(LivingEntity entity) {
@@ -30,7 +27,6 @@ public class DistanceToTargetFunction implements FloatFunction<DistanceToTargetF
         }
         return target.distanceTo(entity);
     }
-
     @Override
     public MutableComponent getMultiplierTooltip(SkillBonus.Target target, float divisor, Component bonusTooltip) {
         String key = "%s.multiplier.%s".formatted(getDescriptionId(), target.getName());
@@ -41,7 +37,6 @@ public class DistanceToTargetFunction implements FloatFunction<DistanceToTargetF
             return Component.translatable(key, bonusTooltip);
         }
     }
-
     @Override
     public MutableComponent getPredicateTooltip(SkillBonus.Target target, FloatFunctionEntityPredicate.Logic logic, Component bonusTooltip, float requiredValue) {
         String key = "%s.condition.%s".formatted(getDescriptionId(), target.getName());
@@ -49,7 +44,6 @@ public class DistanceToTargetFunction implements FloatFunction<DistanceToTargetF
         Component logicDescription = logic.getTooltip("distance_to_target", valueDescription);
         return Component.translatable(key, bonusTooltip, logicDescription);
     }
-
     @Override
     public MutableComponent getRequirementTooltip(FloatFunctionEntityPredicate.Logic logic, float requiredValue) {
         return Component.literal("Unsupported").withStyle(ChatFormatting.RED);
@@ -58,33 +52,24 @@ public class DistanceToTargetFunction implements FloatFunction<DistanceToTargetF
     public FloatFunction.Serializer getSerializer() {
         return PSTFloatFunctions.DISTANCE_TO_TARGET.get();
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<FloatFunction<?>> consumer) {
-<<<<<<< Updated upstream
-        
-=======
->>>>>>> Stashed changes
     }
-
     public static class Serializer implements FloatFunction.Serializer {
         @Override
         public FloatFunction<?> deserialize(JsonObject json) throws JsonParseException {
             return new DistanceToTargetFunction();
         }
-
         @Override
         public void serialize(JsonObject json, FloatFunction<?> provider) {
             if (!(provider instanceof DistanceToTargetFunction)) {
                 throw new IllegalArgumentException();
             }
         }
-
         @Override
         public FloatFunction<?> deserialize(CompoundTag tag) {
             return new DistanceToTargetFunction();
         }
-
         @Override
         public CompoundTag serialize(FloatFunction<?> provider) {
             if (!(provider instanceof DistanceToTargetFunction)) {
@@ -92,27 +77,16 @@ public class DistanceToTargetFunction implements FloatFunction<DistanceToTargetF
             }
             return new CompoundTag();
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             return new DistanceToTargetFunction();
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof DistanceToTargetFunction)) {
                 throw new IllegalArgumentException();
             }
         }
-
         @Override
         public FloatFunction<?> createDefaultInstance() {
             return new DistanceToTargetFunction();

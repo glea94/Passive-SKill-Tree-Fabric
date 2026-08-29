@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget.editor;
-
 import daripher.skilltree.client.screen.ScreenHelper;
 import daripher.skilltree.client.widget.skill.SkillButton;
 import daripher.skilltree.client.widget.skill.SkillButtons;
@@ -12,12 +11,10 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
-
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 public class SkillSelector extends AbstractWidget {
     private static final int SELECTION_COLOR = 0xEE95EB34;
     private final Set<PassiveSkill> selectedSkills = new LinkedHashSet<>();
@@ -25,34 +22,19 @@ public class SkillSelector extends AbstractWidget {
     private final SkillTreeEditor editor;
     private int selectionStartX;
     private int selectionStartY;
-
     public SkillSelector(SkillTreeEditor editor, SkillButtons skillButtons) {
-<<<<<<< Updated upstream
-        
         super(0, 0, 0, 0, Component.empty());
         this.skillButtons = skillButtons;
         this.editor = editor;
-        
-=======
-        super(0, 0, 0, 0, Component.empty());
-        this.skillButtons = skillButtons;
-        this.editor = editor;
->>>>>>> Stashed changes
         this.active = false;
     }
-
     @Override
     protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-<<<<<<< Updated upstream
-        
-=======
->>>>>>> Stashed changes
         if (this.active) {
             renderSelectionArea(graphics, mouseX, mouseY);
         }
         renderSelectedSkillsHighlight(graphics);
     }
-
     private void renderSelectedSkillsHighlight(@NotNull GuiGraphicsExtractor graphics) {
         graphics.pose().pushMatrix();
         graphics.pose().translate(skillButtons.getScrollX(), skillButtons.getScrollY());
@@ -62,7 +44,6 @@ public class SkillSelector extends AbstractWidget {
         }
         graphics.pose().popMatrix();
     }
-
     private void renderSkillSelection(@NotNull GuiGraphicsExtractor graphics, SkillButton widget, float zoom) {
         graphics.pose().pushMatrix();
         float widgetCenterX = widget.getX() + widget.getWidth() / 2f;
@@ -77,11 +58,9 @@ public class SkillSelector extends AbstractWidget {
         ScreenHelper.drawRectangle(graphics, x, y, width, height, SELECTION_COLOR);
         graphics.pose().popMatrix();
     }
-
     private void renderSelectionArea(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         ScreenHelper.drawRectangle(graphics, selectionStartX, selectionStartY, mouseX - selectionStartX, mouseY - selectionStartY, SELECTION_COLOR);
     }
-
     @Override
     public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
         if (mouseButtonEvent.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) {
@@ -94,10 +73,6 @@ public class SkillSelector extends AbstractWidget {
             return false;
         }
         if (mouseButtonEvent.hasShiftDown()) {
-<<<<<<< Updated upstream
-            
-=======
->>>>>>> Stashed changes
             this.active = true;
             selectionStartX = (int) mouseButtonEvent.x();
             selectionStartY = (int) mouseButtonEvent.y();
@@ -120,13 +95,8 @@ public class SkillSelector extends AbstractWidget {
         }
         return true;
     }
-
     @Override
     public boolean mouseReleased(MouseButtonEvent mouseButtonEvent) {
-<<<<<<< Updated upstream
-        
-=======
->>>>>>> Stashed changes
         if (this.active) {
             addSelectedSkills(mouseButtonEvent.x(), mouseButtonEvent.y());
             this.active = false;
@@ -136,7 +106,6 @@ public class SkillSelector extends AbstractWidget {
         }
         return false;
     }
-
     private void addSelectedSkills(double mouseX, double mouseY) {
         Rectangle2D selectedArea = getSelectionArea(mouseX, mouseY);
         for (SkillButton skillButton : skillButtons.getWidgets()) {
@@ -148,7 +117,6 @@ public class SkillSelector extends AbstractWidget {
         editor.clearWidgets();
         editor.rebuildWidgets();
     }
-
     @NotNull
     private Rectangle2D getSelectionArea(double mouseX, double mouseY) {
         double x = Math.min(mouseX, selectionStartX) - skillButtons.getScrollX();
@@ -157,7 +125,6 @@ public class SkillSelector extends AbstractWidget {
         double height = Math.abs(mouseY - selectionStartY);
         return new Rectangle2D.Double(x, y, width, height);
     }
-
     @NotNull
     private Rectangle2D getSkillArea(SkillButton skill) {
         double skillSize = skill.skill.getSkillSize() * skillButtons.getZoom();
@@ -165,29 +132,24 @@ public class SkillSelector extends AbstractWidget {
         double skillY = skill.getY() + skill.getHeight() / 2d - skillSize / 2;
         return new Rectangle2D.Double(skillX, skillY, skillSize, skillSize);
     }
-
     public Set<PassiveSkill> getSelectedSkills() {
         return selectedSkills;
     }
-
     public void clearSelection() {
         selectedSkills.clear();
         editor.clearWidgets();
         editor.rebuildWidgets();
     }
-
     public @Nullable PassiveSkill getFirstSelectedSkill() {
         if (selectedSkills.isEmpty()) {
             return null;
         }
         return (PassiveSkill) selectedSkills.toArray()[0];
     }
-
     @NotNull
     private List<SkillButton> getSelectedButtons() {
         return selectedSkills.stream().map(PassiveSkill::getId).map(skillButtons::getWidgetById).toList();
     }
-
     @Override
     protected void updateWidgetNarration(@NotNull NarrationElementOutput output) {
     }

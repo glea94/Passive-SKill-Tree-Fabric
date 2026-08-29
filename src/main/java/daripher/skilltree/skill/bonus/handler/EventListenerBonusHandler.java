@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.event.CriticalHitPSTEvent;
 import daripher.skilltree.event.LivingEntityUseItemFinishPSTEvent;
 import daripher.skilltree.event.LivingHurtPSTEvent;
@@ -13,10 +12,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.Entity;
-
 import java.util.List;
 import java.util.function.BiConsumer;
-
 public class EventListenerBonusHandler {
     public static void register() {
         PSTEvents.LIVING_HURT.register(EventListenerBonusHandler::triggerHurtEvents);
@@ -27,7 +24,6 @@ public class EventListenerBonusHandler {
             return true;
         });
     }
-
     private static void triggerItemUsedEvents(LivingEntityUseItemFinishPSTEvent event) {
         if (!(event.getEntity() instanceof Player player)) {
             return;
@@ -36,7 +32,6 @@ public class EventListenerBonusHandler {
             eventListener.onEvent(player, event.getItem(), skillBonus);
         });
     }
-
     private static void triggerHurtEvents(LivingHurtPSTEvent event) {
         DamageSource damageSource = event.getSource();
         LivingEntity target = event.getEntity();
@@ -53,7 +48,6 @@ public class EventListenerBonusHandler {
             });
         }
     }
-
     private static void triggerCritEvents(CriticalHitPSTEvent event) {
         if (!event.isCrit()) {
             return;
@@ -66,7 +60,6 @@ public class EventListenerBonusHandler {
             eventListener.onEvent(player, target, skillBonus);
         });
     }
-
     private static void triggerKillEvents(LivingEntity killedEntity, DamageSource damageSource) {
         if (!(damageSource.getEntity() instanceof Player player)) {
             return;
@@ -75,11 +68,6 @@ public class EventListenerBonusHandler {
             eventListener.onEvent(player, killedEntity, damageSource, skillBonus);
         });
     }
-<<<<<<< Updated upstream
-
-    
-=======
->>>>>>> Stashed changes
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <T extends SkillEventListener> void triggerEvent(Player player, Class<T> listenerClass, BiConsumer<T, EventListenerBonus<?>> action) {
         List<EventListenerBonus> skillBonuses = SkillBonusProvider.getMergedSkillBonuses(player, EventListenerBonus.class);

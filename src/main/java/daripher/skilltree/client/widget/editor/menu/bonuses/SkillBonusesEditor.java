@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget.editor.menu.bonuses;
-
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.editor.menu.EditorMenu;
@@ -7,15 +6,12 @@ import daripher.skilltree.init.PSTSkillBonuses;
 import daripher.skilltree.skill.PassiveSkill;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import net.minecraft.network.chat.Component;
-
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
-
 public class SkillBonusesEditor extends EditorMenu {
     public SkillBonusesEditor(SkillTreeEditor editor, EditorMenu previousMenu) {
         super(editor, previousMenu);
     }
-
     @Override
     public void init() {
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
@@ -43,7 +39,6 @@ public class SkillBonusesEditor extends EditorMenu {
             editor.increaseHeight(19);
         }
     }
-
     private @Nullable SkillBonus<?> getSelectedSkillBonus(int selectedBonusIndex) {
         if (editor.selectedMismatchedBonuses()) {
             return null;
@@ -59,7 +54,6 @@ public class SkillBonusesEditor extends EditorMenu {
         }
         return selectedSkill.getBonuses().get(selectedBonusIndex);
     }
-
     private void skillBonusChanged(@Nullable SkillBonus<?> skillBonus, int selectedBonusIndex) {
         if (skillBonus == null) {
             deleteSelectedSkillBonuses(selectedBonusIndex);
@@ -67,12 +61,10 @@ public class SkillBonusesEditor extends EditorMenu {
             setSkillBonuses(skillBonus, selectedBonusIndex);
         }
     }
-
     private void setSkillBonuses(SkillBonus<?> bonus, int selectedBonusIndex) {
         editor.getSelectedSkills().forEach(s -> s.getBonuses().set(selectedBonusIndex, bonus.copy()));
         editor.saveSelectedSkills();
     }
-
     private void deleteSelectedSkillBonuses(int selectedBonusIndex) {
         editor.getSelectedSkills().forEach(skill -> {
             if (skill.getBonuses().size() > selectedBonusIndex) {
@@ -80,20 +72,11 @@ public class SkillBonusesEditor extends EditorMenu {
             }
         });
         editor.saveSelectedSkills();
-<<<<<<< Updated upstream
-        
-=======
->>>>>>> Stashed changes
         editor.selectMenu(previousMenu);
     }
-
     private void addSkillBonus(SkillTreeEditor editor, SkillBonus<?> skillBonus) {
         editor.getSelectedSkills().forEach(s -> s.getBonuses().add(skillBonus.copy()));
         editor.saveSelectedSkills();
-<<<<<<< Updated upstream
-        
-=======
->>>>>>> Stashed changes
         editor.selectMenu(previousMenu);
     }
 }

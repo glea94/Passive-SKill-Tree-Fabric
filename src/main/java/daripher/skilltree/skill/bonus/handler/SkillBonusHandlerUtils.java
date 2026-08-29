@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.entity.persistentdata.PersistentDataProvider;
 import daripher.skilltree.event.LivingHurtPSTEvent;
 import daripher.skilltree.event.PSTEvents;
@@ -16,18 +15,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.Optional;
 import java.util.UUID;
-
-
 public class SkillBonusHandlerUtils {
     public static final String LAST_ATTACK_TARGET_TAG_NAME = "LastAttackTarget";
-
     public static void register() {
         PSTEvents.LIVING_HURT.register(EventPriority.HIGH, SkillBonusHandlerUtils::setLastHurtEntity);
     }
-
     private static void setLastHurtEntity(LivingHurtPSTEvent event) {
         Player attacker = null;
         if (event.getSource().getEntity() instanceof Player player) {
@@ -40,12 +34,10 @@ public class SkillBonusHandlerUtils {
         }
         setLastPlayerAttackTarget(attacker, event.getEntity());
     }
-
     private static void setLastPlayerAttackTarget(Player player, LivingEntity target) {
         CompoundTag dataTag = PersistentDataProvider.get(player);
         dataTag.store(LAST_ATTACK_TARGET_TAG_NAME, UUIDUtil.CODEC, target.getUUID());
     }
-
     public static @Nullable Entity getLastPlayerAttackTarget(Player player) {
         CompoundTag playerPersistentData = PersistentDataProvider.get(player);
         Optional<UUID> lastTargetUUIDOpt = playerPersistentData.read(LAST_ATTACK_TARGET_TAG_NAME, UUIDUtil.CODEC);
@@ -64,7 +56,6 @@ public class SkillBonusHandlerUtils {
         }
         return serverLevel.getEntity(lastTargetUUID);
     }
-
     public static void hurtIgnoringInvulnerabilityTime(LivingEntity livingEntity, DamageSource damageSource, float amount) {
         MinecraftServer minecraftServer = livingEntity.level().getServer();
         if (minecraftServer == null) {

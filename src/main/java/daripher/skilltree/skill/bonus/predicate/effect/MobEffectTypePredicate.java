@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.effect;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -11,17 +10,13 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
-
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class MobEffectTypePredicate implements MobEffectPredicate {
     private MobEffectType effectType;
-
     public MobEffectTypePredicate(MobEffectType effectType) {
         this.effectType = effectType;
     }
-
     @Override
     public boolean test(MobEffect mobEffect) {
         return switch (effectType) {
@@ -31,22 +26,18 @@ public final class MobEffectTypePredicate implements MobEffectPredicate {
             case NEUTRAL -> mobEffect.getCategory() == MobEffectCategory.NEUTRAL;
         };
     }
-
     @Override
     public boolean testsForHarmfulEffects() {
         return effectType == MobEffectType.HARMFUL;
     }
-
     @Override
     public Component getTooltip() {
         return Component.translatable(effectType.getDescriptionId());
     }
-
     @Override
     public Component getTooltip(String type) {
         return Component.translatable("%s.%s".formatted(effectType.getDescriptionId(), type));
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -58,17 +49,14 @@ public final class MobEffectTypePredicate implements MobEffectPredicate {
         MobEffectTypePredicate that = (MobEffectTypePredicate) o;
         return effectType == that.effectType;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(effectType);
     }
-
     @Override
     public MobEffectPredicate.Serializer getSerializer() {
         return PSTMobEffectPredicates.EFFECT_CATEGORY.get();
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<MobEffectPredicate> consumer) {
         editor.addLabel(0, 0, "Effect Category", ChatFormatting.GREEN);
@@ -77,39 +65,29 @@ public final class MobEffectTypePredicate implements MobEffectPredicate {
                 .setResponder(condition -> selectEffectType(consumer, condition));
         editor.increaseHeight(selectionList.getHeight() + 10);
     }
-
     private void selectEffectType(Consumer<MobEffectPredicate> consumer, MobEffectType effectType) {
         setEffectType(effectType);
         consumer.accept(this);
     }
-
     public void setEffectType(MobEffectType effectType) {
         this.effectType = effectType;
     }
-
     public static class Serializer implements MobEffectPredicate.Serializer {
         @Override
         public MobEffectTypePredicate deserialize(JsonObject json) throws JsonParseException {
             MobEffectType effectType = MobEffectType.fromName(json.get("effect_type").getAsString());
             return new MobEffectTypePredicate(effectType);
         }
-
         @Override
         public void serialize(JsonObject json, MobEffectPredicate predicate) {
             MobEffectTypePredicate validPredicate = validatePredicate(predicate);
             json.addProperty("effect_type", validPredicate.effectType.getName());
         }
-
         @Override
         public MobEffectTypePredicate deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-            
-=======
->>>>>>> Stashed changes
             MobEffectType effectType = MobEffectType.fromName(tag.getString("effect_type").orElse(""));
             return new MobEffectTypePredicate(effectType);
         }
-
         @Override
         public CompoundTag serialize(MobEffectPredicate predicate) {
             MobEffectTypePredicate validPredicate = validatePredicate(predicate);
@@ -117,34 +95,22 @@ public final class MobEffectTypePredicate implements MobEffectPredicate {
             tag.putString("effect_type", validPredicate.effectType.getName());
             return tag;
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public MobEffectTypePredicate deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectType effectType = MobEffectType.values()[buf.readInt()];
             return new MobEffectTypePredicate(effectType);
         }
-<<<<<<< Updated upstream
-
-        
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, MobEffectPredicate predicate) {
             MobEffectTypePredicate validPredicate = validatePredicate(predicate);
             buf.writeInt(validPredicate.effectType.ordinal());
         }
-
         private MobEffectTypePredicate validatePredicate(MobEffectPredicate predicate) {
             if (!(predicate instanceof MobEffectTypePredicate validPredicate)) {
                 throw new IllegalArgumentException();
             }
             return validPredicate;
         }
-
         @Override
         public MobEffectPredicate createDefaultInstance() {
             return new MobEffectTypePredicate(MobEffectType.BENEFICIAL);

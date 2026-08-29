@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.event.LivingAttackPSTEvent;
 import daripher.skilltree.event.PSTEvents;
 import daripher.skilltree.skill.SkillBonusProvider;
@@ -12,15 +11,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
-
-
 public class DamageAvoidanceBonusHandler {
     public static void register() {
         PSTEvents.LIVING_ATTACK.register(EventPriority.LOWEST, DamageAvoidanceBonusHandler::applyDamageAvoidanceBonuses);
     }
-
     private static void applyDamageAvoidanceBonuses(LivingAttackPSTEvent event) {
         if (!(event.getEntity() instanceof Player player)) {
             return;
@@ -36,17 +31,12 @@ public class DamageAvoidanceBonusHandler {
             avoidanceChance += skillBonus.getChance(damageSource, player, attacker);
         }
         if (player.getRandom().nextFloat() < avoidanceChance) {
-<<<<<<< Updated upstream
-            
-=======
->>>>>>> Stashed changes
             event.setCanceled(true);
             EventListenerBonusHandler.triggerEvent(player, EvasionEventListener.class, (eventListener, skillBonus) -> {
                 eventListener.onEvent(player, attacker, skillBonus);
             });
         }
     }
-
     private static @Nullable LivingEntity getAttacker(DamageSource damageSource) {
         Entity sourceEntity = damageSource.getEntity();
         if (sourceEntity instanceof LivingEntity attacker) {

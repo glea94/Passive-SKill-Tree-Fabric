@@ -1,12 +1,10 @@
 package daripher.skilltree.config;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.skill.PassiveSkill;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.Identifier;
-
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -17,25 +15,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-
 public class ClientConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve(SkillTreeMod.MOD_ID + "-client.json");
-
     public static Set<Identifier> favorite_skills;
     public static int favorite_color;
     public static boolean favorite_color_is_rainbow;
     public static boolean skill_tree_background_parallax;
     public static boolean show_hud_progress_bar;
-
     private static class Data {
         List<String> favorite_skills = new ArrayList<>();
         String favorite_color_hex = "#42B0FF";
         boolean skill_tree_background_parallax = true;
         boolean show_hud_progress_bar = true;
     }
-
     public static void load() {
         Data data;
         if (Files.exists(CONFIG_PATH)) {
@@ -54,17 +47,13 @@ public class ClientConfig {
         applyData(data);
         save(data);
     }
-
     private static void applyData(Data data) {
-        
         favorite_skills = data.favorite_skills.stream()
                 .map(Identifier::parse)
                 .collect(Collectors.toCollection(HashSet::new));
-
         favorite_color_is_rainbow = "rainbow".equalsIgnoreCase(data.favorite_color_hex);
         skill_tree_background_parallax = data.skill_tree_background_parallax;
         show_hud_progress_bar = data.show_hud_progress_bar;
-
         if (!favorite_color_is_rainbow) {
             try {
                 favorite_color = Integer.decode(data.favorite_color_hex);
@@ -74,7 +63,6 @@ public class ClientConfig {
             }
         }
     }
-
     private static void save(Data data) {
         try {
             Files.createDirectories(CONFIG_PATH.getParent());
@@ -85,7 +73,6 @@ public class ClientConfig {
             SkillTreeMod.LOGGER.error("Couldn't write client config", exception);
         }
     }
-
     public static void toggleFavoriteSkill(PassiveSkill skill) {
         if (favorite_skills.contains(skill.getId())) {
             favorite_skills.remove(skill.getId());

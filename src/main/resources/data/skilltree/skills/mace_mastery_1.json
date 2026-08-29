@@ -1,0 +1,37 @@
+{
+  "id": "skilltree:mace_mastery_1",
+  "bonuses": [
+    {
+      "type": "skilltree:recipe_unlock",
+      "recipe_id": "skilltree:mace_mastery_mace"
+    }
+  ],
+  "requirements": [
+    {
+      "type": "skilltree:learned_skill",
+      "skill_id": "skilltree:blacksmith_56"
+    },
+    {
+      "type": "skilltree:learned_skill",
+      "skill_id": "skilltree:blacksmith_57"
+    },
+    {
+      "type": "skilltree:learned_skill",
+      "skill_id": "skilltree:blacksmith_58"
+    }
+  ],
+  "directConnections": [],
+  "longConnections": [],
+  "oneWayConnections": [],
+  "tags": [],
+  "backgroundTexture": "skilltree:textures/icons/background/class.png",
+  "iconTexture": "skilltree:textures/icons/mace_mastery.png",
+  "borderTexture": "skilltree:textures/tooltip/keystone.png",
+  "titleColor": "",
+  "positionX": -220.0,
+  "positionY": 220.0,
+  "buttonSize": 24,
+  "isStartingPoint": true,
+  "isAlwaysStartingPoint": false,
+  "cost": 0
+}
