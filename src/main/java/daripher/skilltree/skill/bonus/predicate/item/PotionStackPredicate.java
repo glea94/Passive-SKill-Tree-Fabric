@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.item;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -16,18 +15,14 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.PotionContents;
-
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class PotionStackPredicate implements ItemStackPredicate {
     private Type type;
-
     public PotionStackPredicate(Type type) {
         this.type = type;
     }
-
     @Override
     public boolean test(ItemStack stack) {
         if (!(stack.getItem() instanceof PotionItem)) {
@@ -40,7 +35,6 @@ public final class PotionStackPredicate implements ItemStackPredicate {
             case BENEFICIAL -> hasEffects(stack, MobEffectCategory.BENEFICIAL);
         };
     }
-
     public static boolean hasEffects(ItemStack stack, MobEffectCategory category) {
         PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
         if (contents == null) {
@@ -53,12 +47,10 @@ public final class PotionStackPredicate implements ItemStackPredicate {
         }
         return false;
     }
-
     @Override
     public String getDescriptionId() {
         return "%s.%s".formatted(ItemStackPredicate.super.getDescriptionId(), type.getName());
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -70,25 +62,19 @@ public final class PotionStackPredicate implements ItemStackPredicate {
         PotionStackPredicate that = (PotionStackPredicate) o;
         return type == that.type;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(type);
     }
-
     public enum Type {
         HARMFUL("harmful"), NEUTRAL("neutral"), BENEFICIAL("beneficial"), ANY("any");
-
         final String name;
-
         Type(String name) {
             this.name = name;
         }
-
         public String getName() {
             return name;
         }
-
         public Component getFormattedName() {
             return Component.literal(getName().substring(0, 1).toUpperCase(Locale.ROOT) + getName().substring(1));
         }
@@ -101,12 +87,10 @@ public final class PotionStackPredicate implements ItemStackPredicate {
             return ANY;
         }
     }
-
     @Override
     public ItemStackPredicate.Serializer getSerializer() {
         return PSTItemPredicates.POTIONS.get();
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<ItemStackPredicate> consumer) {
         editor.addLabel(0, 0, "Type", ChatFormatting.GREEN);
@@ -115,22 +99,18 @@ public final class PotionStackPredicate implements ItemStackPredicate {
                 .setResponder(potionType -> selectPotionType(consumer, potionType));
         editor.increaseHeight(29);
     }
-
     private void selectPotionType(Consumer<ItemStackPredicate> consumer, Type type) {
         setType(type);
         consumer.accept(this);
     }
-
     public void setType(Type type) {
         this.type = type;
     }
-
     public static class Serializer implements ItemStackPredicate.Serializer {
         @Override
         public ItemStackPredicate deserialize(JsonObject json) throws JsonParseException {
             return new PotionStackPredicate(SerializationHelper.deserializePotionType(json));
         }
-
         @Override
         public void serialize(JsonObject json, ItemStackPredicate condition) {
             if (!(condition instanceof PotionStackPredicate aCondition)) {
@@ -138,12 +118,10 @@ public final class PotionStackPredicate implements ItemStackPredicate {
             }
             SerializationHelper.serializePotionType(json, aCondition.type);
         }
-
         @Override
         public ItemStackPredicate deserialize(CompoundTag tag) {
             return new PotionStackPredicate(SerializationHelper.deserializePotionType(tag));
         }
-
         @Override
         public CompoundTag serialize(ItemStackPredicate condition) {
             if (!(condition instanceof PotionStackPredicate aCondition)) {
@@ -153,14 +131,20 @@ public final class PotionStackPredicate implements ItemStackPredicate {
             SerializationHelper.serializePotionType(tag, aCondition.type);
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new PotionStackPredicate(NetworkHelper.readEnum(buf, Type.class));
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof PotionStackPredicate aCondition)) {
@@ -168,7 +152,6 @@ public final class PotionStackPredicate implements ItemStackPredicate {
             }
             NetworkHelper.writeEnum(buf, aCondition.type);
         }
-
         @Override
         public ItemStackPredicate createDefaultInstance() {
             return new PotionStackPredicate(Type.ANY);

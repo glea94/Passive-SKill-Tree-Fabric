@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.damage;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTDamagePredicates;
@@ -11,18 +10,15 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.player.Player;
-
 public record PoisonDamageCondition() implements DamageCondition {
     @Override
     public boolean met(DamageSource source) {
         return source.is(PSTDamageTypes.POISON);
     }
-
     @Override
     public DamageCondition.Serializer getSerializer() {
         return PSTDamagePredicates.POISON.get();
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -30,41 +26,34 @@ public record PoisonDamageCondition() implements DamageCondition {
         }
         return o != null && getClass() == o.getClass();
     }
-
     @Override
     public DamageSource createDamageSource(Player player) {
         Holder<DamageType> damageType = player.level().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(PSTDamageTypes.POISON);
         return new DamageSource(damageType, null, player);
     }
-
     @Override
     public boolean canCreateDamageSource() {
         return true;
     }
-
     @Override
     public int hashCode() {
         return getSerializer().hashCode();
     }
-
     public static class Serializer implements DamageCondition.Serializer {
         @Override
         public DamageCondition deserialize(JsonObject json) throws JsonParseException {
             return new PoisonDamageCondition();
         }
-
         @Override
         public void serialize(JsonObject json, DamageCondition condition) {
             if (!(condition instanceof PoisonDamageCondition)) {
                 throw new IllegalArgumentException();
             }
         }
-
         @Override
         public DamageCondition deserialize(CompoundTag tag) {
             return new PoisonDamageCondition();
         }
-
         @Override
         public CompoundTag serialize(DamageCondition condition) {
             if (!(condition instanceof PoisonDamageCondition)) {
@@ -72,19 +61,16 @@ public record PoisonDamageCondition() implements DamageCondition {
             }
             return new CompoundTag();
         }
-
         @Override
         public DamageCondition deserialize(RegistryFriendlyByteBuf buf) {
             return new PoisonDamageCondition();
         }
-
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, DamageCondition condition) {
             if (!(condition instanceof PoisonDamageCondition)) {
                 throw new IllegalArgumentException();
             }
         }
-
         @Override
         public DamageCondition createDefaultInstance() {
             return new PoisonDamageCondition();

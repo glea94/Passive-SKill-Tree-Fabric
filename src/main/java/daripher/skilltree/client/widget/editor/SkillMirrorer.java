@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget.editor;
-
 import daripher.skilltree.client.screen.ScreenHelper;
 import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.ChatFormatting;
@@ -10,22 +9,24 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 public class SkillMirrorer extends AbstractWidget {
     private final SkillTreeEditor editor;
     private float mirrorCenterX;
     private float mirrorCenterY;
     private float mirrorAngle;
     private int mirrorSides = 2;
-
     public SkillMirrorer(SkillTreeEditor editor) {
+<<<<<<< Updated upstream
 
         super(0, 0, 0, 0, Component.empty());
         this.editor = editor;
 
+=======
+        super(0, 0, 0, 0, Component.empty());
+        this.editor = editor;
+>>>>>>> Stashed changes
         this.active = false;
     }
-
     public void init() {
         editor.addLabel(19, 0, "Mirror", ChatFormatting.GOLD);
         editor.addCheckBox(0, 0, this.active).setResponder(v -> updateMirrorActive(editor, v));
@@ -49,7 +50,6 @@ public class SkillMirrorer extends AbstractWidget {
         editor.addButton(70, 0, 40, 14, "Set").setPressFunc(b -> setMirrorCenter(editor));
         editor.increaseHeight(19);
     }
-
     @Override
     protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (!this.active) {
@@ -69,14 +69,16 @@ public class SkillMirrorer extends AbstractWidget {
         ScreenHelper.drawRectangle(graphics, -4, -4, 8, 8, 0x55CFCFCF);
         graphics.pose().popMatrix();
     }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
     private void updateMirrorActive(SkillTreeEditor editor, boolean active) {
         this.active = active;
         editor.clearWidgets();
         editor.rebuildWidgets();
     }
-
     private void setMirrorCenter(SkillTreeEditor editor) {
         PassiveSkill selectedSkill = editor.getFirstSelectedSkill();
         if (selectedSkill == null) {
@@ -87,7 +89,6 @@ public class SkillMirrorer extends AbstractWidget {
         editor.clearWidgets();
         editor.rebuildWidgets();
     }
-
     public @Nullable PassiveSkill getMirroredSkill(PassiveSkill skill, int sector) {
         float skillX = skill.getPositionX();
         float skillY = skill.getPositionY();
@@ -102,7 +103,6 @@ public class SkillMirrorer extends AbstractWidget {
         float mirroredSkillY = mirrorCenterY + Mth.cos((float) (angle + Math.PI)) * distance;
         return getSkillAtPosition(mirroredSkillX, mirroredSkillY);
     }
-
     public void createSkills(float angle, float distance, SkillFactory skillFactory) {
         if (!this.active) {
             return;
@@ -115,7 +115,6 @@ public class SkillMirrorer extends AbstractWidget {
             editor.getSelectedSkills().forEach(skill -> createSkill(distance, finalAngle, sector, skill, skillFactory));
         }
     }
-
     private void createSkill(float distance, float angle, int sector, PassiveSkill skill, SkillFactory skillFactory) {
         skill = getMirroredSkill(skill, sector);
         if (skill == null) {
@@ -126,7 +125,6 @@ public class SkillMirrorer extends AbstractWidget {
         float skillY = skill.getPositionY() + Mth.cos(angle) * (distance + skillSize);
         skillFactory.accept(skillX, skillY, skill);
     }
-
     @Nullable
     private PassiveSkill getSkillAtPosition(float x, float y) {
         for (PassiveSkill skill : editor.getSkills()) {
@@ -137,11 +135,9 @@ public class SkillMirrorer extends AbstractWidget {
         }
         return null;
     }
-
     @Override
     protected void updateWidgetNarration(@NotNull NarrationElementOutput output) {
     }
-
     @FunctionalInterface
     public interface SkillFactory {
         void accept(float x, float y, PassiveSkill skill);

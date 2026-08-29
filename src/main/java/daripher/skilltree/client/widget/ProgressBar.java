@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget;
-
 import net.minecraft.client.renderer.RenderPipelines;
 import daripher.skilltree.capability.skill.IPlayerSkills;
 import daripher.skilltree.capability.skill.PlayerSkillsProvider;
@@ -13,16 +12,12 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
-
 public class ProgressBar extends Button {
     public boolean showProgressInNumbers;
-
     public ProgressBar(int x, int y, OnPress pressFunc) {
         super(x, y, 235, 19, Component.empty(), pressFunc, DEFAULT_NARRATION);
     }
-
     private static int getCurrentLevel() {
         LocalPlayer player = Minecraft.getInstance().player;
         Objects.requireNonNull(player);
@@ -31,11 +26,9 @@ public class ProgressBar extends Button {
         int points = capability.getSkillPoints();
         return skills + points;
     }
-
     private static boolean isMaxLevel(int currentLevel) {
         return currentLevel >= ServerConfig.max_skill_points;
     }
-
     @Override
     protected void extractContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics);
@@ -43,7 +36,6 @@ public class ProgressBar extends Button {
         renderNextLevel(graphics);
         renderProgress(graphics);
     }
-
     protected void renderBackground(GuiGraphicsExtractor graphics) {
         float experienceProgress = getExperienceProgress();
         int filledBarWidth = (int) (experienceProgress * 183);
@@ -54,7 +46,6 @@ public class ProgressBar extends Button {
         }
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX() + 26, getY() + 7, 0F, 5F, filledBarWidth, 5, 256, 256);
     }
-
     protected void renderProgress(GuiGraphicsExtractor graphics) {
         if (showProgressInNumbers) {
             int cost = ServerConfig.getSkillPointCost(getCurrentLevel());
@@ -62,26 +53,33 @@ public class ProgressBar extends Button {
             Objects.requireNonNull(player);
             long exp = ExpHelper.getPlayerExp(player);
             String text = exp + "/" + cost;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             ScreenHelper.drawCenteredOutlinedText(graphics, text, getX() + this.getWidth() / 2, getTextY(), 0xFCE266);
         } else {
             float experienceProgress = getExperienceProgress();
             String text = (int) (experienceProgress * 100) + "%";
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             ScreenHelper.drawCenteredOutlinedText(graphics, text, getX() + this.getWidth() / 2, getTextY(), 0xFCE266);
         }
     }
-
     protected void renderNextLevel(GuiGraphicsExtractor graphics) {
         int currentLevel = getCurrentLevel();
         if (isMaxLevel(currentLevel)) {
             currentLevel--;
         }
         int nextLevel = currentLevel + 1;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         ScreenHelper.drawCenteredOutlinedText(graphics, "" + nextLevel, getX() + this.getWidth() - 17, getTextY(), 0xFCE266);
     }
-
     protected void renderCurrentLevel(GuiGraphicsExtractor graphics) {
         int currentLevel = getCurrentLevel();
         if (isMaxLevel(currentLevel)) {
@@ -89,11 +87,9 @@ public class ProgressBar extends Button {
         }
         ScreenHelper.drawCenteredOutlinedText(graphics, "" + currentLevel, getX() + 17, getTextY(), 0xFCE266);
     }
-
     protected int getTextY() {
         return getY() + 5;
     }
-
     private float getExperienceProgress() {
         int level = getCurrentLevel();
         float progress = 1F;

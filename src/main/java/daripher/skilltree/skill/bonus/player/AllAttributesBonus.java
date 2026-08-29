@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.attribute.AttributesHelper;
@@ -24,37 +23,38 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Consumer;
-
 public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>, TickingSkillBonus {
     private AttributeModifier modifier;
     private @NotNull LivingMultiplier playerMultiplier = NoneLivingMultiplier.INSTANCE;
     private @NotNull LivingEntityPredicate playerCondition = NoneLivingEntityPredicate.INSTANCE;
-
     public AllAttributesBonus(AttributeModifier modifier) {
         this.modifier = modifier;
     }
-
     @Override
     public void onSkillLearned(ServerPlayer player, boolean firstTime) {
         if (playerCondition != NoneLivingEntityPredicate.INSTANCE || playerMultiplier != NoneLivingMultiplier.INSTANCE) {
             return;
         }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         AttributesHelper.playerAttributesList().stream()
                 .map(attr -> player.getAttribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attr)))
                 .filter(Objects::nonNull)
                 .filter(a -> !a.hasModifier(modifier.id()))
                 .forEach(a -> applyAttributeModifier(a, modifier, player));
     }
-
     @Override
     public void onSkillRemoved(ServerPlayer player) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         AttributesHelper.playerAttributesList().stream()
                 .map(attr -> player.getAttribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attr)))
                 .filter(Objects::nonNull)
@@ -64,7 +64,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
                     }
                 });
     }
-
     @Override
     public void tick(ServerPlayer player) {
         if (playerCondition == NoneLivingEntityPredicate.INSTANCE && playerMultiplier == NoneLivingMultiplier.INSTANCE) {
@@ -82,7 +81,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
         }
         applyDynamicAttributeBonus(player);
     }
-
     private void applyDynamicAttributeBonus(ServerPlayer player) {
         AttributesHelper.playerAttributesList().stream()
                 .map(attr -> player.getAttribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attr)))
@@ -111,15 +109,16 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
             player.setHealth(player.getMaxHealth() * healthPercentage);
         }
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.ALL_ATTRIBUTES.get();
     }
-
     @Override
     public AllAttributesBonus copy() {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         AttributeModifier modifier = new AttributeModifier(
                 Identifier.fromNamespaceAndPath("skilltree", "modifier_" + UUID.randomUUID()),
                 this.modifier.amount(),
@@ -130,13 +129,11 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
         bonus.playerCondition = this.playerCondition;
         return bonus;
     }
-
     @Override
     public AllAttributesBonus multiply(double multiplier) {
         modifier = new AttributeModifier(modifier.id(), modifier.amount() * multiplier, modifier.operation());
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof AllAttributesBonus otherBonus)) {
@@ -150,7 +147,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
         }
         return otherBonus.modifier.operation() == this.modifier.operation();
     }
-
     @Override
     public SkillBonus<AllAttributesBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof AllAttributesBonus otherBonus)) {
@@ -162,7 +158,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
         mergedBonus.playerCondition = this.playerCondition;
         return mergedBonus;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), modifier.amount(), modifier.operation());
@@ -174,7 +169,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
     public boolean isPositive() {
         return modifier.amount() > 0;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<AllAttributesBonus> consumer) {
         editor.addLabel(110, 0, "Amount", ChatFormatting.GOLD);
@@ -195,51 +189,42 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
                 .setMenuInitFunc(() -> addPlayerMultiplierWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<AllAttributesBonus> consumer, LivingMultiplier multiplier) {
         setMultiplier(multiplier);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<AllAttributesBonus> consumer, LivingEntityPredicate condition) {
         setCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectOperation(Consumer<AllAttributesBonus> consumer, AttributeModifier.Operation operation) {
         setOperation(operation);
         consumer.accept(this.copy());
     }
-
     private void selectAmount(Consumer<AllAttributesBonus> consumer, Double value) {
         setAmount(value);
         consumer.accept(this.copy());
     }
-
     private void addPlayerMultiplierWidgets(SkillTreeEditor editor, Consumer<AllAttributesBonus> consumer) {
         playerMultiplier.addEditorWidgets(editor, multiplier -> {
             setMultiplier(multiplier);
             consumer.accept(this.copy());
         });
     }
-
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<AllAttributesBonus> consumer) {
         playerCondition.addEditorWidgets(editor, condition -> {
             setCondition(condition);
             consumer.accept(this.copy());
         });
     }
-
     public void setAmount(double amount) {
         this.modifier = new AttributeModifier(modifier.id(), amount, modifier.operation());
     }
-
     public void setOperation(AttributeModifier.Operation operation) {
         this.modifier = new AttributeModifier(modifier.id(), modifier.amount(), operation);
     }
-
     public SkillBonus<?> setCondition(LivingEntityPredicate condition) {
         this.playerCondition = condition;
         return this;
@@ -248,7 +233,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
         this.playerMultiplier = multiplier;
         return this;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public AllAttributesBonus deserialize(JsonObject json) throws JsonParseException {
@@ -258,7 +242,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(json, "player_condition");
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof AllAttributesBonus aBonus)) {
@@ -268,7 +251,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
             SerializationHelper.serializeLivingMultiplier(json, aBonus.playerMultiplier, "player_multiplier");
             SerializationHelper.serializeLivingCondition(json, aBonus.playerCondition, "player_condition");
         }
-
         @Override
         public AllAttributesBonus deserialize(CompoundTag tag) {
             AttributeModifier modifier = SerializationHelper.deserializeAttributeModifier(tag);
@@ -277,7 +259,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof AllAttributesBonus aBonus)) {
@@ -289,8 +270,11 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
             SerializationHelper.serializeLivingCondition(tag, aBonus.playerCondition, "player_condition");
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public AllAttributesBonus deserialize(RegistryFriendlyByteBuf buf) {
             AttributeModifier modifier = NetworkHelper.readAttributeModifier(buf);
@@ -299,8 +283,11 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
             bonus.playerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof AllAttributesBonus aBonus)) {
@@ -310,7 +297,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
             NetworkHelper.writeLivingMultiplier(buf, aBonus.playerMultiplier);
             NetworkHelper.writeLivingCondition(buf, aBonus.playerCondition);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new AllAttributesBonus(new AttributeModifier(

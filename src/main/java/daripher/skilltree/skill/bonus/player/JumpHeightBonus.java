@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -16,47 +15,38 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class JumpHeightBonus implements SkillBonus<JumpHeightBonus> {
     private @NotNull LivingEntityPredicate playerCondition;
     private float multiplier;
-
     public JumpHeightBonus(@NotNull LivingEntityPredicate playerCondition, float multiplier) {
         this.playerCondition = playerCondition;
         this.multiplier = multiplier;
     }
-
     public JumpHeightBonus(float multiplier) {
         this(NoneLivingEntityPredicate.INSTANCE, multiplier);
     }
-
     public float getJumpHeightMultiplier(Player player) {
         if (!playerCondition.test(player)) {
             return 0f;
         }
         return multiplier;
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.JUMP_HEIGHT.get();
     }
-
     @Override
     public JumpHeightBonus copy() {
         return new JumpHeightBonus(playerCondition, multiplier);
     }
-
     @Override
     public JumpHeightBonus multiply(double multiplier) {
         this.multiplier = (float) (this.multiplier * multiplier);
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof JumpHeightBonus otherBonus)) {
@@ -64,7 +54,6 @@ public final class JumpHeightBonus implements SkillBonus<JumpHeightBonus> {
         }
         return Objects.equals(otherBonus.playerCondition, this.playerCondition);
     }
-
     @Override
     public SkillBonus<JumpHeightBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof JumpHeightBonus otherBonus)) {
@@ -72,19 +61,16 @@ public final class JumpHeightBonus implements SkillBonus<JumpHeightBonus> {
         }
         return new JumpHeightBonus(playerCondition, otherBonus.multiplier + this.multiplier);
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), multiplier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
         tooltip = playerCondition.getTooltip(tooltip, Target.PLAYER);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return multiplier > 0;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<JumpHeightBonus> consumer) {
         editor.addLabel(0, 0, "Multiplier", ChatFormatting.GOLD);
@@ -97,37 +83,30 @@ public final class JumpHeightBonus implements SkillBonus<JumpHeightBonus> {
                 .setMenuInitFunc(() -> addPlayerConditionWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<JumpHeightBonus> consumer) {
         playerCondition.addEditorWidgets(editor, condition -> {
             setPlayerCondition(condition);
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<JumpHeightBonus> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectMultiplier(Consumer<JumpHeightBonus> consumer, Double value) {
         setMultiplier(value.floatValue());
         consumer.accept(this.copy());
     }
-
     public void setPlayerCondition(@NotNull LivingEntityPredicate playerCondition) {
         this.playerCondition = playerCondition;
     }
-
     public void setMultiplier(float multiplier) {
         this.multiplier = multiplier;
     }
-
     public float getMultiplier() {
         return multiplier;
     }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -142,12 +121,10 @@ public final class JumpHeightBonus implements SkillBonus<JumpHeightBonus> {
         }
         return this.multiplier == that.multiplier;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(playerCondition, multiplier);
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public JumpHeightBonus deserialize(JsonObject json) throws JsonParseException {
@@ -155,7 +132,6 @@ public final class JumpHeightBonus implements SkillBonus<JumpHeightBonus> {
             float multiplier = SerializationHelper.getElement(json, "multiplier").getAsFloat();
             return new JumpHeightBonus(condition, multiplier);
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof JumpHeightBonus aBonus)) {
@@ -164,14 +140,12 @@ public final class JumpHeightBonus implements SkillBonus<JumpHeightBonus> {
             SerializationHelper.serializeLivingCondition(json, aBonus.playerCondition, "player_condition");
             json.addProperty("multiplier", aBonus.multiplier);
         }
-
         @Override
         public JumpHeightBonus deserialize(CompoundTag tag) {
             LivingEntityPredicate condition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
             float multiplier = tag.getFloatOr("multiplier", 0f);
             return new JumpHeightBonus(condition, multiplier);
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof JumpHeightBonus aBonus)) {
@@ -182,14 +156,20 @@ public final class JumpHeightBonus implements SkillBonus<JumpHeightBonus> {
             tag.putFloat("multiplier", aBonus.multiplier);
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public JumpHeightBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new JumpHeightBonus(NetworkHelper.readLivingCondition(buf), buf.readFloat());
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof JumpHeightBonus aBonus)) {
@@ -198,7 +178,6 @@ public final class JumpHeightBonus implements SkillBonus<JumpHeightBonus> {
             NetworkHelper.writeLivingCondition(buf, aBonus.playerCondition);
             buf.writeFloat(aBonus.multiplier);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new JumpHeightBonus(0.1f);

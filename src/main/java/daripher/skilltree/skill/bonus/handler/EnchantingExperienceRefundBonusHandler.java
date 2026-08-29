@@ -1,13 +1,10 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.EnchantingExperienceRefundBonus;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
-
 public class EnchantingExperienceRefundBonusHandler {
     public static boolean shouldRefundEnchantingExperience(@NotNull Player player, ItemStack itemStack) {
         List<EnchantingExperienceRefundBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(player, EnchantingExperienceRefundBonus.class);

@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -24,13 +23,11 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoidanceChanceBonus> {
     private float chance;
     private @NotNull LivingMultiplier playerMultiplier = NoneLivingMultiplier.INSTANCE;
@@ -38,11 +35,9 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
     private @NotNull LivingEntityPredicate playerCondition = NoneLivingEntityPredicate.INSTANCE;
     private @NotNull LivingEntityPredicate attackerCondition = NoneLivingEntityPredicate.INSTANCE;
     private @NotNull DamageCondition damageCondition = NoneDamageCondition.INSTANCE;
-
     public DamageAvoidanceChanceBonus(float chance) {
         this.chance = chance;
     }
-
     public float getChance(DamageSource source, Player player, @Nullable LivingEntity attacker) {
         if (!damageCondition.met(source)) {
             return 0f;
@@ -61,12 +56,10 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
         }
         return result;
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.DAMAGE_AVOIDANCE.get();
     }
-
     @Override
     public DamageAvoidanceChanceBonus copy() {
         DamageAvoidanceChanceBonus bonus = new DamageAvoidanceChanceBonus(chance);
@@ -77,13 +70,11 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
         bonus.attackerCondition = this.attackerCondition;
         return bonus;
     }
-
     @Override
     public DamageAvoidanceChanceBonus multiply(double multiplier) {
         chance *= (float) multiplier;
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof DamageAvoidanceChanceBonus otherBonus)) {
@@ -103,7 +94,6 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
         }
         return Objects.equals(otherBonus.attackerCondition, this.attackerCondition);
     }
-
     @Override
     public SkillBonus<DamageAvoidanceChanceBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof DamageAvoidanceChanceBonus otherBonus)) {
@@ -128,12 +118,10 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
         tooltip = attackerCondition.getTooltip(tooltip, Target.ENEMY);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return chance > 0;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<DamageAvoidanceChanceBonus> consumer) {
         editor.addLabel(0, 0, "Chance", ChatFormatting.GOLD);
@@ -167,45 +155,38 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
                 .setMenuInitFunc(() -> addTargetMultiplierWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectChance(Consumer<DamageAvoidanceChanceBonus> consumer, Double value) {
         setChance(value.floatValue());
         consumer.accept(this.copy());
     }
-
     private void addTargetMultiplierWidgets(SkillTreeEditor editor, Consumer<DamageAvoidanceChanceBonus> consumer) {
         attackerMultiplier.addEditorWidgets(editor, multiplier -> {
             setEnemyMultiplier(multiplier);
             consumer.accept(this.copy());
         });
     }
-
     private void selectTargetMultiplier(SkillTreeEditor editor, Consumer<DamageAvoidanceChanceBonus> consumer, LivingMultiplier multiplier) {
         setEnemyMultiplier(multiplier);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addPlayerMultiplierWidgets(SkillTreeEditor editor, Consumer<DamageAvoidanceChanceBonus> consumer) {
         playerMultiplier.addEditorWidgets(editor, multiplier -> {
             setPlayerMultiplier(multiplier);
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<DamageAvoidanceChanceBonus> consumer, LivingMultiplier multiplier) {
         setPlayerMultiplier(multiplier);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addTargetConditionWidgets(SkillTreeEditor editor, Consumer<DamageAvoidanceChanceBonus> consumer) {
         attackerCondition.addEditorWidgets(editor, c -> {
             setTargetCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     private void selectTargetCondition(SkillTreeEditor editor, Consumer<DamageAvoidanceChanceBonus> consumer, LivingEntityPredicate condition) {
         setTargetCondition(condition);
         consumer.accept(this.copy());
@@ -217,47 +198,38 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<DamageAvoidanceChanceBonus> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectDamageCondition(Consumer<DamageAvoidanceChanceBonus> consumer, DamageCondition condition) {
         setDamageCondition(condition);
         consumer.accept(this.copy());
     }
-
     public SkillBonus<?> setPlayerCondition(LivingEntityPredicate condition) {
         this.playerCondition = condition;
         return this;
     }
-
     public SkillBonus<?> setDamageCondition(DamageCondition condition) {
         this.damageCondition = condition;
         return this;
     }
-
     public SkillBonus<?> setTargetCondition(LivingEntityPredicate condition) {
         this.attackerCondition = condition;
         return this;
     }
-
     public SkillBonus<?> setPlayerMultiplier(LivingMultiplier multiplier) {
         this.playerMultiplier = multiplier;
         return this;
     }
-
     public SkillBonus<?> setEnemyMultiplier(LivingMultiplier multiplier) {
         this.attackerMultiplier = multiplier;
         return this;
     }
-
     public void setChance(float chance) {
         this.chance = chance;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public DamageAvoidanceChanceBonus deserialize(JsonObject json) throws JsonParseException {
@@ -270,7 +242,6 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
             bonus.attackerCondition = SerializationHelper.deserializeLivingCondition(json, "attacker_condition");
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof DamageAvoidanceChanceBonus aBonus)) {
@@ -283,7 +254,6 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
             SerializationHelper.serializeDamageCondition(json, aBonus.damageCondition);
             SerializationHelper.serializeLivingCondition(json, aBonus.attackerCondition, "attacker_condition");
         }
-
         @Override
         public DamageAvoidanceChanceBonus deserialize(CompoundTag tag) {
             float chance = tag.getFloatOr("chance", 0f);
@@ -295,7 +265,6 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
             bonus.attackerCondition = SerializationHelper.deserializeLivingCondition(tag, "attacker_condition");
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof DamageAvoidanceChanceBonus aBonus)) {
@@ -310,8 +279,11 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
             SerializationHelper.serializeLivingCondition(tag, aBonus.attackerCondition, "attacker_condition");
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public DamageAvoidanceChanceBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -323,8 +295,11 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
             bonus.attackerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof DamageAvoidanceChanceBonus aBonus)) {
@@ -337,7 +312,6 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
             NetworkHelper.writeDamageCondition(buf, aBonus.damageCondition);
             NetworkHelper.writeLivingCondition(buf, aBonus.attackerCondition);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new DamageAvoidanceChanceBonus(0.1f).setDamageCondition(new MeleeDamageCondition());

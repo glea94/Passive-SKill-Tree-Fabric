@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.requirement;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -12,46 +11,36 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
-
 import java.util.function.Consumer;
-
 public final class NumericValueRequirement implements SkillRequirement<NumericValueRequirement> {
     private FloatFunctionEntityPredicate condition;
-
     public NumericValueRequirement(FloatFunctionEntityPredicate condition) {
         this.condition = condition;
     }
-
     @Override
     public boolean test(Player player) {
         return condition.test(player);
     }
-
     @Override
     public MutableComponent getTooltip() {
         return condition.getValueProvider().getRequirementTooltip(condition.getLogic(), condition.getRequiredValue());
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<NumericValueRequirement> consumer) {
         condition.addEditorWidgets(editor, predicate -> setCondition((FloatFunctionEntityPredicate) predicate, consumer));
     }
-
     public void setCondition(FloatFunctionEntityPredicate condition, Consumer<NumericValueRequirement> consumer) {
         this.condition = condition;
         consumer.accept(this.copy());
     }
-
     @Override
     public NumericValueRequirement copy() {
         return new NumericValueRequirement(condition);
     }
-
     @Override
     public SkillRequirement.Serializer getSerializer() {
         return PSTSkillRequirements.NUMERIC_VALUE.get();
     }
-
     public static class Serializer implements SkillRequirement.Serializer {
         @Override
         public SkillRequirement<?> deserialize(JsonObject json) throws JsonParseException {
@@ -59,21 +48,18 @@ public final class NumericValueRequirement implements SkillRequirement<NumericVa
                     .deserialize(json);
             return new NumericValueRequirement(condition);
         }
-
         @Override
         public void serialize(JsonObject json, SkillRequirement<?> requirement) {
             if (requirement instanceof NumericValueRequirement aRequirement) {
                 aRequirement.condition.getSerializer().serialize(json, aRequirement.condition);
             }
         }
-
         @Override
         public SkillRequirement<?> deserialize(CompoundTag tag) {
             FloatFunctionEntityPredicate condition = (FloatFunctionEntityPredicate) PSTLivingEntityPredicates.NUMERIC_VALUE.get()
                     .deserialize(tag);
             return new NumericValueRequirement(condition);
         }
-
         @Override
         public CompoundTag serialize(SkillRequirement<?> requirement) {
             CompoundTag tag = new CompoundTag();
@@ -82,23 +68,18 @@ public final class NumericValueRequirement implements SkillRequirement<NumericVa
             }
             return tag;
         }
-
-
         @Override
         public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
             FloatFunctionEntityPredicate condition = (FloatFunctionEntityPredicate) PSTLivingEntityPredicates.NUMERIC_VALUE.get()
                     .deserialize(buf);
             return new NumericValueRequirement(condition);
         }
-
-
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillRequirement<?> requirement) {
             if (requirement instanceof NumericValueRequirement aRequirement) {
                 aRequirement.condition.getSerializer().serialize(buf, aRequirement.condition);
             }
         }
-
         @Override
         public SkillRequirement<?> createDefaultInstance() {
             return new NumericValueRequirement(new FloatFunctionEntityPredicate(new EffectAmountFunction(MobEffectType.BENEFICIAL), 5, FloatFunctionEntityPredicate.Logic.MORE));

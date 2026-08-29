@@ -1,5 +1,4 @@
 package daripher.skilltree.init.predicate;
-
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.init.PSTRegistries;
@@ -7,14 +6,11 @@ import daripher.skilltree.skill.bonus.predicate.living.*;
 import net.minecraft.resources.Identifier;
 import daripher.skilltree.util.registry.DeferredRegister;
 import daripher.skilltree.util.registry.RegistryObject;
-
 import java.util.List;
 import java.util.Objects;
-
 public class PSTLivingEntityPredicates {
     public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "living_conditions");
     public static final DeferredRegister<LivingEntityPredicate.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
-
     public static final RegistryObject<LivingEntityPredicate.Serializer> NONE = REGISTRY.register("none", NoneLivingEntityPredicate.Serializer::new);
     public static final RegistryObject<LivingEntityPredicate.Serializer> HAS_ITEM_EQUIPPED = REGISTRY.register("has_item_equipped", HasItemEquippedEntityPredicate.Serializer::new);
     public static final RegistryObject<LivingEntityPredicate.Serializer> HAS_EFFECT = REGISTRY.register("has_effect", HasEffectEntityPredicate.Serializer::new);
@@ -27,14 +23,15 @@ public class PSTLivingEntityPredicates {
     public static final RegistryObject<LivingEntityPredicate.Serializer> UNARMED = REGISTRY.register("unarmed", UnarmedEntityPredicate.Serializer::new);
     public static final RegistryObject<LivingEntityPredicate.Serializer> NUMERIC_VALUE = REGISTRY.register("numeric_value", FloatFunctionEntityPredicate.Serializer::new);
     public static final RegistryObject<LivingEntityPredicate.Serializer> ALL_ARMOR = REGISTRY.register("all_armor", AllArmorEntityPredicate.Serializer::new);
-
     public static List<LivingEntityPredicate> conditionsList() {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         return PSTRegistries.LIVING_CONDITIONS.get().getValues().stream()
                 .map(LivingEntityPredicate.Serializer::createDefaultInstance)
                 .toList();
     }
-
     public static String getName(LivingEntityPredicate condition) {
         Identifier id = PSTRegistries.LIVING_CONDITIONS.get().getKey(condition.getSerializer());
         return TooltipHelper.idToName(Objects.requireNonNull(id).getPath());

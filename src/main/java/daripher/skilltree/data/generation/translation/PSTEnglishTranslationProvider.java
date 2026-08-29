@@ -1,5 +1,4 @@
 package daripher.skilltree.data.generation.translation;
-
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.init.*;
 import daripher.skilltree.init.predicate.PSTDamagePredicates;
@@ -11,20 +10,20 @@ import daripher.skilltree.skill.bonus.player.LootAmountModifierBonus;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-
 public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
     public PSTEnglishTranslationProvider(FabricPackOutput dataOutput, java.util.concurrent.CompletableFuture<net.minecraft.core.HolderLookup.Provider> registryLookup) {
         super(dataOutput, "en_us", registryLookup);
     }
-
-
     @Override
     protected void addTranslations() {
-
         add("skilltree:hunter", "Hunter");
         add("skilltree:alchemist", "Alchemist");
         add("skilltree:cook", "Cook");
+<<<<<<< Updated upstream
 
+=======
+        add("skilltree:blacksmith", "Blacksmith");
+>>>>>>> Stashed changes
         addSkill("alchemist", 1, "Alchemist");
         addSkills("alchemist", 2, 26, 29, "Poison Chance");
         addSkill("alchemist", 32, "Immunity Bypass");
@@ -58,7 +57,6 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         addSkill("alchemist", 36, "Powerful Throw");
         addSkills("alchemist", 40, 43, 46, "Fire Damage");
         addSkill("alchemist", 59, "Incineration");
-
         addSkill("cook", 1, "Cook");
         addSkills("cook", 2, 26, 29, "Unarmed Damage");
         addSkill("cook", 32, "Heavy Punch");
@@ -90,7 +88,6 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         addSkill("cook", 35, "Experienced Fisherman");
         addSkills("cook", 39, 42, 45, "Damage Taken While Fishing");
         addSkill("cook", 61, "Unseen Fisherman");
-
         addSkill("hunter", 1, "Hunter");
         addSkills("hunter", 2, 26, 29, "Leather Armor Durability");
         addSkill("hunter", 32, "Armor Fitting");
@@ -122,7 +119,42 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         addSkill("hunter", 35, "Experienced Hunter");
         addSkills("hunter", 39, 42, 45, "Luck");
         addSkill("hunter", 61, "Lucky Beggar");
+<<<<<<< Updated upstream
 
+=======
+        addSkill("blacksmith", 1, "Blacksmith");
+        addSkills("blacksmith", 3, 27, 30, "Shield Wall");
+        addSkill("blacksmith", 33, "Shield Mastery");
+        addSkills("blacksmith", 47, 50, 53, "Reinforced Shield");
+        addSkill("blacksmith", 56, "Living Fortress");
+        addSkills("blacksmith", 6, 9, 12, "Shield Bash");
+        addSkill("blacksmith", 15, "Retaliation");
+        addSkills("blacksmith", 20, 23, 28, "Steady Stance");
+        addSkill("blacksmith", 35, "Unshakable");
+        addSkills("blacksmith", 39, 42, 45, "Sturdy Shield");
+        addSkill("blacksmith", 61, "Unbreakable Guard");
+        addSkills("blacksmith", 4, 7, 10, 13, "Sturdy Tools");
+        addSkill("blacksmith", 16, "Master Smith");
+        addSkill("blacksmith", 17, "Weapon Forging");
+        addSkill("blacksmith", 18, "Weapon Forging");
+        addSkill("blacksmith", 19, "Masterwork Blade");
+        addSkills("blacksmith", 40, 43, 46, "Precision Strike");
+        addSkill("blacksmith", 59, "Lethal Precision");
+        addSkills("blacksmith", 48, 51, 54, "Swift Strikes");
+        addSkill("blacksmith", 57, "Weapon Mastery");
+        addSkills("blacksmith", 21, 24, 31, "Tempered Edge");
+        addSkill("blacksmith", 36, "Heavy Blow");
+        addSkills("blacksmith", 2, 5, 8, 11, "Plated Armor");
+        addSkill("blacksmith", 14, "Iron Skin");
+        addSkills("blacksmith", 26, 22, 25, 34, "Iron Plating");
+        addSkill("blacksmith", 37, "Bulwark");
+        addSkill("blacksmith", 29, "Vitality");
+        addSkill("blacksmith", 32, "Forged Body");
+        addSkills("blacksmith", 49, 52, 55, "Vitality");
+        addSkill("blacksmith", 58, "Heart of Steel");
+        addSkills("blacksmith", 38, 41, 44, "Forge-Tempered");
+        addSkill("blacksmith", 60, "Heat Resistant");
+>>>>>>> Stashed changes
         add(PSTSkillBonuses.DAMAGE.get(), "Damage");
         add(PSTSkillBonuses.CRIT_DAMAGE.get(), "Critical Damage Multiplier");
         add(PSTSkillBonuses.CRIT_DAMAGE.get(), "damage", "Critical %s Damage Multiplier");
@@ -202,18 +234,15 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         add(PSTSkillBonuses.REMOVE_EFFECT.get(), "player.chance", "Chance to dispel %s from self");
         add(PSTSkillBonuses.REMOVE_EFFECT.get(), "enemy", "Dispel %s from an enemy");
         add(PSTSkillBonuses.REMOVE_EFFECT.get(), "enemy.chance", "Chance to dispel %s from an enemy");
-
         add(ExperienceGainMultiplierBonus.ExperienceSource.MOBS.getDescriptionId(), "Mobs");
         add(ExperienceGainMultiplierBonus.ExperienceSource.ORE.getDescriptionId(), "Ores");
         add(ExperienceGainMultiplierBonus.ExperienceSource.FISHING.getDescriptionId(), "Fishing");
-
         add(LootAmountModifierBonus.LootType.MOBS.getDescriptionId(), "mobs loot");
         add(LootAmountModifierBonus.LootType.FISHING.getDescriptionId(), "fishing loot");
         add(LootAmountModifierBonus.LootType.GEMS.getDescriptionId(), "gems from ore");
         add(LootAmountModifierBonus.LootType.CHESTS.getDescriptionId(), "loot in chests");
         add(LootAmountModifierBonus.LootType.ORE.getDescriptionId(), "loot from ore");
         add(LootAmountModifierBonus.LootType.ARCHAEOLOGY.getDescriptionId(), "loot from archaeology");
-
         add(PSTLivingEntityPredicates.HAS_ITEM_EQUIPPED.get(), "target.player", "with");
         add(PSTLivingEntityPredicates.HAS_ITEM_EQUIPPED.get(), "target.enemy", "if enemy has");
         add(PSTLivingEntityPredicates.HAS_ITEM_EQUIPPED.get(), "%s %s %s equipped");
@@ -254,7 +283,6 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         add(PSTLivingEntityPredicates.ALL_ARMOR.get(), "target.player", "if all your armor is");
         add(PSTLivingEntityPredicates.ALL_ARMOR.get(), "target.enemy", "if all target's armor is");
         add(PSTLivingEntityPredicates.ALL_ARMOR.get(), "%s %s %s");
-
         add("effect_type.beneficial", "beneficial effect");
         add("effect_type.beneficial.plural", "beneficial effects");
         add("effect_type.harmful", "harmful effect");
@@ -263,7 +291,6 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         add("effect_type.neutral.plural", "neutral effects");
         add("effect_type.any", "effect");
         add("effect_type.any.plural", "effects");
-
         add(PSTEventListeners.ATTACK.get(), "%s on hit");
         add(PSTEventListeners.ATTACK.get(), "damage", "%s on %s hit");
         add(PSTEventListeners.BLOCK.get(), "%s on block");
@@ -280,7 +307,6 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         add(PSTEventListeners.TICKING.get(), "minute", "%s every minute");
         add(PSTEventListeners.TICKING.get(), "minutes", "%s every %s minutes");
         add(PSTEventListeners.CRITICAL_HIT.get(), "%s on critical hit");
-
         add(PSTDamagePredicates.PROJECTILE.get(), "Projectile Damage");
         add(PSTDamagePredicates.PROJECTILE.get(), "type", "Projectile");
         add(PSTDamagePredicates.MELEE.get(), "Melee Damage");
@@ -296,14 +322,11 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         add(PSTDamagePredicates.POISON.get(), "type", "Poison");
         add(PSTDamagePredicates.THORNS.get(), "Thorns Damage");
         add(PSTDamagePredicates.THORNS.get(), "type", "Thorns");
-
         deathMessage("poison", "%1$s died from poison");
         deathMessage("poison.player", "%1$s was poisoned by %2$s");
-
         add(PSTEnchantmentPredicates.WEAPON.get(), "Weapon Enchantments");
         add(PSTEnchantmentPredicates.ARMOR.get(), "Armor Enchantments");
         add(PSTEnchantmentPredicates.NONE.get(), "Enchantments");
-
         add(PSTItemPredicates.NONE.get(), "Item");
         add(PSTItemPredicates.NONE.get(), "plural", "Items");
         add(PSTItemPredicates.EQUIPMENT_TYPE.get(), "weapon", "Weapon");
@@ -357,86 +380,63 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         add(PSTItemPredicates.EQUIPMENT_TYPE.get(), "shovel", "Shovel");
         add(PSTItemPredicates.EQUIPMENT_TYPE.get(), "shovel.plural", "Shovels");
         add(PSTItemPredicates.ENCHANTED.get(), "Enchanted %s");
-
         add(PSTFloatFunctions.ATTRIBUTE_VALUE.get(), "multiplier.player.plural", "%s per %s %s");
         add(PSTFloatFunctions.ATTRIBUTE_VALUE.get(), "multiplier.player", "%s per 1 %s");
         add(PSTFloatFunctions.ATTRIBUTE_VALUE.get(), "multiplier.enemy.plural", "%s per %s enemy's %s");
         add(PSTFloatFunctions.ATTRIBUTE_VALUE.get(), "multiplier.enemy", "%s per 1 enemy's %s");
-
         add(PSTFloatFunctions.ATTRIBUTE_VALUE.get(), "condition.player", "%s if %s is %s");
         add(PSTFloatFunctions.ATTRIBUTE_VALUE.get(), "condition.enemy", "%s if enemy's %s is %s");
-
         add(PSTFloatFunctions.ATTRIBUTE_VALUE.get(), "requirement", "Reach %s %s");
-
         add(PSTFloatFunctions.DISTANCE_TO_TARGET.get(), "multiplier.player.plural", "%s per %s blocks between you and enemy");
         add(PSTFloatFunctions.DISTANCE_TO_TARGET.get(), "multiplier.player", "%s per block between you and enemy");
-
         add(PSTFloatFunctions.DISTANCE_TO_TARGET.get(), "condition.player", "%s if distance to target is %s");
-
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "multiplier.player.plural", "%s per %s %s on you");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "multiplier.player", "%s per %s on you");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "multiplier.enemy.plural", "%s per %s %s on target");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "multiplier.enemy", "%s per %s on target");
-
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "condition.player", "%s while affected by %s %s");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "condition.player.any", "%s while affected by any %s");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "condition.player.none", "%s while not affected by any %s");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "condition.enemy", "%s if target is affected by %s %s");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "condition.enemy.any", "%s if target is affected by any %s");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "condition.enemy.none", "%s if target is not affected by any %s");
-
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "requirement", "Have %s %s on you");
-
         add(PSTLivingEntityPredicates.NUMERIC_VALUE.get(), "equal.effect_amount", "exactly %s");
-
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "multiplier.player.plural", "%s per %s enchantments on your %s");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "multiplier.player", "%s per enchantment on your %s");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "multiplier.enemy.plural", "%s per %s enchantments on target's %s");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "multiplier.enemy", "%s per enchantment on target's %s");
-
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "enchantment", "enchantment");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "enchantment.plural", "enchantments");
-
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "condition.player", "%s if you have %s %s on %s");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "condition.player.any", "%s if your %s is enchanted");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "condition.player.none", "%s if your %s is not enchanted");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "condition.enemy", "%s if target has %s %s on %s");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "condition.enemy.any", "%s if target's %s is enchanted");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "condition.enemy.none", "%s if target's %s is not enchanted");
-
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "requirement", "Have %s %s on your %s");
-
         add(PSTLivingEntityPredicates.NUMERIC_VALUE.get(), "equal.enchantment_amount", "exactly %s");
-
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "multiplier.player.plural", "%s per %s enchantment levels on your %s");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "multiplier.player", "%s per enchantment level on your %s");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "multiplier.enemy.plural", "%s per %s enchantment levels on target's %s");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "multiplier.enemy", "%s per enchantment level on target's %s");
-
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "level", "level");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "level.plural", "levels");
-
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "condition.player", "%s if you have %s enchantment %s on %s");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "condition.player.any", "%s if your %s is enchanted");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "condition.player.none", "%s if your %s is not enchanted");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "condition.enemy", "%s if target has %s enchantment %s on %s");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "condition.enemy.any", "%s if target's %s is enchanted");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "condition.enemy.none", "%s if target's %s is not enchanted");
-
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "requirement", "Have %s enchantment %s on your %s");
-
         add(PSTFloatFunctions.EQUIPMENT_DURABILITY.get(), "multiplier.player.plural", "%s per %s durability of your %s");
         add(PSTFloatFunctions.EQUIPMENT_DURABILITY.get(), "multiplier.player", "%s per durability of your %s");
         add(PSTFloatFunctions.EQUIPMENT_DURABILITY.get(), "multiplier.enemy.plural", "%s per %s durability of target's %s");
         add(PSTFloatFunctions.EQUIPMENT_DURABILITY.get(), "multiplier.enemy", "%s per durability of target's %s");
-
         add(PSTFloatFunctions.EQUIPMENT_DURABILITY.get(), "condition.player", "%s if your %s has %s durability");
         add(PSTFloatFunctions.EQUIPMENT_DURABILITY.get(), "condition.enemy", "%s if target's has %s %s durability");
-
         add(PSTFloatFunctions.EQUIPMENT_DURABILITY.get(), "requirement", "Have %s durability on your %s");
-
         add(PSTLivingEntityPredicates.NUMERIC_VALUE.get(), "equal.equipment_durability", "exactly %s");
-
         add(PSTFloatFunctions.FOOD_LEVEL.get(), "point", "hunger point");
         add(PSTFloatFunctions.FOOD_LEVEL.get(), "point.plural", "hunger points");
         add(PSTFloatFunctions.FOOD_LEVEL.get(), "multiplier.player", "%s per current %s");
@@ -457,7 +457,6 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         add(PSTFloatFunctions.FOOD_LEVEL.get(), "condition.enemy.not_full", "%s if target is hungry");
         add(PSTFloatFunctions.FOOD_LEVEL.get(), "requirement", "Have %s %s");
         add(PSTLivingEntityPredicates.NUMERIC_VALUE.get(), "equal.food_level", "exactly %s");
-
         add(PSTFloatFunctions.HEALTH_LEVEL.get(), "point", "health point");
         add(PSTFloatFunctions.HEALTH_LEVEL.get(), "point.plural", "health points");
         add(PSTFloatFunctions.HEALTH_LEVEL.get(), "percentage", "health");
@@ -480,9 +479,7 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         add(PSTFloatFunctions.HEALTH_LEVEL.get(), "condition.enemy.not_full", "%s if target is injured");
         add(PSTFloatFunctions.HEALTH_LEVEL.get(), "requirement", "Have %s %s");
         add(PSTLivingEntityPredicates.NUMERIC_VALUE.get(), "equal.health_level", "exactly %s");
-
         add(PSTLivingEntityPredicates.NUMERIC_VALUE.get(), "equal.mana_level", "exactly %s");
-
         add(PSTFloatFunctions.LEARNED_SKILLS_AMOUNT.get(), "point", "skill");
         add(PSTFloatFunctions.LEARNED_SKILLS_AMOUNT.get(), "point.plural", "skills");
         add(PSTFloatFunctions.LEARNED_SKILLS_AMOUNT.get(), "multiplier.player", "%s per learned skill");
@@ -493,13 +490,11 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         add(PSTFloatFunctions.LEARNED_SKILLS_AMOUNT.get(), "condition.enemy", "%s if target has learned %s %s");
         add(PSTFloatFunctions.LEARNED_SKILLS_AMOUNT.get(), "requirement", "Learn %s %s");
         add(PSTLivingEntityPredicates.NUMERIC_VALUE.get(), "equal.learned_skills_amount", "exactly %s");
-
         add(PSTSkillRequirements.ADVANCEMENT.get(), "Get %s advancement");
         add(PSTSkillRequirements.LEARNED_SKILL.get(), "Learn %s skill");
         add(PSTSkillRequirements.NOT_LEARNED_SKILL.get(), "Don't learn %s skill");
         add(PSTSkillRequirements.STAT_VALUE.get(), "killed", "You killed %s %s");
         add(PSTSkillRequirements.STAT_VALUE.get(), "killed_by", "You were killed by %s %s times");
-
         add("skilltree.poisoned_weapon", "Poisoned:");
         add("skilltree.poisoned_weapon.uses_left", "Poisoned [%s uses left]:");
         add("skilltree.poisoned_weapon.effect", " • %s (%s)");
@@ -514,17 +509,13 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         addTooltip(PSTItems.WISDOM_SCROLL.get(), "Grants one passive skill point");
         addTooltip(PSTItems.AMNESIA_SCROLL.get(), "Resets your passive skill tree");
         addWarning(PSTItems.AMNESIA_SCROLL.get(), "%d%% of your skill points will be lost");
-
         add(PSTMobEffects.LIQUID_FIRE.get(), "Liquid Fire");
-
         add(PSTPotions.LIQUID_FIRE_1.get(), "Liquid Fire");
         add(PSTPotions.LIQUID_FIRE_2.get(), "Liquid Fire");
-
         add("skilltree.message.reset", "Skill Tree has changed. Your skill points have been restored.");
         add("skilltree.message.reset_command", "Your skill tree has been reset.");
         add("skilltree.message.point_command", "Skill point gained.");
         add("skilltree.message.grant_skill_command", "You were granted the %s skill.");
-
         add("widget.skill_points_left", "Points left: %s");
         add("widget.skill_button.not_learned", "Skill not learned");
         add("widget.buy_skill_button", "Buy Skill Point");
@@ -536,19 +527,15 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         add("key.display_skill_tree", "Open Skill Tree");
         add("skill.limitation", "Limited to: %s");
         add("skill.requirements", "Requirements:");
-
         add("itemGroup.skilltree", "Passive Skill Tree");
-
         add(PSTRecipeSerializers.WORKBENCH_ITEM_BONUS.get(), "%s [%s]");
         add(PSTRecipeSerializers.WORKBENCH_POTION_MIXING.get(), "Potion mixing");
         add(PSTRecipeSerializers.WORKBENCH_POTION_MIXING.get(), "custom_skill_description", "You can mix potions using advanced workbench");
         add(PSTRecipeSerializers.WORKBENCH_WEAPON_POISONING.get(), "Weapon poisoning");
         add(PSTRecipeSerializers.WORKBENCH_WEAPON_POISONING.get(), "custom_skill_description", "You can apply poisons to weapons using advanced workbench");
     }
-
     public void add(net.minecraft.world.item.alchemy.Potion potion, String name) {
         String effectId = potion.name();
-
         add(net.minecraft.world.item.Items.POTION.getDescriptionId() + ".effect." + effectId, "Potion of " + name);
         add(net.minecraft.world.item.Items.SPLASH_POTION.getDescriptionId() + ".effect." + effectId, "Splash Potion of " + name);
         add(net.minecraft.world.item.Items.LINGERING_POTION.getDescriptionId() + ".effect." + effectId, "Lingering Potion of " + name);

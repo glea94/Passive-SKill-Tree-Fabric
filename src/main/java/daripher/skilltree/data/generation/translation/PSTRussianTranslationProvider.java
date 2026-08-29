@@ -1,5 +1,4 @@
 package daripher.skilltree.data.generation.translation;
-
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.init.*;
 import daripher.skilltree.init.predicate.PSTDamagePredicates;
@@ -11,20 +10,20 @@ import daripher.skilltree.skill.bonus.player.LootAmountModifierBonus;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-
 public class PSTRussianTranslationProvider extends PSTTranslationProvider {
     public PSTRussianTranslationProvider(FabricPackOutput dataOutput, java.util.concurrent.CompletableFuture<net.minecraft.core.HolderLookup.Provider> registryLookup) {
         super(dataOutput, "ru_ru", registryLookup);
     }
-
-
     @Override
     protected void addTranslations() {
-
         add("skilltree:hunter", "Охотник");
         add("skilltree:alchemist", "Алхимик");
         add("skilltree:cook", "Повар");
+<<<<<<< Updated upstream
 
+=======
+        add("skilltree:blacksmith", "Кузнец");
+>>>>>>> Stashed changes
         addSkill("alchemist", 1, "Алхимик");
         addSkills("alchemist", 2, 26, 29, "Шанс отравления");
         addSkill("alchemist", 32, "Обход иммунитета");
@@ -58,7 +57,6 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         addSkill("alchemist", 36, "Мощный бросок");
         addSkills("alchemist", 40, 43, 46, "Урон огнем");
         addSkill("alchemist", 59, "Испепеление");
-
         addSkill("cook", 1, "Повар");
         addSkills("cook", 2, 26, 29, "Урон без оружия");
         addSkill("cook", 32, "Тяжелый удар");
@@ -90,7 +88,6 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         addSkill("cook", 35, "Опытный рыбак");
         addSkills("cook", 39, 42, 45, "Получаемый урон во время рыбалки");
         addSkill("cook", 61, "Незримый рыбак");
-
         addSkill("hunter", 1, "Охотник");
         addSkills("hunter", 2, 26, 29, "Прочность кожаной брони");
         addSkill("hunter", 32, "Подгонка брони");
@@ -122,7 +119,42 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         addSkill("hunter", 35, "Опытный охотник");
         addSkills("hunter", 39, 42, 45, "Удача");
         addSkill("hunter", 61, "Счастливчик");
+<<<<<<< Updated upstream
 
+=======
+        addSkill("blacksmith", 1, "Кузнец");
+        addSkills("blacksmith", 3, 27, 30, "Стена щитов");
+        addSkill("blacksmith", 33, "Мастерство щита");
+        addSkills("blacksmith", 47, 50, 53, "Усиленный щит");
+        addSkill("blacksmith", 56, "Живая крепость");
+        addSkills("blacksmith", 6, 9, 12, "Удар щитом");
+        addSkill("blacksmith", 15, "Возмездие");
+        addSkills("blacksmith", 20, 23, 28, "Твёрдая стойка");
+        addSkill("blacksmith", 35, "Непоколебимый");
+        addSkills("blacksmith", 39, 42, 45, "Крепкий щит");
+        addSkill("blacksmith", 61, "Несокрушимая защита");
+        addSkills("blacksmith", 4, 7, 10, 13, "Крепкие инструменты");
+        addSkill("blacksmith", 16, "Мастер-кузнец");
+        addSkill("blacksmith", 17, "Ковка оружия");
+        addSkill("blacksmith", 18, "Ковка оружия");
+        addSkill("blacksmith", 19, "Клинок мастера");
+        addSkills("blacksmith", 40, 43, 46, "Точный удар");
+        addSkill("blacksmith", 59, "Смертоносная точность");
+        addSkills("blacksmith", 48, 51, 54, "Быстрые удары");
+        addSkill("blacksmith", 57, "Мастерство оружия");
+        addSkills("blacksmith", 21, 24, 31, "Закалённое лезвие");
+        addSkill("blacksmith", 36, "Тяжёлый удар");
+        addSkills("blacksmith", 2, 5, 8, 11, "Бронированная броня");
+        addSkill("blacksmith", 14, "Железная кожа");
+        addSkills("blacksmith", 26, 22, 25, 34, "Железная обшивка");
+        addSkill("blacksmith", 37, "Оплот");
+        addSkill("blacksmith", 29, "Живучесть");
+        addSkill("blacksmith", 32, "Кованое тело");
+        addSkills("blacksmith", 49, 52, 55, "Живучесть");
+        addSkill("blacksmith", 58, "Стальное сердце");
+        addSkills("blacksmith", 38, 41, 44, "Закалка в горне");
+        addSkill("blacksmith", 60, "Огнестойкость");
+>>>>>>> Stashed changes
         add(PSTSkillBonuses.DAMAGE.get(), "Урон");
         add(PSTSkillBonuses.CRIT_DAMAGE.get(), "Множитель критического урона");
         add(PSTSkillBonuses.CRIT_DAMAGE.get(), "damage", "Множитель критического урона %s");
@@ -201,18 +233,15 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         add(PSTSkillBonuses.REMOVE_EFFECT.get(), "player.chance", "Шанс развеять %s на вас");
         add(PSTSkillBonuses.REMOVE_EFFECT.get(), "enemy", "Развеивает %s на врагах");
         add(PSTSkillBonuses.REMOVE_EFFECT.get(), "enemy.chance", "Шанс развеять %s%s на врагах");
-
         add(ExperienceGainMultiplierBonus.ExperienceSource.MOBS.getDescriptionId(), "с Существ");
         add(ExperienceGainMultiplierBonus.ExperienceSource.ORE.getDescriptionId(), "из Руды");
         add(ExperienceGainMultiplierBonus.ExperienceSource.FISHING.getDescriptionId(), "за Рыбалку");
-
         add(LootAmountModifierBonus.LootType.MOBS.getDescriptionId(), "награды с существ");
         add(LootAmountModifierBonus.LootType.FISHING.getDescriptionId(), "награды с рыбалки");
         add(LootAmountModifierBonus.LootType.GEMS.getDescriptionId(), "самоцветы из руды");
         add(LootAmountModifierBonus.LootType.CHESTS.getDescriptionId(), "награды в сундуках");
         add(LootAmountModifierBonus.LootType.ORE.getDescriptionId(), "награды из руды");
         add(LootAmountModifierBonus.LootType.ARCHAEOLOGY.getDescriptionId(), "награды от археологии");
-
         add(PSTLivingEntityPredicates.HAS_ITEM_EQUIPPED.get(), "target.you", "вас");
         add(PSTLivingEntityPredicates.HAS_ITEM_EQUIPPED.get(), "target.enemy", "враге");
         add(PSTLivingEntityPredicates.HAS_ITEM_EQUIPPED.get(), "%s если на %s %s");
@@ -253,7 +282,6 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         add(PSTLivingEntityPredicates.ALL_ARMOR.get(), "target.player", "если вся ваша броня - ");
         add(PSTLivingEntityPredicates.ALL_ARMOR.get(), "target.enemy", "если вся броня цели - ");
         add(PSTLivingEntityPredicates.ALL_ARMOR.get(), "%s %s %s");
-
         add("effect_type.beneficial", "положительный эффект");
         add("effect_type.beneficial.plural", "положительные эффекты");
         add("effect_type.harmful", "негативный эффект");
@@ -262,7 +290,6 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         add("effect_type.neutral.plural", "нейтральные эффект");
         add("effect_type.any", "эффект");
         add("effect_type.any.plural", "эффекты");
-
         add(PSTEventListeners.ATTACK.get(), "%s при атаке");
         add(PSTEventListeners.ATTACK.get(), "damage", "%s при атаке %s");
         add(PSTEventListeners.BLOCK.get(), "%s при блоке");
@@ -279,7 +306,6 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         add(PSTEventListeners.TICKING.get(), "minute", "%s каждую минуту");
         add(PSTEventListeners.TICKING.get(), "minutes", "%s каждые %s минуты");
         add(PSTEventListeners.CRITICAL_HIT.get(), "%s при критическом ударе");
-
         add(PSTDamagePredicates.PROJECTILE.get(), "Урон снарядами");
         add(PSTDamagePredicates.PROJECTILE.get(), "type", "снарядами");
         add(PSTDamagePredicates.PROJECTILE.get(), "type.blocked", "снаряда");
@@ -295,11 +321,9 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         add(PSTDamagePredicates.FIRE.get(), "type", "огнём");
         add(PSTDamagePredicates.THORNS.get(), "Урон шипами");
         add(PSTDamagePredicates.THORNS.get(), "type", "шипами");
-
         add(PSTEnchantmentPredicates.WEAPON.get(), "Зачарование оружия");
         add(PSTEnchantmentPredicates.ARMOR.get(), "Зачарование брони");
         add(PSTEnchantmentPredicates.NONE.get(), "Зачарование");
-
         add(PSTItemPredicates.NONE.get(), "Предмет");
         add(PSTItemPredicates.NONE.get(), "where", "Предмете");
         add(PSTItemPredicates.NONE.get(), "type", "ый Предмет");
@@ -436,89 +460,65 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         add(PSTItemPredicates.EQUIPMENT_TYPE.get(), "shovel.plural.adjective", "ые Лопаты");
         add(PSTItemPredicates.EQUIPMENT_TYPE.get(), "shovel.plural", "Лопаты");
         add(PSTItemPredicates.ENCHANTED.get(), "Зачарованн%s");
-
         add(PSTLivingMultipliers.NUMERIC_VALUE.get(), "plural", "%s per %s %s");
         add(PSTLivingMultipliers.NUMERIC_VALUE.get(), "%s per %s");
-
         add(PSTFloatFunctions.ATTRIBUTE_VALUE.get(), "multiplier.player.plural", "%s за каждые %s %s");
         add(PSTFloatFunctions.ATTRIBUTE_VALUE.get(), "multiplier.player", "%s за каждое очко %s");
         add(PSTFloatFunctions.ATTRIBUTE_VALUE.get(), "multiplier.enemy.plural", "%s за каждые %s %s цели");
         add(PSTFloatFunctions.ATTRIBUTE_VALUE.get(), "multiplier.enemy", "%s за каждое очко %s цели");
-
         add(PSTFloatFunctions.ATTRIBUTE_VALUE.get(), "condition.player", "%s если %s %s");
         add(PSTFloatFunctions.ATTRIBUTE_VALUE.get(), "condition.enemy", "%s если %s цели %s");
-
         add(PSTFloatFunctions.ATTRIBUTE_VALUE.get(), "requirement", "Достигните %s %s");
-
         add(PSTFloatFunctions.DISTANCE_TO_TARGET.get(), "multiplier.player.plural", "%s за каждые %s блока между вами и целью");
         add(PSTFloatFunctions.DISTANCE_TO_TARGET.get(), "multiplier.player", "%s за каждый блок между вами и целью");
-
         add(PSTFloatFunctions.DISTANCE_TO_TARGET.get(), "condition.player", "%s если расстояние между вами и целью %s");
-
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "multiplier.player.plural", "%s за каждые %s %s на вас");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "multiplier.player", "%s за каждый %s на вас");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "multiplier.enemy.plural", "%s за каждые %s %s цели");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "multiplier.enemy", "%s за каждый %s цели");
-
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "condition.player", "%s если на вас действуют %s %s");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "condition.player.any", "%s если на вас действует любой %s");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "condition.player.none", "%s если на вас не действует %s");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "condition.enemy", "%s если на цель действуют %s %s");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "condition.enemy.any", "%s если на цель действует любой %s");
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "condition.enemy.none", "%s если на цель не действуют %s");
-
         add(PSTFloatFunctions.EFFECT_AMOUNT.get(), "requirement", "На вас %s %s");
-
         add(PSTLivingEntityPredicates.NUMERIC_VALUE.get(), "equal.effect_amount", "ровно %s");
-
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "multiplier.player.plural", "%s за каждое %s зачарования на %s");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "multiplier.player", "%s за каждое зачарование на %s");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "multiplier.enemy.plural", "%s за каждые %s зачарования на %s цели");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "multiplier.enemy", "%s за каждое зачарование на %s цели");
-
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "enchantment", "зачарование");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "enchantment.plural", "зачарования");
-
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "condition.player", "%s если у вас %s %s на %s");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "condition.player.any", "%s если ваш %s имеет зачарования");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "condition.player.none", "%s если ваш %s не имеет зачарования");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "condition.enemy", "%s если у цели есть %s %s на %s");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "condition.enemy.any", "%s если %s цели имеет зачарования");
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "condition.enemy.none", "%s если %s цели не имеет зачарования");
-
         add(PSTFloatFunctions.ENCHANTMENT_AMOUNT.get(), "requirement", "На вашем %3$s %1$s %2$s");
-
         add(PSTLivingEntityPredicates.NUMERIC_VALUE.get(), "equal.enchantment_amount", "ровно %s");
-
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "multiplier.player.plural", "%s за %s уровня зачарований на %s");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "multiplier.player", "%s за каждый уровень зачарований на %s");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "multiplier.enemy.plural", "%s за %s уровня зачарований на %s цели");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "multiplier.enemy", "%s за каждый уровень зачарований на %s цели");
-
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "level", "уровень");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "level.plural", "уровней");
-
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "condition.player", "%s если у вас %s %s зачарований на %s");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "condition.player.any", "%s если ваш %s имеет зачарования");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "condition.player.none", "%s если ваш %s не имеет зачарований");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "condition.enemy", "%s если у цели %s %s зачарований на %s");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "condition.enemy.any", "%s если %s цели имеет зачарования");
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "condition.enemy.none", "%s если %s цели не имеет зачарований");
-
         add(PSTFloatFunctions.ENCHANTMENT_LEVELS.get(), "requirement", "На вашем %3$s %1$s %2$s");
-
         add(PSTFloatFunctions.EQUIPMENT_DURABILITY.get(), "multiplier.player.plural", "%s за каждые %s прочности вашего %s");
         add(PSTFloatFunctions.EQUIPMENT_DURABILITY.get(), "multiplier.player", "%s за единицу прочности вашего %s");
         add(PSTFloatFunctions.EQUIPMENT_DURABILITY.get(), "multiplier.enemy.plural", "%s за каждые %s прочности %s цели");
         add(PSTFloatFunctions.EQUIPMENT_DURABILITY.get(), "multiplier.enemy", "%s за единицу прочности %s цели");
-
         add(PSTFloatFunctions.EQUIPMENT_DURABILITY.get(), "condition.player", "%s если ваш %s имеет %s прочности");
         add(PSTFloatFunctions.EQUIPMENT_DURABILITY.get(), "condition.enemy", "%s если %s цели имеет %s durability");
-
         add(PSTFloatFunctions.EQUIPMENT_DURABILITY.get(), "requirement", "Ваш %2$s имеет %1$s прочности");
-
         add(PSTLivingEntityPredicates.NUMERIC_VALUE.get(), "equal.equipment_durability", "ровно %s");
-
         add(PSTFloatFunctions.FOOD_LEVEL.get(), "point", "очко сытости");
         add(PSTFloatFunctions.FOOD_LEVEL.get(), "point.plural", "очка сытости");
         add(PSTFloatFunctions.FOOD_LEVEL.get(), "multiplier.player", "%s за каждое текущее %s");
@@ -539,7 +539,6 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         add(PSTFloatFunctions.FOOD_LEVEL.get(), "condition.enemy.not_full", "%s если цель голодна");
         add(PSTFloatFunctions.FOOD_LEVEL.get(), "requirement", "У вас %s %s");
         add(PSTLivingEntityPredicates.NUMERIC_VALUE.get(), "equal.food_level", "ровно %s");
-
         add(PSTFloatFunctions.HEALTH_LEVEL.get(), "point", "очко здоровья");
         add(PSTFloatFunctions.HEALTH_LEVEL.get(), "point.plural", "очка здоровья");
         add(PSTFloatFunctions.HEALTH_LEVEL.get(), "percentage", "здоровья");
@@ -562,16 +561,12 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         add(PSTFloatFunctions.HEALTH_LEVEL.get(), "condition.enemy.not_full", "%s если цель ранена");
         add(PSTFloatFunctions.HEALTH_LEVEL.get(), "requirement", "У вас %s %s");
         add(PSTLivingEntityPredicates.NUMERIC_VALUE.get(), "equal.health_level", "ровно %s");
-
         add(PSTLivingEntityPredicates.NUMERIC_VALUE.get(), "equal.mana_level", "ровно %s");
-
-
         add(PSTSkillRequirements.ADVANCEMENT.get(), "Получите достижение %s");
         add(PSTSkillRequirements.LEARNED_SKILL.get(), "Изучите умение %s");
         add(PSTSkillRequirements.NOT_LEARNED_SKILL.get(), "Не изучайте умение %s");
         add(PSTSkillRequirements.STAT_VALUE.get(), "killed", "Вы убили %s %s");
         add(PSTSkillRequirements.STAT_VALUE.get(), "killed_by", "Вы были убиты %s %s раз");
-
         add("skilltree.poisoned_weapon", "Отравлено:");
         add("skilltree.poisoned_weapon.uses_left", "Отравлено [%s использований]:");
         add("item.minecraft.potion.mixture", "Микстура");
@@ -584,17 +579,13 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         addTooltip(PSTItems.WISDOM_SCROLL.get(), "Дарует одно очко пассивных умений");
         addTooltip(PSTItems.AMNESIA_SCROLL.get(), "Сбрасывает ваше древо пассивных умений");
         addWarning(PSTItems.AMNESIA_SCROLL.get(), "%d%% очков умений будут потеряны");
-
         add(PSTMobEffects.LIQUID_FIRE.get(), "Жидкий огонь");
-
         add(PSTPotions.LIQUID_FIRE_1.get(), "жидкого огня");
         add(PSTPotions.LIQUID_FIRE_2.get(), "жидкого огня");
-
         add("skilltree.message.reset", "Древо пассивных умений изменилось. Ваши очки умений были восстановлены.");
         add("skilltree.message.reset_command", "Ваше древо пассивных умений было сброшено.");
         add("skilltree.message.point_command", "Получено очко пассивных умений.");
         add("skilltree.message.grant_skill_command", "Вам было даровано умение %s.");
-
         add("widget.skill_points_left", "Очков осталось: %s");
         add("widget.skill_button.not_learned", "Умение не изучено");
         add("widget.skill_button.multiple_bonuses", "%s и %s");
@@ -606,19 +597,15 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         add("key.display_skill_tree", "Открыть древо пассивных умений");
         add("skill.limitation", "Ограничение: %s");
         add("skill.requirements", "Требования:");
-
         add("itemGroup.skilltree", "Passive Skill Tree");
-
         add(PSTRecipeSerializers.WORKBENCH_ITEM_BONUS.get(), "%s [%s]");
         add(PSTRecipeSerializers.WORKBENCH_POTION_MIXING.get(), "Смешивание зелий");
         add(PSTRecipeSerializers.WORKBENCH_POTION_MIXING.get(), "custom_skill_description", "Вы можете смешивать зелья используя продвинутый рабочий стол");
         add(PSTRecipeSerializers.WORKBENCH_WEAPON_POISONING.get(), "Отравление оружия");
         add(PSTRecipeSerializers.WORKBENCH_WEAPON_POISONING.get(), "custom_skill_description", "Вы можете отравлять оружие используя продвинутый рабочий стол");
     }
-
     public void add(net.minecraft.world.item.alchemy.Potion potion, String name) {
         String effectId = potion.name();
-
         add(net.minecraft.world.item.Items.POTION.getDescriptionId() + ".effect." + effectId, "Зелье " + name);
         add(net.minecraft.world.item.Items.SPLASH_POTION.getDescriptionId() + ".effect." + effectId, "Взрывное зелье " + name);
         add(net.minecraft.world.item.Items.LINGERING_POTION.getDescriptionId() + ".effect." + effectId, "Туманное зелье " + name);

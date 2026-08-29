@@ -1,5 +1,4 @@
 package daripher.skilltree.network.message;
-
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.init.PSTRecipeTypes;
 import daripher.skilltree.recipe.workbench.AbstractWorkbenchRecipe;
@@ -23,83 +22,41 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmithingTransformRecipe;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 public class SyncWorkbenchRecipesMessage implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<SyncWorkbenchRecipesMessage> TYPE =
             new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "sync_workbench_recipes"));
-
     private static final StreamCodec<RegistryFriendlyByteBuf, AbstractWorkbenchRecipe> RECIPE_CODEC =
             StreamCodec.of(SyncWorkbenchRecipesMessage::encodeRecipe, SyncWorkbenchRecipesMessage::decodeRecipe);
-
     public static final StreamCodec<RegistryFriendlyByteBuf, SyncWorkbenchRecipesMessage> STREAM_CODEC = StreamCodec.composite(
             RECIPE_CODEC.apply(ByteBufCodecs.list()), message -> message.recipes,
             SyncWorkbenchRecipesMessage::new
     );
-
     public final List<AbstractWorkbenchRecipe> recipes;
-
     private SyncWorkbenchRecipesMessage(List<AbstractWorkbenchRecipe> recipes) {
         this.recipes = recipes;
     }
-
     public SyncWorkbenchRecipesMessage(MinecraftServer server) {
         RecipeManager recipeManager = server.getRecipeManager();
         List<AbstractWorkbenchRecipe> allRecipes = new ArrayList<>();
-
         recipeManager.getRecipes().stream()
                 .filter(holder -> holder.value().getType() == PSTRecipeTypes.WORKBENCH)
                 .map(holder -> {
                     AbstractWorkbenchRecipe recipe = (AbstractWorkbenchRecipe) holder.value();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     recipe.setId(holder.id().identifier());
                     return recipe;
                 })
                 .forEach(allRecipes::add);
-
-
-
-
-
-
-
-
-
-
-
-
         var registryAccess = server.registryAccess();
         ContextMap resolveContext = SlotDisplayContext.fromLevel(server.overworld());
-
         recipeManager.getRecipes().stream()
                 .filter(holder -> holder.value().getType() == RecipeType.CRAFTING)
                 .map(holder -> new RecipeHolder<>(holder.id(), (CraftingRecipe) holder.value()))
                 .filter(recipe -> hasResolvableDisplay(recipe.value().display(), resolveContext, recipe.id()))
                 .map(holder -> (AbstractWorkbenchRecipe) new WorkbenchVanillaCraftingRecipe(holder, registryAccess))
                 .forEach(allRecipes::add);
-
         recipeManager.getRecipes().stream()
                 .filter(holder -> holder.value().getType() == RecipeType.SMITHING)
                 .filter(holder -> holder.value() instanceof SmithingTransformRecipe)
@@ -107,10 +64,8 @@ public class SyncWorkbenchRecipesMessage implements CustomPacketPayload {
                 .filter(recipe -> hasResolvableDisplay(recipe.value().display(), resolveContext, recipe.id()))
                 .map(holder -> (AbstractWorkbenchRecipe) new WorkbenchVanillaSmithingRecipe(holder, registryAccess))
                 .forEach(allRecipes::add);
-
         this.recipes = List.copyOf(allRecipes);
     }
-
     private static boolean hasResolvableDisplay(List<RecipeDisplay> displays, ContextMap context, Object recipeId) {
         if (displays.isEmpty()) {
             return false;
@@ -123,7 +78,6 @@ public class SyncWorkbenchRecipesMessage implements CustomPacketPayload {
             return false;
         }
     }
-
     private static void encodeRecipe(RegistryFriendlyByteBuf buf, AbstractWorkbenchRecipe recipe) {
         Identifier.STREAM_CODEC.encode(buf, recipe.getId());
         RecipeSerializer<?> serializer = recipe.getSerializer();
@@ -132,7 +86,6 @@ public class SyncWorkbenchRecipesMessage implements CustomPacketPayload {
         Identifier.STREAM_CODEC.encode(buf, serializerId);
         contentCodec(serializer).encode(buf, recipe);
     }
-
     private static AbstractWorkbenchRecipe decodeRecipe(RegistryFriendlyByteBuf buf) {
         Identifier id = Identifier.STREAM_CODEC.decode(buf);
         Identifier serializerId = Identifier.STREAM_CODEC.decode(buf);
@@ -141,12 +94,10 @@ public class SyncWorkbenchRecipesMessage implements CustomPacketPayload {
         recipe.setId(id);
         return recipe;
     }
-
     @SuppressWarnings("unchecked")
     private static StreamCodec<RegistryFriendlyByteBuf, AbstractWorkbenchRecipe> contentCodec(RecipeSerializer<?> serializer) {
         return (StreamCodec<RegistryFriendlyByteBuf, AbstractWorkbenchRecipe>) (StreamCodec<?, ?>) serializer.streamCodec();
     }
-
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;

@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.event.LivingHurtPSTEvent;
 import daripher.skilltree.event.PSTEvents;
 import daripher.skilltree.skill.SkillBonusProvider;
@@ -9,19 +8,19 @@ import daripher.skilltree.util.event.EventPriority;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
 public class DamageConversionBonusHandler {
+<<<<<<< Updated upstream
     private static boolean isProcessingConversion;
 
+=======
+    private static boolean isProcessingConversion; 
+>>>>>>> Stashed changes
     public static void register() {
         PSTEvents.LIVING_HURT.register(EventPriority.LOWEST, DamageConversionBonusHandler::dealConvertedDamage);
     }
-
     private static void dealConvertedDamage(LivingHurtPSTEvent event) {
         if (isProcessingConversion) {
             return;

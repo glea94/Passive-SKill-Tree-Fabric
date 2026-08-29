@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -17,42 +16,34 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyBonus> {
     private @NotNull ItemStackPredicate itemStackPredicate;
     private float multiplier;
-
     public RepairEfficiencyBonus(@NotNull ItemStackPredicate itemStackPredicate, float multiplier) {
         this.itemStackPredicate = itemStackPredicate;
         this.multiplier = multiplier;
     }
-
     public float getRepairEfficiencyMultiplier(ItemStack stack) {
         if (!getItemCondition().test(stack)) {
             return 0f;
         }
         return getMultiplier();
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.REPAIR_EFFICIENCY.get();
     }
-
     @Override
     public RepairEfficiencyBonus copy() {
         return new RepairEfficiencyBonus(itemStackPredicate, multiplier);
     }
-
     @Override
     public RepairEfficiencyBonus multiply(double multiplier) {
         return new RepairEfficiencyBonus(itemStackPredicate, (float) (this.multiplier * multiplier));
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof RepairEfficiencyBonus otherBonus)) {
@@ -60,7 +51,6 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
         }
         return Objects.equals(otherBonus.itemStackPredicate, this.itemStackPredicate);
     }
-
     @Override
     public SkillBonus<RepairEfficiencyBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof RepairEfficiencyBonus otherBonus)) {
@@ -68,7 +58,6 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
         }
         return new RepairEfficiencyBonus(itemStackPredicate, otherBonus.multiplier + this.multiplier);
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         Component itemDescription = itemStackPredicate.getTooltip("plural.type");
@@ -79,12 +68,10 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
         return Component.translatable(getDescriptionId(), itemDescription, bonusDescription)
                 .withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return multiplier > 0;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<RepairEfficiencyBonus> consumer) {
         editor.addLabel(0, 0, "Multiplier", ChatFormatting.GOLD);
@@ -103,35 +90,28 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
             consumer.accept(this.copy());
         });
     }
-
     private void selectItemCondition(SkillTreeEditor editor, Consumer<RepairEfficiencyBonus> consumer, ItemStackPredicate condition) {
         setItemCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectMultiplier(Consumer<RepairEfficiencyBonus> consumer, Double value) {
         setMultiplier(value.floatValue());
         consumer.accept(this.copy());
     }
-
     public void setItemCondition(@NotNull ItemStackPredicate itemStackPredicate) {
         this.itemStackPredicate = itemStackPredicate;
     }
-
     public void setMultiplier(float multiplier) {
         this.multiplier = multiplier;
     }
-
     @NotNull
     public ItemStackPredicate getItemCondition() {
         return itemStackPredicate;
     }
-
     public float getMultiplier() {
         return multiplier;
     }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -146,12 +126,10 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
         }
         return this.multiplier == that.multiplier;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(itemStackPredicate, multiplier);
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public RepairEfficiencyBonus deserialize(JsonObject json) throws JsonParseException {
@@ -159,7 +137,6 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
             float multiplier = SerializationHelper.getElement(json, "multiplier").getAsFloat();
             return new RepairEfficiencyBonus(condition, multiplier);
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof RepairEfficiencyBonus aBonus)) {
@@ -168,14 +145,12 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
             SerializationHelper.serializeItemPredicate(json, aBonus.itemStackPredicate);
             json.addProperty("multiplier", aBonus.multiplier);
         }
-
         @Override
         public RepairEfficiencyBonus deserialize(CompoundTag tag) {
             ItemStackPredicate condition = SerializationHelper.deserializeItemPredicate(tag);
             float multiplier = tag.getFloatOr("multiplier", 0f);
             return new RepairEfficiencyBonus(condition, multiplier);
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof RepairEfficiencyBonus aBonus)) {
@@ -186,14 +161,20 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
             tag.putFloat("multiplier", aBonus.multiplier);
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public RepairEfficiencyBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new RepairEfficiencyBonus(NetworkHelper.readItemPredicate(buf), buf.readFloat());
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RepairEfficiencyBonus aBonus)) {
@@ -202,7 +183,6 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
             NetworkHelper.writeItemPredicate(buf, aBonus.itemStackPredicate);
             buf.writeFloat(aBonus.multiplier);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new RepairEfficiencyBonus(NoneItemStackPredicate.INSTANCE, 0.1f);

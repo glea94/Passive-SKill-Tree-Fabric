@@ -1,13 +1,13 @@
 package daripher.skilltree.exp;
-
 import net.minecraft.world.entity.player.Player;
-
 public class ExpHelper {
     public static long getPlayerExp(Player player) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         return levelsToXP(player.experienceLevel) + Math.round(player.experienceProgress * player.getXpNeededForNextLevel());
     }
-
     private static int levelsToXP(int levels) {
         if (levels <= 16) {
             return (int) (Math.pow(levels, 2) + 6 * levels);

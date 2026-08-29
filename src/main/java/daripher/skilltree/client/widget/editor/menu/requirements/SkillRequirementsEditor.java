@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget.editor.menu.requirements;
-
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.editor.menu.EditorMenu;
@@ -7,14 +6,11 @@ import daripher.skilltree.init.PSTSkillRequirements;
 import daripher.skilltree.skill.PassiveSkill;
 import daripher.skilltree.skill.requirement.SkillRequirement;
 import net.minecraft.network.chat.Component;
-
 import java.util.List;
-
 public class SkillRequirementsEditor extends EditorMenu {
     public SkillRequirementsEditor(SkillTreeEditor editor, EditorMenu previousMenu) {
         super(editor, previousMenu);
     }
-
     @Override
     public void init() {
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
@@ -40,12 +36,14 @@ public class SkillRequirementsEditor extends EditorMenu {
             editor.increaseHeight(19);
         }
     }
-
     private void addSkillRequirement(SkillTreeEditor editor, SkillRequirement<?> requirement) {
         editor.getSelectedSkills().forEach(s -> s.getRequirements().add(requirement.copy()));
         editor.saveSelectedSkills();
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         editor.selectMenu(previousMenu);
     }
 }

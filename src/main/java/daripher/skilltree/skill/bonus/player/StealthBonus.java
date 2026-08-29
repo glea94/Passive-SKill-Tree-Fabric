@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -20,22 +19,18 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class StealthBonus implements SkillBonus<StealthBonus> {
     private float amount;
     private @NotNull LivingMultiplier playerMultiplier = NoneLivingMultiplier.INSTANCE;
     private @NotNull LivingMultiplier enemyMultiplier = NoneLivingMultiplier.INSTANCE;
     private @NotNull LivingEntityPredicate playerCondition = NoneLivingEntityPredicate.INSTANCE;
     private @NotNull LivingEntityPredicate enemyCondition = NoneLivingEntityPredicate.INSTANCE;
-
     public StealthBonus(float amount) {
         this.amount = amount;
     }
-
     public float getStealthMultiplier(Player player, LivingEntity lookingEntity) {
         if (!playerCondition.test(player)) {
             return 0f;
@@ -45,12 +40,10 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
         }
         return amount * playerMultiplier.getValue(player) * enemyMultiplier.getValue(lookingEntity);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.STEALTH.get();
     }
-
     @Override
     public StealthBonus copy() {
         StealthBonus bonus = new StealthBonus(amount);
@@ -60,13 +53,11 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
         bonus.enemyCondition = this.enemyCondition;
         return bonus;
     }
-
     @Override
     public StealthBonus multiply(double multiplier) {
         amount *= (float) multiplier;
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof StealthBonus otherBonus)) {
@@ -83,7 +74,6 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
         }
         return Objects.equals(otherBonus.enemyCondition, this.enemyCondition);
     }
-
     @Override
     public SkillBonus<StealthBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof StealthBonus otherBonus)) {
@@ -97,7 +87,6 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
         mergedBonus.enemyCondition = this.enemyCondition;
         return mergedBonus;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         String descriptionId = getDescriptionId() + (!isPositive() ? ".negative" : "");
@@ -112,7 +101,6 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
     public boolean isPositive() {
         return amount > 0;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<StealthBonus> consumer) {
         editor.addLabel(0, 0, "Amount", ChatFormatting.GOLD);
@@ -141,51 +129,43 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
                 .setMenuInitFunc(() -> addTargetMultiplierWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectAmount(Consumer<StealthBonus> consumer, Double value) {
         setAmount(value.floatValue());
         consumer.accept(this.copy());
     }
-
     private void addTargetMultiplierWidgets(SkillTreeEditor editor, Consumer<StealthBonus> consumer) {
         enemyMultiplier.addEditorWidgets(editor, multiplier -> {
             setEnemyMultiplier(multiplier);
             consumer.accept(this.copy());
         });
     }
-
     private void selectTargetMultiplier(SkillTreeEditor editor, Consumer<StealthBonus> consumer, LivingMultiplier multiplier) {
         setEnemyMultiplier(multiplier);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addPlayerMultiplierWidgets(SkillTreeEditor editor, Consumer<StealthBonus> consumer) {
         playerMultiplier.addEditorWidgets(editor, multiplier -> {
             setPlayerMultiplier(multiplier);
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<StealthBonus> consumer, LivingMultiplier multiplier) {
         setPlayerMultiplier(multiplier);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addTargetConditionWidgets(SkillTreeEditor editor, Consumer<StealthBonus> consumer) {
         enemyCondition.addEditorWidgets(editor, c -> {
             setEnemyCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     private void selectTargetCondition(SkillTreeEditor editor, Consumer<StealthBonus> consumer, LivingEntityPredicate condition) {
         setEnemyCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<StealthBonus> consumer) {
         playerCondition.addEditorWidgets(editor, c -> {
             setPlayerCondition(c);
@@ -197,31 +177,25 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     public StealthBonus setPlayerCondition(LivingEntityPredicate condition) {
         this.playerCondition = condition;
         return this;
     }
-
     public StealthBonus setEnemyCondition(LivingEntityPredicate condition) {
         this.enemyCondition = condition;
         return this;
     }
-
     public StealthBonus setPlayerMultiplier(LivingMultiplier multiplier) {
         this.playerMultiplier = multiplier;
         return this;
     }
-
     public StealthBonus setEnemyMultiplier(LivingMultiplier multiplier) {
         this.enemyMultiplier = multiplier;
         return this;
     }
-
     public void setAmount(float amount) {
         this.amount = amount;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public StealthBonus deserialize(JsonObject json) throws JsonParseException {
@@ -233,7 +207,6 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
             bonus.enemyCondition = SerializationHelper.deserializeLivingCondition(json, "target_condition");
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof StealthBonus aBonus)) {
@@ -245,7 +218,6 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
             SerializationHelper.serializeLivingCondition(json, aBonus.playerCondition, "player_condition");
             SerializationHelper.serializeLivingCondition(json, aBonus.enemyCondition, "target_condition");
         }
-
         @Override
         public StealthBonus deserialize(CompoundTag tag) {
             float amount = tag.getFloatOr("amount", 0f);
@@ -256,7 +228,6 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
             bonus.enemyCondition = SerializationHelper.deserializeLivingCondition(tag, "target_condition");
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof StealthBonus aBonus)) {
@@ -270,8 +241,11 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
             SerializationHelper.serializeLivingCondition(tag, aBonus.enemyCondition, "target_condition");
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public StealthBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -282,8 +256,11 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
             bonus.enemyCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof StealthBonus aBonus)) {
@@ -295,7 +272,6 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
             NetworkHelper.writeLivingCondition(buf, aBonus.playerCondition);
             NetworkHelper.writeLivingCondition(buf, aBonus.enemyCondition);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new StealthBonus(0.1f);

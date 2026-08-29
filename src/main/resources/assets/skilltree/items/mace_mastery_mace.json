@@ -1,0 +1,10 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "skilltree:item/mace_mastery_mace",
+    "tints": [
+      { "type": "minecraft:constant", "value": 16777215 },
+      { "type": "minecraft:custom_model_data", "index": 0, "default": 16777215 }
+    ]
+  }
+}

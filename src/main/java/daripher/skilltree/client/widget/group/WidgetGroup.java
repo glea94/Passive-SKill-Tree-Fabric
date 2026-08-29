@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget.group;
-
 import daripher.skilltree.client.widget.TickingWidget;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -10,21 +9,20 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.awt.geom.Rectangle2D;
 import java.util.HashSet;
 import java.util.Set;
-
 public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implements TickingWidget {
     protected final Set<T> widgets = new HashSet<>();
     protected Runnable rebuildFunc = () -> {
     };
-
     public WidgetGroup(int x, int y, int width, int height) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         super(x, y, width, height, Component.empty());
     }
-
     @Override
     protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         widgetsCopy().forEach(widget -> widget.extractRenderState(graphics, mouseX, mouseY, partialTick));
@@ -32,11 +30,9 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
         graphics.pose().translate(0f, 0f);
         graphics.pose().popMatrix();
     }
-
     @Override
     protected void updateWidgetNarration(@NotNull NarrationElementOutput output) {
     }
-
     @Override
     public boolean keyPressed(KeyEvent keyEvent) {
         boolean result = false;
@@ -47,7 +43,6 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
         }
         return result;
     }
-
     @Override
     public boolean keyReleased(KeyEvent keyEvent) {
         boolean result = false;
@@ -58,7 +53,6 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
         }
         return result;
     }
-
     @Override
     public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
         boolean result = false;
@@ -69,7 +63,6 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
         }
         return result;
     }
-
     @Override
     public boolean mouseDragged(MouseButtonEvent mouseButtonEvent, double dragX, double dragY) {
         boolean result = false;
@@ -80,7 +73,6 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
         }
         return result;
     }
-
     @Override
     public boolean mouseReleased(MouseButtonEvent mouseButtonEvent) {
         boolean result = false;
@@ -91,7 +83,6 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
         }
         return result;
     }
-
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         boolean result = false;
@@ -102,7 +93,6 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
         }
         return result;
     }
-
     @Override
     public boolean charTyped(CharacterEvent characterEvent) {
         boolean result = false;
@@ -113,12 +103,10 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
         }
         return result;
     }
-
     @Override
     public void mouseMoved(double mouseX, double mouseY) {
         widgetsCopy().forEach(widget -> widget.mouseMoved(mouseX, mouseY));
     }
-
     public void onWidgetTick() {
         for (T t : widgetsCopy()) {
             if (t instanceof TickingWidget tickingWidget) {
@@ -126,39 +114,34 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
             }
         }
     }
-
     public <W extends T> @NotNull W addWidget(@NotNull W widget) {
         widgets.add(widget);
         return widget;
     }
-
     public Set<T> getWidgets() {
         return widgets;
     }
-
     public void clearWidgets() {
         widgets.clear();
     }
-
     public void setRebuildFunc(Runnable rebuildFunc) {
         this.rebuildFunc = rebuildFunc;
     }
-
     public void rebuildWidgets() {
         rebuildFunc.run();
     }
-
     protected HashSet<T> widgetsCopy() {
         return new HashSet<>(widgets);
     }
-
     public Rectangle2D.Float getArea() {
         return new Rectangle2D.Float(getX(), getY(), this.getWidth(), this.getHeight());
     }
-
     public @Nullable T getWidgetAt(double mouseX, double mouseY) {
         for (T widget : widgets) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             if (!widget.visible) {
                 continue;
             }
@@ -169,7 +152,6 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
         }
         return null;
     }
-
     protected @NotNull Rectangle2D.Double getWidgetArea(T widget) {
         double width = widget.getWidth();
         double height = widget.getHeight();

@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.network.ClientWorkbenchRecipeCache;
@@ -15,34 +14,27 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
     private @NotNull Identifier recipeId;
-
     public RecipeUnlockBonus(@NotNull Identifier recipeId) {
         this.recipeId = recipeId;
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.RECIPE_UNLOCK.get();
     }
-
     @Override
     public RecipeUnlockBonus copy() {
         return new RecipeUnlockBonus(recipeId);
     }
-
     @Override
     public RecipeUnlockBonus multiply(double multiplier) {
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof RecipeUnlockBonus otherBonus)) {
@@ -50,12 +42,10 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
         }
         return Objects.equals(otherBonus.recipeId, this.recipeId);
     }
-
     @Override
     public SkillBonus<RecipeUnlockBonus> merge(SkillBonus<?> other) {
         return this;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         String customSkillDescriptionId = TooltipHelper.getRecipeDescriptionId(recipeId) + ".custom_skill_description";
@@ -70,12 +60,10 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
         MutableComponent tooltip = Component.translatable(getDescriptionId(), recipeTooltip);
         return tooltip.withStyle(skillBonusTooltipStyle);
     }
-
     @Override
     public boolean isPositive() {
         return true;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<RecipeUnlockBonus> consumer) {
         editor.addLabel(0, 0, "Recipe ID", ChatFormatting.GOLD);
@@ -86,22 +74,18 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
         editor.addSelectionMenu(0, 0, 200, artisanRecipes).setValue(recipeId).setResponder(id -> selectRecipeId(editor, consumer, id));
         editor.increaseHeight(19);
     }
-
     private void selectRecipeId(SkillTreeEditor editor, Consumer<RecipeUnlockBonus> consumer, Identifier id) {
         setRecipeId(id);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     public void setRecipeId(@NotNull Identifier id) {
         this.recipeId = id;
     }
-
     @NotNull
     public Identifier getRecipeId() {
         return recipeId;
     }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -113,19 +97,16 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
         RecipeUnlockBonus that = (RecipeUnlockBonus) obj;
         return Objects.equals(this.recipeId, that.recipeId);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(recipeId);
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public RecipeUnlockBonus deserialize(JsonObject json) throws JsonParseException {
             Identifier recipeId = Identifier.parse(json.get("recipe_id").getAsString());
             return new RecipeUnlockBonus(recipeId);
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof RecipeUnlockBonus aBonus)) {
@@ -133,13 +114,11 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
             }
             json.addProperty("recipe_id", aBonus.recipeId.toString());
         }
-
         @Override
         public RecipeUnlockBonus deserialize(CompoundTag tag) {
             Identifier recipeId = Identifier.parse(tag.getString("recipe_id").orElseThrow());
             return new RecipeUnlockBonus(recipeId);
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof RecipeUnlockBonus aBonus)) {
@@ -149,15 +128,21 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
             tag.putString("recipe_id", aBonus.recipeId.toString());
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public RecipeUnlockBonus deserialize(RegistryFriendlyByteBuf buf) {
             Identifier recipeId = Identifier.parse(buf.readUtf());
             return new RecipeUnlockBonus(recipeId);
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RecipeUnlockBonus aBonus)) {
@@ -165,7 +150,6 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
             }
             buf.writeUtf(aBonus.recipeId.toString());
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new RecipeUnlockBonus(Identifier.parse("unknown_recipe"));

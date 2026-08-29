@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -22,21 +21,17 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus> {
     private float multiplier;
     private @NotNull LivingMultiplier playerMultiplier = NoneLivingMultiplier.INSTANCE;
     private @NotNull LivingEntityPredicate playerCondition = NoneLivingEntityPredicate.INSTANCE;
     private @NotNull ItemStackPredicate itemStackPredicate = NoneItemStackPredicate.INSTANCE;
-
     public ItemUsageSpeedBonus(float multiplier) {
         this.multiplier = multiplier;
     }
-
     public float getItemUsageSpeedModifier(Player player, ItemStack itemStack) {
         if (!playerCondition.test(player)) {
             return 0f;
@@ -46,12 +41,10 @@ public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus
         }
         return multiplier * playerMultiplier.getValue(player);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.ITEM_USAGE_SPEED.get();
     }
-
     @Override
     public ItemUsageSpeedBonus copy() {
         ItemUsageSpeedBonus bonus = new ItemUsageSpeedBonus(multiplier);
@@ -60,13 +53,11 @@ public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus
         bonus.itemStackPredicate = this.itemStackPredicate;
         return bonus;
     }
-
     @Override
     public ItemUsageSpeedBonus multiply(double multiplier) {
         this.multiplier *= (float) multiplier;
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof ItemUsageSpeedBonus otherBonus)) {
@@ -80,7 +71,6 @@ public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus
         }
         return Objects.equals(otherBonus.playerCondition, this.playerCondition);
     }
-
     @Override
     public SkillBonus<ItemUsageSpeedBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof ItemUsageSpeedBonus otherBonus)) {
@@ -93,7 +83,6 @@ public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus
         mergedBonus.itemStackPredicate = this.itemStackPredicate;
         return mergedBonus;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         MutableComponent tooltip;
@@ -106,12 +95,10 @@ public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus
         tooltip = playerCondition.getTooltip(tooltip, Target.PLAYER);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return multiplier > 0;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<ItemUsageSpeedBonus> consumer) {
         editor.addLabel(0, 0, "Multiplier", ChatFormatting.GOLD);
@@ -139,65 +126,54 @@ public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus
         setMultiplier(value.floatValue());
         consumer.accept(this.copy());
     }
-
     private void addPlayerMultiplierWidgets(SkillTreeEditor editor, Consumer<ItemUsageSpeedBonus> consumer) {
         playerMultiplier.addEditorWidgets(editor, multiplier -> {
             setPlayerMultiplier(multiplier);
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<ItemUsageSpeedBonus> consumer, LivingMultiplier multiplier) {
         setPlayerMultiplier(multiplier);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<ItemUsageSpeedBonus> consumer) {
         playerCondition.addEditorWidgets(editor, c -> {
             setPlayerCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<ItemUsageSpeedBonus> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addItemConditionWidgets(SkillTreeEditor editor, Consumer<ItemUsageSpeedBonus> consumer) {
         itemStackPredicate.addEditorWidgets(editor, c -> {
             setItemCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     private void selectItemCondition(SkillTreeEditor editor, Consumer<ItemUsageSpeedBonus> consumer, ItemStackPredicate condition) {
         setItemCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     public SkillBonus<?> setPlayerCondition(LivingEntityPredicate condition) {
         this.playerCondition = condition;
         return this;
     }
-
     public SkillBonus<?> setItemCondition(ItemStackPredicate condition) {
         this.itemStackPredicate = condition;
         return this;
     }
-
     public SkillBonus<?> setPlayerMultiplier(LivingMultiplier multiplier) {
         this.playerMultiplier = multiplier;
         return this;
     }
-
     public void setMultiplier(float multiplier) {
         this.multiplier = multiplier;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public ItemUsageSpeedBonus deserialize(JsonObject json) throws JsonParseException {
@@ -208,7 +184,6 @@ public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus
             bonus.itemStackPredicate = SerializationHelper.deserializeItemPredicate(json);
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemUsageSpeedBonus aBonus)) {
@@ -219,7 +194,6 @@ public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus
             SerializationHelper.serializeLivingCondition(json, aBonus.playerCondition, "player_condition");
             SerializationHelper.serializeItemPredicate(json, aBonus.itemStackPredicate);
         }
-
         @Override
         public ItemUsageSpeedBonus deserialize(CompoundTag tag) {
             float multiplier = tag.getFloatOr("multiplier", 0f);
@@ -229,7 +203,6 @@ public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus
             bonus.itemStackPredicate = SerializationHelper.deserializeItemPredicate(tag);
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemUsageSpeedBonus aBonus)) {
@@ -242,8 +215,11 @@ public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus
             SerializationHelper.serializeItemPredicate(tag, aBonus.itemStackPredicate);
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public ItemUsageSpeedBonus deserialize(RegistryFriendlyByteBuf buf) {
             float multiplier = buf.readFloat();
@@ -253,8 +229,11 @@ public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus
             bonus.itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return bonus;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemUsageSpeedBonus aBonus)) {
@@ -265,7 +244,6 @@ public final class ItemUsageSpeedBonus implements SkillBonus<ItemUsageSpeedBonus
             NetworkHelper.writeLivingCondition(buf, aBonus.playerCondition);
             NetworkHelper.writeItemPredicate(buf, aBonus.itemStackPredicate);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new ItemUsageSpeedBonus(0.1f);

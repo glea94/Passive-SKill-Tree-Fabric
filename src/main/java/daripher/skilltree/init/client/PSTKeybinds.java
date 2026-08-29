@@ -1,5 +1,4 @@
 package daripher.skilltree.init.client;
-
 import com.mojang.blaze3d.platform.InputConstants;
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.screen.SkillTreeScreen;
@@ -15,17 +14,13 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
-
-
 public class PSTKeybinds {
     private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "main"));
     private static final KeyMapping SKILL_TREE_KEY = new KeyMapping("key.display_skill_tree", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, CATEGORY);
-
     public static void register() {
         KeyMappingHelper.registerKeyMapping(SKILL_TREE_KEY);
         ClientTickEvents.END_CLIENT_TICK.register(PSTKeybinds::handleKeyPress);
     }
-
     private static void handleKeyPress(Minecraft minecraft) {
         while (SKILL_TREE_KEY.consumeClick()) {
             if (minecraft.screen != null) {

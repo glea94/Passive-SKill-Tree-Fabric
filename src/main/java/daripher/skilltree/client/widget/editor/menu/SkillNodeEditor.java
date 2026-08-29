@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget.editor.menu;
-
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.data.client.SkillTreeEditorData;
 import daripher.skilltree.client.widget.NumericTextField;
@@ -12,20 +11,16 @@ import daripher.skilltree.skill.requirement.SkillRequirement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-
 import org.jetbrains.annotations.Nullable;
-
 public class SkillNodeEditor extends EditorMenu {
     private NumericTextField distanceEditor;
     private NumericTextField angleEditor;
     private static double lastUsedDistance = 10;
     private static double lastUsedAngle = 0;
     private boolean shouldConnect = true;
-
     public SkillNodeEditor(SkillTreeEditor editor, EditorMenu previousMenu) {
         super(editor, previousMenu);
     }
-
     @Override
     public void init() {
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
@@ -49,23 +44,22 @@ public class SkillNodeEditor extends EditorMenu {
         editor.increaseHeight(19);
         editor.addMirrorerWidgets();
     }
-
     private void createSkills(SkillFactory factory) {
         float angle = (float) angleEditor.getNumericValue();
         float distance = (float) distanceEditor.getNumericValue();
         createSkills(angle, distance, factory);
     }
-
     private void createSkills(float angle, float distance, SkillFactory skillFactory) {
         editor.getSelectedSkills().forEach(skill -> createSkill(distance, angle, skill, skillFactory));
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         editor.getSkillMirrorer().createSkills(angle, distance, skillFactory::accept);
-
         editor.clearWidgets();
         editor.rebuildWidgets();
     }
-
     private void createSkill(float distance, float angle, PassiveSkill skill, SkillFactory skillFactory) {
         angle = (float) Math.toRadians(angle);
         float skillSize = skill.getSkillSize() / 2f + 8;
@@ -73,7 +67,6 @@ public class SkillNodeEditor extends EditorMenu {
         float skillY = skill.getPositionY() + Mth.cos(angle) * (distance + skillSize);
         skillFactory.accept(skillX, skillY, skill);
     }
-
     private void createSkillCopy(float x, float y, PassiveSkill original) {
         Identifier skillTreeId = editor.getSkillTree().getId();
         PassiveSkill skill = new PassiveSkill(createNewSkillId(skillTreeId), original.getSkillSize(), original.getFrameTexture(), original.getIconTexture(), original.getTooltipFrameTexture(), original.isStartingPoint());
@@ -94,7 +87,6 @@ public class SkillNodeEditor extends EditorMenu {
         editor.getSkillTree().getSkillIds().add(skill.getId());
         SkillTreeEditorData.saveEditorSkillTree(editor.getSkillTree());
     }
-
     private void createNewSkill(float x, float y, @Nullable PassiveSkill original) {
         Identifier background = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/icons/background/lesser.png");
         Identifier icon = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "textures/icons/void.png");
@@ -110,7 +102,6 @@ public class SkillNodeEditor extends EditorMenu {
         editor.getSkillTree().getSkillIds().add(skill.getId());
         SkillTreeEditorData.saveEditorSkillTree(editor.getSkillTree());
     }
-
     public static Identifier createNewSkillId(Identifier skillTreeId) {
         Identifier id;
         int counter = 1;
@@ -119,7 +110,6 @@ public class SkillNodeEditor extends EditorMenu {
         } while (SkillTreeEditorData.getEditorSkill(id) != null);
         return id;
     }
-
     public void setConnect(SkillTreeEditor editor, boolean connect) {
         this.shouldConnect = connect;
         editor.clearWidgets();

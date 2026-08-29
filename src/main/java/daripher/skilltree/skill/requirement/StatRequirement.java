@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.requirement;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -21,38 +20,30 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.core.registries.BuiltInRegistries;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
-
 public final class StatRequirement implements SkillRequirement<StatRequirement> {
     private Identifier statTypeId;
     private Identifier statId;
     private int minValue;
-
     public StatRequirement(Identifier statTypeId, Identifier statId, int minValue) {
         this.statTypeId = statTypeId;
         this.statId = statId;
         this.minValue = minValue;
     }
-
     @Override
     public boolean test(Player player) {
-
         StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(statTypeId).map(Holder::value).orElse(null);
-
         if (statType == null) {
             return false;
         }
         int statValue = getStatValue(player, statType);
         return statValue >= minValue;
     }
-
     @Override
     public MutableComponent getTooltip() {
-
         StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(statTypeId).map(Holder::value).orElse(null);
         if (statType == null) {
             return Component.translatable("Unknown stat type: " + statTypeId).withStyle(ChatFormatting.RED);
@@ -92,7 +83,6 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
             return Component.literal(statType.getDisplayName().getString() + " " + itemName.getString() + ": " + minValue);
         }
     }
-
     private <T> int getStatValue(Player player, @NotNull StatType<T> statType) {
         StatsCounter playerStats = getPlayerStats(player);
         int statValue;
@@ -104,7 +94,6 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
             statValue = playerStats.getValue(Stats.CUSTOM, originalStatId);
         } else {
             T stat = statType.getRegistry().get(statId).map(Holder::value).orElse(null);
-
             if (stat == null) {
                 return 0;
             }
@@ -112,19 +101,15 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         }
         return statValue;
     }
-
     private StatsCounter getPlayerStats(Player player) {
-
         if (player.level().isClientSide()) {
             return getClientPlayerStats(player);
         }
         return ((ServerPlayer) player).getStats();
     }
-
     private static StatsCounter getClientPlayerStats(Player player) {
         return ((LocalPlayer) player).getStats();
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<StatRequirement> consumer) {
         editor.addLabel(0, 0, "Stat Type", ChatFormatting.GOLD);
@@ -135,9 +120,7 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Stat", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-
         StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(getStatTypeId()).map(Holder::value).orElse(null);
-
         if (statType == null) {
             editor.addLabel(0, 0, "Unknown stat type: " + getStatTypeId(), ChatFormatting.RED);
             editor.increaseHeight(19);
@@ -162,16 +145,13 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         setMinValue(value.intValue());
         consumer.accept(this.copy());
     }
-
     private void selectStat(Consumer<StatRequirement> consumer, Identifier statId) {
         setStatId(statId);
         consumer.accept(this.copy());
     }
-
     private void selectStatType(Consumer<StatRequirement> consumer, Identifier statTypeId) {
         setStatTypeId(statTypeId);
         StatType<?> statType = BuiltInRegistries.STAT_TYPE.get(getStatTypeId()).map(Holder::value).orElse(null);
-
         if (statType == null) {
             consumer.accept(this.copy());
             return;
@@ -180,24 +160,19 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         statIds.stream().findFirst().ifPresent(this::setStatId);
         consumer.accept(this.copy());
     }
-
     public void setStatId(Identifier statId) {
         this.statId = statId;
     }
-
     public void setStatTypeId(Identifier statTypeId) {
         this.statTypeId = statTypeId;
     }
-
     public void setMinValue(int minValue) {
         this.minValue = minValue;
     }
-
     @Override
     public StatRequirement copy() {
         return new StatRequirement(statTypeId, statId, minValue);
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -209,25 +184,20 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
         StatRequirement that = (StatRequirement) o;
         return minValue == that.minValue && Objects.equals(statTypeId, that.statTypeId) && Objects.equals(statId, that.statId);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(statTypeId, statId, minValue);
     }
-
     public Identifier getStatTypeId() {
         return statTypeId;
     }
-
     public Identifier getStatId() {
         return statId;
     }
-
     @Override
     public SkillRequirement.Serializer getSerializer() {
         return PSTSkillRequirements.STAT_VALUE.get();
     }
-
     public static class Serializer implements SkillRequirement.Serializer {
         @Override
         public SkillRequirement<?> deserialize(JsonObject json) throws JsonParseException {
@@ -236,7 +206,6 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
             int minValue = json.get("minValue").getAsInt();
             return new StatRequirement(statTypeId, statId, minValue);
         }
-
         @Override
         public void serialize(JsonObject json, SkillRequirement<?> requirement) {
             if (requirement instanceof StatRequirement aRequirement) {
@@ -245,16 +214,13 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
                 json.addProperty("minValue", aRequirement.minValue);
             }
         }
-
         @Override
         public SkillRequirement<?> deserialize(CompoundTag tag) {
-
             Identifier statTypeId = Identifier.parse(tag.getString("statTypeId").orElse(""));
             Identifier statId = Identifier.parse(tag.getString("statId").orElse(""));
             int minValue = tag.getInt("minValue").orElse(0);
             return new StatRequirement(statTypeId, statId, minValue);
         }
-
         @Override
         public CompoundTag serialize(SkillRequirement<?> requirement) {
             CompoundTag tag = new CompoundTag();
@@ -265,7 +231,6 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
             }
             return tag;
         }
-
         @Override
         public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
             Identifier statTypeId = Identifier.parse(buf.readUtf());
@@ -273,7 +238,6 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
             int minValue = buf.readInt();
             return new StatRequirement(statTypeId, statId, minValue);
         }
-
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillRequirement<?> requirement) {
             if (requirement instanceof StatRequirement aRequirement) {
@@ -282,10 +246,8 @@ public final class StatRequirement implements SkillRequirement<StatRequirement> 
                 buf.writeInt(aRequirement.minValue);
             }
         }
-
         @Override
         public SkillRequirement<?> createDefaultInstance() {
-
             Identifier customStatType = Stats.CUSTOM.getRegistry().key().identifier();
             return new StatRequirement(customStatType, Stats.DEATHS, 1);
         }

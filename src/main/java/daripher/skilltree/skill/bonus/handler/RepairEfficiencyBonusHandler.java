@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.event.AnvilUpdatePSTEvent;
 import daripher.skilltree.event.PSTEvents;
 import daripher.skilltree.skill.SkillBonusProvider;
@@ -7,15 +6,11 @@ import daripher.skilltree.skill.bonus.player.RepairEfficiencyBonus;
 import daripher.skilltree.util.event.EventPriority;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-
 import java.util.List;
-
-
 public class RepairEfficiencyBonusHandler {
     public static void register() {
         PSTEvents.ANVIL_UPDATE.register(EventPriority.HIGH, RepairEfficiencyBonusHandler::applyRepairEfficiency);
     }
-
     private static void applyRepairEfficiency(AnvilUpdatePSTEvent event) {
         Player player = event.getPlayer();
         if (player == null) {

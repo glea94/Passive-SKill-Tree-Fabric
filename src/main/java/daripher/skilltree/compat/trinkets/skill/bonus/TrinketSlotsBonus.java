@@ -1,5 +1,4 @@
 package daripher.skilltree.compat.trinkets.skill.bonus;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.SkillTreeMod;
@@ -20,40 +19,40 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-
 import java.util.UUID;
 import java.util.function.Consumer;
-
 public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
     private String slotName;
     private int amount;
     private final Identifier modifierId;
-
     public TrinketSlotsBonus(String slotName, int amount) {
         this.slotName = slotName;
         this.amount = amount;
         this.modifierId = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "trinket_slots_bonus_" + UUID.randomUUID());
     }
-
     private TrinketSlotsBonus(String slotName, int amount, Identifier modifierId) {
         this.slotName = slotName;
         this.amount = amount;
         this.modifierId = modifierId;
     }
-
     private AttributeInstance getSlotAttributeInstance(ServerPlayer player) {
         Identifier attributeId = Identifier.fromNamespaceAndPath("trinkets", slotName);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         Holder<Attribute> slotAttributeHolder = BuiltInRegistries.ATTRIBUTE.get(attributeId)
                 .map(holder -> (Holder<Attribute>) (Object) holder)
                 .orElse(null);
         if (slotAttributeHolder == null) {
             return null;
         }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         return player.getAttribute(slotAttributeHolder);
     }
-
     @Override
     public void onSkillLearned(ServerPlayer player, boolean firstTime) {
         if (!firstTime) {
@@ -66,7 +65,6 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
         AttributeModifier modifier = new AttributeModifier(modifierId, amount, AttributeModifier.Operation.ADD_VALUE);
         attributeInstance.addPermanentModifier(modifier);
     }
-
     @Override
     public void onSkillRemoved(ServerPlayer player) {
         AttributeInstance attributeInstance = getSlotAttributeInstance(player);
@@ -75,32 +73,26 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
         }
         attributeInstance.removeModifier(modifierId);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return TrinketsCompatibility.TRINKET_SLOTS_BONUS.get();
     }
-
     @Override
     public TrinketSlotsBonus copy() {
         return new TrinketSlotsBonus(slotName, amount, modifierId);
     }
-
     @Override
     public TrinketSlotsBonus multiply(double multiplier) {
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         return false;
     }
-
     @Override
     public SkillBonus<TrinketSlotsBonus> merge(SkillBonus<?> other) {
         throw new UnsupportedOperationException();
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         Component slotDescription;
@@ -116,7 +108,6 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
     public boolean isPositive() {
         return amount > 0;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<TrinketSlotsBonus> consumer) {
         editor.addLabel(0, 0, "Amount", ChatFormatting.GOLD);
@@ -126,25 +117,20 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
         editor.addTextField(0, 0, 200, 14, slotName).setResponder(value -> selectSlotName(consumer, value));
         editor.increaseHeight(19);
     }
-
     private void selectSlotName(Consumer<TrinketSlotsBonus> consumer, String slotName) {
         setSlotName(slotName);
         consumer.accept(this.copy());
     }
-
     private void selectAmount(Consumer<TrinketSlotsBonus> consumer, Double value) {
         setAmount(value.intValue());
         consumer.accept(this.copy());
     }
-
     public void setSlotName(String slotName) {
         this.slotName = slotName;
     }
-
     public void setAmount(int amount) {
         this.amount = amount;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public TrinketSlotsBonus deserialize(JsonObject json) throws JsonParseException {
@@ -153,7 +139,6 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
             String modifierId = SerializationHelper.getElement(json, "modifier_id").getAsString();
             return new TrinketSlotsBonus(slotName, amount, Identifier.parse(modifierId));
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof TrinketSlotsBonus aBonus)) {
@@ -163,16 +148,17 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
             json.addProperty("amount", aBonus.amount);
             json.addProperty("modifier_id", aBonus.modifierId.toString());
         }
-
         @Override
         public TrinketSlotsBonus deserialize(CompoundTag tag) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             String slotName = tag.getString("slot").orElse("");
             int amount = tag.getInt("amount").orElse(0);
             String modifierId = tag.getString("modifier_id").orElse("");
             return new TrinketSlotsBonus(slotName, amount, Identifier.parse(modifierId));
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof TrinketSlotsBonus aBonus)) {
@@ -184,8 +170,11 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
             tag.putString("modifier_id", aBonus.modifierId.toString());
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public TrinketSlotsBonus deserialize(RegistryFriendlyByteBuf buf) {
             String slotName = buf.readUtf();
@@ -193,8 +182,11 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
             String modifierId = buf.readUtf();
             return new TrinketSlotsBonus(slotName, amount, Identifier.parse(modifierId));
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof TrinketSlotsBonus aBonus)) {
@@ -204,7 +196,6 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
             buf.writeInt(aBonus.amount);
             buf.writeUtf(aBonus.modifierId.toString());
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new TrinketSlotsBonus("ring", 1);

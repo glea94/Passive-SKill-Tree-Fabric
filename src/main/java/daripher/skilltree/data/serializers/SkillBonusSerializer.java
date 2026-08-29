@@ -1,20 +1,16 @@
 package daripher.skilltree.data.serializers;
-
 import com.google.gson.*;
 import daripher.skilltree.init.PSTRegistries;
 import daripher.skilltree.skill.bonus.SkillBonus;
 import daripher.skilltree.skill.bonus.player.BrokenSkillBonus;
 import net.minecraft.resources.Identifier;
-
 import java.lang.reflect.Type;
 import java.util.Objects;
-
 public class SkillBonusSerializer implements JsonSerializer<SkillBonus<?>>, JsonDeserializer<SkillBonus<?>> {
     @Override
     public SkillBonus<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObj = (JsonObject) json;
         String type = jsonObj.get("type").getAsString();
-
         Identifier serializerId = Identifier.parse(type);
         SkillBonus.Serializer serializer = PSTRegistries.SKILL_BONUSES.get().getValue(serializerId);
         if (serializer == null) {
@@ -22,7 +18,6 @@ public class SkillBonusSerializer implements JsonSerializer<SkillBonus<?>>, Json
         }
         return serializer.deserialize(jsonObj);
     }
-
     @Override
     public JsonElement serialize(SkillBonus<?> src, Type typeOfSrc, JsonSerializationContext context) {
         JsonObject json = new JsonObject();

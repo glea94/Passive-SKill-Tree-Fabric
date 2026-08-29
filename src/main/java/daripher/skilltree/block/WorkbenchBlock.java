@@ -1,5 +1,4 @@
 package daripher.skilltree.block;
-
 import daripher.skilltree.inventory.menu.WorkbenchMenu;
 import daripher.skilltree.util.registry.DeferredRegister;
 import net.minecraft.core.BlockPos;
@@ -20,36 +19,40 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 public class WorkbenchBlock extends Block {
     private static final Component CONTAINER_TITLE = Component.translatable("container.upgrade");
-
     public WorkbenchBlock() {
+<<<<<<< Updated upstream
 
 
 
 
+=======
+>>>>>>> Stashed changes
         super(Properties.of().setId(ResourceKey.create(Registries.BLOCK, DeferredRegister.currentId()))
                 .mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)
                 .ignitedByLava());
     }
+<<<<<<< Updated upstream
 
 
     @SuppressWarnings("deprecation")
+=======
+>>>>>>> Stashed changes
     @Override
     protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState blockState, Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult blockHitResult) {
-
         if (level.isClientSide()) {
-
             return InteractionResult.SUCCESS;
         } else {
             player.openMenu(blockState.getMenuProvider(level, blockPos));
-
             return InteractionResult.SUCCESS;
         }
     }
+<<<<<<< Updated upstream
 
     @SuppressWarnings("deprecation")
+=======
+>>>>>>> Stashed changes
     @Nullable
     @Override
     public MenuProvider getMenuProvider(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos) {

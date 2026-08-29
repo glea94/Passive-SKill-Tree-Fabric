@@ -1,0 +1,40 @@
+{
+  "id": "skilltree:mace_mastery_11",
+  "bonuses": [],
+  "requirements": [
+    {
+      "type": "skilltree:learned_skill",
+      "skill_id": "skilltree:mace_mastery_8"
+    },
+    {
+      "type": "skilltree:learned_skill",
+      "skill_id": "skilltree:mace_mastery_9"
+    },
+    {
+      "type": "skilltree:learned_skill",
+      "skill_id": "skilltree:mace_mastery_10"
+    },
+    {
+      "type": "skilltree:mace_mastery_kills",
+      "min_kills": 150
+    }
+  ],
+  "directConnections": [
+    "skilltree:mace_mastery_8",
+    "skilltree:mace_mastery_9",
+    "skilltree:mace_mastery_10"
+  ],
+  "longConnections": [],
+  "oneWayConnections": [],
+  "tags": [],
+  "backgroundTexture": "skilltree:textures/icons/background/class.png",
+  "iconTexture": "skilltree:textures/icons/mace_mastery.png",
+  "borderTexture": "skilltree:textures/tooltip/keystone.png",
+  "titleColor": "",
+  "positionX": 134.61179,
+  "positionY": -169.94379,
+  "buttonSize": 30,
+  "isStartingPoint": false,
+  "isAlwaysStartingPoint": false,
+  "cost": 0
+}

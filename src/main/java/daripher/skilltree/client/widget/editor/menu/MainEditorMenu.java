@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget.editor.menu;
-
 import daripher.skilltree.data.client.SkillTreeEditorData;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.editor.menu.bonuses.SkillBonusesEditor;
@@ -8,14 +7,11 @@ import daripher.skilltree.client.widget.editor.menu.requirements.SkillRequiremen
 import daripher.skilltree.client.widget.editor.menu.tags.SkillTagsEditor;
 import daripher.skilltree.skill.PassiveSkill;
 import daripher.skilltree.skill.PassiveSkillTree;
-
 import java.util.Set;
-
 public class MainEditorMenu extends EditorMenu {
     public MainEditorMenu(SkillTreeEditor editor) {
         super(editor, null);
     }
-
     @Override
     public void init() {
         clearWidgets();
@@ -36,7 +32,6 @@ public class MainEditorMenu extends EditorMenu {
         editor.addConfirmationButton(0, 0, 200, 14, "Remove", "Confirm").setPressFunc(b -> deleteSelectedSkills());
         editor.increaseHeight(19);
     }
-
     private void deleteSelectedSkills() {
         Set<PassiveSkill> selectedSkills = editor.getSelectedSkills();
         PassiveSkillTree skillTree = editor.getSkillTree();
@@ -46,16 +41,17 @@ public class MainEditorMenu extends EditorMenu {
             SkillTreeEditorData.saveEditorSkillTree(skillTree);
         });
         selectedSkills.clear();
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         editor.clearWidgets();
         editor.rebuildWidgets();
     }
-
     private void addMenuSelectionButton(SkillTreeEditor editor, String name, MenuConstructor menuConstructor) {
         editor.addButton(0, 0, 200, 14, name).setPressFunc(b -> selectMenu(editor, menuConstructor));
         editor.increaseHeight(19);
     }
-
     private void selectMenu(SkillTreeEditor editor, MenuConstructor menuConstructor) {
         editor.selectMenu(menuConstructor.construct(editor, this));
     }

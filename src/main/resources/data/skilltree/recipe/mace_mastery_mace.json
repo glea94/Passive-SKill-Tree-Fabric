@@ -1,0 +1,18 @@
+{
+  "type": "skilltree:workbench_mace",
+  "requires_passive_skill": true,
+  "base_ingredient": {
+    "ingredient": "minecraft:breeze_rod",
+    "required_amount": 1
+  },
+  "additionalIngredients": [
+    {
+      "ingredient": "minecraft:heavy_core",
+      "required_amount": 1
+    }
+  ],
+  "result": {
+    "item": "minecraft:mace",
+    "count": 1
+  }
+}

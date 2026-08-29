@@ -1,20 +1,15 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.event.LivingVisibilityPSTEvent;
 import daripher.skilltree.event.PSTEvents;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.StealthBonus;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-
 import java.util.List;
-
-
 public class StealthBonusHandler {
     public static void register() {
         PSTEvents.LIVING_VISIBILITY.register(StealthBonusHandler::applyVisibilityMultiplier);
     }
-
     private static void applyVisibilityMultiplier(LivingVisibilityPSTEvent event) {
         if (!(event.getEntity() instanceof Player player)) {
             return;
@@ -30,7 +25,10 @@ public class StealthBonusHandler {
         for (StealthBonus skillBonus : skillBonuses) {
             stealthMultiplier += skillBonus.getStealthMultiplier(player, lookingEntity);
         }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         event.modifyVisibility(1f - stealthMultiplier);
     }
 }

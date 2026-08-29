@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.multiplier;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -15,29 +14,23 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class FloatFunctionMultiplier implements LivingMultiplier {
     private FloatFunction<?> floatFunction;
     private float divisor;
-
     public FloatFunctionMultiplier(FloatFunction<?> floatFunction, float divisor) {
         this.floatFunction = floatFunction;
         this.divisor = divisor;
     }
-
     @Override
     public float getValue(LivingEntity entity) {
         return (int) (floatFunction.apply(entity) / divisor);
     }
-
     @Override
     public MutableComponent getTooltip(MutableComponent bonusTooltip, SkillBonus.Target target) {
         return floatFunction.getMultiplierTooltip(target, divisor, bonusTooltip);
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<LivingMultiplier> consumer) {
         editor.addLabel(0, 0, "Value Type", ChatFormatting.GREEN);
@@ -54,30 +47,24 @@ public final class FloatFunctionMultiplier implements LivingMultiplier {
                 .setNumericResponder(value -> selectDivisor(consumer, value));
         editor.increaseHeight(19);
     }
-
     private void addValueProviderWidgets(SkillTreeEditor editor, Consumer<LivingMultiplier> consumer) {
         floatFunction.addEditorWidgets(editor, provider -> selectValueProvider(consumer, provider));
     }
-
     private void selectDivisor(Consumer<LivingMultiplier> consumer, Double value) {
         setDivisor(value.floatValue());
         consumer.accept(this);
     }
-
     private void selectValueProvider(Consumer<LivingMultiplier> consumer, FloatFunction<?> valueProvider) {
         setFloatFunction(valueProvider);
         consumer.accept(this);
     }
-
     public float getDivisor() {
         return divisor;
     }
-
     @Override
     public LivingMultiplier.Serializer getSerializer() {
         return PSTLivingMultipliers.NUMERIC_VALUE.get();
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -92,24 +79,19 @@ public final class FloatFunctionMultiplier implements LivingMultiplier {
         }
         return Objects.equals(floatFunction, that.floatFunction);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(floatFunction, divisor);
     }
-
     public void setFloatFunction(FloatFunction<?> floatFunction) {
         this.floatFunction = floatFunction;
     }
-
     public void setDivisor(float divisor) {
         this.divisor = divisor;
     }
-
     public FloatFunction<?> getFloatFunction() {
         return floatFunction;
     }
-
     public static class Serializer implements LivingMultiplier.Serializer {
         @Override
         public LivingMultiplier deserialize(JsonObject json) throws JsonParseException {
@@ -117,7 +99,6 @@ public final class FloatFunctionMultiplier implements LivingMultiplier {
             float divisor = !json.has("divisor") ? 1f : json.get("divisor").getAsFloat();
             return new FloatFunctionMultiplier(valueProvider, divisor);
         }
-
         @Override
         public void serialize(JsonObject json, LivingMultiplier multiplier) {
             if (!(multiplier instanceof FloatFunctionMultiplier aMultiplier)) {
@@ -132,7 +113,6 @@ public final class FloatFunctionMultiplier implements LivingMultiplier {
             float divisor = tag.getFloatOr("divisor", 1f);
             return new FloatFunctionMultiplier(valueProvider, divisor);
         }
-
         @Override
         public CompoundTag serialize(LivingMultiplier multiplier) {
             if (!(multiplier instanceof FloatFunctionMultiplier aMultiplier)) {
@@ -143,16 +123,22 @@ public final class FloatFunctionMultiplier implements LivingMultiplier {
             tag.putFloat("divisor", aMultiplier.divisor);
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public LivingMultiplier deserialize(RegistryFriendlyByteBuf buf) {
             FloatFunction<?> valueProvider = NetworkHelper.readValueProvider(buf);
             float divisor = buf.readFloat();
             return new FloatFunctionMultiplier(valueProvider, divisor);
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingMultiplier multiplier) {
             if (!(multiplier instanceof FloatFunctionMultiplier aMultiplier)) {
@@ -161,10 +147,12 @@ public final class FloatFunctionMultiplier implements LivingMultiplier {
             NetworkHelper.writeValueProvider(buf, aMultiplier.floatFunction);
             buf.writeFloat(aMultiplier.divisor);
         }
-
         @Override
         public LivingMultiplier createDefaultInstance() {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             return new FloatFunctionMultiplier(new AttributeValueFunction(Attributes.MAX_HEALTH), 5f);
         }
     }

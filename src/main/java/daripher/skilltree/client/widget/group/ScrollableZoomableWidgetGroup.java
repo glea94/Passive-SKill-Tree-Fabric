@@ -1,26 +1,24 @@
 package daripher.skilltree.client.widget.group;
-
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.input.MouseButtonEvent;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
-
 import org.jetbrains.annotations.Nullable;
 import java.awt.geom.Rectangle2D;
-
 public class ScrollableZoomableWidgetGroup<T extends AbstractWidget> extends WidgetGroup<T> {
     protected float scrollX;
     protected float scrollY;
     protected int maxScrollX;
     protected int maxScrollY;
     private float zoom = 1F;
-
     public ScrollableZoomableWidgetGroup(int pX, int pY, int pWidth, int pHeight) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         super(pX, pY, pWidth, pHeight);
     }
-
     @Override
     protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         graphics.enableScissor(getX(), getY(), getX() + getWidth(), getY() + getHeight());
@@ -40,11 +38,8 @@ public class ScrollableZoomableWidgetGroup<T extends AbstractWidget> extends Wid
         graphics.pose().popMatrix();
         graphics.disableScissor();
     }
-
     protected void renderBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-
     }
-
     @Override
     public boolean mouseDragged(MouseButtonEvent mouseButtonEvent, double dragX, double dragY) {
         if (mouseButtonEvent.button() != GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
@@ -58,7 +53,6 @@ public class ScrollableZoomableWidgetGroup<T extends AbstractWidget> extends Wid
         }
         return super.mouseDragged(mouseButtonEvent, dragX, dragY);
     }
-
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if (scrollY > 0 && zoom < 2F) {
@@ -74,7 +68,6 @@ public class ScrollableZoomableWidgetGroup<T extends AbstractWidget> extends Wid
         rebuildFunc.run();
         return true;
     }
-
     @Override
     public @Nullable T getWidgetAt(double mouseX, double mouseY) {
         mouseX -= scrollX;
@@ -87,7 +80,6 @@ public class ScrollableZoomableWidgetGroup<T extends AbstractWidget> extends Wid
         }
         return null;
     }
-
     @Override
     protected @NotNull Rectangle2D.Double getWidgetArea(T widget) {
         double width = widget.getWidth() * zoom;
@@ -96,31 +88,24 @@ public class ScrollableZoomableWidgetGroup<T extends AbstractWidget> extends Wid
         double y = widget.getY() + widget.getHeight() / 2d - height / 2;
         return new Rectangle2D.Double(x, y, width, height);
     }
-
     public void setMaxScrollX(int maxScrollX) {
         this.maxScrollX = maxScrollX;
     }
-
     public void setMaxScrollY(int maxScrollY) {
         this.maxScrollY = maxScrollY;
     }
-
     public int getMaxScrollX() {
         return maxScrollX;
     }
-
     public int getMaxScrollY() {
         return maxScrollY;
     }
-
     public float getScrollX() {
         return scrollX;
     }
-
     public float getScrollY() {
         return scrollY;
     }
-
     public float getZoom() {
         return zoom;
     }

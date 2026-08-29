@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget.editor.menu.description;
-
 import daripher.skilltree.data.client.SkillTreeEditorData;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.editor.menu.EditorMenu;
@@ -9,19 +8,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
-
 public class SkillDescriptionLineEditor extends EditorMenu {
     private final int selectedLine;
-
     public SkillDescriptionLineEditor(SkillTreeEditor editor, EditorMenu previousMenu, int selectedLine) {
         super(editor, previousMenu);
         this.selectedLine = selectedLine;
     }
-
     @Override
     public void init() {
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
@@ -95,7 +90,6 @@ public class SkillDescriptionLineEditor extends EditorMenu {
         });
         editor.increaseHeight(19);
     }
-
     private boolean canEditDescription() {
         PassiveSkill selectedSkill = editor.getFirstSelectedSkill();
         if (selectedSkill == null) {
@@ -124,7 +118,6 @@ public class SkillDescriptionLineEditor extends EditorMenu {
         }
         return true;
     }
-
     private void removeDescriptionLine() {
         editor.getSelectedSkills().forEach(skill -> {
             List<MutableComponent> description = skill.getDescription();
@@ -138,7 +131,6 @@ public class SkillDescriptionLineEditor extends EditorMenu {
         editor.selectMenu(previousMenu);
         editor.rebuildWidgets();
     }
-
     private void setDescription(String line) {
         editor.getSelectedSkills().forEach(skill -> {
             List<MutableComponent> description = skill.getDescription();
@@ -150,7 +142,6 @@ public class SkillDescriptionLineEditor extends EditorMenu {
         });
         editor.saveSelectedSkills();
     }
-
     private void setDescriptionStyle(Function<Style, Style> styleFunc) {
         editor.getSelectedSkills().forEach(skill -> {
             List<MutableComponent> description = skill.getDescription();
@@ -164,7 +155,6 @@ public class SkillDescriptionLineEditor extends EditorMenu {
             }
         });
     }
-
     private static boolean isColorString(String v) {
         return v.matches("^[a-fA-F0-9]{6}");
     }

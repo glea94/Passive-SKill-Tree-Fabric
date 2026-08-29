@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -18,32 +17,26 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBonus> {
     private float multiplier;
     private @NotNull LivingMultiplier playerMultiplier = NoneLivingMultiplier.INSTANCE;
     private @NotNull LivingEntityPredicate playerCondition = NoneLivingEntityPredicate.INSTANCE;
-
     public IncomingHealingBonus(float multiplier) {
         this.multiplier = multiplier;
     }
-
     public float getHealingMultiplier(Player player) {
         if (!playerCondition.test(player)) {
             return 0f;
         }
         return this.multiplier * playerMultiplier.getValue(player);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.INCOMING_HEALING.get();
     }
-
     @Override
     public IncomingHealingBonus copy() {
         IncomingHealingBonus bonus = new IncomingHealingBonus(multiplier);
@@ -51,13 +44,11 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
         bonus.playerCondition = this.playerCondition;
         return bonus;
     }
-
     @Override
     public IncomingHealingBonus multiply(double multiplier) {
         this.multiplier = (float) (this.multiplier * multiplier);
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof IncomingHealingBonus otherBonus)) {
@@ -71,7 +62,6 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
         }
         return otherBonus.multiplier == this.multiplier;
     }
-
     @Override
     public SkillBonus<IncomingHealingBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof IncomingHealingBonus otherBonus)) {
@@ -82,7 +72,6 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
         mergedBonus.playerCondition = this.playerCondition;
         return mergedBonus;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         MutableComponent tooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), multiplier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
@@ -90,12 +79,10 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
         tooltip = playerCondition.getTooltip(tooltip, Target.PLAYER);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return multiplier > 0;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<IncomingHealingBonus> consumer) {
         editor.addLabel(0, 0, "Multiplier", ChatFormatting.GOLD);
@@ -114,7 +101,6 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
                 .setMenuInitFunc(() -> addPlayerMultiplierWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addPlayerMultiplierWidgets(SkillTreeEditor editor, Consumer<IncomingHealingBonus> consumer) {
         playerMultiplier.addEditorWidgets(editor, multiplier -> {
             setMultiplier(multiplier);
@@ -126,39 +112,32 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<IncomingHealingBonus> consumer) {
         playerCondition.addEditorWidgets(editor, condition -> {
             setCondition(condition);
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<IncomingHealingBonus> consumer, LivingEntityPredicate condition) {
         setCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectMultiplier(Consumer<IncomingHealingBonus> consumer, Double value) {
         setMultiplier(value.floatValue());
         consumer.accept(this.copy());
     }
-
     public void setMultiplier(float multiplier) {
         this.multiplier = multiplier;
     }
-
     public SkillBonus<?> setCondition(LivingEntityPredicate condition) {
         this.playerCondition = condition;
         return this;
     }
-
     public SkillBonus<?> setMultiplier(LivingMultiplier multiplier) {
         this.playerMultiplier = multiplier;
         return this;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public IncomingHealingBonus deserialize(JsonObject json) throws JsonParseException {
@@ -168,7 +147,6 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(json, "player_condition");
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof IncomingHealingBonus aBonus)) {
@@ -178,7 +156,6 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
             SerializationHelper.serializeLivingMultiplier(json, aBonus.playerMultiplier, "player_multiplier");
             SerializationHelper.serializeLivingCondition(json, aBonus.playerCondition, "player_condition");
         }
-
         @Override
         public IncomingHealingBonus deserialize(CompoundTag tag) {
             float multiplier = tag.getFloatOr("multiplier", 0f);
@@ -187,7 +164,6 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
             bonus.playerCondition = SerializationHelper.deserializeLivingCondition(tag, "player_condition");
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof IncomingHealingBonus aBonus)) {
@@ -199,8 +175,11 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
             SerializationHelper.serializeLivingCondition(tag, aBonus.playerCondition, "player_condition");
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public IncomingHealingBonus deserialize(RegistryFriendlyByteBuf buf) {
             IncomingHealingBonus bonus = new IncomingHealingBonus(buf.readFloat());
@@ -208,8 +187,11 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
             bonus.playerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof IncomingHealingBonus aBonus)) {
@@ -219,7 +201,6 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
             NetworkHelper.writeLivingMultiplier(buf, aBonus.playerMultiplier);
             NetworkHelper.writeLivingCondition(buf, aBonus.playerCondition);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new IncomingHealingBonus(0.15f);

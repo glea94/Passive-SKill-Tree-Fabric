@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.effect;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -16,37 +15,29 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffects;
-
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class MobEffectIdPredicate implements MobEffectPredicate {
     private Holder<MobEffect> mobEffect;
-
     public MobEffectIdPredicate(Holder<MobEffect> mobEffect) {
         this.mobEffect = mobEffect;
     }
-
     @Override
     public boolean test(MobEffect mobEffect) {
         return mobEffect == this.mobEffect.value();
     }
-
     @Override
     public boolean testsForHarmfulEffects() {
         return mobEffect.value().getCategory() == MobEffectCategory.HARMFUL;
     }
-
     @Override
     public Component getTooltip() {
         return mobEffect.value().getDisplayName();
     }
-
     @Override
     public Component getTooltip(String type) {
         return TooltipHelper.getOptionalTooltip(mobEffect.value().getDescriptionId(), type);
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -58,17 +49,14 @@ public final class MobEffectIdPredicate implements MobEffectPredicate {
         MobEffectIdPredicate that = (MobEffectIdPredicate) o;
         return mobEffect.equals(that.mobEffect);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(mobEffect);
     }
-
     @Override
     public MobEffectPredicate.Serializer getSerializer() {
         return PSTMobEffectPredicates.EFFECT_ID.get();
     }
-
     @SuppressWarnings("unchecked")
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<MobEffectPredicate> consumer) {
@@ -77,16 +65,13 @@ public final class MobEffectIdPredicate implements MobEffectPredicate {
         editor.addSelectionMenu(0, 0, 200, mobEffect).setResponder(holder -> selectEffect(consumer, holder));
         editor.increaseHeight(19);
     }
-
     private void selectEffect(Consumer<MobEffectPredicate> consumer, Holder<MobEffect> mobEffect) {
         setEffectType(mobEffect);
         consumer.accept(this);
     }
-
     public void setEffectType(Holder<MobEffect> mobEffect) {
         this.mobEffect = mobEffect;
     }
-
     public static class Serializer implements MobEffectPredicate.Serializer {
         @Override
         public MobEffectPredicate deserialize(JsonObject json) throws JsonParseException {
@@ -95,13 +80,11 @@ public final class MobEffectIdPredicate implements MobEffectPredicate {
             Holder<MobEffect> mobEffect = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(rawEffect);
             return new MobEffectIdPredicate(mobEffect);
         }
-
         @Override
         public void serialize(JsonObject json, MobEffectPredicate predicate) {
             MobEffectIdPredicate validPredicate = validatePredicate(predicate);
             SerializationHelper.serializeMobEffect(json, validPredicate.mobEffect.value());
         }
-
         @Override
         public MobEffectPredicate deserialize(CompoundTag tag) {
             MobEffect rawEffect = SerializationHelper.deserializeMobEffect(tag);
@@ -109,7 +92,6 @@ public final class MobEffectIdPredicate implements MobEffectPredicate {
             Holder<MobEffect> mobEffect = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(rawEffect);
             return new MobEffectIdPredicate(mobEffect);
         }
-
         @Override
         public CompoundTag serialize(MobEffectPredicate predicate) {
             MobEffectIdPredicate validPredicate = validatePredicate(predicate);
@@ -117,7 +99,6 @@ public final class MobEffectIdPredicate implements MobEffectPredicate {
             SerializationHelper.serializeMobEffect(tag, validPredicate.mobEffect.value());
             return tag;
         }
-
         @Override
         public MobEffectPredicate deserialize(RegistryFriendlyByteBuf buf) {
             MobEffect rawEffect = NetworkHelper.readMobEffect(buf);
@@ -125,20 +106,17 @@ public final class MobEffectIdPredicate implements MobEffectPredicate {
             Holder<MobEffect> mobEffect = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(rawEffect);
             return new MobEffectIdPredicate(mobEffect);
         }
-
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, MobEffectPredicate predicate) {
             MobEffectIdPredicate validPredicate = validatePredicate(predicate);
             NetworkHelper.writeMobEffect(buf, validPredicate.mobEffect.value());
         }
-
         private MobEffectIdPredicate validatePredicate(MobEffectPredicate predicate) {
             if (!(predicate instanceof MobEffectIdPredicate validPredicate)) {
                 throw new IllegalArgumentException();
             }
             return validPredicate;
         }
-
         @Override
         public MobEffectPredicate createDefaultInstance() {
             return new MobEffectIdPredicate(MobEffects.POISON);

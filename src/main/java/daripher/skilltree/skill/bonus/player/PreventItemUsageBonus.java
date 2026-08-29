@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -15,33 +14,26 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class PreventItemUsageBonus implements SkillBonus<PreventItemUsageBonus> {
     private @NotNull ItemStackPredicate itemStackPredicate;
-
     public PreventItemUsageBonus(@NotNull ItemStackPredicate itemStackPredicate) {
         this.itemStackPredicate = itemStackPredicate;
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.CANT_USE_ITEM.get();
     }
-
     @Override
     public PreventItemUsageBonus copy() {
         return new PreventItemUsageBonus(itemStackPredicate);
     }
-
     @Override
     public PreventItemUsageBonus multiply(double multiplier) {
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof PreventItemUsageBonus otherBonus)) {
@@ -49,23 +41,19 @@ public final class PreventItemUsageBonus implements SkillBonus<PreventItemUsageB
         }
         return Objects.equals(otherBonus.itemStackPredicate, this.itemStackPredicate);
     }
-
     @Override
     public SkillBonus<PreventItemUsageBonus> merge(SkillBonus<?> other) {
         return this;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         Component itemDescription = itemStackPredicate.getTooltip("plural");
         return Component.translatable(getDescriptionId(), itemDescription).withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return false;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<PreventItemUsageBonus> consumer) {
         editor.addLabel(0, 0, "Item Condition", ChatFormatting.GOLD);
@@ -74,29 +62,24 @@ public final class PreventItemUsageBonus implements SkillBonus<PreventItemUsageB
                 .setMenuInitFunc(() -> addItemConditionWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectItemCondition(SkillTreeEditor editor, Consumer<PreventItemUsageBonus> consumer, ItemStackPredicate condition) {
         setItemCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addItemConditionWidgets(SkillTreeEditor editor, Consumer<PreventItemUsageBonus> consumer) {
         itemStackPredicate.addEditorWidgets(editor, c -> {
             setItemCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     public void setItemCondition(@NotNull ItemStackPredicate itemStackPredicate) {
         this.itemStackPredicate = itemStackPredicate;
     }
-
     @NotNull
     public ItemStackPredicate getItemCondition() {
         return itemStackPredicate;
     }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -108,19 +91,16 @@ public final class PreventItemUsageBonus implements SkillBonus<PreventItemUsageB
         PreventItemUsageBonus that = (PreventItemUsageBonus) obj;
         return Objects.equals(this.itemStackPredicate, that.itemStackPredicate);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(itemStackPredicate);
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public PreventItemUsageBonus deserialize(JsonObject json) throws JsonParseException {
             ItemStackPredicate condition = SerializationHelper.deserializeItemPredicate(json);
             return new PreventItemUsageBonus(condition);
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof PreventItemUsageBonus aBonus)) {
@@ -128,13 +108,11 @@ public final class PreventItemUsageBonus implements SkillBonus<PreventItemUsageB
             }
             SerializationHelper.serializeItemPredicate(json, aBonus.itemStackPredicate);
         }
-
         @Override
         public PreventItemUsageBonus deserialize(CompoundTag tag) {
             ItemStackPredicate condition = SerializationHelper.deserializeItemPredicate(tag);
             return new PreventItemUsageBonus(condition);
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof PreventItemUsageBonus aBonus)) {
@@ -144,14 +122,20 @@ public final class PreventItemUsageBonus implements SkillBonus<PreventItemUsageB
             SerializationHelper.serializeItemPredicate(tag, aBonus.itemStackPredicate);
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public PreventItemUsageBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new PreventItemUsageBonus(NetworkHelper.readItemPredicate(buf));
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof PreventItemUsageBonus aBonus)) {
@@ -159,7 +143,6 @@ public final class PreventItemUsageBonus implements SkillBonus<PreventItemUsageB
             }
             NetworkHelper.writeItemPredicate(buf, aBonus.itemStackPredicate);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new PreventItemUsageBonus(new EquipmentPredicate(EquipmentPredicate.Type.BOW));

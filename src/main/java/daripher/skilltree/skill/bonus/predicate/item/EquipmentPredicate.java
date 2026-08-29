@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.item;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -14,18 +13,14 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.*;
-
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public class EquipmentPredicate implements ItemStackPredicate {
     public Type type;
-
     public EquipmentPredicate(Type type) {
         this.type = type;
     }
-
     @Override
     public boolean test(ItemStack stack) {
         return switch (type) {
@@ -50,23 +45,18 @@ public class EquipmentPredicate implements ItemStackPredicate {
             default -> isEquipment(stack);
         };
     }
-
     public static boolean isEquipment(ItemStack stack) {
         return isArmor(stack) || isWeapon(stack) || isShield(stack) || isTool(stack);
     }
-
     public static boolean isRangedWeapon(ItemStack stack) {
         return isCrossbow(stack) || isBow(stack) || stack.is(PSTTags.Items.RANGED_WEAPON);
     }
-
     public static boolean isMeleeWeapon(ItemStack stack) {
         return isSword(stack) || isAxe(stack) || isTrident(stack) || stack.is(PSTTags.Items.MELEE_WEAPON);
     }
-
     public static boolean isLeggings(ItemStack stack) {
         return stack.is(ItemTags.LEG_ARMOR);
     }
-
     public static boolean isTrident(ItemStack stack) {
         Identifier id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (Objects.requireNonNull(id).toString().equals("tetra:modular_single")) {
@@ -74,11 +64,9 @@ public class EquipmentPredicate implements ItemStackPredicate {
         }
         return stack.getItem() instanceof TridentItem;
     }
-
     public static boolean isPickaxe(ItemStack stack) {
         return stack.is(ItemTags.PICKAXES);
     }
-
     public static boolean isCrossbow(ItemStack stack) {
         Identifier id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (Objects.requireNonNull(id).toString().equals("tetra:modular_crossbow")) {
@@ -86,23 +74,18 @@ public class EquipmentPredicate implements ItemStackPredicate {
         }
         return stack.getItem() instanceof CrossbowItem;
     }
-
     public static boolean isWeapon(ItemStack stack) {
         return isMeleeWeapon(stack) || isRangedWeapon(stack);
     }
-
     public static boolean isPotion(ItemStack stack) {
         return stack.getItem() instanceof PotionItem;
     }
-
     public static boolean isChestplate(ItemStack stack) {
         return stack.is(ItemTags.CHEST_ARMOR);
     }
-
     public static boolean isShovel(ItemStack stack) {
         return stack.getItem() instanceof ShovelItem || stack.is(ItemTags.SHOVELS);
     }
-
     public static boolean isShield(ItemStack stack) {
         Identifier id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (Objects.requireNonNull(id).toString().equals("tetra:modular_shield")) {
@@ -113,7 +96,6 @@ public class EquipmentPredicate implements ItemStackPredicate {
     public static boolean isHelmet(ItemStack stack) {
         return stack.is(ItemTags.HEAD_ARMOR);
     }
-
     public static boolean isSword(ItemStack stack) {
         Identifier id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (Objects.requireNonNull(id).toString().equals("tetra:modular_sword")) {
@@ -121,16 +103,12 @@ public class EquipmentPredicate implements ItemStackPredicate {
         }
         return stack.is(ItemTags.SWORDS);
     }
-
-    
     public static boolean isTool(ItemStack stack) {
         return isPickaxe(stack) || isShovel(stack) || isHoe(stack);
     }
-
     public static boolean isHoe(ItemStack stack) {
         return stack.getItem() instanceof HoeItem || stack.is(ItemTags.HOES);
     }
-
     public static boolean isBow(ItemStack stack) {
         Identifier id = BuiltInRegistries.ITEM.getKey(stack.getItem());
         if (Objects.requireNonNull(id).toString().equals("tetra:modular_bow")) {
@@ -138,24 +116,19 @@ public class EquipmentPredicate implements ItemStackPredicate {
         }
         return stack.getItem() instanceof BowItem;
     }
-
     public static boolean isBoots(ItemStack stack) {
         return stack.is(ItemTags.FOOT_ARMOR);
     }
-
     public static boolean isAxe(ItemStack stack) {
         return stack.getItem() instanceof AxeItem || stack.is(ItemTags.AXES);
     }
-
     public static boolean isArmor(ItemStack stack) {
         return isHelmet(stack) || isBoots(stack) || isChestplate(stack) || isLeggings(stack);
     }
-
     @Override
     public String getDescriptionId() {
         return ItemStackPredicate.super.getDescriptionId() + "." + type.name().toLowerCase(Locale.ROOT);
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -167,17 +140,14 @@ public class EquipmentPredicate implements ItemStackPredicate {
         EquipmentPredicate that = (EquipmentPredicate) o;
         return Objects.equals(type, that.type);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(type);
     }
-
     @Override
     public ItemStackPredicate.Serializer getSerializer() {
         return PSTItemPredicates.EQUIPMENT_TYPE.get();
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<ItemStackPredicate> consumer) {
         editor.addLabel(0, 0, "Type", ChatFormatting.GREEN);
@@ -186,31 +156,25 @@ public class EquipmentPredicate implements ItemStackPredicate {
                 .setElementNameGetter(Type::getName);
         editor.increaseHeight(19);
     }
-
     private void selectEquipmentType(Consumer<ItemStackPredicate> consumer, Type type) {
         setType(type);
         consumer.accept(this);
     }
-
     public void setType(Type type) {
         this.type = type;
     }
-
     public enum Type {
         ANY, HELMET, CHESTPLATE, LEGGINGS, BOOTS, ARMOR, SHIELD, WEAPON, SWORD, AXE, TRIDENT, MELEE_WEAPON, BOW, CROSSBOW, RANGED_WEAPON, PICKAXE, HOE, SHOVEL, TOOL;
-
         public Component getName() {
             return Component.literal(TooltipHelper.idToName(name().toLowerCase(Locale.ROOT)));
         }
     }
-
     public static class Serializer implements ItemStackPredicate.Serializer {
         @Override
         public ItemStackPredicate deserialize(JsonObject json) throws JsonParseException {
             Type type = Type.valueOf(json.get("equipment_type").getAsString().toUpperCase(Locale.ROOT));
             return new EquipmentPredicate(type);
         }
-
         @Override
         public void serialize(JsonObject json, ItemStackPredicate condition) {
             if (!(condition instanceof EquipmentPredicate aCondition)) {
@@ -218,13 +182,11 @@ public class EquipmentPredicate implements ItemStackPredicate {
             }
             json.addProperty("equipment_type", aCondition.type.name().toLowerCase(Locale.ROOT));
         }
-
         @Override
         public ItemStackPredicate deserialize(CompoundTag tag) {
             Type type = Type.valueOf(tag.getString("equipment_type").orElse("").toUpperCase(Locale.ROOT));
             return new EquipmentPredicate(type);
         }
-
         @Override
         public CompoundTag serialize(ItemStackPredicate condition) {
             if (!(condition instanceof EquipmentPredicate aCondition)) {
@@ -234,12 +196,10 @@ public class EquipmentPredicate implements ItemStackPredicate {
             tag.putString("equipment_type", aCondition.type.name().toLowerCase(Locale.ROOT));
             return tag;
         }
-
         @Override
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new EquipmentPredicate(Type.values()[buf.readInt()]);
         }
-
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof EquipmentPredicate aCondition)) {
@@ -247,7 +207,6 @@ public class EquipmentPredicate implements ItemStackPredicate {
             }
             buf.writeInt(aCondition.type.ordinal());
         }
-
         @Override
         public ItemStackPredicate createDefaultInstance() {
             return new EquipmentPredicate(Type.ANY);

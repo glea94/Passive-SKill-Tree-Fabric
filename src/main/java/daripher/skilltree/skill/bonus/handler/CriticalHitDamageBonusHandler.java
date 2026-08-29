@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.event.CriticalHitPSTEvent;
 import daripher.skilltree.event.LivingHurtPSTEvent;
 import daripher.skilltree.event.PSTEvents;
@@ -12,17 +11,17 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
-
-
 public class CriticalHitDamageBonusHandler {
     public static void register() {
         PSTEvents.CRITICAL_HIT.register(EventPriority.LOW, CriticalHitDamageBonusHandler::applyCritBonuses);
         PSTEvents.LIVING_HURT.register(EventPriority.LOW, CriticalHitDamageBonusHandler::applyIndirectHitCritDamage);
     }
-
     private static void applyCritBonuses(CriticalHitPSTEvent event) {
         Player player = event.getEntity();
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         if (player.level().isClientSide()) {
             return;
         }
@@ -36,11 +35,13 @@ public class CriticalHitDamageBonusHandler {
         float modCritMultiplier = getCritDamageModifier(player, damageSource, hurtEntity);
         event.setDamageMultiplier(1.5f + modCritMultiplier);
     }
-
     private static void applyIndirectHitCritDamage(LivingHurtPSTEvent event) {
         DamageSource damageSource = event.getSource();
         Entity directDamagingEntity = damageSource.getDirectEntity();
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         if (directDamagingEntity instanceof Player) {
             return;
         }
@@ -66,7 +67,6 @@ public class CriticalHitDamageBonusHandler {
             event.setAmount(event.getAmount() * (vanillaCritMultiplier + modCritMultiplier));
         }
     }
-
     public static float getCritDamageModifier(Player player, DamageSource source, LivingEntity target) {
         float multiplier = 0f;
         for (CritDamageBonus bonus : SkillBonusProvider.getSkillBonuses(player, CritDamageBonus.class)) {

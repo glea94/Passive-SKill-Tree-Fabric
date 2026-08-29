@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -27,21 +26,17 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBonus> {
     private @NotNull String command;
     private @NotNull String description;
     private @NotNull SkillEventListener eventListener;
-
     public ExecuteCommandBonus(@NotNull String command, @NotNull String description, @NotNull SkillEventListener eventListener) {
         this.command = command;
         this.description = description;
         this.eventListener = eventListener;
     }
-
     @Override
     public void applyEffect(LivingEntity target, @Nullable LivingEntity source) {
         if (!(target instanceof Player player)) {
@@ -58,27 +53,22 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
         Commands commands = server.getCommands();
         commands.performPrefixedCommand(commandSourceStack, command);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.COMMAND.get();
     }
-
     @Override
     public ExecuteCommandBonus copy() {
         return new ExecuteCommandBonus(command, description, eventListener);
     }
-
     @Override
     public ExecuteCommandBonus multiply(double multiplier) {
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         return false;
     }
-
     @Override
     public boolean sameBonus(SkillBonus<?> other) {
         if (!(other instanceof ExecuteCommandBonus otherBonus)) {
@@ -89,28 +79,23 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
         }
         return Objects.equals(otherBonus.eventListener, this.eventListener);
     }
-
     @Override
     public SkillBonus<EventListenerBonus<ExecuteCommandBonus>> merge(SkillBonus<?> other) {
         throw new UnsupportedOperationException();
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         Style style = TooltipHelper.getSkillBonusStyle(isPositive());
         return Component.translatable(description).withStyle(style);
     }
-
     @Override
     public boolean isPositive() {
         return true;
     }
-
     @Override
     public @NotNull SkillEventListener getEventListener() {
         return eventListener;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<ExecuteCommandBonus>> consumer) {
         editor.addLabel(0, 0, "Command", ChatFormatting.GOLD);
@@ -128,7 +113,6 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
                 .setMenuInitFunc(() -> addEventListenerWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectDescription(Consumer<EventListenerBonus<ExecuteCommandBonus>> consumer, String text) {
         setDescription(text);
         consumer.accept(this.copy());
@@ -137,39 +121,35 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
         setCommand(text);
         consumer.accept(this.copy());
     }
-
     private void selectEventListener(SkillTreeEditor editor, Consumer<EventListenerBonus<ExecuteCommandBonus>> consumer, SkillEventListener eventListener) {
         setEventListener(eventListener);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addEventListenerWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<ExecuteCommandBonus>> consumer) {
         eventListener.addEditorWidgets(editor, e -> {
             setEventListener(e);
             consumer.accept(this.copy());
         });
     }
-
     public void setCommand(@NotNull String command) {
         this.command = command;
     }
-
     public void setDescription(@NotNull String description) {
         this.description = description;
     }
-
     public void setEventListener(@NotNull SkillEventListener eventListener) {
         this.eventListener = eventListener;
     }
-
     private static CommandSourceStack createCommandSourceStack(Player player, ServerLevel level) {
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         return new CommandSourceStack(((ServerPlayer) player).commandSource(), player.position(), player.getRotationVector(), level, PermissionSet.ALL_PERMISSIONS, player.getName()
                 .getString(), player.getDisplayName(), level.getServer(), player);
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public ExecuteCommandBonus deserialize(JsonObject json) throws JsonParseException {
@@ -178,7 +158,6 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
             SkillEventListener eventListener = SerializationHelper.deserializeEventListener(json);
             return new ExecuteCommandBonus(command, description, eventListener);
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof ExecuteCommandBonus aBonus)) {
@@ -188,7 +167,6 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
             json.addProperty("description", aBonus.description);
             SerializationHelper.serializeEventListener(json, aBonus.eventListener);
         }
-
         @Override
         public ExecuteCommandBonus deserialize(CompoundTag tag) {
             String command = tag.getStringOr("command", "");
@@ -201,7 +179,6 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
             }
             return new ExecuteCommandBonus(command, description, eventListener);
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof ExecuteCommandBonus aBonus)) {
@@ -213,8 +190,11 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
             SerializationHelper.serializeEventListener(tag, aBonus.eventListener);
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public ExecuteCommandBonus deserialize(RegistryFriendlyByteBuf buf) {
             String command = buf.readUtf();
@@ -222,8 +202,11 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
             SkillEventListener eventListener = NetworkHelper.readEventListener(buf);
             return new ExecuteCommandBonus(command, description, eventListener);
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ExecuteCommandBonus aBonus)) {
@@ -233,7 +216,6 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
             buf.writeUtf(aBonus.description);
             NetworkHelper.writeEventListener(buf, aBonus.eventListener);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new ExecuteCommandBonus("give @p minecraft:apple", "Grants an apple when learned", new SkillLearnedEventListener());

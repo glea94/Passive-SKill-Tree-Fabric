@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.item;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -12,33 +11,29 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
-
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class EnchantedStackPredicate implements ItemStackPredicate {
     private ItemStackPredicate itemStackPredicate;
-
     public EnchantedStackPredicate(ItemStackPredicate itemStackPredicate) {
         this.itemStackPredicate = itemStackPredicate;
     }
-
     @Override
     public boolean test(ItemStack stack) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         return stack.isEnchanted() && itemStackPredicate.test(stack);
     }
-
     @Override
     public Component getTooltip() {
         return Component.translatable(getDescriptionId(), itemStackPredicate.getTooltip("type"));
     }
-
     @Override
     public Component getTooltip(String type) {
         return Component.translatable(getDescriptionId(), itemStackPredicate.getTooltip(type + ".type"));
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -50,17 +45,14 @@ public final class EnchantedStackPredicate implements ItemStackPredicate {
         EnchantedStackPredicate that = (EnchantedStackPredicate) o;
         return itemStackPredicate.equals(that.itemStackPredicate);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(itemStackPredicate);
     }
-
     @Override
     public ItemStackPredicate.Serializer getSerializer() {
         return PSTItemPredicates.ENCHANTED.get();
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<ItemStackPredicate> consumer) {
         editor.addLabel(0, 0, "Inner Item Condition", ChatFormatting.GREEN);
@@ -69,30 +61,25 @@ public final class EnchantedStackPredicate implements ItemStackPredicate {
                 .setMenuInitFunc(() -> addItemConditionWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addItemConditionWidgets(SkillTreeEditor editor, Consumer<ItemStackPredicate> consumer) {
         itemStackPredicate.addEditorWidgets(editor, condition -> {
             setItemCondition(condition);
             consumer.accept(this);
         });
     }
-
     private void selectItemCondition(SkillTreeEditor editor, Consumer<ItemStackPredicate> consumer, ItemStackPredicate condition) {
         setItemCondition(condition);
         consumer.accept(this);
         editor.rebuildWidgets();
     }
-
     public void setItemCondition(ItemStackPredicate itemStackPredicate) {
         this.itemStackPredicate = itemStackPredicate;
     }
-
     public static class Serializer implements ItemStackPredicate.Serializer {
         @Override
         public ItemStackPredicate deserialize(JsonObject json) throws JsonParseException {
             return new EnchantedStackPredicate(SerializationHelper.deserializeItemPredicate(json));
         }
-
         @Override
         public void serialize(JsonObject json, ItemStackPredicate condition) {
             if (!(condition instanceof EnchantedStackPredicate aCondition)) {
@@ -100,12 +87,10 @@ public final class EnchantedStackPredicate implements ItemStackPredicate {
             }
             SerializationHelper.serializeItemPredicate(json, aCondition.itemStackPredicate);
         }
-
         @Override
         public ItemStackPredicate deserialize(CompoundTag tag) {
             return new EnchantedStackPredicate(SerializationHelper.deserializeItemPredicate(tag));
         }
-
         @Override
         public CompoundTag serialize(ItemStackPredicate condition) {
             if (!(condition instanceof EnchantedStackPredicate aCondition)) {
@@ -115,14 +100,20 @@ public final class EnchantedStackPredicate implements ItemStackPredicate {
             SerializationHelper.serializeItemPredicate(tag, aCondition.itemStackPredicate);
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new EnchantedStackPredicate(NetworkHelper.readItemPredicate(buf));
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof EnchantedStackPredicate aCondition)) {
@@ -130,7 +121,6 @@ public final class EnchantedStackPredicate implements ItemStackPredicate {
             }
             NetworkHelper.writeItemPredicate(buf, aCondition.itemStackPredicate);
         }
-
         @Override
         public ItemStackPredicate createDefaultInstance() {
             return new EnchantedStackPredicate(new ItemTagPredicate(ItemTags.SWORDS.location()));

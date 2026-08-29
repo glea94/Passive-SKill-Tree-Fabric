@@ -1,5 +1,4 @@
 package daripher.skilltree.data.reloader;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -16,12 +15,9 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
-
-
 public class SkillTreesReloader extends SimplePreparableReloadListener<Map<Identifier, JsonElement>> implements IdentifiableResourceReloadListener {
     public static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(Identifier.class, new com.google.gson.TypeAdapter<Identifier>() {
@@ -36,50 +32,53 @@ public class SkillTreesReloader extends SimplePreparableReloadListener<Map<Ident
             })
             .setPrettyPrinting()
             .create();
-
     private static final Map<Identifier, PassiveSkillTree> SKILL_TREES = new HashMap<>();
-
     public SkillTreesReloader() {
         super();
     }
-
     @Override
     public Identifier getFabricId() {
         return Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_trees_reloader");
     }
-
     public static void register() {
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new SkillTreesReloader());
     }
-
     public static Map<Identifier, PassiveSkillTree> getSkillTrees() {
         return SKILL_TREES;
     }
-
     public static PassiveSkillTree getSkillTreeById(Identifier id) {
         return SKILL_TREES.getOrDefault(id, new PassiveSkillTree(id));
     }
-
     public static @Nullable Identifier getDefaultSkillTreeId() {
         return getSkillTrees().keySet().stream().findAny().orElse(null);
     }
+<<<<<<< Updated upstream
 
 
 
+=======
+>>>>>>> Stashed changes
     public static java.util.List<Identifier> getOrderedSkillTreeIds() {
         return SKILL_TREES.values().stream()
                 .filter(tree -> !tree.getSkillIds().isEmpty())
+                .filter(tree -> !tree.isHidden())
                 .map(PassiveSkillTree::getId)
                 .toList();
     }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
     public static void loadFromByteBuf(RegistryFriendlyByteBuf buf) {
         SKILL_TREES.clear();
         NetworkHelper.readPassiveSkillTrees(buf).forEach(t -> SKILL_TREES.put(t.getId(), t));
     }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
     @Override
     protected Map<Identifier, JsonElement> prepare(ResourceManager resourceManager, ProfilerFiller profilerFiller) {
         Map<Identifier, JsonElement> map = new HashMap<>();
@@ -101,13 +100,11 @@ public class SkillTreesReloader extends SimplePreparableReloadListener<Map<Ident
         }
         return map;
     }
-
     @Override
     protected void apply(Map<Identifier, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
         SKILL_TREES.clear();
         map.forEach(this::readSkillTree);
     }
-
     protected void readSkillTree(Identifier id, JsonElement json) {
         try {
             PassiveSkillTree tree = GSON.fromJson(json, PassiveSkillTree.class);

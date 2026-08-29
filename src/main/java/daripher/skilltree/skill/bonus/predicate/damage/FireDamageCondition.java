@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.damage;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTDamagePredicates;
@@ -12,18 +11,15 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.player.Player;
-
 public record FireDamageCondition() implements DamageCondition {
     @Override
     public boolean met(DamageSource source) {
         return source.is(DamageTypeTags.IS_FIRE);
     }
-
     @Override
     public DamageCondition.Serializer getSerializer() {
         return PSTDamagePredicates.FIRE.get();
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -31,41 +27,34 @@ public record FireDamageCondition() implements DamageCondition {
         }
         return o != null && getClass() == o.getClass();
     }
-
     @Override
     public DamageSource createDamageSource(Player player) {
         Holder<DamageType> damageType = player.level().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.ON_FIRE);
         return new DamageSource(damageType, null, player);
     }
-
     @Override
     public boolean canCreateDamageSource() {
         return true;
     }
-
     @Override
     public int hashCode() {
         return getSerializer().hashCode();
     }
-
     public static class Serializer implements DamageCondition.Serializer {
         @Override
         public DamageCondition deserialize(JsonObject json) throws JsonParseException {
             return new FireDamageCondition();
         }
-
         @Override
         public void serialize(JsonObject json, DamageCondition condition) {
             if (!(condition instanceof FireDamageCondition)) {
                 throw new IllegalArgumentException();
             }
         }
-
         @Override
         public DamageCondition deserialize(CompoundTag tag) {
             return new FireDamageCondition();
         }
-
         @Override
         public CompoundTag serialize(DamageCondition condition) {
             if (!(condition instanceof FireDamageCondition)) {
@@ -73,19 +62,16 @@ public record FireDamageCondition() implements DamageCondition {
             }
             return new CompoundTag();
         }
-
         @Override
         public DamageCondition deserialize(RegistryFriendlyByteBuf buf) {
             return new FireDamageCondition();
         }
-
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, DamageCondition condition) {
             if (!(condition instanceof FireDamageCondition)) {
                 throw new IllegalArgumentException();
             }
         }
-
         @Override
         public DamageCondition createDefaultInstance() {
             return new FireDamageCondition();

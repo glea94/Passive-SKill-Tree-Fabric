@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -25,33 +24,26 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusBonus> {
     private @NotNull ItemStackPredicate itemStackPredicate;
     private @NotNull GroupedItemBonus itemBonuses;
     private @NotNull List<Identifier> recipeIds;
-
     public CraftedItemBonusBonus(@NotNull ItemStackPredicate itemStackPredicate, @NotNull GroupedItemBonus itemBonuses) {
         this(itemStackPredicate, itemBonuses, Collections.emptyList());
     }
-
     public CraftedItemBonusBonus(@NotNull ItemStackPredicate itemStackPredicate, @NotNull GroupedItemBonus itemBonuses, @NotNull List<Identifier> recipeIds) {
         this.itemStackPredicate = itemStackPredicate;
         this.itemBonuses = itemBonuses;
         this.recipeIds = recipeIds;
     }
-
     public void itemCrafted(ItemStack craftResult) {
         itemCrafted(craftResult, null);
     }
-
     public void itemCrafted(ItemStack craftResult, @Nullable Identifier usedRecipeId) {
         if (!itemStackPredicate.test(craftResult)) {
             return;
@@ -61,22 +53,18 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
         }
         ItemBonusHandler.addCraftingBonuses(craftResult, itemBonuses);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.CRAFTED_ITEM_BONUS.get();
     }
-
     @Override
     public CraftedItemBonusBonus copy() {
         return new CraftedItemBonusBonus(itemStackPredicate, itemBonuses, recipeIds);
     }
-
     @Override
     public CraftedItemBonusBonus multiply(double multiplier) {
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof CraftedItemBonusBonus otherBonus)) {
@@ -85,7 +73,6 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
         return Objects.equals(otherBonus.itemStackPredicate, this.itemStackPredicate)
                 && Objects.equals(otherBonus.recipeIds, this.recipeIds);
     }
-
     @Override
     public SkillBonus<CraftedItemBonusBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof CraftedItemBonusBonus otherBonus)) {
@@ -94,14 +81,12 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
         GroupedItemBonus mergedItemBonuses = ItemBonusHandler.mergeGroupedItemBonuses(itemBonuses, otherBonus.itemBonuses);
         return new CraftedItemBonusBonus(itemStackPredicate, mergedItemBonuses, recipeIds);
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         Style tooltipStyle = TooltipHelper.getSkillBonusStyle(isPositive());
         Component itemDescription = itemStackPredicate.getTooltip("plural");
         return Component.translatable(getDescriptionId(), itemDescription).withStyle(tooltipStyle);
     }
-
     @Override
     public List<MutableComponent> getFullTooltip() {
         List<MutableComponent> fullTooltip = new ArrayList<>();
@@ -112,12 +97,10 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
         }
         return fullTooltip;
     }
-
     @Override
     public boolean isPositive() {
         return true;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<CraftedItemBonusBonus> consumer) {
         editor.addLabel(0, 0, "Item Condition", ChatFormatting.GOLD);
@@ -129,7 +112,6 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
         editor.increaseHeight(19);
         addItemBonusWidgets(editor, consumer);
     }
-
     private void addItemBonusWidgets(SkillTreeEditor editor, Consumer<CraftedItemBonusBonus> consumer) {
         itemBonuses.addEditorWidgets(editor, groupedItemBonuses -> {
             selectItemBonuses(consumer, groupedItemBonuses);
@@ -140,37 +122,30 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
         setItemBonuses(itemBonuses);
         consumer.accept(this.copy());
     }
-
     private void setItemBonuses(@NotNull GroupedItemBonus itemBonuses) {
         this.itemBonuses = itemBonuses;
     }
-
     private void selectItemCondition(SkillTreeEditor editor, Consumer<CraftedItemBonusBonus> consumer, ItemStackPredicate condition) {
         setItemCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addItemConditionWidgets(SkillTreeEditor editor, Consumer<CraftedItemBonusBonus> consumer) {
         itemStackPredicate.addEditorWidgets(editor, c -> {
             setItemCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     public void setItemCondition(@NotNull ItemStackPredicate itemStackPredicate) {
         this.itemStackPredicate = itemStackPredicate;
     }
-
     public void setRecipeIds(@NotNull List<Identifier> recipeIds) {
         this.recipeIds = recipeIds;
     }
-
     @NotNull
     public List<Identifier> getRecipeIds() {
         return recipeIds;
     }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -183,12 +158,10 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
         return Objects.equals(this.itemStackPredicate, that.itemStackPredicate)
                 && Objects.equals(this.recipeIds, that.recipeIds);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(itemStackPredicate, recipeIds);
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public CraftedItemBonusBonus deserialize(JsonObject json) throws JsonParseException {
@@ -204,7 +177,6 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             }
             return new CraftedItemBonusBonus(condition, itemBonuses, recipeIds);
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof CraftedItemBonusBonus aBonus)) {
@@ -218,7 +190,6 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
                 json.add("recipe_ids", array);
             }
         }
-
         @Override
         public CraftedItemBonusBonus deserialize(CompoundTag tag) {
             ItemStackPredicate condition = SerializationHelper.deserializeItemPredicate(tag);
@@ -236,7 +207,6 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             });
             return new CraftedItemBonusBonus(condition, itemBonuses, recipeIds);
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof CraftedItemBonusBonus aBonus)) {
@@ -257,8 +227,6 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             }
             return tag;
         }
-
-
         @Override
         public CraftedItemBonusBonus deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
@@ -269,8 +237,6 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             }
             return new CraftedItemBonusBonus(itemStackPredicate, itemBonuses, recipeIds);
         }
-
-
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof CraftedItemBonusBonus aBonus)) {
@@ -280,7 +246,6 @@ public final class CraftedItemBonusBonus implements SkillBonus<CraftedItemBonusB
             NetworkHelper.writeItemBonus(buf, aBonus.itemBonuses);
             NetworkHelper.writeResourceLocations(buf, aBonus.recipeIds);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             EquipmentPredicate itemStackPredicate = new EquipmentPredicate(EquipmentPredicate.Type.BOW);

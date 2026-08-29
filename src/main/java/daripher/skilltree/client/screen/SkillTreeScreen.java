@@ -1,5 +1,4 @@
 package daripher.skilltree.client.screen;
-
 import daripher.skilltree.client.widget.NavigationArrowButton;
 import daripher.skilltree.client.widget.SkillTreeWidgets;
 import daripher.skilltree.mixin.AbstractWidgetAccessor;
@@ -26,12 +25,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2fStack;
 import org.lwjgl.glfw.GLFW;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
-
-
 public class SkillTreeScreen extends Screen {
     public static final int BACKGROUND_SIZE = 2048;
     private static final int NAV_ARROW_SIZE = 16;
@@ -46,20 +42,25 @@ public class SkillTreeScreen extends Screen {
     private @Nullable Identifier nextTreeId;
     private @Nullable NavigationArrowButton prevButton;
     private @Nullable NavigationArrowButton nextButton;
-
     public SkillTreeScreen(Identifier skillTreeId) {
         super(Component.empty());
         this.skillTree = SkillTreesReloader.getSkillTreeById(skillTreeId);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         this.skillButtons = new SkillButtons(skillTree, () -> renderAnimation);
         this.skillTreeWidgets = new SkillTreeWidgets(getLocalPlayer(), skillButtons, skillTree);
         this.skillButtons.setRebuildFunc(this::rebuildWidgets);
         this.skillTreeWidgets.setRebuildFunc(this::rebuildWidgets);
         updateNavigationTreeIds();
     }
+<<<<<<< Updated upstream
 
 
 
+=======
+>>>>>>> Stashed changes
     private void updateNavigationTreeIds() {
         List<Identifier> orderedIds = SkillTreesReloader.getOrderedSkillTreeIds();
         int index = orderedIds.indexOf(skillTree.getId());
@@ -71,13 +72,15 @@ public class SkillTreeScreen extends Screen {
         prevTreeId = index > 0 ? orderedIds.get(index - 1) : null;
         nextTreeId = index < orderedIds.size() - 1 ? orderedIds.get(index + 1) : null;
     }
-
     private void switchToTree(Identifier skillTreeId) {
         Objects.requireNonNull(this.minecraft).setScreen(new SkillTreeScreen(skillTreeId));
     }
+<<<<<<< Updated upstream
 
 
 
+=======
+>>>>>>> Stashed changes
     private void addNavigationArrows() {
         prevButton = null;
         nextButton = null;
@@ -92,7 +95,6 @@ public class SkillTreeScreen extends Screen {
             nextButton.setPressFunc(b -> switchToTree(targetId));
         }
     }
-
     @Override
     public void init() {
         Minecraft minecraft = Objects.requireNonNull(this.minecraft);
@@ -115,18 +117,15 @@ public class SkillTreeScreen extends Screen {
         addRenderableWidget(skillButtons);
         addNavigationArrows();
     }
-
     private void addSkillButtons() {
         Stream<PassiveSkill> passiveSkills = skillTree.getSkillIds().stream().map(SkillsReloader::getSkillById).filter(Objects::nonNull);
         passiveSkills.forEach(skill -> skillTreeWidgets.addSkillButton(skill, () -> renderAnimation));
         skillButtons.updateSkillConnections();
     }
-
     @Override
     protected void rebuildWidgets() {
         Objects.requireNonNull(this.minecraft).execute(super::rebuildWidgets);
     }
-
     private void calculateMaxScroll() {
         skillButtons.setMaxScrollX(Math.min(0, width / 2 - 350));
         skillButtons.setMaxScrollY(Math.min(0, height / 2 - 350));
@@ -139,16 +138,21 @@ public class SkillTreeScreen extends Screen {
             skillButtons.setMaxScrollY(maxScrollY);
         });
     }
-
     @Override
     public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         renderAnimation += partialTick;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         renderBackground(graphics);
         skillButtons.extractRenderState(graphics, mouseX, mouseY, partialTick);
         renderOverlay(graphics);
         skillTreeWidgets.extractRenderState(graphics, mouseX, mouseY, partialTick);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         if (prevButton != null) {
             prevButton.extractRenderState(graphics, mouseX, mouseY, partialTick);
         }
@@ -161,7 +165,6 @@ public class SkillTreeScreen extends Screen {
         prevMouseX = mouseX;
         prevMouseY = mouseY;
     }
-
     @Override
     public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
         if (skillTreeWidgets.mouseClicked(mouseButtonEvent, doubleClick)) {
@@ -170,7 +173,10 @@ public class SkillTreeScreen extends Screen {
         if (skillButtons.mouseClicked(mouseButtonEvent, doubleClick)) {
             return true;
         }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         if (prevButton != null && prevButton.isMouseOver(mouseButtonEvent.x(), mouseButtonEvent.y())) {
             return prevButton.mouseClicked(mouseButtonEvent, doubleClick);
         }
@@ -179,8 +185,11 @@ public class SkillTreeScreen extends Screen {
         }
         return false;
     }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
     @Override
     public void tick() {
         if (!statsUpdated) {
@@ -189,7 +198,6 @@ public class SkillTreeScreen extends Screen {
         }
         skillTreeWidgets.onWidgetTick();
     }
-
     @Override
     public boolean keyPressed(KeyEvent keyEvent) {
         if (skillTreeWidgets.keyPressed(keyEvent)) {
@@ -205,18 +213,16 @@ public class SkillTreeScreen extends Screen {
         }
         return false;
     }
-
     @Override
     public boolean keyReleased(KeyEvent keyEvent) {
         return skillTreeWidgets.keyPressed(keyEvent);
     }
-
     @Override
     public boolean charTyped(CharacterEvent characterEvent) {
         return skillTreeWidgets.charTyped(characterEvent);
     }
-
     private void renderOverlay(GuiGraphicsExtractor graphics) {
+<<<<<<< Updated upstream
 
         Identifier texture = Identifier.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_overlay.png");
 
@@ -226,6 +232,12 @@ public class SkillTreeScreen extends Screen {
 
     public void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
 
+=======
+        Identifier texture = Identifier.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_overlay.png");
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, width, height, width, height);
+    }
+    public void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
+>>>>>>> Stashed changes
         Identifier texture = Identifier.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_background.png");
         Matrix3x2fStack poseStack = graphics.pose();
         poseStack.pushMatrix();
@@ -240,21 +252,17 @@ public class SkillTreeScreen extends Screen {
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (width - size) / 2, (height - size) / 2, 0F, 0F, size, size, size, size);
         poseStack.popMatrix();
     }
-
     @Override
     public boolean mouseDragged(MouseButtonEvent mouseButtonEvent, double dragAmountX, double dragAmountY) {
         return skillButtons.mouseDragged(mouseButtonEvent, dragAmountX, dragAmountY);
     }
-
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         return skillButtons.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
-
     private @NotNull LocalPlayer getLocalPlayer() {
         return Objects.requireNonNull(Objects.requireNonNull(this.minecraft).player);
     }
-
     public void updateSkillPoints(int skillPoints) {
         skillTreeWidgets.updateSkillPoints(skillPoints);
     }

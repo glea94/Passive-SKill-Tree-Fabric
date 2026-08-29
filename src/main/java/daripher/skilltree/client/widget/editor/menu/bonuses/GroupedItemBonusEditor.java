@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget.editor.menu.bonuses;
-
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.editor.menu.EditorMenu;
@@ -15,13 +14,10 @@ import daripher.skilltree.skill.bonus.item.ItemBonus;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.function.Consumer;
-
 @SuppressWarnings({"rawtypes", "unchecked"})
 public final class GroupedItemBonusEditor {
     private GroupedItemBonusEditor() {}
-
     public static void addEditorWidgets(GroupedItemBonus groupedBonus, SkillTreeEditor editor, Consumer<GroupedItemBonus> consumer) {
         ItemBonus<?> defaultBonus = PSTItemBonuses.SKILL_BONUS.get().createDefaultInstance();
         editor.addSelectionMenu(0, 0, 90, defaultBonus).setResponder(itemBonus -> {
@@ -42,7 +38,6 @@ public final class GroupedItemBonusEditor {
             editor.increaseHeight(19);
         }
     }
-
     private static void skillBonusChanged(GroupedItemBonus groupedBonus, @Nullable ItemBonus<?> itemBonus, int selectedBonusIndex, Consumer<GroupedItemBonus> consumer) {
         if (itemBonus == null) {
             groupedBonus.removeInnerBonus(selectedBonusIndex);
@@ -51,7 +46,6 @@ public final class GroupedItemBonusEditor {
         }
         consumer.accept(groupedBonus.copy());
     }
-
     private static void addItemBonus(GroupedItemBonus groupedBonus, SkillTreeEditor editor, ItemBonus<?> itemBonus) {
         final EditorMenu previousMenu = editor.getSelectedMenu().previousMenu;
         if (itemBonus instanceof EquipmentBonus equipmentBonus) {

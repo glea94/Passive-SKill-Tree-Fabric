@@ -1,19 +1,14 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.event.LivingHealPSTEvent;
 import daripher.skilltree.event.PSTEvents;
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.IncomingHealingBonus;
 import net.minecraft.world.entity.player.Player;
-
 import java.util.List;
-
-
 public class IncomingHealingBonusHandler {
     public static void register() {
         PSTEvents.LIVING_HEAL.register(IncomingHealingBonusHandler::modifyIncomingHealing);
     }
-
     private static void modifyIncomingHealing(LivingHealPSTEvent event) {
         if (!(event.getEntity() instanceof Player player)) {
             return;

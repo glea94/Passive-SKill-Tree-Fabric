@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.event;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -23,13 +22,11 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public class IncomingDamageEventListener implements SkillEventListener {
     private LivingEntityPredicate playerCondition = NoneLivingEntityPredicate.INSTANCE;
     private LivingEntityPredicate enemyCondition = NoneLivingEntityPredicate.INSTANCE;
@@ -37,7 +34,6 @@ public class IncomingDamageEventListener implements SkillEventListener {
     private LivingMultiplier playerMultiplier = NoneLivingMultiplier.INSTANCE;
     private LivingMultiplier enemyMultiplier = NoneLivingMultiplier.INSTANCE;
     private SkillBonus.Target target = SkillBonus.Target.ENEMY;
-
     public void onEvent(@NotNull Player player, @Nullable LivingEntity enemy, @NotNull DamageSource damage, @NotNull EventListenerBonus<?> skill) {
         if (enemyCondition != NoneLivingEntityPredicate.INSTANCE && enemy == null) {
             return;
@@ -58,7 +54,6 @@ public class IncomingDamageEventListener implements SkillEventListener {
         float effectMultiplier = playerMultiplier.getValue(player) * enemyMultiplier.getValue(enemy);
         skill.copy().multiply(effectMultiplier).applyEffect(targetEntity, player);
     }
-
     @Override
     public MutableComponent getTooltip(Component bonusTooltip) {
         Component damageDescription = damageCondition.getTooltip();
@@ -69,12 +64,10 @@ public class IncomingDamageEventListener implements SkillEventListener {
         eventTooltip = enemyMultiplier.getTooltip(eventTooltip, SkillBonus.Target.ENEMY);
         return eventTooltip;
     }
-
     @Override
     public SkillEventListener.Serializer getSerializer() {
         return PSTEventListeners.DAMAGE_TAKEN.get();
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -90,7 +83,6 @@ public class IncomingDamageEventListener implements SkillEventListener {
     public int hashCode() {
         return Objects.hash(playerCondition, enemyCondition, damageCondition, playerMultiplier, enemyMultiplier, target);
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         editor.addLabel(0, 0, "Player Condition", ChatFormatting.GREEN);
@@ -122,31 +114,29 @@ public class IncomingDamageEventListener implements SkillEventListener {
                 .setResponder(target -> selectTarget(consumer, target));
         editor.increaseHeight(29);
     }
-
     private void selectTarget(Consumer<SkillEventListener> consumer, SkillBonus.Target target) {
         setTarget(target);
         consumer.accept(this);
     }
-
     private void selectDamageCondition(Consumer<SkillEventListener> consumer, DamageCondition condition) {
         setDamageCondition(condition);
         consumer.accept(this);
     }
-
     private void addTargetMultiplierWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         enemyMultiplier.addEditorWidgets(editor, multiplier -> {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             setEnemyMultiplier(multiplier);
             consumer.accept(this);
         });
     }
-
     private void selectTargetMultiplier(SkillTreeEditor editor, Consumer<SkillEventListener> consumer, LivingMultiplier multiplier) {
         setEnemyMultiplier(multiplier);
         consumer.accept(this);
         editor.rebuildWidgets();
     }
-
     private void addPlayerMultiplierWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         playerMultiplier.addEditorWidgets(editor, multiplier -> {
             setPlayerMultiplier(multiplier);
@@ -158,62 +148,50 @@ public class IncomingDamageEventListener implements SkillEventListener {
         consumer.accept(this);
         editor.rebuildWidgets();
     }
-
     private void addTargetConditionWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         enemyCondition.addEditorWidgets(editor, condition -> {
             setEnemyCondition(condition);
             consumer.accept(this);
         });
     }
-
     private void selectTargetCondition(SkillTreeEditor editor, Consumer<SkillEventListener> consumer, LivingEntityPredicate condition) {
         setEnemyCondition(condition);
         consumer.accept(this);
         editor.rebuildWidgets();
     }
-
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         playerCondition.addEditorWidgets(editor, condition -> {
             setPlayerCondition(condition);
             consumer.accept(this);
         });
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<SkillEventListener> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this);
         editor.rebuildWidgets();
     }
-
     @Override
     public SkillBonus.Target getTarget() {
         return target;
     }
-
     public void setDamageCondition(DamageCondition damageCondition) {
         this.damageCondition = damageCondition;
     }
-
     public void setEnemyCondition(LivingEntityPredicate enemyCondition) {
         this.enemyCondition = enemyCondition;
     }
-
     public void setPlayerCondition(LivingEntityPredicate playerCondition) {
         this.playerCondition = playerCondition;
     }
-
     public void setEnemyMultiplier(LivingMultiplier enemyMultiplier) {
         this.enemyMultiplier = enemyMultiplier;
     }
-
     public void setPlayerMultiplier(LivingMultiplier playerMultiplier) {
         this.playerMultiplier = playerMultiplier;
     }
-
     public void setTarget(SkillBonus.Target target) {
         this.target = target;
     }
-
     public static class Serializer implements SkillEventListener.Serializer {
         @Override
         public SkillEventListener deserialize(JsonObject json) throws JsonParseException {
@@ -238,7 +216,6 @@ public class IncomingDamageEventListener implements SkillEventListener {
             SerializationHelper.serializeLivingMultiplier(json, aListener.playerMultiplier, "player_multiplier");
             json.addProperty("target", aListener.target.name().toLowerCase(Locale.ROOT));
         }
-
         @Override
         public SkillEventListener deserialize(CompoundTag tag) {
             IncomingDamageEventListener listener = new IncomingDamageEventListener();
@@ -247,11 +224,13 @@ public class IncomingDamageEventListener implements SkillEventListener {
             listener.setPlayerCondition(SerializationHelper.deserializeLivingCondition(tag, "player_condition"));
             listener.setEnemyMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "enemy_multiplier"));
             listener.setPlayerMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier"));
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             listener.setTarget(SkillBonus.Target.valueOf(tag.getString("target").orElse("").toUpperCase(Locale.ROOT)));
             return listener;
         }
-
         @Override
         public CompoundTag serialize(SkillEventListener listener) {
             if (!(listener instanceof IncomingDamageEventListener aListener)) {
@@ -266,8 +245,11 @@ public class IncomingDamageEventListener implements SkillEventListener {
             tag.putString("target", aListener.target.name().toLowerCase(Locale.ROOT));
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             IncomingDamageEventListener listener = new IncomingDamageEventListener();
@@ -279,8 +261,11 @@ public class IncomingDamageEventListener implements SkillEventListener {
             listener.setTarget(SkillBonus.Target.values()[buf.readInt()]);
             return listener;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof IncomingDamageEventListener aListener)) {
@@ -293,7 +278,6 @@ public class IncomingDamageEventListener implements SkillEventListener {
             NetworkHelper.writeLivingMultiplier(buf, aListener.playerMultiplier);
             buf.writeInt(aListener.target.ordinal());
         }
-
         @Override
         public SkillEventListener createDefaultInstance() {
             return new IncomingDamageEventListener();

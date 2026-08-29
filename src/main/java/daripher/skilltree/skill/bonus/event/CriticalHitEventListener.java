@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.event;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -20,19 +19,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public class CriticalHitEventListener implements SkillEventListener {
     private LivingEntityPredicate playerCondition = NoneLivingEntityPredicate.INSTANCE;
     private LivingEntityPredicate enemyCondition = NoneLivingEntityPredicate.INSTANCE;
     private LivingMultiplier playerMultiplier = NoneLivingMultiplier.INSTANCE;
     private LivingMultiplier enemyMultiplier = NoneLivingMultiplier.INSTANCE;
     private SkillBonus.Target target = SkillBonus.Target.ENEMY;
-
     public void onEvent(@NotNull Player player, @NotNull LivingEntity enemy, @NotNull EventListenerBonus<?> skill) {
         if (!playerCondition.test(player)) {
             return;
@@ -44,7 +40,6 @@ public class CriticalHitEventListener implements SkillEventListener {
         float effectMultiplier = playerMultiplier.getValue(player) * enemyMultiplier.getValue(enemy);
         skill.copy().multiply(effectMultiplier).applyEffect(targetEntity, player);
     }
-
     @Override
     public MutableComponent getTooltip(Component bonusTooltip) {
         MutableComponent eventTooltip;
@@ -55,12 +50,10 @@ public class CriticalHitEventListener implements SkillEventListener {
         eventTooltip = enemyMultiplier.getTooltip(eventTooltip, SkillBonus.Target.ENEMY);
         return eventTooltip;
     }
-
     @Override
     public SkillEventListener.Serializer getSerializer() {
         return PSTEventListeners.CRITICAL_HIT.get();
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -72,7 +65,6 @@ public class CriticalHitEventListener implements SkillEventListener {
         CriticalHitEventListener listener = (CriticalHitEventListener) o;
         return Objects.equals(playerCondition, listener.playerCondition) && Objects.equals(enemyCondition, listener.enemyCondition) && Objects.equals(playerMultiplier, listener.playerMultiplier) && Objects.equals(enemyMultiplier, listener.enemyMultiplier) && target == listener.target;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(playerCondition, enemyCondition, playerMultiplier, enemyMultiplier, target);
@@ -106,59 +98,53 @@ public class CriticalHitEventListener implements SkillEventListener {
                 .setResponder(target -> selectTarget(consumer, target));
         editor.increaseHeight(29);
     }
-
     private void selectTarget(Consumer<SkillEventListener> consumer, SkillBonus.Target target) {
         setTarget(target);
         consumer.accept(this);
     }
-
     private void addTargetMultiplierWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         enemyMultiplier.addEditorWidgets(editor, multiplier -> {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             setEnemyMultiplier(multiplier);
             consumer.accept(this);
         });
     }
-
     private void selectTargetMultiplier(SkillTreeEditor editor, Consumer<SkillEventListener> consumer, LivingMultiplier multiplier) {
         setEnemyMultiplier(multiplier);
         consumer.accept(this);
         editor.rebuildWidgets();
     }
-
     private void addPlayerMultiplierWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         playerMultiplier.addEditorWidgets(editor, multiplier -> {
             setPlayerMultiplier(multiplier);
             consumer.accept(this);
         });
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<SkillEventListener> consumer, LivingMultiplier multiplier) {
         setPlayerMultiplier(multiplier);
         consumer.accept(this);
         editor.rebuildWidgets();
     }
-
     private void addTargetConditionWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         enemyCondition.addEditorWidgets(editor, condition -> {
             setEnemyCondition(condition);
             consumer.accept(this);
         });
     }
-
     private void selectTargetCondition(SkillTreeEditor editor, Consumer<SkillEventListener> consumer, LivingEntityPredicate condition) {
         setEnemyCondition(condition);
         consumer.accept(this);
         editor.rebuildWidgets();
     }
-
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         playerCondition.addEditorWidgets(editor, condition -> {
             setPlayerCondition(condition);
             consumer.accept(this);
         });
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<SkillEventListener> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this);
@@ -168,32 +154,26 @@ public class CriticalHitEventListener implements SkillEventListener {
     public SkillBonus.Target getTarget() {
         return target;
     }
-
     public CriticalHitEventListener setEnemyCondition(LivingEntityPredicate enemyCondition) {
         this.enemyCondition = enemyCondition;
         return this;
     }
-
     public CriticalHitEventListener setPlayerCondition(LivingEntityPredicate playerCondition) {
         this.playerCondition = playerCondition;
         return this;
     }
-
     public CriticalHitEventListener setEnemyMultiplier(LivingMultiplier enemyMultiplier) {
         this.enemyMultiplier = enemyMultiplier;
         return this;
     }
-
     public CriticalHitEventListener setPlayerMultiplier(LivingMultiplier playerMultiplier) {
         this.playerMultiplier = playerMultiplier;
         return this;
     }
-
     public CriticalHitEventListener setTarget(SkillBonus.Target target) {
         this.target = target;
         return this;
     }
-
     public static class Serializer implements SkillEventListener.Serializer {
         @Override
         public SkillEventListener deserialize(JsonObject json) throws JsonParseException {
@@ -205,7 +185,6 @@ public class CriticalHitEventListener implements SkillEventListener {
             listener.setTarget(SkillBonus.Target.valueOf(json.get("target").getAsString().toUpperCase(Locale.ROOT)));
             return listener;
         }
-
         @Override
         public void serialize(JsonObject json, SkillEventListener listener) {
             if (!(listener instanceof CriticalHitEventListener aListener)) {
@@ -217,7 +196,6 @@ public class CriticalHitEventListener implements SkillEventListener {
             SerializationHelper.serializeLivingMultiplier(json, aListener.playerMultiplier, "player_multiplier");
             json.addProperty("target", aListener.target.name().toLowerCase(Locale.ROOT));
         }
-
         @Override
         public SkillEventListener deserialize(CompoundTag tag) {
             CriticalHitEventListener listener = new CriticalHitEventListener();
@@ -225,11 +203,13 @@ public class CriticalHitEventListener implements SkillEventListener {
             listener.setPlayerCondition(SerializationHelper.deserializeLivingCondition(tag, "player_condition"));
             listener.setEnemyMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "enemy_multiplier"));
             listener.setPlayerMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier"));
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             listener.setTarget(SkillBonus.Target.valueOf(tag.getString("target").orElse("").toUpperCase(Locale.ROOT)));
             return listener;
         }
-
         @Override
         public CompoundTag serialize(SkillEventListener listener) {
             if (!(listener instanceof CriticalHitEventListener aListener)) {
@@ -243,8 +223,11 @@ public class CriticalHitEventListener implements SkillEventListener {
             tag.putString("target", aListener.target.name().toLowerCase(Locale.ROOT));
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             CriticalHitEventListener listener = new CriticalHitEventListener();
@@ -255,8 +238,11 @@ public class CriticalHitEventListener implements SkillEventListener {
             listener.setTarget(SkillBonus.Target.values()[buf.readInt()]);
             return listener;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof CriticalHitEventListener aListener)) {
@@ -268,7 +254,6 @@ public class CriticalHitEventListener implements SkillEventListener {
             NetworkHelper.writeLivingMultiplier(buf, aListener.playerMultiplier);
             buf.writeInt(aListener.target.ordinal());
         }
-
         @Override
         public SkillEventListener createDefaultInstance() {
             return new CriticalHitEventListener();

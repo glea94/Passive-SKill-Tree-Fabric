@@ -1,5 +1,4 @@
 package daripher.skilltree.data.reloader;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -24,13 +23,10 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.io.Reader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-
 public class SkillsReloader extends SimplePreparableReloadListener<Map<Identifier, JsonElement>> implements IdentifiableResourceReloadListener {
     public static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(Identifier.class, new com.google.gson.TypeAdapter<Identifier>() {
@@ -51,41 +47,40 @@ public class SkillsReloader extends SimplePreparableReloadListener<Map<Identifie
                     ComponentSerialization.CODEC.encodeStart(JsonOps.INSTANCE, src).getOrThrow(IllegalStateException::new))
             .setPrettyPrinting()
             .create();
-
     private static final Map<Identifier, PassiveSkill> SKILLS = new HashMap<>();
-
     public SkillsReloader() {
         super();
     }
-
     @Override
     public Identifier getFabricId() {
         return Identifier.fromNamespaceAndPath(daripher.skilltree.SkillTreeMod.MOD_ID, "skills_reloader");
     }
-
     public static void register() {
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new SkillsReloader());
     }
-
     public static Map<Identifier, PassiveSkill> getSkills() {
         return SKILLS;
     }
-
     public static Collection<Identifier> getSkillIds() {
         return SKILLS.keySet();
     }
-
     public static @Nullable PassiveSkill getSkillById(Identifier id) {
         return SKILLS.get(id);
     }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
     public static void loadFromByteBuf(RegistryFriendlyByteBuf buf) {
         SKILLS.clear();
         NetworkHelper.readPassiveSkills(buf).forEach(s -> SKILLS.put(s.getId(), s));
     }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
     @Override
     protected Map<Identifier, JsonElement> prepare(ResourceManager resourceManager, ProfilerFiller profilerFiller) {
         Map<Identifier, JsonElement> map = new HashMap<>();
@@ -107,13 +102,11 @@ public class SkillsReloader extends SimplePreparableReloadListener<Map<Identifie
         }
         return map;
     }
-
     @Override
     protected void apply(Map<Identifier, JsonElement> map, @NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
         SKILLS.clear();
         map.forEach(this::readSkill);
     }
-
     protected void readSkill(Identifier id, JsonElement json) {
         try {
             PassiveSkill skill = GSON.fromJson(json, PassiveSkill.class);

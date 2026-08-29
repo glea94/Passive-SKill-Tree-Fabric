@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.item;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -13,23 +12,18 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.registries.BuiltInRegistries;
-
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class ItemIdPredicate implements ItemStackPredicate {
     private Identifier id;
-
     public ItemIdPredicate(Identifier id) {
         this.id = id;
     }
-
     @Override
     public boolean test(ItemStack stack) {
         Item item = BuiltInRegistries.ITEM.get(id).map(Holder::value).orElse(null);
         return item == stack.getItem();
     }
-
     @Override
     public String getDescriptionId() {
         Item item = BuiltInRegistries.ITEM.get(id).map(Holder::value).orElse(null);
@@ -38,7 +32,6 @@ public final class ItemIdPredicate implements ItemStackPredicate {
         }
         return ItemStackPredicate.super.getDescriptionId();
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -50,17 +43,14 @@ public final class ItemIdPredicate implements ItemStackPredicate {
         ItemIdPredicate that = (ItemIdPredicate) o;
         return id.equals(that.id);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(id);
     }
-
     @Override
     public ItemStackPredicate.Serializer getSerializer() {
         return PSTItemPredicates.ITEM_ID.get();
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<ItemStackPredicate> consumer) {
         editor.addLabel(0, 0, "Item Id", ChatFormatting.GREEN);
@@ -69,30 +59,25 @@ public final class ItemIdPredicate implements ItemStackPredicate {
                 .setResponder(text -> selectItemId(consumer, text));
         editor.increaseHeight(19);
     }
-
     private void selectItemId(Consumer<ItemStackPredicate> consumer, String text) {
         setId(Identifier.parse(text));
         consumer.accept(this);
     }
-
     private static boolean isItemId(String text) {
         if (Identifier.tryParse(text) == null) {
             return false;
         }
         return BuiltInRegistries.ITEM.containsKey(Identifier.parse(text));
     }
-
     public void setId(Identifier id) {
         this.id = id;
     }
-
     public static class Serializer implements ItemStackPredicate.Serializer {
         @Override
         public ItemStackPredicate deserialize(JsonObject json) throws JsonParseException {
             Identifier id = Identifier.parse(json.get("id").getAsString());
             return new ItemIdPredicate(id);
         }
-
         @Override
         public void serialize(JsonObject json, ItemStackPredicate condition) {
             if (!(condition instanceof ItemIdPredicate aCondition)) {
@@ -100,16 +85,17 @@ public final class ItemIdPredicate implements ItemStackPredicate {
             }
             json.addProperty("id", aCondition.id.toString());
         }
-
         @Override
         public ItemStackPredicate deserialize(CompoundTag tag) {
             Tag idTag = tag.get("id");
             Objects.requireNonNull(idTag);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             Identifier id = Identifier.parse(idTag.asString().orElseThrow());
             return new ItemIdPredicate(id);
         }
-
         @Override
         public CompoundTag serialize(ItemStackPredicate condition) {
             if (!(condition instanceof ItemIdPredicate aCondition)) {
@@ -119,12 +105,10 @@ public final class ItemIdPredicate implements ItemStackPredicate {
             tag.putString("id", aCondition.id.toString());
             return tag;
         }
-
         @Override
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new ItemIdPredicate(Identifier.parse(buf.readUtf()));
         }
-
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof ItemIdPredicate aCondition)) {
@@ -132,7 +116,6 @@ public final class ItemIdPredicate implements ItemStackPredicate {
             }
             buf.writeUtf(aCondition.id.toString());
         }
-
         @Override
         public ItemStackPredicate createDefaultInstance() {
             return new ItemIdPredicate(Identifier.parse("minecraft:shield"));

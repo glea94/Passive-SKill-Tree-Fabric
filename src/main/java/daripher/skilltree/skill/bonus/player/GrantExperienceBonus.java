@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -19,26 +18,21 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class GrantExperienceBonus implements EventListenerBonus<GrantExperienceBonus> {
     private float chance;
     private int amount;
     private SkillEventListener eventListener;
-
     public GrantExperienceBonus(float chance, int amount, SkillEventListener eventListener) {
         this.chance = chance;
         this.amount = amount;
         this.eventListener = eventListener;
     }
-
     public GrantExperienceBonus(float chance, int amount) {
         this(chance, amount, new OutgoingDamageEventListener().setTarget(Target.PLAYER));
     }
-
     @Override
     public void applyEffect(LivingEntity target, @Nullable LivingEntity source) {
         if (!(target instanceof Player player)) {
@@ -48,17 +42,14 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
             player.giveExperiencePoints(amount);
         }
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.GAIN_EXPERIENCE.get();
     }
-
     @Override
     public GrantExperienceBonus copy() {
         return new GrantExperienceBonus(chance, amount, eventListener);
     }
-
     @Override
     public GrantExperienceBonus multiply(double multiplier) {
         if (chance == 1) {
@@ -68,7 +59,6 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
         }
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof GrantExperienceBonus otherBonus)) {
@@ -79,7 +69,6 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
         }
         return Objects.equals(otherBonus.eventListener, this.eventListener);
     }
-
     @Override
     public GrantExperienceBonus merge(SkillBonus<?> other) {
         if (!(other instanceof GrantExperienceBonus otherBonus)) {
@@ -90,7 +79,6 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
         }
         return new GrantExperienceBonus(otherBonus.chance + this.chance, amount, eventListener);
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         String bonusDescription = getDescriptionId();
@@ -104,17 +92,14 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
         tooltip = eventListener.getTooltip(tooltip);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return chance > 0;
     }
-
     @Override
     public SkillEventListener getEventListener() {
         return eventListener;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<GrantExperienceBonus>> consumer) {
         editor.addLabel(0, 0, "Chance", ChatFormatting.GOLD);
@@ -137,35 +122,28 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
             consumer.accept(this.copy());
         });
     }
-
     private void selectEventListener(SkillTreeEditor editor, Consumer<EventListenerBonus<GrantExperienceBonus>> consumer, SkillEventListener eventListener) {
         setEventListener(eventListener);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectAmount(Consumer<EventListenerBonus<GrantExperienceBonus>> consumer, Double value) {
         setAmount(value.intValue());
         consumer.accept(this.copy());
     }
-
     private void selectChance(Consumer<EventListenerBonus<GrantExperienceBonus>> consumer, Double value) {
         setChance(value.floatValue());
         consumer.accept(this.copy());
     }
-
     public void setEventListener(SkillEventListener eventListener) {
         this.eventListener = eventListener;
     }
-
     public void setChance(float chance) {
         this.chance = chance;
     }
-
     public void setAmount(int amount) {
         this.amount = amount;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public GrantExperienceBonus deserialize(JsonObject json) throws JsonParseException {
@@ -175,7 +153,6 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
             bonus.eventListener = SerializationHelper.deserializeEventListener(json);
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof GrantExperienceBonus aBonus)) {
@@ -185,7 +162,6 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
             json.addProperty("amount", aBonus.amount);
             SerializationHelper.serializeEventListener(json, aBonus.eventListener);
         }
-
         @Override
         public GrantExperienceBonus deserialize(CompoundTag tag) {
             float chance = tag.getFloatOr("chance", 0f);
@@ -194,7 +170,6 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
             bonus.eventListener = SerializationHelper.deserializeEventListener(tag);
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof GrantExperienceBonus aBonus)) {
@@ -206,8 +181,11 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
             SerializationHelper.serializeEventListener(tag, aBonus.eventListener);
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public GrantExperienceBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -216,8 +194,11 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
             bonus.eventListener = NetworkHelper.readEventListener(buf);
             return bonus;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof GrantExperienceBonus aBonus)) {
@@ -227,7 +208,6 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
             buf.writeInt(aBonus.amount);
             NetworkHelper.writeEventListener(buf, aBonus.eventListener);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new GrantExperienceBonus(0.05f, 5);

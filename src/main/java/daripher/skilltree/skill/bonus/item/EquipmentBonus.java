@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.item;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -14,18 +13,14 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
     private SkillBonus<?> skillBonus;
-
     public EquipmentBonus(SkillBonus<?> skillBonus) {
         this.skillBonus = skillBonus;
     }
-
     @Override
     public boolean canMerge(ItemBonus<?> other) {
         if (!(other instanceof EquipmentBonus otherBonus)) {
@@ -33,7 +28,6 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
         }
         return otherBonus.skillBonus.canMerge(this.skillBonus);
     }
-
     @Override
     public EquipmentBonus merge(ItemBonus<?> other) {
         if (!(other instanceof EquipmentBonus otherBonus)) {
@@ -41,33 +35,27 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
         }
         return new EquipmentBonus(otherBonus.skillBonus.merge(this.skillBonus));
     }
-
     @Override
     public EquipmentBonus copy() {
         return new EquipmentBonus(skillBonus.copy());
     }
-
     @Override
     public EquipmentBonus multiply(double multiplier) {
         skillBonus.multiply(multiplier);
         return this;
     }
-
     @Override
     public ItemBonus.Serializer getSerializer() {
         return PSTItemBonuses.SKILL_BONUS.get();
     }
-
     @Override
     public List<MutableComponent> getFullTooltip() {
         return skillBonus.getFullTooltip();
     }
-
     @Override
     public boolean isPositive() {
         return skillBonus.isPositive();
     }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -79,7 +67,6 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
         EquipmentBonus that = (EquipmentBonus) obj;
         return Objects.equals(this.skillBonus, that.skillBonus);
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<EquipmentBonus> consumer) {
         skillBonus.addEditorWidgets(editor, bonus -> {
@@ -90,27 +77,22 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
     public SkillBonus<?> getSkillBonus() {
         return skillBonus;
     }
-
     public void setSkillBonus(SkillBonus<?> skillBonus) {
         this.skillBonus = skillBonus;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(skillBonus);
     }
-
     @Override
     public String toString() {
         return "EquipmentBonus[" + "skillBonus=" + skillBonus + ']';
     }
-
     public static class Serializer implements ItemBonus.Serializer {
         @Override
         public ItemBonus<?> deserialize(JsonObject json) throws JsonParseException {
             return new EquipmentBonus(SkillsReloader.GSON.fromJson(json.get("skill_bonus"), SkillBonus.class));
         }
-
         @Override
         public void serialize(JsonObject json, ItemBonus<?> bonus) {
             if (!(bonus instanceof EquipmentBonus aBonus)) {
@@ -124,7 +106,6 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
             skillBonus.getSerializer().serialize(skillBonusJson, skillBonus);
             json.add("skill_bonus", skillBonusJson);
         }
-
         @Override
         public ItemBonus<?> deserialize(CompoundTag tag) {
             CompoundTag skillBonusTag = tag.getCompound("skill_bonus").orElseThrow();
@@ -135,7 +116,6 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
             SkillBonus<?> skillBonus = serializer.deserialize(skillBonusTag);
             return new EquipmentBonus(skillBonus);
         }
-
         @Override
         public CompoundTag serialize(ItemBonus<?> bonus) {
             if (!(bonus instanceof EquipmentBonus aBonus)) {
@@ -151,14 +131,20 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
             tag.put("skill_bonus", skillBonusTag);
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public ItemBonus<?> deserialize(RegistryFriendlyByteBuf buf) {
             return new EquipmentBonus(NetworkHelper.readSkillBonus(buf));
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemBonus<?> bonus) {
             if (!(bonus instanceof EquipmentBonus aBonus)) {
@@ -166,7 +152,6 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
             }
             NetworkHelper.writeSkillBonus(buf, aBonus.skillBonus);
         }
-
         @Override
         public ItemBonus<?> createDefaultInstance() {
             return new EquipmentBonus(new OutgoingDamageBonus(0.1f, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));

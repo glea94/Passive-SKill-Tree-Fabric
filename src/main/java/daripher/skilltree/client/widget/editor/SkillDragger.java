@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget.editor;
-
 import daripher.skilltree.skill.PassiveSkill;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -7,7 +6,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
-
 public class SkillDragger extends AbstractWidget {
     private boolean gridSnapEnabled;
     private boolean showGrid;
@@ -16,13 +14,14 @@ public class SkillDragger extends AbstractWidget {
     private final SkillTreeEditor editor;
     private double totalDragX;
     private double totalDragY;
-
     public SkillDragger(SkillTreeEditor editor) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         super(0, 0, 0, 0, Component.empty());
         this.editor = editor;
     }
-
     @Override
     protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (showGrid) {
@@ -45,7 +44,6 @@ public class SkillDragger extends AbstractWidget {
             graphics.pose().popMatrix();
         }
     }
-
     @Override
     public boolean mouseDragged(MouseButtonEvent mouseButtonEvent, double dragX, double dragY) {
         if (mouseButtonEvent.button() == 0 && mouseButtonEvent.hasControlDown() && !editor.getSelectedSkills().isEmpty()) {
@@ -71,19 +69,16 @@ public class SkillDragger extends AbstractWidget {
         }
         return true;
     }
-
     @Override
     public boolean mouseReleased(MouseButtonEvent mouseButtonEvent) {
         totalDragX = totalDragY = 0;
         return super.mouseReleased(mouseButtonEvent);
     }
-
     private void dragSelectedSkills(float x, float y) {
         editor.getSelectedSkills().forEach(skill -> dragSkill(x, y, skill));
         editor.updateSkillConnections();
         editor.saveSelectedSkills();
     }
-
     private void dragSkill(float x, float y, PassiveSkill skill) {
         float xPosition = skill.getPositionX() + x;
         float yPosition = skill.getPositionY() + y;
@@ -95,39 +90,30 @@ public class SkillDragger extends AbstractWidget {
         editor.getSkillButtons().removeIf(button -> button.skill == skill);
         editor.addSkillButton(skill);
     }
-
     public boolean isGridSnapEnabled() {
         return gridSnapEnabled;
     }
-
     public void setGridSnapEnabled(boolean gridSnapEnabled) {
         this.gridSnapEnabled = gridSnapEnabled;
     }
-
     public int getGridSizeX() {
         return gridSizeX;
     }
-
     public void setGridSizeX(int gridSizeX) {
         this.gridSizeX = Math.max(gridSizeX, 1);
     }
-
     public int getGridSizeY() {
         return gridSizeY;
     }
-
     public void setGridSizeY(int gridSizeY) {
         this.gridSizeY = Math.max(gridSizeY, 1);
     }
-
     public boolean isShowGrid() {
         return showGrid;
     }
-
     public void setShowGrid(boolean showGrid) {
         this.showGrid = showGrid;
     }
-
     @Override
     protected void updateWidgetNarration(@NotNull NarrationElementOutput output) {
     }

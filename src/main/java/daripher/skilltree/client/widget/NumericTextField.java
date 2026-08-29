@@ -1,58 +1,47 @@
 package daripher.skilltree.client.widget;
-
 import net.minecraft.client.input.KeyEvent;
 import org.jetbrains.annotations.NotNull;
-
 import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-
 public class NumericTextField extends TextField {
     private static final Predicate<String> DEFAULT_FILTER = NumericTextField::isNumericString;
     private @Nullable Consumer<Double> numericResponder;
     private double defaultValue;
-
     public NumericTextField(int x, int y, int width, int height, double defaultValue) {
         super(x, y, width, height, formatDefaultValue(defaultValue));
         setDefaultValue(defaultValue);
         setSoftFilter(DEFAULT_FILTER);
     }
-
     @Override
     public void insertText(@NotNull String text) {
         super.insertText(text);
         onNumericValueChange();
     }
-
     @Override
     public void setMaxLength(int length) {
         super.setMaxLength(length);
         onNumericValueChange();
     }
-
     @Override
     public void setValue(@NotNull String text) {
         super.setValue(text);
         onNumericValueChange();
     }
-
     @Override
     public boolean keyPressed(KeyEvent keyEvent) {
         boolean pressed = super.keyPressed(keyEvent);
         onNumericValueChange();
         return pressed;
     }
-
     public NumericTextField setNumericFilter(Predicate<Double> filter) {
         setSoftFilter(DEFAULT_FILTER.and(createNumericFilter(filter)));
         return this;
     }
-
     public void setDefaultValue(double defaultValue) {
         this.defaultValue = defaultValue;
     }
-
     public double getNumericValue() {
         try {
             return Double.parseDouble(getValue());
@@ -60,17 +49,14 @@ public class NumericTextField extends TextField {
             return defaultValue;
         }
     }
-
     public void setNumericResponder(@Nullable Consumer<Double> numericResponder) {
         this.numericResponder = numericResponder;
     }
-
     private void onNumericValueChange() {
         if (numericResponder != null) {
             numericResponder.accept(getNumericValue());
         }
     }
-
     private Predicate<String> createNumericFilter(Predicate<Double> filter) {
         return s -> {
             try {
@@ -80,7 +66,6 @@ public class NumericTextField extends TextField {
             }
         };
     }
-
     private static String formatDefaultValue(double defaultValue) {
         String formatted = String.format(Locale.ENGLISH, "%.3f", defaultValue);
         while (formatted.endsWith("0")) {
@@ -91,7 +76,6 @@ public class NumericTextField extends TextField {
         }
         return formatted;
     }
-
     private static boolean isNumericString(String s) {
         try {
             Double.parseDouble(s);

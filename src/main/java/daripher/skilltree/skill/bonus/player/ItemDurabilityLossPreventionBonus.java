@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -22,21 +21,17 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemDurabilityLossPreventionBonus> {
     private float chance;
     private @NotNull LivingMultiplier playerMultiplier = NoneLivingMultiplier.INSTANCE;
     private @NotNull LivingEntityPredicate playerCondition = NoneLivingEntityPredicate.INSTANCE;
     private @NotNull ItemStackPredicate itemStackPredicate = NoneItemStackPredicate.INSTANCE;
-
     public ItemDurabilityLossPreventionBonus(float chance) {
         this.chance = chance;
     }
-
     public float getDurabilityLossChanceReduction(Player player, ItemStack itemStack) {
         if (!playerCondition.test(player)) {
             return 0f;
@@ -46,12 +41,10 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
         }
         return chance * playerMultiplier.getValue(player);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.ITEM_DURABILITY_LOSS_AVOIDANCE.get();
     }
-
     @Override
     public ItemDurabilityLossPreventionBonus copy() {
         ItemDurabilityLossPreventionBonus bonus = new ItemDurabilityLossPreventionBonus(chance);
@@ -60,13 +53,11 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
         bonus.itemStackPredicate = this.itemStackPredicate;
         return bonus;
     }
-
     @Override
     public ItemDurabilityLossPreventionBonus multiply(double multiplier) {
         chance *= (float) multiplier;
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof ItemDurabilityLossPreventionBonus otherBonus)) {
@@ -80,7 +71,6 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
         }
         return Objects.equals(otherBonus.playerCondition, this.playerCondition);
     }
-
     @Override
     public SkillBonus<ItemDurabilityLossPreventionBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof ItemDurabilityLossPreventionBonus otherBonus)) {
@@ -93,7 +83,6 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
         mergedBonus.itemStackPredicate = this.itemStackPredicate;
         return mergedBonus;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         MutableComponent tooltip;
@@ -107,12 +96,10 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
         tooltip = playerCondition.getTooltip(tooltip, Target.PLAYER);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return chance > 0;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<ItemDurabilityLossPreventionBonus> consumer) {
         editor.addLabel(0, 0, "Chance", ChatFormatting.GOLD);
@@ -140,65 +127,54 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
         setChance(value.floatValue());
         consumer.accept(this.copy());
     }
-
     private void addPlayerMultiplierWidgets(SkillTreeEditor editor, Consumer<ItemDurabilityLossPreventionBonus> consumer) {
         playerMultiplier.addEditorWidgets(editor, multiplier -> {
             setPlayerMultiplier(multiplier);
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<ItemDurabilityLossPreventionBonus> consumer, LivingMultiplier multiplier) {
         setPlayerMultiplier(multiplier);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addPlayerConditionWidgets(SkillTreeEditor editor, Consumer<ItemDurabilityLossPreventionBonus> consumer) {
         playerCondition.addEditorWidgets(editor, c -> {
             setPlayerCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<ItemDurabilityLossPreventionBonus> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void addItemConditionWidgets(SkillTreeEditor editor, Consumer<ItemDurabilityLossPreventionBonus> consumer) {
         itemStackPredicate.addEditorWidgets(editor, c -> {
             setItemCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     private void selectItemCondition(SkillTreeEditor editor, Consumer<ItemDurabilityLossPreventionBonus> consumer, ItemStackPredicate condition) {
         setItemCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     public SkillBonus<?> setPlayerCondition(LivingEntityPredicate condition) {
         this.playerCondition = condition;
         return this;
     }
-
     public SkillBonus<?> setItemCondition(ItemStackPredicate condition) {
         this.itemStackPredicate = condition;
         return this;
     }
-
     public SkillBonus<?> setPlayerMultiplier(LivingMultiplier multiplier) {
         this.playerMultiplier = multiplier;
         return this;
     }
-
     public void setChance(float chance) {
         this.chance = chance;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public ItemDurabilityLossPreventionBonus deserialize(JsonObject json) throws JsonParseException {
@@ -209,7 +185,6 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
             bonus.itemStackPredicate = SerializationHelper.deserializeItemPredicate(json);
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemDurabilityLossPreventionBonus aBonus)) {
@@ -220,7 +195,6 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
             SerializationHelper.serializeLivingCondition(json, aBonus.playerCondition, "player_condition");
             SerializationHelper.serializeItemPredicate(json, aBonus.itemStackPredicate);
         }
-
         @Override
         public ItemDurabilityLossPreventionBonus deserialize(CompoundTag tag) {
             float chance = tag.getFloatOr("chance", 0f);
@@ -230,7 +204,6 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
             bonus.itemStackPredicate = SerializationHelper.deserializeItemPredicate(tag);
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemDurabilityLossPreventionBonus aBonus)) {
@@ -243,8 +216,11 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
             SerializationHelper.serializeItemPredicate(tag, aBonus.itemStackPredicate);
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public ItemDurabilityLossPreventionBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -254,8 +230,11 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
             bonus.itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return bonus;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemDurabilityLossPreventionBonus aBonus)) {
@@ -266,7 +245,6 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
             NetworkHelper.writeLivingCondition(buf, aBonus.playerCondition);
             NetworkHelper.writeItemPredicate(buf, aBonus.itemStackPredicate);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new ItemDurabilityLossPreventionBonus(0.1f);

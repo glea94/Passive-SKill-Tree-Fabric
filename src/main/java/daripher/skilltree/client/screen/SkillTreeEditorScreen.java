@@ -1,5 +1,4 @@
 package daripher.skilltree.client.screen;
-
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.mixin.AbstractWidgetAccessor;
 import daripher.skilltree.data.client.SkillTreeEditorData;
@@ -23,10 +22,7 @@ import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3x2fStack;
 import org.lwjgl.glfw.GLFW;
-
 import java.util.Objects;
-
-
 public class SkillTreeEditorScreen extends Screen {
     private final PassiveSkillTree skillTree;
     private final SkillButtons skillButtons;
@@ -35,15 +31,16 @@ public class SkillTreeEditorScreen extends Screen {
     private int prevMouseX;
     private int prevMouseY;
     private boolean statsUpdated;
-
     public SkillTreeEditorScreen(Identifier skillTreeId) {
         super(Component.empty());
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         this.skillTree = SkillTreeEditorData.getOrCreateEditorTree(skillTreeId);
         this.skillButtons = new SkillButtons(skillTree, () -> 0f);
         this.editorWidgets = new SkillTreeEditor(skillButtons);
     }
-
     @Override
     public void init() {
         if (!statsUpdated) {
@@ -60,8 +57,11 @@ public class SkillTreeEditorScreen extends Screen {
         ((AbstractWidgetAccessor) (Object) skillButtons).setHeight(this.height);
         ((AbstractWidgetAccessor) (Object) editorWidgets).setWidth(210);
         ((AbstractWidgetAccessor) (Object) editorWidgets).setHeight(10);
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         editorWidgets.setX(this.width - editorWidgets.getWidth());
         editorWidgets.init();
         editorWidgets.increaseHeight(5);
@@ -74,12 +74,10 @@ public class SkillTreeEditorScreen extends Screen {
         addRenderableWidget(skillButtons);
         addRenderableWidget(editorWidgets);
     }
-
     @Override
     protected void rebuildWidgets() {
         this.minecraft.execute(super::rebuildWidgets);
     }
-
     private void calculateMaxScroll() {
         skillButtons.setMaxScrollX(Math.min(0, this.width / 2 - 350));
         skillButtons.setMaxScrollY(Math.min(0, this.height / 2 - 350));
@@ -92,10 +90,12 @@ public class SkillTreeEditorScreen extends Screen {
             skillButtons.setMaxScrollY(maxScrollY);
         });
     }
-
     @Override
     public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         renderBackground(graphics);
         skillButtons.extractRenderState(graphics, mouseX, mouseY, partialTick);
         renderOverlay(graphics);
@@ -120,7 +120,6 @@ public class SkillTreeEditorScreen extends Screen {
         editorWidgets.getSkillTree().getSkillIds().add(skill.getId());
         SkillTreeEditorData.saveEditorSkillTree(editorWidgets.getSkillTree());
     }
-
     @Override
     public boolean shouldCloseOnEsc() {
         if (!shouldCloseOnEsc) {
@@ -129,7 +128,6 @@ public class SkillTreeEditorScreen extends Screen {
         }
         return super.shouldCloseOnEsc();
     }
-
     @Override
     public void tick() {
         if (!statsUpdated) {
@@ -138,12 +136,10 @@ public class SkillTreeEditorScreen extends Screen {
         }
         editorWidgets.onWidgetTick();
     }
-
     private void renderOverlay(GuiGraphicsExtractor graphics) {
         Identifier texture = Identifier.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_overlay.png");
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, this.width, this.height, this.width, this.height);
     }
-
     public void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
         Identifier texture = Identifier.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_background.png");
         Matrix3x2fStack poseStack = graphics.pose();
@@ -153,28 +149,27 @@ public class SkillTreeEditorScreen extends Screen {
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (this.width - size) / 2, (this.height - size) / 2, 0F, 0F, size, size, size, size);
         poseStack.popMatrix();
     }
-
     @Override
     public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean doubleClick) {
         return editorWidgets.mouseClicked(mouseButtonEvent, doubleClick);
     }
-
     @Override
     public boolean mouseReleased(MouseButtonEvent mouseButtonEvent) {
         return editorWidgets.mouseReleased(mouseButtonEvent);
     }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         return editorWidgets.mouseScrolled(mouseX, mouseY, 0, scrollY) || skillButtons.mouseScrolled(mouseX, mouseY, 0, scrollY);
     }
-
     @Override
     public boolean mouseDragged(MouseButtonEvent mouseButtonEvent, double dragX, double dragY) {
         return editorWidgets.mouseDragged(mouseButtonEvent, dragX, dragY) | skillButtons.mouseDragged(mouseButtonEvent, dragX, dragY);
     }
-
     @Override
     public boolean keyPressed(KeyEvent keyEvent) {
         if (editorWidgets.keyPressed(keyEvent)) {
@@ -196,7 +191,6 @@ public class SkillTreeEditorScreen extends Screen {
         }
         return false;
     }
-
     @Override
     public boolean charTyped(CharacterEvent characterEvent) {
         return editorWidgets.charTyped(characterEvent);

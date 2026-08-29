@@ -1,11 +1,6 @@
 {
   "id": "skilltree:blacksmith_12",
-  "bonuses": [
-    {
-      "type": "skilltree:block_break_speed",
-      "multiplier": 0.25
-    }
-  ],
+  "bonuses": [],
   "requirements": [],
   "directConnections": [
     "skilltree:blacksmith_9"

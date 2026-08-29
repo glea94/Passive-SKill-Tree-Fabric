@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.function;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -17,20 +16,19 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-
 import java.util.List;
 import java.util.function.Consumer;
-
 public class EffectAmountFunction implements FloatFunction<EffectAmountFunction> {
     private MobEffectType effectType;
-
     public EffectAmountFunction(MobEffectType effectType) {
         this.effectType = effectType;
     }
-
     @Override
     public float apply(LivingEntity entity) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         List<Holder<MobEffect>> effects = entity.getActiveEffects().stream().map(MobEffectInstance::getEffect).toList();
         return switch (effectType) {
             case ANY -> effects.size();
@@ -39,7 +37,6 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
             case BENEFICIAL -> effects.stream().filter(e -> e.value().getCategory() == MobEffectCategory.BENEFICIAL).count();
         };
     }
-
     @Override
     public MutableComponent getMultiplierTooltip(SkillBonus.Target target, float divisor, Component bonusTooltip) {
         String key = "%s.multiplier.%s".formatted(getDescriptionId(), target.getName());
@@ -54,7 +51,6 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
             return Component.translatable(key, bonusTooltip, effectDescription);
         }
     }
-
     @Override
     public MutableComponent getPredicateTooltip(SkillBonus.Target target, FloatFunctionEntityPredicate.Logic logic, Component bonusTooltip, float requiredValue) {
         String key = "%s.condition.%s".formatted(getDescriptionId(), target.getName());
@@ -75,7 +71,6 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
         Component logicDescription = logic.getTooltip("effect_amount", valueDescription);
         return Component.translatable(key, bonusTooltip, logicDescription, effectDescription);
     }
-
     @Override
     public MutableComponent getRequirementTooltip(FloatFunctionEntityPredicate.Logic logic, float requiredValue) {
         String key = "%s.requirement".formatted(getDescriptionId());
@@ -96,12 +91,10 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
         Component logicDescription = logic.getTooltip("effect_amount", valueDescription);
         return Component.translatable(key, logicDescription, effectDescription);
     }
-
     @Override
     public FloatFunction.Serializer getSerializer() {
         return PSTFloatFunctions.EFFECT_AMOUNT.get();
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<FloatFunction<?>> consumer) {
         editor.addLabel(0, 0, "Effect Type", ChatFormatting.GREEN);
@@ -110,23 +103,19 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
                 .setResponder(type -> selectEffectType(consumer, type));
         editor.increaseHeight(19);
     }
-
     private void selectEffectType(Consumer<FloatFunction<?>> consumer, MobEffectType type) {
         setEffectType(type);
         consumer.accept(this);
     }
-
     public void setEffectType(MobEffectType type) {
         this.effectType = type;
     }
-
     public static class Serializer implements FloatFunction.Serializer {
         @Override
         public FloatFunction<?> deserialize(JsonObject json) throws JsonParseException {
             MobEffectType type = MobEffectType.fromName(json.get("effect_type").getAsString());
             return new EffectAmountFunction(type);
         }
-
         @Override
         public void serialize(JsonObject json, FloatFunction<?> provider) {
             if (!(provider instanceof EffectAmountFunction aProvider)) {
@@ -134,14 +123,15 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
             }
             json.addProperty("effect_type", aProvider.effectType.getName());
         }
-
         @Override
         public FloatFunction<?> deserialize(CompoundTag tag) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             MobEffectType type = MobEffectType.fromName(tag.getString("effect_type").orElse(""));
             return new EffectAmountFunction(type);
         }
-
         @Override
         public CompoundTag serialize(FloatFunction<?> provider) {
             if (!(provider instanceof EffectAmountFunction aProvider)) {
@@ -151,15 +141,21 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
             tag.putString("effect_type", aProvider.effectType.getName());
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectType type = MobEffectType.values()[buf.readInt()];
             return new EffectAmountFunction(type);
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof EffectAmountFunction aProvider)) {
@@ -167,7 +163,6 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
             }
             buf.writeInt(aProvider.effectType.ordinal());
         }
-
         @Override
         public FloatFunction<?> createDefaultInstance() {
             return new EffectAmountFunction(MobEffectType.ANY);

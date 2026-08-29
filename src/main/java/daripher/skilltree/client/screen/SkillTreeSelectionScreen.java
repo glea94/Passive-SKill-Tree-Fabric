@@ -1,5 +1,4 @@
 package daripher.skilltree.client.screen;
-
 import daripher.skilltree.client.widget.SkillTreeSelectionButton;
 import daripher.skilltree.data.reloader.SkillTreesReloader;
 import daripher.skilltree.skill.PassiveSkillTree;
@@ -11,23 +10,18 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
-
 public class SkillTreeSelectionScreen extends Screen {
     public static final int BUTTONS_SIZE = 19;
     public static final int BUTTONS_SPACING = 5;
-
     public SkillTreeSelectionScreen() {
         super(Component.empty());
     }
-
     @Override
     protected void init() {
         clearWidgets();
         addSkillTreeButtons();
     }
-
     private void addSkillTreeButtons() {
         List<PassiveSkillTree> skillTrees = getNonEmptySkillTrees();
         int buttonCount = skillTrees.size();
@@ -40,15 +34,19 @@ public class SkillTreeSelectionScreen extends Screen {
             addRenderableWidget(button);
         }
     }
-
     @NotNull
     private static List<PassiveSkillTree> getNonEmptySkillTrees() {
-        return SkillTreesReloader.getSkillTrees().values().stream().filter(skillTree -> !skillTree.getSkillIds().isEmpty()).toList();
+        return SkillTreesReloader.getSkillTrees().values().stream()
+                .filter(skillTree -> !skillTree.getSkillIds().isEmpty())
+                .filter(skillTree -> !skillTree.isHidden())
+                .toList();
     }
-
     @Override
     public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         renderBackground(guiGraphics);
         super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         for (var widget : children()) {
@@ -61,7 +59,6 @@ public class SkillTreeSelectionScreen extends Screen {
             guiGraphics.setTooltipForNextFrame(font, button.getMessage(), mouseX, mouseY);
         }
     }
-
     public void renderBackground(@NotNull GuiGraphicsExtractor guiGraphics) {
         Identifier texture = Identifier.parse("skilltree:textures/screen/skill_tree_background.png");
         int size = SkillTreeScreen.BACKGROUND_SIZE;

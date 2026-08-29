@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -25,28 +24,23 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-
 import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class InflictMobEffectBonus implements EventListenerBonus<InflictMobEffectBonus> {
     private MobEffectInstance effectInstance;
     private SkillEventListener eventListener;
     private float chance;
     private int maxStacks;
-
     public InflictMobEffectBonus(float chance, MobEffectInstance effectInstance, SkillEventListener eventListener, int maxStacks) {
         this.chance = chance;
         this.effectInstance = effectInstance;
         this.eventListener = eventListener;
         this.maxStacks = maxStacks;
     }
-
     public InflictMobEffectBonus(float chance, MobEffectInstance effectInstance, int maxStacks) {
         this(chance, effectInstance, new OutgoingDamageEventListener(), maxStacks);
     }
-
     @Override
     public void applyEffect(LivingEntity target, @Nullable LivingEntity source) {
         RandomSource random = target.getRandom();
@@ -60,7 +54,6 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
         }
         target.addEffect(effectInstanceCopy, source);
     }
-
     private MobEffectInstance getEffectInstanceAfterStacking(LivingEntity target, Holder<MobEffect> effect, MobEffectInstance effectInstance) {
         MobEffectInstance activeEffectInstance = target.getEffect(effect);
         if (activeEffectInstance == null) {
@@ -76,17 +69,14 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
         effectInstance = new MobEffectInstance(effect, duration, amplifier);
         return effectInstance;
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.INFLICT_EFFECT.get();
     }
-
     @Override
     public InflictMobEffectBonus copy() {
         return new InflictMobEffectBonus(chance, effectInstance, eventListener, maxStacks);
     }
-
     @Override
     public InflictMobEffectBonus multiply(double multiplier) {
         if (chance < 1) {
@@ -98,7 +88,6 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
         }
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof InflictMobEffectBonus otherBonus)) {
@@ -109,7 +98,6 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
         }
         return Objects.equals(otherBonus.eventListener, this.eventListener);
     }
-
     @Override
     public SkillBonus<EventListenerBonus<InflictMobEffectBonus>> merge(SkillBonus<?> other) {
         if (!(other instanceof InflictMobEffectBonus otherBonus)) {
@@ -155,7 +143,6 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
         }
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     private Component getDurationDescription() {
         boolean measureInSeconds = effectInstance.getDuration() < 1200;
         String measurement = measureInSeconds ? "seconds" : "minutes";
@@ -163,33 +150,26 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
         String formattedDuration = TooltipHelper.formatNumber(duration);
         return Component.translatable(getDescriptionId() + "." + measurement, formattedDuration);
     }
-
     @Override
     public void gatherInfo(Consumer<MutableComponent> consumer) {
         TooltipHelper.consumeTranslated(effectInstance.getDescriptionId() + ".info", consumer);
     }
-
     @Override
     public boolean isPositive() {
-        
         return chance > 0 ^ eventListener.getTarget() == Target.PLAYER ^ effectInstance.getEffect()
                 .value().getCategory() != MobEffectCategory.HARMFUL;
     }
-
     @Override
     public SkillEventListener getEventListener() {
         return eventListener;
     }
-
     @SuppressWarnings("unchecked")
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<InflictMobEffectBonus>> consumer) {
         editor.addLabel(0, 0, "Effect", ChatFormatting.GOLD);
         editor.addLabel(150, 0, "Chance", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-        
         editor.addSelectionMenu(0, 0, 145, effectInstance.getEffect()).setResponder(holder -> selectEffect(consumer, holder));
-
         editor.addNumericTextField(150, 0, 50, 14, chance).setNumericResponder(value -> selectChance(consumer, value));
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Duration", ChatFormatting.GOLD);
@@ -210,7 +190,6 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
                 .setMenuInitFunc(() -> addEventListenerWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addEventListenerWidgets(SkillTreeEditor editor, Consumer<EventListenerBonus<InflictMobEffectBonus>> consumer) {
         eventListener.addEditorWidgets(editor, listener -> {
             setEventListener(listener);
@@ -222,56 +201,44 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectAmplifier(Consumer<EventListenerBonus<InflictMobEffectBonus>> consumer, Double value) {
         setAmplifier(value.intValue());
         consumer.accept(this.copy());
     }
-
     private void selectMaxStacks(Consumer<EventListenerBonus<InflictMobEffectBonus>> consumer, Double value) {
         setMaxStacks(value.intValue());
         consumer.accept(this.copy());
     }
-
     private void selectDuration(Consumer<EventListenerBonus<InflictMobEffectBonus>> consumer, Double value) {
         setDuration(value.intValue());
         consumer.accept(this.copy());
     }
-
     private void selectChance(Consumer<EventListenerBonus<InflictMobEffectBonus>> consumer, Double value) {
         setChance(value.floatValue());
         consumer.accept(this.copy());
     }
-
     private void selectEffect(Consumer<EventListenerBonus<InflictMobEffectBonus>> consumer, Holder<MobEffect> effect) {
         setEffectInstance(effect);
         consumer.accept(this.copy());
     }
-
     public void setChance(float chance) {
         this.chance = chance;
     }
-
     public void setEffectInstance(Holder<MobEffect> effectInstance) {
         this.effectInstance = new MobEffectInstance(effectInstance, this.effectInstance.getDuration(), this.effectInstance.getAmplifier());
     }
-
     public void setDuration(int duration) {
         this.effectInstance = new MobEffectInstance(this.effectInstance.getEffect(), duration, this.effectInstance.getAmplifier());
     }
-
     public void setAmplifier(int amplifier) {
         this.effectInstance = new MobEffectInstance(this.effectInstance.getEffect(), this.effectInstance.getDuration(), amplifier);
     }
-
     public void setMaxStacks(int maxStacks) {
         this.maxStacks = maxStacks;
     }
-
     public void setEventListener(SkillEventListener eventListener) {
         this.eventListener = eventListener;
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public InflictMobEffectBonus deserialize(JsonObject json) throws JsonParseException {
@@ -282,7 +249,6 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
             bonus.eventListener = SerializationHelper.deserializeEventListener(json);
             return bonus;
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof InflictMobEffectBonus aBonus)) {
@@ -293,7 +259,6 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
             SerializationHelper.serializeEffectInstance(json, aBonus.effectInstance);
             SerializationHelper.serializeEventListener(json, aBonus.eventListener);
         }
-
         @Override
         public InflictMobEffectBonus deserialize(CompoundTag tag) {
             float chance = tag.getFloatOr("chance", 0f);
@@ -303,7 +268,6 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
             bonus.eventListener = SerializationHelper.deserializeEventListener(tag);
             return bonus;
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof InflictMobEffectBonus aBonus)) {
@@ -316,8 +280,6 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
             SerializationHelper.serializeEventListener(tag, aBonus.eventListener);
             return tag;
         }
-
-        
         @Override
         public InflictMobEffectBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -327,8 +289,6 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
             bonus.eventListener = NetworkHelper.readEventListener(buf);
             return bonus;
         }
-
-        
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof InflictMobEffectBonus aBonus)) {
@@ -339,10 +299,8 @@ public final class InflictMobEffectBonus implements EventListenerBonus<InflictMo
             NetworkHelper.writeEffectInstance(buf, aBonus.effectInstance);
             NetworkHelper.writeEventListener(buf, aBonus.eventListener);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
-            
             return new InflictMobEffectBonus(0.05f, new MobEffectInstance(MobEffects.POISON, 100), 1);
         }
     }

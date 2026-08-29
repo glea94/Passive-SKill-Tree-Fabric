@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.event;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -16,35 +15,28 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public class SkillLearnedEventListener implements SkillEventListener {
     private LivingMultiplier playerMultiplier = NoneLivingMultiplier.INSTANCE;
-
     public void onEvent(@NotNull Player player, @NotNull EventListenerBonus<?> skill) {
         skill.multiply(playerMultiplier.getValue(player)).applyEffect(player, player);
     }
-
     @Override
     public MutableComponent getTooltip(Component bonusTooltip) {
         MutableComponent eventTooltip = Component.translatable(getDescriptionId(), bonusTooltip);
         eventTooltip = playerMultiplier.getTooltip(eventTooltip, SkillBonus.Target.PLAYER);
         return eventTooltip;
     }
-
     @Override
     public SkillBonus.Target getTarget() {
         return SkillBonus.Target.PLAYER;
     }
-
     @Override
     public SkillEventListener.Serializer getSerializer() {
         return PSTEventListeners.SKILL_LEARNED.get();
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -56,12 +48,10 @@ public class SkillLearnedEventListener implements SkillEventListener {
         SkillLearnedEventListener listener = (SkillLearnedEventListener) o;
         return Objects.equals(playerMultiplier, listener.playerMultiplier);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(playerMultiplier);
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         editor.addLabel(0, 0, "Player Multiplier", ChatFormatting.GREEN);
@@ -71,25 +61,21 @@ public class SkillLearnedEventListener implements SkillEventListener {
                 .setMenuInitFunc(() -> addPlayerMultiplierWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addPlayerMultiplierWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         playerMultiplier.addEditorWidgets(editor, multiplier -> {
             setPlayerMultiplier(multiplier);
             consumer.accept(this);
         });
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<SkillEventListener> consumer, LivingMultiplier multiplier) {
         setPlayerMultiplier(multiplier);
         consumer.accept(this);
         editor.rebuildWidgets();
     }
-
     public SkillLearnedEventListener setPlayerMultiplier(LivingMultiplier playerMultiplier) {
         this.playerMultiplier = playerMultiplier;
         return this;
     }
-
     public static class Serializer implements SkillEventListener.Serializer {
         @Override
         public SkillEventListener deserialize(JsonObject json) throws JsonParseException {
@@ -97,7 +83,6 @@ public class SkillLearnedEventListener implements SkillEventListener {
             listener.setPlayerMultiplier(SerializationHelper.deserializeLivingMultiplier(json, "player_multiplier"));
             return listener;
         }
-
         @Override
         public void serialize(JsonObject json, SkillEventListener listener) {
             if (!(listener instanceof SkillLearnedEventListener aListener)) {
@@ -105,14 +90,12 @@ public class SkillLearnedEventListener implements SkillEventListener {
             }
             SerializationHelper.serializeLivingMultiplier(json, aListener.playerMultiplier, "player_multiplier");
         }
-
         @Override
         public SkillEventListener deserialize(CompoundTag tag) {
             SkillLearnedEventListener listener = new SkillLearnedEventListener();
             listener.setPlayerMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier"));
             return listener;
         }
-
         @Override
         public CompoundTag serialize(SkillEventListener listener) {
             if (!(listener instanceof SkillLearnedEventListener aListener)) {
@@ -122,16 +105,22 @@ public class SkillLearnedEventListener implements SkillEventListener {
             SerializationHelper.serializeLivingMultiplier(tag, aListener.playerMultiplier, "player_multiplier");
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             SkillLearnedEventListener listener = new SkillLearnedEventListener();
             listener.setPlayerMultiplier(NetworkHelper.readLivingMultiplier(buf));
             return listener;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof SkillLearnedEventListener aListener)) {
@@ -139,7 +128,6 @@ public class SkillLearnedEventListener implements SkillEventListener {
             }
             NetworkHelper.writeLivingMultiplier(buf, aListener.playerMultiplier);
         }
-
         @Override
         public SkillEventListener createDefaultInstance() {
             return new SkillLearnedEventListener();

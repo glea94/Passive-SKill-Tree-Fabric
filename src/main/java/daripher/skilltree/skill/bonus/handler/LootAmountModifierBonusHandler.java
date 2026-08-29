@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.skill.SkillBonusProvider;
 import daripher.skilltree.skill.bonus.player.LootAmountModifierBonus;
 import it.unimi.dsi.fastutil.floats.Float2FloatMap;
@@ -16,9 +15,7 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
-
 public class LootAmountModifierBonusHandler {
     public static @NotNull ObjectArrayList<ItemStack> modifyLoot(ObjectArrayList<ItemStack> defaultLoot, LootContext lootContext, net.minecraft.resources.Identifier lootTableId) {
         Player player = null;
@@ -27,6 +24,7 @@ public class LootAmountModifierBonusHandler {
             if (!lootType.canAffect(lootContext, lootTableId)) {
                 continue;
             }
+<<<<<<< Updated upstream
 
             player = (Player) lootContext.getParameter(lootType.getPlayerLootContextParam());
             if (lootContext.hasParameter(LootContextParams.TOOL)) {
@@ -35,6 +33,11 @@ public class LootAmountModifierBonusHandler {
 
 
 
+=======
+            player = (Player) lootContext.getParameter(lootType.getPlayerLootContextParam());
+            if (lootContext.hasParameter(LootContextParams.TOOL)) {
+                ItemInstance tool = lootContext.getParameter(LootContextParams.TOOL);
+>>>>>>> Stashed changes
                 int silkTouchLevel = tool.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY).getLevel(
                         player.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH)
                 );
@@ -70,7 +73,6 @@ public class LootAmountModifierBonusHandler {
         }
         return modifiedLoot;
     }
-
     public static float getLootAmountModifier(Player player, LootAmountModifierBonus.LootType lootType) {
         RandomSource random = player.getRandom();
         Float2FloatMap lootAmountModifierToChanceMap = getLootAmountModifierToChanceMap(player, lootType);
@@ -90,7 +92,6 @@ public class LootAmountModifierBonusHandler {
         }
         return amountModifier;
     }
-
     @NotNull
     public static Float2FloatMap getLootAmountModifierToChanceMap(Player player, LootAmountModifierBonus.LootType lootType) {
         Float2FloatMap multipliers = new Float2FloatOpenHashMap();

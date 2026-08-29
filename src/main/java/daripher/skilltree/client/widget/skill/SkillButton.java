@@ -1,5 +1,4 @@
 package daripher.skilltree.client.widget.skill;
-
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.config.ClientConfig;
 import daripher.skilltree.skill.PassiveSkill;
@@ -21,14 +20,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
-
 public class SkillButton extends Button {
     private static final Style DESCRIPTION_STYLE = Style.EMPTY.withColor(0x7B7BE5);
     private static final Style ID_STYLE = Style.EMPTY.withColor(0x545454);
@@ -41,37 +38,36 @@ public class SkillButton extends Button {
     public boolean searched;
     public boolean selected;
     public boolean hasBrokenBonuses;
-
     public SkillButton(Supplier<Float> animationFunc, float x, float y, PassiveSkill skill) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         super((int) x, (int) y, skill.getSkillSize(), skill.getSkillSize(), Component.empty(), b -> {}, DEFAULT_NARRATION);
         this.x = x;
         this.y = y;
         this.skill = skill;
         this.animationFunction = animationFunc;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         this.active = false;
         this.hasBrokenBonuses = skill.getBonuses().stream().anyMatch(bonus -> bonus instanceof BrokenSkillBonus);
     }
-
     private static final int WHITE = 0xFFFFFFFF;
-
     private static int argb(float r, float g, float b, float a) {
         return ((int) (Mth.clamp(a, 0F, 1F) * 255) << 24)
                 | ((int) (Mth.clamp(r, 0F, 1F) * 255) << 16)
                 | ((int) (Mth.clamp(g, 0F, 1F) * 255) << 8)
                 | (int) (Mth.clamp(b, 0F, 1F) * 255);
     }
-
     @Override
     protected void extractContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-
         graphics.pose().pushMatrix();
         graphics.pose().translate(x, y);
-
         int currentWidth = this.getWidth();
         int currentHeight = this.getHeight();
-
         if (hasBrokenBonuses) {
             Identifier brokenTexture = Identifier.parse("skilltree:textures/icons/broken_skill.png");
             graphics.blit(RenderPipelines.GUI_TEXTURED, brokenTexture, 0, 0, 0F, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth, currentHeight);
@@ -101,7 +97,6 @@ public class SkillButton extends Button {
         }
         graphics.pose().popMatrix();
     }
-
     private void renderFavoriteSkillHighlight(GuiGraphicsExtractor graphics) {
         if (!ClientConfig.favorite_skills.contains(skill.getId())) {
             return;
@@ -117,11 +112,9 @@ public class SkillButton extends Button {
         float g = ((color >> 8) & 0xFF) / 255f;
         float b = ((color) & 0xFF) / 255f;
         int tint = argb(r, g, b, 1f);
-
         int currentWidth = this.getWidth();
         int currentHeight = this.getHeight();
         int size = (int) (currentWidth * 1.4);
-
         graphics.pose().pushMatrix();
         graphics.pose().translate(currentWidth / 2f, currentHeight / 2f);
         float animation = 1 + 0.3f * (Mth.sin(animationFunction.get() / 3F) + 1) / 2;
@@ -131,7 +124,6 @@ public class SkillButton extends Button {
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, size, size, 80, 80, 80, 80, tint);
         graphics.pose().popMatrix();
     }
-
     private void renderFrame(GuiGraphicsExtractor graphics, int color) {
         Identifier texture = skill.getFrameTexture();
         int currentWidth = this.getWidth();
@@ -144,27 +136,26 @@ public class SkillButton extends Button {
         int currentHeight = this.getHeight();
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, currentWidth, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth * 3, currentHeight, color);
     }
-
     private void renderIcon(GuiGraphicsExtractor graphics, int color) {
         Identifier texture = skill.getIconTexture();
         int currentWidth = this.getWidth();
         int currentHeight = this.getHeight();
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth, currentHeight, color);
     }
-
     private void renderBackground(GuiGraphicsExtractor graphics, int color) {
         Identifier texture = skill.getFrameTexture();
         int currentWidth = this.getWidth();
         int currentHeight = this.getHeight();
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth * 3, currentHeight, color);
     }
-
     public void setButtonSize(int size) {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         this.setWidth(size);
         this.setHeight(size);
     }
-
     public List<MutableComponent> getSkillTooltip(PassiveSkillTree skillTree) {
         ArrayList<MutableComponent> tooltip = new ArrayList<>();
         addTitleTooltip(tooltip);
@@ -179,7 +170,6 @@ public class SkillButton extends Button {
         addAdvancedTooltip(tooltip);
         return tooltip;
     }
-
     public void addRequirementsTooltip(ArrayList<MutableComponent> tooltip) {
         if (skill.getRequirements().isEmpty()) {
             return;
@@ -192,7 +182,6 @@ public class SkillButton extends Button {
         tooltip.add(requirementsComponent);
         skill.getRequirements().forEach(requirement -> addRequirementTooltip(tooltip, requirement));
     }
-
     private void addRequirementTooltip(ArrayList<MutableComponent> tooltip, SkillRequirement<?> requirement) {
         MutableComponent requirementTooltip = requirement.getTooltip();
         Player localPlayer = Minecraft.getInstance().player;
@@ -200,18 +189,19 @@ public class SkillButton extends Button {
         requirementTooltip = requirementTooltip.withStyle(style);
         tooltip.add(Component.literal("  ").append(requirementTooltip));
     }
-
     public void addSkillBonusTooltip(List<MutableComponent> tooltip) {
         addDescriptionTooltip(tooltip);
         addInfoTooltip(tooltip);
     }
-
     private void addInfoTooltip(List<MutableComponent> tooltip) {
+<<<<<<< Updated upstream
 
 
 
 
 
+=======
+>>>>>>> Stashed changes
         boolean altDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_LEFT_ALT)
                 || InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_RIGHT_ALT);
         if (!altDown) {
@@ -229,7 +219,6 @@ public class SkillButton extends Button {
             tooltip.addAll(info);
         }
     }
-
     protected void addAdvancedTooltip(List<MutableComponent> tooltip) {
         Minecraft minecraft = Minecraft.getInstance();
         if (!minecraft.options.advancedItemTooltips) {
@@ -237,7 +226,6 @@ public class SkillButton extends Button {
         }
         addIdTooltip(tooltip);
     }
-
     protected void addDescriptionTooltip(List<MutableComponent> tooltip) {
         skill.getBonuses().stream().map(SkillBonus::getFullTooltip).forEach(tooltip::addAll);
         String descriptionId = getSkillId() + ".description";
@@ -247,7 +235,6 @@ public class SkillButton extends Button {
             descriptionStrings.stream().map(Component::translatable).map(this::applyDescriptionStyle).forEach(tooltip::add);
         }
     }
-
     private void addLimitationsTooltip(PassiveSkillTree skillTree, ArrayList<MutableComponent> tooltips) {
         boolean addedLimitTooltip = false;
         for (String tag : skill.getTags()) {
@@ -268,29 +255,26 @@ public class SkillButton extends Button {
             tooltips.add(Component.empty());
         }
     }
-
     protected void addTitleTooltip(List<MutableComponent> tooltip) {
         tooltip.add(TooltipHelper.getSkillTitle(skill));
     }
-
     protected void addIdTooltip(List<MutableComponent> tooltip) {
         MutableComponent idComponent = Component.literal(skill.getId().toString()).withStyle(ID_STYLE);
         tooltip.add(idComponent);
     }
-
     protected MutableComponent applyDescriptionStyle(MutableComponent component) {
         return component.withStyle(DESCRIPTION_STYLE);
     }
-
     public void setCanLearn() {
         canLearn = true;
     }
-
     public void setActive() {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         this.active = true;
     }
-
     private String getSkillId() {
         return "skill." + skill.getId().getNamespace() + "." + skill.getId().getPath();
     }

@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -18,51 +17,40 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public class VanillaRecipeUnlockBonus implements SkillBonus<VanillaRecipeUnlockBonus> {
     private @NotNull ItemStackPredicate itemStackPredicate;
-
     public VanillaRecipeUnlockBonus(@NotNull ItemStackPredicate itemStackPredicate) {
         this.itemStackPredicate = itemStackPredicate;
     }
-
     public boolean canUnlockRecipe(WorkbenchVanillaCraftingRecipe recipe) {
         return itemStackPredicate.test(recipe.getResult());
     }
-
     public boolean canUnlockRecipe(WorkbenchVanillaSmithingRecipe recipe) {
         return itemStackPredicate.test(recipe.getResult());
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.VANILLA_RECIPE_UNLOCK.get();
     }
-
     @Override
     public VanillaRecipeUnlockBonus copy() {
         return new VanillaRecipeUnlockBonus(itemStackPredicate);
     }
-
     @Override
     public VanillaRecipeUnlockBonus multiply(double multiplier) {
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         return false;
     }
-
     @Override
     public SkillBonus<VanillaRecipeUnlockBonus> merge(SkillBonus<?> other) {
         return this;
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         Component itemStackPredicateTooltip = itemStackPredicate.getTooltip();
@@ -70,12 +58,10 @@ public class VanillaRecipeUnlockBonus implements SkillBonus<VanillaRecipeUnlockB
         MutableComponent tooltip = Component.translatable(getDescriptionId(), itemStackPredicateTooltip);
         return tooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return true;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<VanillaRecipeUnlockBonus> consumer) {
         editor.addLabel(0, 0, "Item Stack Predicate", ChatFormatting.GOLD);
@@ -84,25 +70,21 @@ public class VanillaRecipeUnlockBonus implements SkillBonus<VanillaRecipeUnlockB
                 .setMenuInitFunc(() -> addItemConditionWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void addItemConditionWidgets(SkillTreeEditor editor, Consumer<VanillaRecipeUnlockBonus> consumer) {
         itemStackPredicate.addEditorWidgets(editor, c -> {
             setItemCondition(c);
             consumer.accept(this.copy());
         });
     }
-
     private void selectItemCondition(SkillTreeEditor editor, Consumer<VanillaRecipeUnlockBonus> consumer, ItemStackPredicate condition) {
         setItemCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     public SkillBonus<?> setItemCondition(ItemStackPredicate condition) {
         this.itemStackPredicate = condition;
         return this;
     }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
@@ -111,19 +93,16 @@ public class VanillaRecipeUnlockBonus implements SkillBonus<VanillaRecipeUnlockB
         VanillaRecipeUnlockBonus that = (VanillaRecipeUnlockBonus) o;
         return Objects.equals(itemStackPredicate, that.itemStackPredicate);
     }
-
     @Override
     public int hashCode() {
         return Objects.hashCode(itemStackPredicate);
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public VanillaRecipeUnlockBonus deserialize(JsonObject json) throws JsonParseException {
             ItemStackPredicate itemStackPredicate = SerializationHelper.deserializeItemPredicate(json);
             return new VanillaRecipeUnlockBonus(itemStackPredicate);
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof VanillaRecipeUnlockBonus aBonus)) {
@@ -131,13 +110,11 @@ public class VanillaRecipeUnlockBonus implements SkillBonus<VanillaRecipeUnlockB
             }
             SerializationHelper.serializeItemPredicate(json, aBonus.itemStackPredicate);
         }
-
         @Override
         public VanillaRecipeUnlockBonus deserialize(CompoundTag tag) {
             ItemStackPredicate itemStackPredicate = SerializationHelper.deserializeItemPredicate(tag);
             return new VanillaRecipeUnlockBonus(itemStackPredicate);
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof VanillaRecipeUnlockBonus aBonus)) {
@@ -147,15 +124,11 @@ public class VanillaRecipeUnlockBonus implements SkillBonus<VanillaRecipeUnlockB
             SerializationHelper.serializeItemPredicate(tag, aBonus.itemStackPredicate);
             return tag;
         }
-
-
         @Override
         public VanillaRecipeUnlockBonus deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return new VanillaRecipeUnlockBonus(itemStackPredicate);
         }
-
-
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof VanillaRecipeUnlockBonus aBonus)) {
@@ -163,7 +136,6 @@ public class VanillaRecipeUnlockBonus implements SkillBonus<VanillaRecipeUnlockB
             }
             NetworkHelper.writeItemPredicate(buf, aBonus.itemStackPredicate);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new VanillaRecipeUnlockBonus(NoneItemStackPredicate.INSTANCE);

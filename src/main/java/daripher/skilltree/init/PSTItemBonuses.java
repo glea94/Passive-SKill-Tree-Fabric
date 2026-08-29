@@ -1,5 +1,4 @@
 package daripher.skilltree.init;
-
 import daripher.skilltree.SkillTreeMod;
 import daripher.skilltree.client.tooltip.TooltipHelper;
 import daripher.skilltree.skill.bonus.item.EquipmentBonus;
@@ -8,26 +7,24 @@ import daripher.skilltree.skill.bonus.item.ItemBonus;
 import net.minecraft.resources.Identifier;
 import daripher.skilltree.util.registry.DeferredRegister;
 import daripher.skilltree.util.registry.RegistryObject;
-
 import java.util.List;
 import java.util.Objects;
-
 public class PSTItemBonuses {
     public static final Identifier REGISTRY_ID = Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "item_bonuses");
     public static final DeferredRegister<ItemBonus.Serializer> REGISTRY = DeferredRegister.create(REGISTRY_ID, SkillTreeMod.MOD_ID);
-
     public static final RegistryObject<ItemBonus.Serializer> SKILL_BONUS = REGISTRY.register("skill_bonus", EquipmentBonus.Serializer::new);
     public static final RegistryObject<ItemBonus.Serializer> ITEM_BONUS_LIST = REGISTRY.register("item_bonus_list", GroupedItemBonus.Serializer::new);
-
     @SuppressWarnings("rawtypes")
     public static List<ItemBonus> bonusList() {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         return PSTRegistries.ITEM_BONUSES.get().getValues().stream()
                 .map(ItemBonus.Serializer::createDefaultInstance)
                 .map(ItemBonus.class::cast)
                 .toList();
     }
-
     public static String getName(ItemBonus<?> itemBonus) {
         Identifier id = PSTRegistries.ITEM_BONUSES.get().getKey(itemBonus.getSerializer());
         return TooltipHelper.idToName(Objects.requireNonNull(id).getPath());

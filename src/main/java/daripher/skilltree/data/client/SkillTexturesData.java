@@ -1,5 +1,4 @@
 package daripher.skilltree.data.client;
-
 import daripher.skilltree.SkillTreeMod;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -10,23 +9,18 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-
 public class SkillTexturesData implements IdentifiableResourceReloadListener {
     private static final Map<String, Set<Identifier>> FOLDER_TO_TEXTURES = new HashMap<>();
-
     public static void register() {
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SkillTexturesData());
     }
-
     @Override
     public Identifier getFabricId() {
         return Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "skill_textures_reloader");
     }
-
     @Override
     public CompletableFuture<Void> reload(PreparableReloadListener.SharedState sharedState, Executor prepareExecutor,
                                           PreparableReloadListener.PreparationBarrier barrier, Executor applyExecutor) {
@@ -38,10 +32,8 @@ public class SkillTexturesData implements IdentifiableResourceReloadListener {
                     FOLDER_TO_TEXTURES.putAll(result);
                 }, applyExecutor);
     }
-
     private static Map<String, Set<Identifier>> scanTextures(ResourceManager resourceManager) {
         Map<String, Set<Identifier>> result = new HashMap<>();
-
         Map<Identifier, Resource> textures = resourceManager.listResources("textures", SkillTexturesData::isTexturePath);
         List<Identifier> textureLocations = textures.keySet().stream().toList();
         for (Identifier textureLocation : textureLocations) {
@@ -53,7 +45,6 @@ public class SkillTexturesData implements IdentifiableResourceReloadListener {
         }
         return result;
     }
-
     @NotNull
     public static String getTextureFolder(Identifier textureLocation) {
         String path = textureLocation.getPath();
@@ -63,19 +54,15 @@ public class SkillTexturesData implements IdentifiableResourceReloadListener {
         }
         return path.substring(0, lastSlash);
     }
-
     private static boolean isTexturePath(Identifier location) {
         return location.getPath().endsWith(".png");
     }
-
     public static Set<Identifier> getTexturesInFolder(String folder) {
         return FOLDER_TO_TEXTURES.getOrDefault(folder, Set.of());
     }
-
     public static boolean isTextureFolder(String string) {
         return FOLDER_TO_TEXTURES.containsKey(string);
     }
-
     @Nullable
     public static String autocompleteFolderName(String string) {
         Set<String> folders = FOLDER_TO_TEXTURES.keySet();

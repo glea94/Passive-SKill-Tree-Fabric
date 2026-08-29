@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -18,43 +17,35 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBonus> {
     private float multiplier;
     private @NotNull LivingEntityPredicate playerCondition = NoneLivingEntityPredicate.INSTANCE;
     private @NotNull LivingMultiplier playerMultiplier = NoneLivingMultiplier.INSTANCE;
-
     public ProjectileSpeedBonus(float multiplier) {
         this.multiplier = multiplier;
     }
-
     public float getProjectileSpeedModifier(Player player) {
         if (!playerCondition.test(player)) {
             return 0f;
         }
         return multiplier * playerMultiplier.getValue(player);
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.PROJECTILE_SPEED.get();
     }
-
     @Override
     public ProjectileSpeedBonus copy() {
         return new ProjectileSpeedBonus(multiplier).setPlayerCondition(playerCondition).setPlayerMultiplier(playerMultiplier);
     }
-
     @Override
     public ProjectileSpeedBonus multiply(double multiplier) {
         this.multiplier = (float) (this.multiplier * multiplier);
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof ProjectileSpeedBonus otherBonus)) {
@@ -65,7 +56,6 @@ public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBon
         }
         return Objects.equals(otherBonus.playerMultiplier, this.playerMultiplier);
     }
-
     @Override
     public SkillBonus<ProjectileSpeedBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof ProjectileSpeedBonus otherBonus)) {
@@ -74,7 +64,6 @@ public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBon
         return new ProjectileSpeedBonus(otherBonus.multiplier + this.multiplier).setPlayerCondition(playerCondition)
                 .setPlayerMultiplier(playerMultiplier);
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         MutableComponent bonusTooltip = TooltipHelper.getSkillBonusTooltip(getDescriptionId(), multiplier, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
@@ -82,12 +71,10 @@ public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBon
         bonusTooltip = playerMultiplier.getTooltip(bonusTooltip, Target.PLAYER);
         return bonusTooltip.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return multiplier > 0;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<ProjectileSpeedBonus> consumer) {
         editor.addLabel(0, 0, "Multiplier", ChatFormatting.GOLD);
@@ -106,19 +93,16 @@ public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBon
                 .setMenuInitFunc(() -> addPlayerMultiplierWidgets(editor, consumer));
         editor.increaseHeight(19);
     }
-
     private void selectPlayerCondition(SkillTreeEditor editor, Consumer<ProjectileSpeedBonus> consumer, LivingEntityPredicate condition) {
         setPlayerCondition(condition);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectPlayerMultiplier(SkillTreeEditor editor, Consumer<ProjectileSpeedBonus> consumer, LivingMultiplier multiplier) {
         setPlayerMultiplier(multiplier);
         consumer.accept(this.copy());
         editor.rebuildWidgets();
     }
-
     private void selectMultiplier(Consumer<ProjectileSpeedBonus> consumer, Double value) {
         setMultiplier(value.floatValue());
         consumer.accept(this.copy());
@@ -129,34 +113,28 @@ public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBon
             consumer.accept(this.copy());
         });
     }
-
     private void addPlayerMultiplierWidgets(SkillTreeEditor editor, Consumer<ProjectileSpeedBonus> consumer) {
         playerMultiplier.addEditorWidgets(editor, m -> {
             setPlayerMultiplier(m);
             consumer.accept(this.copy());
         });
     }
-
     public ProjectileSpeedBonus setPlayerCondition(@NotNull LivingEntityPredicate playerCondition) {
         this.playerCondition = playerCondition;
         return this;
     }
-
     public ProjectileSpeedBonus setPlayerMultiplier(@NotNull LivingMultiplier playerMultiplier) {
         this.playerMultiplier = playerMultiplier;
         return this;
     }
-
     public ProjectileSpeedBonus setMultiplier(float multiplier) {
         this.multiplier = multiplier;
         return this;
     }
-
     @NotNull
     public LivingEntityPredicate getPlayerCondition() {
         return playerCondition;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -168,12 +146,10 @@ public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBon
         ProjectileSpeedBonus that = (ProjectileSpeedBonus) o;
         return Float.compare(multiplier, that.multiplier) == 0 && Objects.equals(playerCondition, that.playerCondition) && Objects.equals(playerMultiplier, that.playerMultiplier);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(multiplier, playerCondition, playerMultiplier);
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public ProjectileSpeedBonus deserialize(JsonObject json) throws JsonParseException {
@@ -182,7 +158,6 @@ public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBon
             LivingMultiplier playerMultiplier = SerializationHelper.deserializeLivingMultiplier(json, "player_multiplier");
             return new ProjectileSpeedBonus(multiplier).setPlayerCondition(playerCondition).setPlayerMultiplier(playerMultiplier);
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof ProjectileSpeedBonus aBonus)) {
@@ -192,7 +167,6 @@ public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBon
             SerializationHelper.serializeLivingCondition(json, aBonus.playerCondition, "player_condition");
             SerializationHelper.serializeLivingMultiplier(json, aBonus.playerMultiplier, "player_multiplier");
         }
-
         @Override
         public ProjectileSpeedBonus deserialize(CompoundTag tag) {
             float multiplier = tag.getFloatOr("multiplier", 0f);
@@ -200,7 +174,6 @@ public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBon
             LivingMultiplier playerMultiplier = SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier");
             return new ProjectileSpeedBonus(multiplier).setPlayerCondition(playerCondition).setPlayerMultiplier(playerMultiplier);
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof ProjectileSpeedBonus aBonus)) {
@@ -212,16 +185,22 @@ public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBon
             tag.putFloat("multiplier", aBonus.multiplier);
             return tag;
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public ProjectileSpeedBonus deserialize(RegistryFriendlyByteBuf buf) {
             LivingEntityPredicate playerCondition = NetworkHelper.readLivingCondition(buf);
             LivingMultiplier playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
             return new ProjectileSpeedBonus(buf.readFloat()).setPlayerCondition(playerCondition).setPlayerMultiplier(playerMultiplier);
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ProjectileSpeedBonus aBonus)) {
@@ -231,7 +210,6 @@ public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBon
             NetworkHelper.writeLivingMultiplier(buf, aBonus.playerMultiplier);
             buf.writeFloat(aBonus.multiplier);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new ProjectileSpeedBonus(0.1f);

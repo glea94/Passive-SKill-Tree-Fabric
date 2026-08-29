@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.living;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
@@ -19,23 +18,18 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class HasEffectEntityPredicate implements LivingEntityPredicate {
     private Holder<MobEffect> effect;
     private int amplifier;
-
     public HasEffectEntityPredicate(@NotNull Holder<MobEffect> effect) {
         this(effect, 0);
     }
-
     public HasEffectEntityPredicate(@NotNull Holder<MobEffect> effect, int amplifier) {
         this.effect = effect;
         this.amplifier = amplifier;
     }
-
     @Override
     public boolean test(LivingEntity living) {
         if (amplifier == 0) {
@@ -44,7 +38,6 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
         MobEffectInstance activeEffect = living.getEffect(this.effect);
         return activeEffect != null && activeEffect.getAmplifier() >= this.amplifier;
     }
-
     @Override
     public MutableComponent getTooltip(MutableComponent bonusTooltip, SkillBonus.Target target) {
         String key = getDescriptionId();
@@ -57,12 +50,10 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
         effectDescription = Component.translatable("potion.withAmplifier", effectDescription, amplifierDescription);
         return Component.translatable(key + ".amplifier", bonusTooltip, targetDescription, effectDescription);
     }
-
     @Override
     public LivingEntityPredicate.Serializer getSerializer() {
         return PSTLivingEntityPredicates.HAS_EFFECT.get();
     }
-
     @SuppressWarnings("unchecked")
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer) {
@@ -74,7 +65,6 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
                 .setNumericResponder(value -> selectAmplifier(consumer, value));
         editor.increaseHeight(19);
     }
-
     private void selectAmplifier(Consumer<LivingEntityPredicate> consumer, Double value) {
         setAmplifier(value.intValue());
         consumer.accept(this.copy());
@@ -83,7 +73,6 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
         setEffect(effect);
         consumer.accept(this.copy());
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -95,24 +84,19 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
         HasEffectEntityPredicate that = (HasEffectEntityPredicate) o;
         return amplifier == that.amplifier && Objects.equals(effect, that.effect);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(effect, amplifier);
     }
-
     public void setEffect(Holder<MobEffect> effect) {
         this.effect = effect;
     }
-
     public void setAmplifier(int amplifier) {
         this.amplifier = amplifier;
     }
-
     public HasEffectEntityPredicate copy() {
         return new HasEffectEntityPredicate(effect, amplifier);
     }
-
     public static class Serializer implements LivingEntityPredicate.Serializer {
         @Override
         public LivingEntityPredicate deserialize(JsonObject json) throws JsonParseException {
@@ -122,14 +106,12 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
             Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(rawEffect);
             return new HasEffectEntityPredicate(effect, amplifier);
         }
-
         @Override
         public void serialize(JsonObject json, LivingEntityPredicate predicate) {
             HasEffectEntityPredicate validPredicate = validatePredicate(predicate);
             SerializationHelper.serializeMobEffect(json, validPredicate.effect.value());
             json.addProperty("amplifier", validPredicate.amplifier);
         }
-
         @Override
         public LivingEntityPredicate deserialize(CompoundTag tag) {
             MobEffect rawEffect = SerializationHelper.deserializeMobEffect(tag);
@@ -138,7 +120,6 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
             Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(rawEffect);
             return new HasEffectEntityPredicate(effect, amplifier);
         }
-
         @Override
         public CompoundTag serialize(LivingEntityPredicate predicate) {
             HasEffectEntityPredicate validPredicate = validatePredicate(predicate);
@@ -147,7 +128,6 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
             tag.putInt("amplifier", validPredicate.amplifier);
             return tag;
         }
-
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             MobEffect rawEffect = NetworkHelper.readMobEffect(buf);
@@ -155,21 +135,18 @@ public final class HasEffectEntityPredicate implements LivingEntityPredicate {
             Holder<MobEffect> effect = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(rawEffect);
             return new HasEffectEntityPredicate(effect, buf.readInt());
         }
-
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             HasEffectEntityPredicate validPredicate = validatePredicate(predicate);
             NetworkHelper.writeMobEffect(buf, validPredicate.effect.value());
             buf.writeInt(validPredicate.amplifier);
         }
-
         private static @NotNull HasEffectEntityPredicate validatePredicate(LivingEntityPredicate predicate) {
             if (!(predicate instanceof HasEffectEntityPredicate validPredicate)) {
                 throw new IllegalArgumentException("Expected HasEffectEntityPredicate, got: " + predicate);
             }
             return validPredicate;
         }
-
         @Override
         public LivingEntityPredicate createDefaultInstance() {
             return new HasEffectEntityPredicate(MobEffects.POISON);

@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.predicate.damage;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.init.predicate.PSTDamagePredicates;
@@ -7,18 +6,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.projectile.Projectile;
-
 public record ProjectileDamageCondition() implements DamageCondition {
     @Override
     public boolean met(DamageSource source) {
         return source.getDirectEntity() instanceof Projectile;
     }
-
     @Override
     public DamageCondition.Serializer getSerializer() {
         return PSTDamagePredicates.PROJECTILE.get();
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -26,30 +22,25 @@ public record ProjectileDamageCondition() implements DamageCondition {
         }
         return o != null && getClass() == o.getClass();
     }
-
     @Override
     public int hashCode() {
         return getSerializer().hashCode();
     }
-
     public static class Serializer implements DamageCondition.Serializer {
         @Override
         public DamageCondition deserialize(JsonObject json) throws JsonParseException {
             return new ProjectileDamageCondition();
         }
-
         @Override
         public void serialize(JsonObject json, DamageCondition condition) {
             if (!(condition instanceof ProjectileDamageCondition)) {
                 throw new IllegalArgumentException();
             }
         }
-
         @Override
         public DamageCondition deserialize(CompoundTag tag) {
             return new ProjectileDamageCondition();
         }
-
         @Override
         public CompoundTag serialize(DamageCondition condition) {
             if (!(condition instanceof ProjectileDamageCondition)) {
@@ -57,21 +48,26 @@ public record ProjectileDamageCondition() implements DamageCondition {
             }
             return new CompoundTag();
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public DamageCondition deserialize(RegistryFriendlyByteBuf buf) {
             return new ProjectileDamageCondition();
         }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, DamageCondition condition) {
             if (!(condition instanceof ProjectileDamageCondition)) {
                 throw new IllegalArgumentException();
             }
         }
-
         @Override
         public DamageCondition createDefaultInstance() {
             return new ProjectileDamageCondition();

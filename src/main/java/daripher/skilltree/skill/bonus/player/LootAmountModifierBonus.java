@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.player;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.tooltip.TooltipHelper;
@@ -16,44 +15,35 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-
-
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 public final class LootAmountModifierBonus implements SkillBonus<LootAmountModifierBonus> {
     private LootType lootType;
     private float multiplier;
     private float chance;
-
     public LootAmountModifierBonus(float chance, float multiplier, LootType lootType) {
         this.chance = chance;
         this.multiplier = multiplier;
         this.lootType = lootType;
     }
-
     @Override
     public SkillBonus.Serializer getSerializer() {
         return PSTSkillBonuses.LOOT_DUPLICATION.get();
     }
-
     @Override
     public LootAmountModifierBonus copy() {
         return new LootAmountModifierBonus(chance, multiplier, lootType);
     }
-
     @Override
     public LootAmountModifierBonus multiply(double multiplier) {
         chance = (float) (chance * multiplier);
         return this;
     }
-
     @Override
     public boolean canMerge(SkillBonus<?> other) {
         if (!(other instanceof LootAmountModifierBonus otherBonus)) {
@@ -64,7 +54,6 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
         }
         return Objects.equals(otherBonus.lootType, this.lootType);
     }
-
     @Override
     public SkillBonus<LootAmountModifierBonus> merge(SkillBonus<?> other) {
         if (!(other instanceof LootAmountModifierBonus otherBonus)) {
@@ -72,7 +61,6 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
         }
         return new LootAmountModifierBonus(otherBonus.chance + this.chance, multiplier, lootType);
     }
-
     @Override
     public MutableComponent getSimpleTooltip() {
         Component lootDescription = Component.translatable(lootType.getDescriptionId());
@@ -102,12 +90,10 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
         }
         return bonusDescription.withStyle(TooltipHelper.getSkillBonusStyle(isPositive()));
     }
-
     @Override
     public boolean isPositive() {
         return chance > 0 ^ multiplier < 0;
     }
-
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<LootAmountModifierBonus> consumer) {
         editor.addLabel(0, 0, "Chance", ChatFormatting.GOLD);
@@ -122,17 +108,14 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
                 .setNameGetter(LootType::getFormattedName).setResponder(type -> selectLootType(consumer, type));
         editor.increaseHeight(lootTypeSelection.getHeight() + 10);
     }
-
     private void selectLootType(Consumer<LootAmountModifierBonus> consumer, LootType lootType) {
         setLootType(lootType);
         consumer.accept(this.copy());
     }
-
     private void selectMultiplier(Consumer<LootAmountModifierBonus> consumer, Double value) {
         setMultiplier(value.floatValue());
         consumer.accept(this.copy());
     }
-
     private void selectChance(Consumer<LootAmountModifierBonus> consumer, Double value) {
         setChance(value.floatValue());
         consumer.accept(this.copy());
@@ -140,27 +123,21 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
     public void setChance(float chance) {
         this.chance = chance;
     }
-
     public void setMultiplier(float multiplier) {
         this.multiplier = multiplier;
     }
-
     public void setLootType(LootType lootType) {
         this.lootType = lootType;
     }
-
     public float getChance() {
         return chance;
     }
-
     public float getLootAmountModifier() {
         return multiplier;
     }
-
     public LootType getLootType() {
         return lootType;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -168,18 +145,18 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
         LootAmountModifierBonus that = (LootAmountModifierBonus) o;
         return Float.compare(multiplier, that.multiplier) == 0 && Float.compare(chance, that.chance) == 0 && lootType == that.lootType;
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(lootType, multiplier, chance);
     }
-
     public enum LootType {
         MOBS("mobs"), FISHING("fishing"), GEMS("gems"), CHESTS("chests"), ORE("ore"), ARCHAEOLOGY("archaeology");
-
         public boolean canAffect(LootContext lootContext, Identifier lootTableId) {
             net.minecraft.util.context.ContextKey<Entity> playerLootContextParam = getPlayerLootContextParam();
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             if (!lootContext.hasParameter(playerLootContextParam)) {
                 return false;
             }
@@ -196,29 +173,23 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
                 case ARCHAEOLOGY -> lootTableName.contains("archaeology/");
             };
         }
-
         public net.minecraft.util.context.ContextKey<Entity> getPlayerLootContextParam() {
             return switch (this) {
                 case MOBS, FISHING -> LootContextParams.ATTACKING_ENTITY;
                 case GEMS, CHESTS, ORE, ARCHAEOLOGY -> LootContextParams.THIS_ENTITY;
             };
         }
-
         final String name;
-
         LootType(String name) {
             this.name = name;
         }
-
         public String getName() {
             return name;
         }
-
         public Component getFormattedName() {
             String firstLetter = getName().substring(0, 1);
             return Component.literal(firstLetter.toUpperCase(Locale.ROOT) + getName().substring(1));
         }
-
         public static LootType byName(String name) {
             for (LootType type : values()) {
                 if (type.name.equals(name)) {
@@ -227,12 +198,10 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
             }
             return MOBS;
         }
-
         public String getDescriptionId() {
             return "loot.type." + getName();
         }
     }
-
     public static class Serializer implements SkillBonus.Serializer {
         @Override
         public LootAmountModifierBonus deserialize(JsonObject json) throws JsonParseException {
@@ -241,7 +210,6 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
             LootType lootType = LootType.byName(json.get("loot_type").getAsString());
             return new LootAmountModifierBonus(chance, multiplier, lootType);
         }
-
         @Override
         public void serialize(JsonObject json, SkillBonus<?> bonus) {
             if (!(bonus instanceof LootAmountModifierBonus aBonus)) {
@@ -251,16 +219,17 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
             json.addProperty("multiplier", aBonus.multiplier);
             json.addProperty("loot_type", aBonus.lootType.name);
         }
-
         @Override
         public LootAmountModifierBonus deserialize(CompoundTag tag) {
             float chance = tag.getFloatOr("chance", 0f);
             float multiplier = tag.getFloatOr("multiplier", 0f);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             LootType lootType = LootType.byName(tag.getString("loot_type").orElse(""));
             return new LootAmountModifierBonus(chance, multiplier, lootType);
         }
-
         @Override
         public CompoundTag serialize(SkillBonus<?> bonus) {
             if (!(bonus instanceof LootAmountModifierBonus aBonus)) {
@@ -272,12 +241,10 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
             tag.putString("loot_type", aBonus.lootType.name);
             return tag;
         }
-
         @Override
         public LootAmountModifierBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new LootAmountModifierBonus(buf.readFloat(), buf.readFloat(), LootType.byName(buf.readUtf()));
         }
-
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof LootAmountModifierBonus aBonus)) {
@@ -287,7 +254,6 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
             buf.writeFloat(aBonus.multiplier);
             buf.writeUtf(aBonus.lootType.name);
         }
-
         @Override
         public SkillBonus<?> createDefaultInstance() {
             return new LootAmountModifierBonus(0.05f, 1f, LootType.MOBS);

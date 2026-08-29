@@ -1,20 +1,16 @@
 package daripher.skilltree.client.widget.editor.menu.tags;
-
 import daripher.skilltree.data.client.SkillTreeEditorData;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
 import daripher.skilltree.client.widget.editor.menu.EditorMenu;
 import daripher.skilltree.skill.PassiveSkill;
 import daripher.skilltree.skill.PassiveSkillTree;
 import net.minecraft.ChatFormatting;
-
 import java.util.List;
 import java.util.Map;
-
 public class SkillTagsEditor extends EditorMenu {
     public SkillTagsEditor(SkillTreeEditor editor, EditorMenu previousMenu) {
         super(editor, previousMenu);
     }
-
     @Override
     public void init() {
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
@@ -51,7 +47,10 @@ public class SkillTagsEditor extends EditorMenu {
             String finalName = name;
             editor.getSelectedSkills().forEach(s -> s.getTags().add(finalName));
             editor.saveSelectedSkills();
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             editor.clearWidgets();
             editor.rebuildWidgets();
         });
@@ -59,7 +58,10 @@ public class SkillTagsEditor extends EditorMenu {
             editor.addButton(110, 0, 90, 14, "Remove").setPressFunc(b -> {
                 editor.getSelectedSkills().forEach(s -> s.getTags().remove(tags.size() - 1));
                 editor.saveSelectedSkills();
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
                 editor.clearWidgets();
                 editor.rebuildWidgets();
             });
@@ -74,14 +76,16 @@ public class SkillTagsEditor extends EditorMenu {
                 name += "1";
             }
             limitations.put(name, 1);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             editor.clearWidgets();
             editor.rebuildWidgets();
             SkillTreeEditorData.saveEditorSkillTree(skillTree);
         });
         editor.increaseHeight(19);
     }
-
     protected boolean canEditTags() {
         PassiveSkill selectedSkill = editor.getFirstSelectedSkill();
         if (selectedSkill == null) {

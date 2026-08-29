@@ -1,5 +1,4 @@
 package daripher.skilltree.skill.bonus.handler;
-
 import daripher.skilltree.entity.persistentdata.PersistentDataProvider;
 import daripher.skilltree.event.LivingHurtPSTEvent;
 import daripher.skilltree.event.PSTEvents;
@@ -19,12 +18,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
-
 import java.util.List;
-
 public class ArrowRetrievalChanceBonusHandler {
     public static final String STUCK_ARROWS_TAG_NAME = "StuckArrows";
-
     public static void register() {
         PSTEvents.LIVING_HURT.register(ArrowRetrievalChanceBonusHandler::saveStuckArrows);
         ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, amount) -> {
@@ -32,7 +28,6 @@ public class ArrowRetrievalChanceBonusHandler {
             return true;
         });
     }
-
     private static void saveStuckArrows(LivingHurtPSTEvent event) {
         DamageSource damageSource = event.getSource();
         if (!(damageSource.getDirectEntity() instanceof AbstractArrow arrow)) {
@@ -62,40 +57,51 @@ public class ArrowRetrievalChanceBonusHandler {
         }
         LivingEntity target = event.getEntity();
         CompoundTag targetPersistentData = PersistentDataProvider.get(target);
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
         ListTag stuckArrowsTag = targetPersistentData.getList(STUCK_ARROWS_TAG_NAME).orElse(new ListTag());
-
         HolderLookup.Provider registries = player.level().registryAccess();
+<<<<<<< Updated upstream
 
 
 
+=======
+>>>>>>> Stashed changes
         RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
         Tag arrowTag = ItemStack.CODEC.encodeStart(ops, arrowStack).getOrThrow(IllegalStateException::new);
-
         stuckArrowsTag.add(arrowTag);
         targetPersistentData.put(STUCK_ARROWS_TAG_NAME, stuckArrowsTag);
     }
-
     private static void retrieveArrows(LivingEntity entity) {
         CompoundTag entityPersistentData = PersistentDataProvider.get(entity);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         ListTag arrowsTag = entityPersistentData.getList(STUCK_ARROWS_TAG_NAME).orElse(new ListTag());
         if (arrowsTag.isEmpty()) {
             return;
         }
-
         HolderLookup.Provider registries = entity.level().registryAccess();
+<<<<<<< Updated upstream
 
 
 
+=======
+>>>>>>> Stashed changes
         RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
         for (Tag tag : arrowsTag) {
             ItemStack arrowStack = ItemStack.CODEC.parse(ops, tag).result().orElse(ItemStack.EMPTY);
             if (arrowStack.isEmpty()) {
                 continue;
             }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             if (entity.level() instanceof ServerLevel serverLevel) {
                 entity.spawnAtLocation(serverLevel, arrowStack);
             }

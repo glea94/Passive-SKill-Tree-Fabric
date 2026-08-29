@@ -1,5 +1,4 @@
 package daripher.skilltree.inventory.menu;
-
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -33,11 +32,9 @@ import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
 public class WorkbenchMenu extends AbstractContainerMenu {
     private static final List<RecipeHolder<AbstractWorkbenchRecipe>> WORKBENCH_RECIPE_CACHE = new ArrayList<>();
     private static final int RESULT_SLOT = 0;
@@ -56,11 +53,9 @@ public class WorkbenchMenu extends AbstractContainerMenu {
     private @NotNull ItemStack prevInput = ItemStack.EMPTY;
     private final Level level;
     private @Nullable Runnable recipeListUpdateListener;
-
     public WorkbenchMenu(int containerId, Inventory playerInventory) {
         this(containerId, playerInventory, ContainerLevelAccess.NULL);
     }
-
     public WorkbenchMenu(int containerId, Inventory playerInventory, ContainerLevelAccess levelAccess) {
         super(PSTMenuTypes.ARTISAN_WORKBENCH.get(), containerId);
         this.selectedRecipeIndex = DataSlot.standalone();
@@ -69,10 +64,8 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         this.levelAccess = levelAccess;
         this.player = playerInventory.player;
         this.level = player.level();
-
         addSlot(new WorkbenchResultSlot(playerInventory.player, workbenchContainer, resultSlots, 0, 143, 129));
         addSlot(new WorkbenchBaseSlot(workbenchContainer, 0, 8, 120));
-
         for (int i = 0; i < 2; ++i) {
             for (int j = 0; j < 5; ++j) {
                 if (i == 0 && j == 0) {
@@ -92,7 +85,6 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         addDataSlot(selectedRecipeIndex);
         setupRecipeList();
     }
-
     @Override
     public @NotNull ItemStack quickMoveStack(@NotNull Player player, int slotIndex) {
         ItemStack movedStack = ItemStack.EMPTY;
@@ -111,7 +103,6 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         } else if (slotIndex >= INV_SLOT_START && slotIndex < HOTBAR_SLOT_END) {
             if (!moveItemStackTo(clickedStack, CRAFT_SLOT_START, CRAFT_SLOT_END, false)) {
                 if (slotIndex < INV_SLOT_END) {
-
                     if (!moveItemStackTo(clickedStack, HOTBAR_SLOT_START, HOTBAR_SLOT_END, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -136,18 +127,15 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         }
         return movedStack;
     }
-
     @Override
     public void removed(@NotNull Player player) {
         super.removed(player);
         levelAccess.execute((level, blockPos) -> clearContainer(player, workbenchContainer));
     }
-
     @Override
     public boolean stillValid(@NotNull Player player) {
         return stillValid(levelAccess, player, PSTBlocks.WORKBENCH.get());
     }
-
     @Override
     public boolean clickMenuButton(@NotNull Player player, int id) {
         if (id == -1) {
@@ -159,35 +147,23 @@ public class WorkbenchMenu extends AbstractContainerMenu {
             RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder = getSelectedRecipeHolder();
             if (selectedRecipeHolder != null) {
                 updateCraftingResult(selectedRecipeHolder);
-
-
                 broadcastChanges();
             }
         }
         return true;
     }
-
     private boolean isValidRecipeIndex(int recipeIndex) {
         return recipeIndex >= 0 && recipeIndex < selectedRecipes.size();
     }
-
     @Override
     public void slotsChanged(@NotNull Container container) {
         updateSelectedRecipe();
     }
-
     private void updateSelectedRecipe() {
         ItemStack input = workbenchContainer.getBaseItem();
         RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder = getSelectedRecipeHolder();
         if (selectedRecipeHolder != null) {
             updateCraftingResult(selectedRecipeHolder);
-
-
-
-
-
-
-
             broadcastChanges();
             if (recipeListUpdateListener != null) {
                 recipeListUpdateListener.run();
@@ -203,17 +179,14 @@ public class WorkbenchMenu extends AbstractContainerMenu {
             recipeListUpdateListener.run();
         }
     }
-
     public void setRecipeListUpdateListener(@Nullable Runnable recipeListUpdateListener) {
         this.recipeListUpdateListener = recipeListUpdateListener;
     }
-
     private void updateCraftingResult(RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder) {
         AbstractWorkbenchRecipe recipe = selectedRecipeHolder.value();
         if (!recipe.matches(workbenchContainer, level)) {
             resultSlots.setItem(0, ItemStack.EMPTY);
         } else {
-
             if (!level.isClientSide()) {
                 ItemStack craftResult = recipe.assemble(workbenchContainer);
                 addCraftingBonuses(craftResult, recipe);
@@ -225,8 +198,6 @@ public class WorkbenchMenu extends AbstractContainerMenu {
     public void addCraftingBonuses(ItemStack craftResult, Identifier usedRecipeId) {
         SkillBonusProvider.getMergedSkillBonuses(player, CraftedItemBonusBonus.class).forEach(bonus -> bonus.itemCrafted(craftResult, usedRecipeId));
     }
-
-    
     public void addCraftingBonuses(ItemStack craftResult, AbstractWorkbenchRecipe recipe) {
         boolean isNetheriteLikeUpgrade = recipe instanceof WorkbenchVanillaSmithingRecipe;
         boolean bonusesAlreadyCarriedOverByTransmute = isNetheriteLikeUpgrade
@@ -237,7 +208,6 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         }
         addCraftingBonuses(craftResult, recipe.getId());
     }
-
     private void setupRecipeList() {
         this.selectedRecipeIndex.set(-1);
         this.resultSlots.setItem(0, ItemStack.EMPTY);
@@ -246,50 +216,19 @@ public class WorkbenchMenu extends AbstractContainerMenu {
                 .sorted(Comparator.comparing(holder -> holder.id().toString()))
                 .toList();
     }
-
     public static void clearRecipeCache() {
-
-
-
-
-
-
-
-
         WORKBENCH_RECIPE_CACHE.clear();
     }
-
     private List<RecipeHolder<AbstractWorkbenchRecipe>> getAllWorkbenchRecipes() {
         if (!WORKBENCH_RECIPE_CACHE.isEmpty()) {
             return WORKBENCH_RECIPE_CACHE;
         }
-
         if (this.level.getServer() != null) {
             RecipeManager recipeManager = this.level.getServer().getRecipeManager();
-
-
-
-
-
-
             List<RecipeHolder<CraftingRecipe>> vanillaCraftingRecipes = recipeManager.getRecipes().stream()
                     .filter(holder -> holder.value().getType() == RecipeType.CRAFTING)
                     .map(holder -> new RecipeHolder<>(holder.id(), (CraftingRecipe) holder.value()))
                     .filter(recipe -> {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         try {
                             List<RecipeDisplay> displays = recipe.value().display();
                             if (displays.isEmpty()) {
@@ -303,19 +242,11 @@ public class WorkbenchMenu extends AbstractContainerMenu {
                         }
                     })
                     .toList();
-
-
-
-
-
             List<RecipeHolder<SmithingTransformRecipe>> vanillaSmithingRecipes = recipeManager.getRecipes().stream()
                     .filter(holder -> holder.value().getType() == RecipeType.SMITHING)
                     .filter(holder -> holder.value() instanceof SmithingTransformRecipe)
                     .map(holder -> new RecipeHolder<>(holder.id(), (SmithingTransformRecipe) holder.value()))
                     .filter(recipe -> {
-
-
-
                         try {
                             List<RecipeDisplay> displays = recipe.value().display();
                             if (displays.isEmpty()) {
@@ -329,19 +260,16 @@ public class WorkbenchMenu extends AbstractContainerMenu {
                         }
                     })
                     .toList();
-
             recipeManager.getRecipes().stream()
                     .filter(holder -> holder.value().getType() == PSTRecipeTypes.WORKBENCH)
                     .map(holder -> new RecipeHolder<>(holder.id(), (AbstractWorkbenchRecipe) holder.value()))
                     .forEach(WORKBENCH_RECIPE_CACHE::add);
-
             for (RecipeHolder<CraftingRecipe> vanillaHolder : vanillaCraftingRecipes) {
                 WORKBENCH_RECIPE_CACHE.add(new RecipeHolder<>(
                         vanillaHolder.id(),
                         new WorkbenchVanillaCraftingRecipe(vanillaHolder, this.level.registryAccess())
                 ));
             }
-
             for (RecipeHolder<SmithingTransformRecipe> vanillaHolder : vanillaSmithingRecipes) {
                 WORKBENCH_RECIPE_CACHE.add(new RecipeHolder<>(
                         vanillaHolder.id(),
@@ -355,34 +283,27 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         }
         return WORKBENCH_RECIPE_CACHE;
     }
-
     private boolean shouldDisplayRecipe(AbstractWorkbenchRecipe recipe) {
         if (recipe.isLockedFor(this.player)) {
             return false;
         }
         return this.workbenchContainer.getBaseItem().isEmpty() || recipe.isValidBaseItem(this.workbenchContainer.getBaseItem());
     }
-
     public Player getPlayer() {
         return this.player;
     }
-
     public List<RecipeHolder<AbstractWorkbenchRecipe>> getSelectedRecipes() {
         return this.selectedRecipes;
     }
-
     public int getSelectedRecipeIndex() {
         return this.selectedRecipeIndex.get();
     }
-
     public WorkbenchContainer getWorkbenchContainer() {
         return this.workbenchContainer;
     }
-
     public ItemStack getResultItem() {
         return this.resultSlots.getItem(0);
     }
-
     public @Nullable RecipeHolder<AbstractWorkbenchRecipe> getSelectedRecipeHolder() {
         if (this.selectedRecipes.isEmpty()) {
             return null;
@@ -393,7 +314,6 @@ public class WorkbenchMenu extends AbstractContainerMenu {
         }
         return this.selectedRecipes.get(index);
     }
-
     @Deprecated
     public @Nullable AbstractWorkbenchRecipe getSelectedRecipe() {
         RecipeHolder<AbstractWorkbenchRecipe> holder = getSelectedRecipeHolder();
