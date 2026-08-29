@@ -24,9 +24,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class TextField extends EditBox implements TickingWidget {
+<<<<<<< Updated upstream
     
     
     
+=======
+>>>>>>> Stashed changes
     public static final int INVALID_TEXT_COLOR = 0xFFD80000;
     private static final int HINT_COLOR = 0xFF575757;
     private static final int TEXT_COLOR = 0xFFE0E0E0;
@@ -158,9 +161,12 @@ public class TextField extends EditBox implements TickingWidget {
         if (highlightWidth != cursorVisiblePosition) {
             int hWidth = Math.max(0, Math.min(highlightWidth, visibleText.length()));
             int highlightEndX = textStartX + font.width(visibleText.substring(0, hWidth));
+<<<<<<< Updated upstream
             
             
             
+=======
+>>>>>>> Stashed changes
             graphics.textHighlight(cursorX, textY - 1, highlightEndX - 1, textY + 9, true);
         }
     }

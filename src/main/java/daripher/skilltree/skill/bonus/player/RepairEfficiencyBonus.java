@@ -186,14 +186,20 @@ public final class RepairEfficiencyBonus implements SkillBonus<RepairEfficiencyB
             tag.putFloat("multiplier", aBonus.multiplier);
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public RepairEfficiencyBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new RepairEfficiencyBonus(NetworkHelper.readItemPredicate(buf), buf.readFloat());
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RepairEfficiencyBonus aBonus)) {

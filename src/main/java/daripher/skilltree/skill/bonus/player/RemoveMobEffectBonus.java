@@ -40,7 +40,10 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
 
     @Override
     public void applyEffect(LivingEntity target, @Nullable LivingEntity source) {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         target.getActiveEffects().stream()
                 .map(MobEffectInstance::getEffect)
                 .filter(holder -> effectPredicate.test(holder.value()))
@@ -213,8 +216,11 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
             SerializationHelper.serializeEventListener(tag, aBonus.eventListener);
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public RemoveMobEffectBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -222,8 +228,11 @@ public final class RemoveMobEffectBonus implements EventListenerBonus<RemoveMobE
             SkillEventListener eventListener = NetworkHelper.readEventListener(buf);
             return new RemoveMobEffectBonus(amount, effectPredicate, eventListener);
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RemoveMobEffectBonus aBonus)) {

@@ -19,9 +19,13 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     protected final Set<T> widgets = new HashSet<>();
     protected Runnable rebuildFunc = () -> {
     };
+<<<<<<< Updated upstream
 
     public WidgetGroup(int x, int y, int width, int height) {
         
+=======
+    public WidgetGroup(int x, int y, int width, int height) {
+>>>>>>> Stashed changes
         super(x, y, width, height, Component.empty());
     }
 
@@ -158,7 +162,10 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
 
     public @Nullable T getWidgetAt(double mouseX, double mouseY) {
         for (T widget : widgets) {
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             if (!widget.visible) {
                 continue;
             }

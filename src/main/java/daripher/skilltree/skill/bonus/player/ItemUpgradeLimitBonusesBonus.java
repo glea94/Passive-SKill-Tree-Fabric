@@ -179,14 +179,20 @@ public final class ItemUpgradeLimitBonusesBonus implements SkillBonus<ItemUpgrad
             tag.putInt("amount", aBonus.amount);
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public ItemUpgradeLimitBonusesBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new ItemUpgradeLimitBonusesBonus(NetworkHelper.readItemPredicate(buf), buf.readInt());
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemUpgradeLimitBonusesBonus aBonus)) {

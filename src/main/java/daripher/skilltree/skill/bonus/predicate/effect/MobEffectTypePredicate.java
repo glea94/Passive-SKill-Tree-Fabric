@@ -102,7 +102,10 @@ public final class MobEffectTypePredicate implements MobEffectPredicate {
 
         @Override
         public MobEffectTypePredicate deserialize(CompoundTag tag) {
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             MobEffectType effectType = MobEffectType.fromName(tag.getString("effect_type").orElse(""));
             return new MobEffectTypePredicate(effectType);
         }
@@ -114,15 +117,21 @@ public final class MobEffectTypePredicate implements MobEffectPredicate {
             tag.putString("effect_type", validPredicate.effectType.getName());
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public MobEffectTypePredicate deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectType effectType = MobEffectType.values()[buf.readInt()];
             return new MobEffectTypePredicate(effectType);
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, MobEffectPredicate predicate) {
             MobEffectTypePredicate validPredicate = validatePredicate(predicate);

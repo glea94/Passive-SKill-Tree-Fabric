@@ -9,7 +9,10 @@ import java.util.Map;
 
 @Mixin(ClientAdvancements.class)
 public interface ClientAdvancementsAccessor {
+<<<<<<< Updated upstream
     
+=======
+>>>>>>> Stashed changes
     @Accessor("progress")
     Map<AdvancementHolder, AdvancementProgress> getProgress();
 }

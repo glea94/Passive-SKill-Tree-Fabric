@@ -51,7 +51,10 @@ public final class SelfSplashImmuneBonus implements SkillBonus<SelfSplashImmuneB
 
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<SelfSplashImmuneBonus> consumer) {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
     }
 
     public static class Serializer implements SkillBonus.Serializer {
@@ -79,14 +82,20 @@ public final class SelfSplashImmuneBonus implements SkillBonus<SelfSplashImmuneB
             }
             return new CompoundTag();
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public SelfSplashImmuneBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new SelfSplashImmuneBonus();
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof SelfSplashImmuneBonus)) {

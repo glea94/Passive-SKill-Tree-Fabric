@@ -24,11 +24,16 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import org.jetbrains.annotations.NotNull;
+<<<<<<< Updated upstream
 
 import java.util.stream.Stream;
 
 public class PSTCommands {
     
+=======
+import java.util.stream.Stream;
+public class PSTCommands {
+>>>>>>> Stashed changes
     public static final SuggestionProvider<CommandSourceStack> SKILL_ID_SUGGESTION = (ctx, builder) ->
             SharedSuggestionProvider.suggestResource(SkillsReloader.getSkillIds().stream(), builder);
 
@@ -40,6 +45,7 @@ public class PSTCommands {
     public static final String PLAYER_ARGUMENT_NAME = "player";
     public static final String SKILL_ID_ARGUMENT_NAME = "skill_id";
     public static final String SKILL_TREE_ID_ARGUMENT_NAME = "skill_tree_id";
+<<<<<<< Updated upstream
 
     public static void register() {
         
@@ -48,6 +54,12 @@ public class PSTCommands {
 
     private static void registerCommands(com.mojang.brigadier.CommandDispatcher<CommandSourceStack> dispatcher) {
         
+=======
+    public static void register() {
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> registerCommands(dispatcher));
+    }
+    private static void registerCommands(com.mojang.brigadier.CommandDispatcher<CommandSourceStack> dispatcher) {
+>>>>>>> Stashed changes
         LiteralArgumentBuilder<CommandSourceStack> baseCommand = getRootCommand();
 
         baseCommand.then(getResetCommand().then(getPlayerArgument().executes(PSTCommands::executeResetCommand)));
@@ -140,7 +152,10 @@ public class PSTCommands {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         Identifier treeId;
         try {
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             treeId = IdentifierArgument.getId(ctx, SKILL_TREE_ID_ARGUMENT_NAME);
         } catch (IllegalArgumentException e) {
             treeId = DEFAULT_SKILL_TREE_ID;
@@ -151,7 +166,10 @@ public class PSTCommands {
 
     private static int executeGrantSkillCommand(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = EntityArgument.getPlayer(ctx, PLAYER_ARGUMENT_NAME);
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         Identifier skillId = IdentifierArgument.getId(ctx, SKILL_ID_ARGUMENT_NAME);
         IPlayerSkills skillsCapability = PlayerSkillsProvider.get(player);
 

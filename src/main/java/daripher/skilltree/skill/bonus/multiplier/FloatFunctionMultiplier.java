@@ -143,16 +143,22 @@ public final class FloatFunctionMultiplier implements LivingMultiplier {
             tag.putFloat("divisor", aMultiplier.divisor);
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public LivingMultiplier deserialize(RegistryFriendlyByteBuf buf) {
             FloatFunction<?> valueProvider = NetworkHelper.readValueProvider(buf);
             float divisor = buf.readFloat();
             return new FloatFunctionMultiplier(valueProvider, divisor);
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingMultiplier multiplier) {
             if (!(multiplier instanceof FloatFunctionMultiplier aMultiplier)) {
@@ -164,7 +170,10 @@ public final class FloatFunctionMultiplier implements LivingMultiplier {
 
         @Override
         public LivingMultiplier createDefaultInstance() {
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             return new FloatFunctionMultiplier(new AttributeValueFunction(Attributes.MAX_HEALTH), 5f);
         }
     }

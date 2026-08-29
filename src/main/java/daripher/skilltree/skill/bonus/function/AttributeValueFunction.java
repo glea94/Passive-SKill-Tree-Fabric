@@ -19,11 +19,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+<<<<<<< Updated upstream
 
 import java.util.function.Consumer;
 
 public class AttributeValueFunction implements FloatFunction<AttributeValueFunction> {
     
+=======
+import java.util.function.Consumer;
+public class AttributeValueFunction implements FloatFunction<AttributeValueFunction> {
+>>>>>>> Stashed changes
     private Holder<Attribute> attribute;
 
     public AttributeValueFunction(Holder<Attribute> attribute) {
@@ -75,7 +80,10 @@ public class AttributeValueFunction implements FloatFunction<AttributeValueFunct
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<FloatFunction<?>> consumer) {
         editor.addLabel(0, 0, "Attribute", ChatFormatting.GREEN);
         editor.increaseHeight(19);
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         editor.addSelectionMenu(0, 0, 200, attribute.value()).setResponder(selectedAttribute -> selectAttribute(consumer, selectedAttribute));
         editor.increaseHeight(19);
     }
@@ -83,8 +91,11 @@ public class AttributeValueFunction implements FloatFunction<AttributeValueFunct
         setAttribute(attribute);
         consumer.accept(this);
     }
+<<<<<<< Updated upstream
 
     
+=======
+>>>>>>> Stashed changes
     public void setAttribute(Attribute attribute) {
         this.attribute = BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attribute);
     }
@@ -123,15 +134,21 @@ public class AttributeValueFunction implements FloatFunction<AttributeValueFunct
             SerializationHelper.serializeAttribute(tag, aProvider.attribute.value());
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             Attribute attribute = NetworkHelper.readAttribute(buf);
             return new AttributeValueFunction(BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attribute));
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof AttributeValueFunction aProvider)) {
@@ -142,7 +159,10 @@ public class AttributeValueFunction implements FloatFunction<AttributeValueFunct
 
         @Override
         public FloatFunction<?> createDefaultInstance() {
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             return new AttributeValueFunction(Attributes.MAX_HEALTH);
         }
     }

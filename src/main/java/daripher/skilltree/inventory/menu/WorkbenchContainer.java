@@ -12,9 +12,13 @@ import java.util.Map;
 
 public class WorkbenchContainer extends SimpleContainer implements RecipeInput {
     public final WorkbenchMenu menu;
+<<<<<<< Updated upstream
 
     public WorkbenchContainer(WorkbenchMenu menu) {
         
+=======
+    public WorkbenchContainer(WorkbenchMenu menu) {
+>>>>>>> Stashed changes
         super(10);
         this.menu = menu;
     }
@@ -26,8 +30,11 @@ public class WorkbenchContainer extends SimpleContainer implements RecipeInput {
     public ItemStack getBaseItem() {
         return getItem(0);
     }
+<<<<<<< Updated upstream
 
     
+=======
+>>>>>>> Stashed changes
     @Override
     public int size() {
         return this.getContainerSize();

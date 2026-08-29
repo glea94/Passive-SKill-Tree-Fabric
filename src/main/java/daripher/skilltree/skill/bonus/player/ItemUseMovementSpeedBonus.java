@@ -248,8 +248,11 @@ public final class ItemUseMovementSpeedBonus implements SkillBonus<ItemUseMoveme
             SerializationHelper.serializeItemPredicate(tag, aBonus.itemStackPredicate);
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public ItemUseMovementSpeedBonus deserialize(RegistryFriendlyByteBuf buf) {
             float multiplier = buf.readFloat();
@@ -259,8 +262,11 @@ public final class ItemUseMovementSpeedBonus implements SkillBonus<ItemUseMoveme
             bonus.itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return bonus;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemUseMovementSpeedBonus aBonus)) {

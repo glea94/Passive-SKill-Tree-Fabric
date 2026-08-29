@@ -41,15 +41,22 @@ public class SkillButton extends Button {
     public boolean searched;
     public boolean selected;
     public boolean hasBrokenBonuses;
+<<<<<<< Updated upstream
 
     public SkillButton(Supplier<Float> animationFunc, float x, float y, PassiveSkill skill) {
         
+=======
+    public SkillButton(Supplier<Float> animationFunc, float x, float y, PassiveSkill skill) {
+>>>>>>> Stashed changes
         super((int) x, (int) y, skill.getSkillSize(), skill.getSkillSize(), Component.empty(), b -> {}, DEFAULT_NARRATION);
         this.x = x;
         this.y = y;
         this.skill = skill;
         this.animationFunction = animationFunc;
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         this.active = false;
         this.hasBrokenBonuses = skill.getBonuses().stream().anyMatch(bonus -> bonus instanceof BrokenSkillBonus);
     }
@@ -158,9 +165,13 @@ public class SkillButton extends Button {
         int currentHeight = this.getHeight();
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth * 3, currentHeight, color);
     }
+<<<<<<< Updated upstream
 
     public void setButtonSize(int size) {
         
+=======
+    public void setButtonSize(int size) {
+>>>>>>> Stashed changes
         this.setWidth(size);
         this.setHeight(size);
     }
@@ -207,11 +218,14 @@ public class SkillButton extends Button {
     }
 
     private void addInfoTooltip(List<MutableComponent> tooltip) {
+<<<<<<< Updated upstream
         
         
         
         
         
+=======
+>>>>>>> Stashed changes
         boolean altDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_LEFT_ALT)
                 || InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_RIGHT_ALT);
         if (!altDown) {
@@ -285,9 +299,13 @@ public class SkillButton extends Button {
     public void setCanLearn() {
         canLearn = true;
     }
+<<<<<<< Updated upstream
 
     public void setActive() {
         
+=======
+    public void setActive() {
+>>>>>>> Stashed changes
         this.active = true;
     }
 

@@ -49,7 +49,10 @@ public final class DualWieldingEntityPredicate implements LivingEntityPredicate 
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<LivingEntityPredicate> consumer) {
         weaponPredicate.addEditorWidgets(editor, predicate -> {
             setWeaponPredicate(predicate);
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             consumer.accept(new DualWieldingEntityPredicate(this.weaponPredicate));
         });
     }
@@ -99,14 +102,20 @@ public final class DualWieldingEntityPredicate implements LivingEntityPredicate 
             SerializationHelper.serializeItemPredicate(tag, validPredicate.weaponPredicate);
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new DualWieldingEntityPredicate(NetworkHelper.readItemPredicate(buf));
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             DualWieldingEntityPredicate validPredicate = validatePredicate(predicate);

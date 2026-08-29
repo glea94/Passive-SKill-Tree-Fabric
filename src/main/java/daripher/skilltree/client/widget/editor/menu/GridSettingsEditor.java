@@ -17,8 +17,11 @@ public class GridSettingsEditor extends EditorMenu {
         editor.increaseHeight(29);
         editor.addLabel(0, 0, "Grid Size", ChatFormatting.GOLD);
         editor.increaseHeight(19);
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         editor.addNumericTextField(0, 0, 50, 14, skillDragger.getGridSizeX())
                 .setNumericFilter(v -> v > 0 && v.intValue() == v)
                 .setNumericResponder(v -> skillDragger.setGridSizeX(v.intValue()));
@@ -30,8 +33,11 @@ public class GridSettingsEditor extends EditorMenu {
         editor.addLabel(0, 0, "Grid Snap", ChatFormatting.GOLD);
         editor.addLabel(100, 0, "Show Grid", ChatFormatting.GOLD);
         editor.increaseHeight(19);
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         editor.addCheckBox(0, 0, skillDragger.isGridSnapEnabled()).setResponder(skillDragger::setGridSnapEnabled);
         editor.addCheckBox(100, 0, skillDragger.isShowGrid()).setResponder(skillDragger::setShowGrid);
         editor.increaseHeight(19);

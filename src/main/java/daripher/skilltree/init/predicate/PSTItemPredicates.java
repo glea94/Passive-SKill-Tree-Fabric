@@ -22,9 +22,13 @@ public class PSTItemPredicates {
     public static final RegistryObject<ItemStackPredicate.Serializer> ENCHANTED = REGISTRY.register("enchanted", EnchantedStackPredicate.Serializer::new);
     public static final RegistryObject<ItemStackPredicate.Serializer> TAG = REGISTRY.register("tag", ItemTagPredicate.Serializer::new);
     public static final RegistryObject<ItemStackPredicate.Serializer> EQUIPMENT_TYPE = REGISTRY.register("equipment_type", EquipmentPredicate.Serializer::new);
+<<<<<<< Updated upstream
 
     public static List<ItemStackPredicate> conditionsList() {
         
+=======
+    public static List<ItemStackPredicate> conditionsList() {
+>>>>>>> Stashed changes
         return PSTRegistries.ITEM_CONDITIONS.get().getValues().stream()
                 .map(ItemStackPredicate.Serializer::createDefaultInstance)
                 .toList();

@@ -23,9 +23,13 @@ public class PSTDamagePredicates {
     public static final RegistryObject<DamageCondition.Serializer> FIRE = REGISTRY.register("fire", FireDamageCondition.Serializer::new);
     public static final RegistryObject<DamageCondition.Serializer> POISON = REGISTRY.register("poison", PoisonDamageCondition.Serializer::new);
     public static final RegistryObject<DamageCondition.Serializer> THORNS = REGISTRY.register("thorns", ThornsDamageCondition.Serializer::new);
+<<<<<<< Updated upstream
 
     public static List<DamageCondition> conditionsList() {
         
+=======
+    public static List<DamageCondition> conditionsList() {
+>>>>>>> Stashed changes
         return PSTRegistries.DAMAGE_CONDITIONS.get().getValues().stream()
                 .map(DamageCondition.Serializer::createDefaultInstance)
                 .toList();

@@ -26,9 +26,13 @@ public class SelectionMenu<T> extends EditorMenu {
         clearWidgets();
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
         editor.increaseHeight(29);
+<<<<<<< Updated upstream
 
         if (requiresSearch) {
             
+=======
+        if (requiresSearch) {
+>>>>>>> Stashed changes
             TextField searchField = editor.addTextField(0, 0, 200, 14, "");
             searchField.setHint("Search");
             searchField.setFocused(true);

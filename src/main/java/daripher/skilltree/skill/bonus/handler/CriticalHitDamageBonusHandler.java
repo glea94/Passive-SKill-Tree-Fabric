@@ -22,7 +22,10 @@ public class CriticalHitDamageBonusHandler {
 
     private static void applyCritBonuses(CriticalHitPSTEvent event) {
         Player player = event.getEntity();
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         if (player.level().isClientSide()) {
             return;
         }
@@ -40,7 +43,10 @@ public class CriticalHitDamageBonusHandler {
     private static void applyIndirectHitCritDamage(LivingHurtPSTEvent event) {
         DamageSource damageSource = event.getSource();
         Entity directDamagingEntity = damageSource.getDirectEntity();
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         if (directDamagingEntity instanceof Player) {
             return;
         }

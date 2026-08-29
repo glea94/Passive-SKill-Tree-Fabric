@@ -59,10 +59,14 @@ public class DeferredRegister<T> {
         byValue.put(value, id);
         return RegistryObject.of(id, value);
     }
+<<<<<<< Updated upstream
 
     
     public void register(Object eventBus) {
         
+=======
+    public void register(Object eventBus) {
+>>>>>>> Stashed changes
     }
 
     public Collection<RegistryObject<? extends T>> getEntries() {

@@ -30,7 +30,10 @@ public class CheckBox extends Button {
         super.renderBackground(graphics);
         Identifier texture = Identifier.parse("skilltree:textures/screen/widgets.png");
         if (value) {
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), 0F, 242F, this.getWidth(), this.getHeight(), 256, 256);
         }
     }

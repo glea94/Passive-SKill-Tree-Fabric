@@ -17,7 +17,10 @@ public class CriticalHitChanceBonusHandler {
 
     private static void applyDirectHitCritChance(CriticalHitPSTEvent event) {
         Player player = event.getEntity();
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         if (player.level().isClientSide()) {
             return;
         }
@@ -32,7 +35,10 @@ public class CriticalHitChanceBonusHandler {
             return;
         }
         if (!isVanillaCrit) {
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             event.setForcedCrit(true);
         }
     }

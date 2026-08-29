@@ -179,7 +179,10 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
 
         public boolean canAffect(LootContext lootContext, Identifier lootTableId) {
             net.minecraft.util.context.ContextKey<Entity> playerLootContextParam = getPlayerLootContextParam();
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             if (!lootContext.hasParameter(playerLootContextParam)) {
                 return false;
             }
@@ -256,7 +259,10 @@ public final class LootAmountModifierBonus implements SkillBonus<LootAmountModif
         public LootAmountModifierBonus deserialize(CompoundTag tag) {
             float chance = tag.getFloatOr("chance", 0f);
             float multiplier = tag.getFloatOr("multiplier", 0f);
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             LootType lootType = LootType.byName(tag.getString("loot_type").orElse(""));
             return new LootAmountModifierBonus(chance, multiplier, lootType);
         }

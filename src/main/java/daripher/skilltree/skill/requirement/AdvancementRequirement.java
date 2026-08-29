@@ -41,9 +41,12 @@ public class AdvancementRequirement implements SkillRequirement<AdvancementRequi
     }
 
     private boolean testServer(ServerPlayer player) {
+<<<<<<< Updated upstream
         
         
         
+=======
+>>>>>>> Stashed changes
         ServerAdvancementManager manager = player.level().getServer().getAdvancements();
         AdvancementHolder advancement = manager.get(advancementId);
         if (advancement == null) return false;
@@ -139,7 +142,10 @@ public class AdvancementRequirement implements SkillRequirement<AdvancementRequi
 
         @Override
         public SkillRequirement<?> deserialize(CompoundTag tag) {
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             Identifier id = Identifier.parse(tag.getString("advancement").orElse(""));
             return new AdvancementRequirement(id);
         }
@@ -152,15 +158,21 @@ public class AdvancementRequirement implements SkillRequirement<AdvancementRequi
             }
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
             Identifier id = Identifier.parse(buf.readUtf());
             return new AdvancementRequirement(id);
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillRequirement<?> requirement) {
             if (requirement instanceof AdvancementRequirement aRequirement) {

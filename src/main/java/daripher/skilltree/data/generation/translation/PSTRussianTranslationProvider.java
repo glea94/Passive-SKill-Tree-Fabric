@@ -25,7 +25,10 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         add("skilltree:alchemist", "Алхимик");
         add("skilltree:cook", "Повар");
         add("skilltree:blacksmith", "Кузнец");
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         addSkill("alchemist", 1, "Алхимик");
         addSkills("alchemist", 2, 26, 29, "Шанс отравления");
         addSkill("alchemist", 32, "Обход иммунитета");
@@ -123,7 +126,10 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         addSkill("hunter", 35, "Опытный охотник");
         addSkills("hunter", 39, 42, 45, "Удача");
         addSkill("hunter", 61, "Счастливчик");
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         addSkill("blacksmith", 1, "Кузнец");
         addSkills("blacksmith", 3, 27, 30, "Стена щитов");
         addSkill("blacksmith", 33, "Мастерство щита");
@@ -156,7 +162,10 @@ public class PSTRussianTranslationProvider extends PSTTranslationProvider {
         addSkill("blacksmith", 58, "Стальное сердце");
         addSkills("blacksmith", 38, 41, 44, "Закалка в горне");
         addSkill("blacksmith", 60, "Огнестойкость");
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         add(PSTSkillBonuses.DAMAGE.get(), "Урон");
         add(PSTSkillBonuses.CRIT_DAMAGE.get(), "Множитель критического урона");
         add(PSTSkillBonuses.CRIT_DAMAGE.get(), "damage", "Множитель критического урона %s");

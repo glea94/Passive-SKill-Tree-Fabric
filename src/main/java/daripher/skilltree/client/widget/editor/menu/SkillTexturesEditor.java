@@ -35,8 +35,11 @@ public class SkillTexturesEditor extends EditorMenu {
             editor.addLabel(0, 0, label, ChatFormatting.GOLD);
             editor.increaseHeight(19);
             String textureFolder = SkillTexturesData.getTextureFolder(texture);
+<<<<<<< Updated upstream
 
             
+=======
+>>>>>>> Stashed changes
             editor.addTextureSelectionMenu(0, 0, 200, texture, textureFolder)
                     .setElementTextureSize(elementTextureWidth, elementTextureHeight)
                     .setSelectionListGridSize(rows, columns)

@@ -65,9 +65,12 @@ public class SkillConnectionsEditor extends EditorMenu {
             skill2.getOneWayConnections().remove(skill1.getId());
         }
         editor.saveSelectedSkills();
+<<<<<<< Updated upstream
 
         
         
+=======
+>>>>>>> Stashed changes
         editor.clearWidgets();
         editor.rebuildWidgets();
     }
@@ -84,8 +87,11 @@ public class SkillConnectionsEditor extends EditorMenu {
             connections.add(selectedSkills[i + 1].getId());
         }
         editor.saveSelectedSkills();
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         editor.clearWidgets();
         editor.rebuildWidgets();
     }

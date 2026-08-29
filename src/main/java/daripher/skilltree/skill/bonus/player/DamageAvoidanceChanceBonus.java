@@ -310,8 +310,11 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
             SerializationHelper.serializeLivingCondition(tag, aBonus.attackerCondition, "attacker_condition");
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public DamageAvoidanceChanceBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -323,8 +326,11 @@ public final class DamageAvoidanceChanceBonus implements SkillBonus<DamageAvoida
             bonus.attackerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof DamageAvoidanceChanceBonus aBonus)) {

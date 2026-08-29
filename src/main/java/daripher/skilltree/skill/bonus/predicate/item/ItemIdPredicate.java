@@ -105,7 +105,10 @@ public final class ItemIdPredicate implements ItemStackPredicate {
         public ItemStackPredicate deserialize(CompoundTag tag) {
             Tag idTag = tag.get("id");
             Objects.requireNonNull(idTag);
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             Identifier id = Identifier.parse(idTag.asString().orElseThrow());
             return new ItemIdPredicate(id);
         }

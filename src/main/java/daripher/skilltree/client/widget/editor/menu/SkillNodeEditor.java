@@ -58,8 +58,11 @@ public class SkillNodeEditor extends EditorMenu {
 
     private void createSkills(float angle, float distance, SkillFactory skillFactory) {
         editor.getSelectedSkills().forEach(skill -> createSkill(distance, angle, skill, skillFactory));
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         editor.getSkillMirrorer().createSkills(angle, distance, skillFactory::accept);
 
         editor.clearWidgets();

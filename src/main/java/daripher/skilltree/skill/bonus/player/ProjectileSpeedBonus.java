@@ -212,16 +212,22 @@ public final class ProjectileSpeedBonus implements SkillBonus<ProjectileSpeedBon
             tag.putFloat("multiplier", aBonus.multiplier);
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public ProjectileSpeedBonus deserialize(RegistryFriendlyByteBuf buf) {
             LivingEntityPredicate playerCondition = NetworkHelper.readLivingCondition(buf);
             LivingMultiplier playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
             return new ProjectileSpeedBonus(buf.readFloat()).setPlayerCondition(playerCondition).setPlayerMultiplier(playerMultiplier);
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ProjectileSpeedBonus aBonus)) {

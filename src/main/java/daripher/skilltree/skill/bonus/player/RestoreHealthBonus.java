@@ -244,8 +244,11 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
             tag.putBoolean("percentage_healing", aBonus.isPercentageHealing);
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public RestoreHealthBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -255,8 +258,11 @@ public final class RestoreHealthBonus implements EventListenerBonus<RestoreHealt
             bonus.isPercentageHealing = buf.readBoolean();
             return bonus;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RestoreHealthBonus aBonus)) {

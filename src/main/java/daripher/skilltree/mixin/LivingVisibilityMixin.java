@@ -15,9 +15,13 @@ public abstract class LivingVisibilityMixin {
     private void skilltree$onGetVisibilityPercent(Entity lookingEntity, CallbackInfoReturnable<Double> cir) {
         LivingVisibilityPSTEvent event = new LivingVisibilityPSTEvent((LivingEntity) (Object) this, lookingEntity);
         PSTEvents.LIVING_VISIBILITY.post(event);
+<<<<<<< Updated upstream
 
         if (event.getVisibilityModifier() != 1.0) {
             
+=======
+        if (event.getVisibilityModifier() != 1.0) {
+>>>>>>> Stashed changes
             cir.setReturnValue(cir.getReturnValue() * event.getVisibilityModifier());
         }
     }

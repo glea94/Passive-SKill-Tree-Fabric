@@ -57,14 +57,20 @@ public record ProjectileDamageCondition() implements DamageCondition {
             }
             return new CompoundTag();
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public DamageCondition deserialize(RegistryFriendlyByteBuf buf) {
             return new ProjectileDamageCondition();
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, DamageCondition condition) {
             if (!(condition instanceof ProjectileDamageCondition)) {

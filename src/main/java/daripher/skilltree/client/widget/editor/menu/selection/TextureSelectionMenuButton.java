@@ -7,9 +7,13 @@ import java.util.Collection;
 
 public class TextureSelectionMenuButton extends SelectionMenuButton<Identifier> {
     private final String texturesFolder;
+<<<<<<< Updated upstream
 
     public TextureSelectionMenuButton(SkillTreeEditor editor, int x, int y, int width, String message, String texturesFolder, Collection<Identifier> values) {
         
+=======
+    public TextureSelectionMenuButton(SkillTreeEditor editor, int x, int y, int width, String message, String texturesFolder, Collection<Identifier> values) {
+>>>>>>> Stashed changes
         super(editor, x, y, width, message, values);
         this.setX(x);
         this.setY(y);

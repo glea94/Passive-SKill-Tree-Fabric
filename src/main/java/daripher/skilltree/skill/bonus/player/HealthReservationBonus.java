@@ -196,8 +196,11 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
             SerializationHelper.serializeLivingCondition(tag, aBonus.playerCondition, "player_condition");
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public HealthReservationBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -206,8 +209,11 @@ public final class HealthReservationBonus implements SkillBonus<HealthReservatio
             bonus.playerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof HealthReservationBonus aBonus)) {

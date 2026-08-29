@@ -14,7 +14,10 @@ import java.util.List;
 
 public class HealthReservationBonusHandler {
     public static void register() {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (ServerPlayer player : server.getPlayerList().getPlayers()) {
                 applyHealthReservation(player);

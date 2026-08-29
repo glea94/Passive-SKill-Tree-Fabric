@@ -17,11 +17,16 @@ import java.util.List;
 
 
 public class ItemUsagePreventionBonusHandler {
+<<<<<<< Updated upstream
     
     private static boolean isProcessingRejection;
 
     public static void register() {
         
+=======
+    private static boolean isProcessingRejection;
+    public static void register() {
+>>>>>>> Stashed changes
         AttackEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
             ItemStack mainHandItem = player.getMainHandItem();
             if (shouldPreventItemUsage(player, mainHandItem)) {

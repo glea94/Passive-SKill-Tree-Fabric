@@ -135,7 +135,10 @@ public class IncomingDamageEventListener implements SkillEventListener {
 
     private void addTargetMultiplierWidgets(SkillTreeEditor editor, Consumer<SkillEventListener> consumer) {
         enemyMultiplier.addEditorWidgets(editor, multiplier -> {
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             setEnemyMultiplier(multiplier);
             consumer.accept(this);
         });
@@ -247,7 +250,10 @@ public class IncomingDamageEventListener implements SkillEventListener {
             listener.setPlayerCondition(SerializationHelper.deserializeLivingCondition(tag, "player_condition"));
             listener.setEnemyMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "enemy_multiplier"));
             listener.setPlayerMultiplier(SerializationHelper.deserializeLivingMultiplier(tag, "player_multiplier"));
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             listener.setTarget(SkillBonus.Target.valueOf(tag.getString("target").orElse("").toUpperCase(Locale.ROOT)));
             return listener;
         }
@@ -266,8 +272,11 @@ public class IncomingDamageEventListener implements SkillEventListener {
             tag.putString("target", aListener.target.name().toLowerCase(Locale.ROOT));
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             IncomingDamageEventListener listener = new IncomingDamageEventListener();
@@ -279,8 +288,11 @@ public class IncomingDamageEventListener implements SkillEventListener {
             listener.setTarget(SkillBonus.Target.values()[buf.readInt()]);
             return listener;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof IncomingDamageEventListener aListener)) {

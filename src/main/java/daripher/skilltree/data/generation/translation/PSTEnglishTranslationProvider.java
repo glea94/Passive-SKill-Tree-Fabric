@@ -25,7 +25,10 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         add("skilltree:alchemist", "Alchemist");
         add("skilltree:cook", "Cook");
         add("skilltree:blacksmith", "Blacksmith");
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         addSkill("alchemist", 1, "Alchemist");
         addSkills("alchemist", 2, 26, 29, "Poison Chance");
         addSkill("alchemist", 32, "Immunity Bypass");
@@ -123,7 +126,10 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         addSkill("hunter", 35, "Experienced Hunter");
         addSkills("hunter", 39, 42, 45, "Luck");
         addSkill("hunter", 61, "Lucky Beggar");
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         addSkill("blacksmith", 1, "Blacksmith");
         addSkills("blacksmith", 3, 27, 30, "Shield Wall");
         addSkill("blacksmith", 33, "Shield Mastery");
@@ -156,7 +162,10 @@ public class PSTEnglishTranslationProvider extends PSTTranslationProvider {
         addSkill("blacksmith", 58, "Heart of Steel");
         addSkills("blacksmith", 38, 41, 44, "Forge-Tempered");
         addSkill("blacksmith", 60, "Heat Resistant");
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         add(PSTSkillBonuses.DAMAGE.get(), "Damage");
         add(PSTSkillBonuses.CRIT_DAMAGE.get(), "Critical Damage Multiplier");
         add(PSTSkillBonuses.CRIT_DAMAGE.get(), "damage", "Critical %s Damage Multiplier");

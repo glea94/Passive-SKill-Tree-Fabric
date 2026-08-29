@@ -30,7 +30,10 @@ public class StealthBonusHandler {
         for (StealthBonus skillBonus : skillBonuses) {
             stealthMultiplier += skillBonus.getStealthMultiplier(player, lookingEntity);
         }
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         event.modifyVisibility(1f - stealthMultiplier);
     }
 }

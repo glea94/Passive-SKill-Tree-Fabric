@@ -19,9 +19,13 @@ public class SkillButtons extends ScrollableZoomableWidgetGroup<SkillButton> {
     private final List<SkillConnection> skillConnections = new ArrayList<>();
     private final Map<Identifier, SkillButton> idToWidget = new HashMap<>();
     private final Supplier<Float> animationFunc;
+<<<<<<< Updated upstream
 
     public SkillButtons(PassiveSkillTree skillTree, Supplier<Float> animationFunc) {
         
+=======
+    public SkillButtons(PassiveSkillTree skillTree, Supplier<Float> animationFunc) {
+>>>>>>> Stashed changes
         super(0, 0, 0, 0);
         this.setX(0);
         this.setY(0);
@@ -75,7 +79,10 @@ public class SkillButtons extends ScrollableZoomableWidgetGroup<SkillButton> {
         if (skill == null) {
             return;
         }
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         ScreenHelper.renderSkillTooltip(skillTree, skill, graphics, tooltipX, tooltipY, this.getWidth(), this.getHeight());
     }
 
@@ -87,7 +94,10 @@ public class SkillButtons extends ScrollableZoomableWidgetGroup<SkillButton> {
         float skillX = skill.getPositionX();
         float skillY = skill.getPositionY();
         int skillSize = skill.getSkillSize();
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         float buttonX = skillX - skillSize / 2F + this.getWidth() / 2F + skillX * (getZoom() - 1);
         float buttonY = skillY - skillSize / 2F + this.getHeight() / 2F + skillY * (getZoom() - 1);
         SkillButton button = new SkillButton(animationFunc, buttonX, buttonY, skill);

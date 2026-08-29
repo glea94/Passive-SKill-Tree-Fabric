@@ -333,8 +333,11 @@ public final class IncomingDamageBonus implements SkillBonus<IncomingDamageBonus
             SerializationHelper.serializeLivingCondition(tag, aBonus.attackerCondition, "attacker_condition");
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public IncomingDamageBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -347,8 +350,11 @@ public final class IncomingDamageBonus implements SkillBonus<IncomingDamageBonus
             bonus.attackerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof IncomingDamageBonus aBonus)) {

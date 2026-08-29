@@ -17,7 +17,10 @@ public class EditBoxAccessor {
 
     static {
         try {
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             try {
                 displayPosField = EditBox.class.getDeclaredField("displayPos");
             } catch (NoSuchFieldException e) {
@@ -29,6 +32,7 @@ public class EditBoxAccessor {
             } catch (NoSuchFieldException e) {
                 try { highlightPosField = EditBox.class.getDeclaredField("selectionStart"); } catch (Exception ignored) {}
             }
+<<<<<<< Updated upstream
 
             
             try {
@@ -36,6 +40,11 @@ public class EditBoxAccessor {
             } catch (NoSuchFieldException ignored) {}
 
             
+=======
+            try {
+                maxLengthField = EditBox.class.getDeclaredField("maxLength");
+            } catch (NoSuchFieldException ignored) {}
+>>>>>>> Stashed changes
             try {
                 suggestionField = EditBox.class.getDeclaredField("suggestion");
             } catch (NoSuchFieldException ignored) {}
@@ -44,8 +53,11 @@ public class EditBoxAccessor {
             if (highlightPosField != null) highlightPosField.setAccessible(true);
             if (maxLengthField != null) maxLengthField.setAccessible(true);
             if (suggestionField != null) suggestionField.setAccessible(true);
+<<<<<<< Updated upstream
 
             
+=======
+>>>>>>> Stashed changes
             for (Field field : EditBox.class.getDeclaredFields()) {
                 if (field.getType() == BiFunction.class) {
                     field.setAccessible(true);
@@ -53,8 +65,11 @@ public class EditBoxAccessor {
                     break;
                 }
             }
+<<<<<<< Updated upstream
 
             
+=======
+>>>>>>> Stashed changes
             for (Method method : EditBox.class.getDeclaredMethods()) {
                 if (method.getParameterCount() == 5) {
                     Class<?>[] types = method.getParameterTypes();
@@ -86,6 +101,7 @@ public class EditBoxAccessor {
     public int getHighlightPos() {
         try { return highlightPosField != null ? highlightPosField.getInt(instance) : 0; } catch (Exception e) { return 0; }
     }
+<<<<<<< Updated upstream
 
     public int getMaxLength() {
         
@@ -94,6 +110,12 @@ public class EditBoxAccessor {
 
     public String getSuggestion() {
         
+=======
+    public int getMaxLength() {
+        try { return maxLengthField != null ? maxLengthField.getInt(instance) : 80; } catch (Exception e) { return 80; }
+    }
+    public String getSuggestion() {
+>>>>>>> Stashed changes
         try { return (suggestionField != null && suggestionField.get(instance) != null) ? (String) suggestionField.get(instance) : ""; } catch (Exception e) { return ""; }
     }
 

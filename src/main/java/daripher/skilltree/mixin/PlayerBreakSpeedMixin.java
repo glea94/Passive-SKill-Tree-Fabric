@@ -14,7 +14,10 @@ public abstract class PlayerBreakSpeedMixin {
     @Inject(method = "getDestroySpeed", at = @At("RETURN"), cancellable = true, require = 1)
     private void skilltree$onGetDestroySpeed(BlockState state, CallbackInfoReturnable<Float> cir) {
         Player self = (Player) (Object) this;
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         BreakSpeedPSTEvent event = new BreakSpeedPSTEvent(self, state, cir.getReturnValue());
         PSTEvents.BREAK_SPEED.post(event);
 

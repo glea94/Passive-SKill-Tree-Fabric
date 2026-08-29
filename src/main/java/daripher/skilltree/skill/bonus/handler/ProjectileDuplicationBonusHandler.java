@@ -104,8 +104,11 @@ public class ProjectileDuplicationBonusHandler {
             AbstractArrow originalArrow = (AbstractArrow) original;
             duplicateArrow.pickup = AbstractArrow.Pickup.DISALLOWED;
             ItemStack weaponItem = originalArrow.getWeaponItem();
+<<<<<<< Updated upstream
 
             
+=======
+>>>>>>> Stashed changes
             EnchantmentHelper.onProjectileSpawned(level, weaponItem != null ? weaponItem : ItemStack.EMPTY, duplicateArrow, item -> {});
 
             AbstractArrowAccessor originalArrowAccessor = (AbstractArrowAccessor) originalArrow;

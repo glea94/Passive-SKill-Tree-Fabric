@@ -11,8 +11,11 @@ import java.util.function.Consumer;
 
 public class TextArea extends MultiLineEditBox implements TickingWidget {
     public TextArea(int x, int y, int width, int height, String defaultValue) {
+<<<<<<< Updated upstream
         
         
+=======
+>>>>>>> Stashed changes
         super(Minecraft.getInstance().font, x, y, width, height, Component.empty(), Component.empty(), -2039584, true, -3092272, true, true);
         this.setValue(defaultValue);
     }
@@ -40,6 +43,9 @@ public class TextArea extends MultiLineEditBox implements TickingWidget {
 
     @Override
     public void onWidgetTick() {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
     }
 }

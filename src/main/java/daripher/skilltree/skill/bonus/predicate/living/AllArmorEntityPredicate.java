@@ -120,14 +120,20 @@ public final class AllArmorEntityPredicate implements LivingEntityPredicate {
             }
             return validPredicate;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new AllArmorEntityPredicate(NetworkHelper.readItemPredicate(buf));
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             AllArmorEntityPredicate validPredicate = validatePredicate(predicate);

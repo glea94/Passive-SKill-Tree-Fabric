@@ -18,9 +18,13 @@ public class PSTLivingMultipliers {
 
     public static final RegistryObject<LivingMultiplier.Serializer> NONE = REGISTRY.register("none", NoneLivingMultiplier.Serializer::new);
     public static final RegistryObject<LivingMultiplier.Serializer> NUMERIC_VALUE = REGISTRY.register("numeric_value", FloatFunctionMultiplier.Serializer::new);
+<<<<<<< Updated upstream
 
     public static List<LivingMultiplier> multiplierList() {
         
+=======
+    public static List<LivingMultiplier> multiplierList() {
+>>>>>>> Stashed changes
         return PSTRegistries.LIVING_MULTIPLIERS.get().getValues().stream()
                 .map(LivingMultiplier.Serializer::createDefaultInstance)
                 .toList();

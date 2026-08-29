@@ -21,15 +21,21 @@ public class EffectImmunityBonusHandler {
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         Holder<MobEffect> mobEffectHolder = event.getEffectInstance().getEffect();
         MobEffect mobEffect = mobEffectHolder.value();
 
         List<EffectImmunityBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(player, EffectImmunityBonus.class);
         for (EffectImmunityBonus skillBonus : skillBonuses) {
             if (skillBonus.shouldProvideImmunity(mobEffect, player)) {
+<<<<<<< Updated upstream
                 
+=======
+>>>>>>> Stashed changes
                 event.setResult(MobEffectApplicablePSTEvent.Result.DENY);
                 return;
             }

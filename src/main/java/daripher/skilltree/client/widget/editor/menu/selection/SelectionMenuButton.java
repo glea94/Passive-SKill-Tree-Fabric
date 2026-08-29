@@ -17,9 +17,13 @@ public class SelectionMenuButton<T> extends Button {
     protected int selectionListRows = 10;
     protected int selectionListColumns = 10;
     private boolean requiresSearch = true;
+<<<<<<< Updated upstream
 
     public SelectionMenuButton(SkillTreeEditor editor, int x, int y, int width, String message, Collection<T> values) {
         
+=======
+    public SelectionMenuButton(SkillTreeEditor editor, int x, int y, int width, String message, Collection<T> values) {
+>>>>>>> Stashed changes
         super(x, y, width, 14, Component.literal(message));
 
         this.selectionList = new TextSelectionList<>(0, 0, 190, 14, values).setRows(8);

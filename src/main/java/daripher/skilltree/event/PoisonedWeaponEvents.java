@@ -35,8 +35,11 @@ public class PoisonedWeaponEvents {
         if (!hasPoison(mainHandItem)) {
             return;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         HolderLookup.Provider registryLookup = event.getEntity().level().registryAccess();
         getPoisonedWeaponEffects(mainHandItem, registryLookup).forEach(pEffectInstance -> event.getEntity().addEffect(pEffectInstance, player));
 
@@ -53,6 +56,7 @@ public class PoisonedWeaponEvents {
         }
 
         ListTag effectsTagList = new ListTag();
+<<<<<<< Updated upstream
 
         
         if (itemStack.getComponents().isEmpty()) return; 
@@ -61,6 +65,9 @@ public class PoisonedWeaponEvents {
         
         
         
+=======
+        if (itemStack.getComponents().isEmpty()) return; 
+>>>>>>> Stashed changes
         HolderLookup.Provider lookup = net.minecraft.client.Minecraft.getInstance().level != null ?
                 net.minecraft.client.Minecraft.getInstance().level.registryAccess() : null;
 
@@ -99,16 +106,22 @@ public class PoisonedWeaponEvents {
         CompoundTag itemTag = getOrCreateCustomTag(itemStack);
         return itemTag.getIntOr(POISON_USES_LEFT_TAG_NAME, 0);
     }
+<<<<<<< Updated upstream
 
     
+=======
+>>>>>>> Stashed changes
     public static List<MobEffectInstance> getPoisonedWeaponEffects(ItemStack itemStack) {
         HolderLookup.Provider lookup = net.minecraft.client.Minecraft.getInstance().level != null ?
                 net.minecraft.client.Minecraft.getInstance().level.registryAccess() : null;
         if (lookup == null) return List.of();
         return getPoisonedWeaponEffects(itemStack, lookup);
     }
+<<<<<<< Updated upstream
 
     
+=======
+>>>>>>> Stashed changes
     public static List<MobEffectInstance> getPoisonedWeaponEffects(ItemStack itemStack, HolderLookup.Provider registryLookup) {
         if (!hasPoison(itemStack)) {
             return List.of();
@@ -116,9 +129,13 @@ public class PoisonedWeaponEvents {
         CompoundTag itemTag = getOrCreateCustomTag(itemStack);
         List<MobEffectInstance> effects = new ArrayList<>();
         ListTag effectsListTag = itemTag.getListOrEmpty(WEAPON_EFFECTS_TAG_NAME);
+<<<<<<< Updated upstream
 
         for (Tag tag : effectsListTag) {
             
+=======
+        for (Tag tag : effectsListTag) {
+>>>>>>> Stashed changes
             MobEffectInstance instance = MobEffectInstance.CODEC.parse(registryLookup.createSerializationContext(NbtOps.INSTANCE), tag).result().orElse(null);
             if (instance != null) {
                 effects.add(instance);

@@ -46,7 +46,10 @@ public abstract class ThrownPotionMixin extends AbstractThrownPotion implements 
         if (!SelfSplashImmunityBonusHandler.isPlayerImmuneToOwnSplashPotions(player)) {
             return baseTargets;
         }
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         List<T> mutableTargets = new ArrayList<>(baseTargets);
         mutableTargets.removeIf(owner::equals);
         return mutableTargets;

@@ -160,8 +160,11 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
             SerializationHelper.serializeLivingCondition(compoundTag, validBonus.playerCondition, "player_condition");
             return compoundTag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public EffectImmunityBonus deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectPredicate mobEffectPredicate = NetworkHelper.readMobEffectCondition(buf);
@@ -169,8 +172,11 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
             bonus.playerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             EffectImmunityBonus validBonus = validateBonus(bonus);
@@ -187,7 +193,10 @@ public final class EffectImmunityBonus implements SkillBonus<EffectImmunityBonus
 
         @Override
         public SkillBonus<?> createDefaultInstance() {
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             return new EffectImmunityBonus(new MobEffectIdPredicate(MobEffects.POISON));
         }
     }

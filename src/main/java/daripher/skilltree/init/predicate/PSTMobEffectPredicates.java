@@ -21,9 +21,13 @@ public class PSTMobEffectPredicates {
     public static final RegistryObject<MobEffectPredicate.Serializer> NONE = REGISTRY.register("none", NoneMobEffectPredicate.Serializer::new);
     public static final RegistryObject<MobEffectPredicate.Serializer> EFFECT_CATEGORY = REGISTRY.register("effect_category", MobEffectTypePredicate.Serializer::new);
     public static final RegistryObject<MobEffectPredicate.Serializer> EFFECT_ID = REGISTRY.register("effect_id", MobEffectIdPredicate.Serializer::new);
+<<<<<<< Updated upstream
 
     public static List<MobEffectPredicate> defaultInstances() {
         
+=======
+    public static List<MobEffectPredicate> defaultInstances() {
+>>>>>>> Stashed changes
         return PSTRegistries.MOB_EFFECT_PREDICATES.get().getValues().stream()
                 .map(MobEffectPredicate.Serializer::createDefaultInstance)
                 .toList();

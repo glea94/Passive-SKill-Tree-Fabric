@@ -27,17 +27,26 @@ public class SkillSelector extends AbstractWidget {
     private int selectionStartY;
 
     public SkillSelector(SkillTreeEditor editor, SkillButtons skillButtons) {
+<<<<<<< Updated upstream
         
         super(0, 0, 0, 0, Component.empty());
         this.skillButtons = skillButtons;
         this.editor = editor;
         
+=======
+        super(0, 0, 0, 0, Component.empty());
+        this.skillButtons = skillButtons;
+        this.editor = editor;
+>>>>>>> Stashed changes
         this.active = false;
     }
 
     @Override
     protected void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         if (this.active) {
             renderSelectionArea(graphics, mouseX, mouseY);
         }
@@ -85,7 +94,10 @@ public class SkillSelector extends AbstractWidget {
             return false;
         }
         if (mouseButtonEvent.hasShiftDown()) {
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             this.active = true;
             selectionStartX = (int) mouseButtonEvent.x();
             selectionStartY = (int) mouseButtonEvent.y();
@@ -111,7 +123,10 @@ public class SkillSelector extends AbstractWidget {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent mouseButtonEvent) {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         if (this.active) {
             addSelectedSkills(mouseButtonEvent.x(), mouseButtonEvent.y());
             this.active = false;

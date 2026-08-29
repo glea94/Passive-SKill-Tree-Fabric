@@ -59,8 +59,11 @@ public class WorkbenchItemBonusRecipeBuilder {
         validate();
         WorkbenchUpgradeBonusRecipe recipe =
                 new WorkbenchUpgradeBonusRecipe(id, baseItemStackPredicate, ingredients, requiresPassiveSkill, itemBonus);
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         ResourceKey<Recipe<?>> recipeKey = ResourceKey.create(Registries.RECIPE, id);
         recipeOutput.accept(recipeKey, recipe, null);
     }

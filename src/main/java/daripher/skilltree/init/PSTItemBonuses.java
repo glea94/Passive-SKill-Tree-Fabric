@@ -21,7 +21,10 @@ public class PSTItemBonuses {
 
     @SuppressWarnings("rawtypes")
     public static List<ItemBonus> bonusList() {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         return PSTRegistries.ITEM_BONUSES.get().getValues().stream()
                 .map(ItemBonus.Serializer::createDefaultInstance)
                 .map(ItemBonus.class::cast)

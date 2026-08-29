@@ -65,14 +65,20 @@ public record FishingEntityPredicate() implements LivingEntityPredicate {
             validatePredicate(predicate);
             return new CompoundTag();
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new FishingEntityPredicate();
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             validatePredicate(predicate);

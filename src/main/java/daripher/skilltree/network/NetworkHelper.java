@@ -85,7 +85,10 @@ public class NetworkHelper {
 
     public static @Nullable Attribute readAttribute(RegistryFriendlyByteBuf buf) {
         Identifier attributeId = buf.readIdentifier();
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(attributeId)
                 .map(Holder::value)
                 .orElse(null);
@@ -134,7 +137,10 @@ public class NetworkHelper {
         List<String> tags = new ArrayList<>();
         int size = buf.readInt();
         for (int i = 0; i < size; i++) {
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             tags.add(buf.readUtf());
         }
         return tags;
@@ -233,6 +239,7 @@ public class NetworkHelper {
         }
         return description;
     }
+<<<<<<< Updated upstream
 
     public static void writeChatComponent(RegistryFriendlyByteBuf buf, MutableComponent component) {
         
@@ -241,6 +248,12 @@ public class NetworkHelper {
 
     public static MutableComponent readChatComponent(RegistryFriendlyByteBuf buf) {
         
+=======
+    public static void writeChatComponent(RegistryFriendlyByteBuf buf, MutableComponent component) {
+        net.minecraft.network.chat.ComponentSerialization.TRUSTED_STREAM_CODEC.encode(buf, component);
+    }
+    public static MutableComponent readChatComponent(RegistryFriendlyByteBuf buf) {
+>>>>>>> Stashed changes
         return (MutableComponent) net.minecraft.network.chat.ComponentSerialization.TRUSTED_STREAM_CODEC.decode(buf);
     }
 
@@ -374,7 +387,10 @@ public class NetworkHelper {
 
     public static @Nullable MobEffect readMobEffect(RegistryFriendlyByteBuf buf) {
         Identifier effectId = buf.readIdentifier();
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         return BuiltInRegistries.MOB_EFFECT.get(effectId)
                 .map(net.minecraft.core.Holder::value)
                 .orElse(null);
@@ -406,7 +422,10 @@ public class NetworkHelper {
     public static MobEffectInstance readEffectInstance(RegistryFriendlyByteBuf buf) {
         MobEffect effect = readMobEffect(buf);
         Objects.requireNonNull(effect);
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         return new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), buf.readInt(), buf.readInt());
     }
 

@@ -116,14 +116,20 @@ public final class HasItemInHandEntityPredicate implements LivingEntityPredicate
             SerializationHelper.serializeItemPredicate(tag, validPredicate.itemStackPredicate);
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new HasItemInHandEntityPredicate(NetworkHelper.readItemPredicate(buf));
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             HasItemInHandEntityPredicate validPredicate = validatePredicate(predicate);

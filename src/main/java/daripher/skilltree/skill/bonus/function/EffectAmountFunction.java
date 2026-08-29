@@ -30,7 +30,10 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
 
     @Override
     public float apply(LivingEntity entity) {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         List<Holder<MobEffect>> effects = entity.getActiveEffects().stream().map(MobEffectInstance::getEffect).toList();
         return switch (effectType) {
             case ANY -> effects.size();
@@ -137,7 +140,10 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
 
         @Override
         public FloatFunction<?> deserialize(CompoundTag tag) {
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             MobEffectType type = MobEffectType.fromName(tag.getString("effect_type").orElse(""));
             return new EffectAmountFunction(type);
         }
@@ -151,15 +157,21 @@ public class EffectAmountFunction implements FloatFunction<EffectAmountFunction>
             tag.putString("effect_type", aProvider.effectType.getName());
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectType type = MobEffectType.values()[buf.readInt()];
             return new EffectAmountFunction(type);
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof EffectAmountFunction aProvider)) {

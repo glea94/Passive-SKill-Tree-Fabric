@@ -29,14 +29,20 @@ public class SkillTreeSelectionButton extends Button {
 
         int currentWidth = this.getWidth();
         int currentHeight = this.getHeight();
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), 0F, (float) v, currentWidth, currentHeight, 19, 57);
     }
 
     @Override
     protected void renderText(@NotNull GuiGraphicsExtractor graphics) {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
     }
 
     private static Minecraft getMinecraft() {

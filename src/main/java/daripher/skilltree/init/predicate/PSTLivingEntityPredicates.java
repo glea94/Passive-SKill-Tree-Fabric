@@ -27,9 +27,13 @@ public class PSTLivingEntityPredicates {
     public static final RegistryObject<LivingEntityPredicate.Serializer> UNARMED = REGISTRY.register("unarmed", UnarmedEntityPredicate.Serializer::new);
     public static final RegistryObject<LivingEntityPredicate.Serializer> NUMERIC_VALUE = REGISTRY.register("numeric_value", FloatFunctionEntityPredicate.Serializer::new);
     public static final RegistryObject<LivingEntityPredicate.Serializer> ALL_ARMOR = REGISTRY.register("all_armor", AllArmorEntityPredicate.Serializer::new);
+<<<<<<< Updated upstream
 
     public static List<LivingEntityPredicate> conditionsList() {
         
+=======
+    public static List<LivingEntityPredicate> conditionsList() {
+>>>>>>> Stashed changes
         return PSTRegistries.LIVING_CONDITIONS.get().getValues().stream()
                 .map(LivingEntityPredicate.Serializer::createDefaultInstance)
                 .toList();

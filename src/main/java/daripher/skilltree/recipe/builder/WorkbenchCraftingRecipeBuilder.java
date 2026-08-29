@@ -54,8 +54,11 @@ public class WorkbenchCraftingRecipeBuilder {
         validate();
         WorkbenchCraftingRecipe recipe =
                 new WorkbenchCraftingRecipe(id, baseIngredient, ingredients, requiresPassiveSkill, result);
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         ResourceKey<Recipe<?>> recipeKey = ResourceKey.create(Registries.RECIPE, id);
         recipeOutput.accept(recipeKey, recipe, null);
     }

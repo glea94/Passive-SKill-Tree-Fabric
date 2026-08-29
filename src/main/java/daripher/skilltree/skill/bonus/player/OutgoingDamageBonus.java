@@ -323,8 +323,11 @@ public final class OutgoingDamageBonus implements SkillBonus<OutgoingDamageBonus
             SerializationHelper.serializeLivingCondition(tag, aBonus.targetCondition, "target_condition");
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public OutgoingDamageBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -337,8 +340,11 @@ public final class OutgoingDamageBonus implements SkillBonus<OutgoingDamageBonus
             bonus.targetCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof OutgoingDamageBonus aBonus)) {

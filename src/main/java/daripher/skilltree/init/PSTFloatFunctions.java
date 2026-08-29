@@ -26,7 +26,10 @@ public class PSTFloatFunctions {
 
     @SuppressWarnings("rawtypes")
     public static List<FloatFunction> providerList() {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         return PSTRegistries.FLOAT_FUNCTIONS.get().getValues().stream()
                 .map(FloatFunction.Serializer::createDefaultInstance)
                 .map(FloatFunction.class::cast)

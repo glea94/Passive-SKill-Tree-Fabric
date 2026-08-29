@@ -23,7 +23,10 @@ public class WorkbenchIngredientSlot extends Slot {
 
     @Override
     public boolean mayPlace(@NotNull ItemStack itemStack) {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         RecipeHolder<AbstractWorkbenchRecipe> selectedRecipeHolder = container.menu.getSelectedRecipeHolder();
         if (selectedRecipeHolder == null) {
             return false;

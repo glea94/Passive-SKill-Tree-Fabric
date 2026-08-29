@@ -62,12 +62,18 @@ public class ProgressBar extends Button {
             Objects.requireNonNull(player);
             long exp = ExpHelper.getPlayerExp(player);
             String text = exp + "/" + cost;
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             ScreenHelper.drawCenteredOutlinedText(graphics, text, getX() + this.getWidth() / 2, getTextY(), 0xFCE266);
         } else {
             float experienceProgress = getExperienceProgress();
             String text = (int) (experienceProgress * 100) + "%";
+<<<<<<< Updated upstream
             
+=======
+>>>>>>> Stashed changes
             ScreenHelper.drawCenteredOutlinedText(graphics, text, getX() + this.getWidth() / 2, getTextY(), 0xFCE266);
         }
     }
@@ -78,7 +84,10 @@ public class ProgressBar extends Button {
             currentLevel--;
         }
         int nextLevel = currentLevel + 1;
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         ScreenHelper.drawCenteredOutlinedText(graphics, "" + nextLevel, getX() + this.getWidth() - 17, getTextY(), 0xFCE266);
     }
 

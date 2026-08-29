@@ -9,15 +9,22 @@ import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
+<<<<<<< Updated upstream
 
 public class PlayerSkillsProvider implements EntityComponentInitializer {
     
+=======
+public class PlayerSkillsProvider implements EntityComponentInitializer {
+>>>>>>> Stashed changes
     public static final ComponentKey<IPlayerSkills> KEY = ComponentRegistryV3.INSTANCE.getOrCreate(
             Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "player_skills"), IPlayerSkills.class);
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         registry.registerForPlayers(KEY, player -> new PlayerSkills(), RespawnCopyStrategy.ALWAYS_COPY);
     }
 

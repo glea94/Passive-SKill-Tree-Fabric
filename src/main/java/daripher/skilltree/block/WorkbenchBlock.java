@@ -25,13 +25,19 @@ public class WorkbenchBlock extends Block {
     private static final Component CONTAINER_TITLE = Component.translatable("container.upgrade");
 
     public WorkbenchBlock() {
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         super(Properties.of().setId(ResourceKey.create(Registries.BLOCK, DeferredRegister.currentId()))
                 .mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)
                 .ignitedByLava());
     }
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
     @Override
     protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState blockState, Level level, @NotNull BlockPos blockPos, @NotNull Player player, @NotNull BlockHitResult blockHitResult) {
 
@@ -44,7 +50,10 @@ public class WorkbenchBlock extends Block {
             return InteractionResult.SUCCESS;
         }
     }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     @Nullable
     @Override
     public MenuProvider getMenuProvider(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos) {

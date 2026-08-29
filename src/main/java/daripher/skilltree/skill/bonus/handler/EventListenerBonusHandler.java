@@ -75,8 +75,11 @@ public class EventListenerBonusHandler {
             eventListener.onEvent(player, killedEntity, damageSource, skillBonus);
         });
     }
+<<<<<<< Updated upstream
 
     
+=======
+>>>>>>> Stashed changes
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <T extends SkillEventListener> void triggerEvent(Player player, Class<T> listenerClass, BiConsumer<T, EventListenerBonus<?>> action) {
         List<EventListenerBonus> skillBonuses = SkillBonusProvider.getMergedSkillBonuses(player, EventListenerBonus.class);

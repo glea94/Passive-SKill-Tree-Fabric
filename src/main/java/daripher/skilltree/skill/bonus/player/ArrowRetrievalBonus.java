@@ -129,14 +129,20 @@ public final class ArrowRetrievalBonus implements SkillBonus<ArrowRetrievalBonus
             tag.putFloat("chance", aBonus.chance);
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public ArrowRetrievalBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new ArrowRetrievalBonus(buf.readFloat());
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ArrowRetrievalBonus aBonus)) {

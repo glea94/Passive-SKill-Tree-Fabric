@@ -80,11 +80,15 @@ public class SkillBonusProvider {
     private static <T> List<T> getEquipmentBonuses(Player player, Class<T> type) {
         return PlayerHelper.getAllEquipment(player).map(s -> getItemBonuses(s, type)).flatMap(List::stream).toList();
     }
+<<<<<<< Updated upstream
 
     private static <T> List<T> getItemBonuses(ItemStack stack, Class<T> type) {
 
 
 
+=======
+    private static <T> List<T> getItemBonuses(ItemStack stack, Class<T> type) {
+>>>>>>> Stashed changes
         List<ItemBonus<?>> itemBonuses = ItemBonusHandler.getItemBonuses(stack, EquipmentBonus.class);
         List<T> bonuses = new ArrayList<>();
         for (ItemBonus<?> itemBonus : itemBonuses) {

@@ -72,7 +72,10 @@ public class LearnedSkillsNumberFunction implements FloatFunction<LearnedSkillsN
 
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<FloatFunction<?>> consumer) {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
     }
 
     public static class Serializer implements FloatFunction.Serializer {
@@ -100,14 +103,20 @@ public class LearnedSkillsNumberFunction implements FloatFunction<LearnedSkillsN
             }
             return new CompoundTag();
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             return new LearnedSkillsNumberFunction();
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof LearnedSkillsNumberFunction)) {

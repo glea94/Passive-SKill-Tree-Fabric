@@ -21,11 +21,15 @@ import java.util.Objects;
 
 public class ClientNetworking {
     public static void register() {
+<<<<<<< Updated upstream
         
         ClientPlayNetworking.registerGlobalReceiver(SyncServerDataMessage.TYPE, (message, context) -> {
             
             
             
+=======
+        ClientPlayNetworking.registerGlobalReceiver(SyncServerDataMessage.TYPE, (message, context) -> {
+>>>>>>> Stashed changes
             RegistryFriendlyByteBuf buf = message.getDataBuffer();
             SkillsReloader.loadFromByteBuf(buf);
             SkillTreesReloader.loadFromByteBuf(buf);
@@ -38,8 +42,11 @@ public class ClientNetworking {
         ClientPlayNetworking.registerGlobalReceiver(OpenSkillTreeEditorMessage.TYPE, (message, context) -> {
             handleOpenSkillTreeEditor(context.client(), message);
         });
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         ClientPlayNetworking.registerGlobalReceiver(SyncWorkbenchRecipesMessage.TYPE, (message, context) -> {
             ClientWorkbenchRecipeCache.set(message.recipes);
         });
@@ -67,6 +74,7 @@ public class ClientNetworking {
     }
 
     public static void sendGainSkillPoint() {
+<<<<<<< Updated upstream
         
         ClientPlayNetworking.send(new GainSkillPointMessage());
 
@@ -77,6 +85,13 @@ public class ClientNetworking {
             
             capability.setSkillPoints(capability.getSkillPoints() + 1);
             
+=======
+        ClientPlayNetworking.send(new GainSkillPointMessage());
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.player != null && minecraft.gui.screen() instanceof SkillTreeScreen screen) {
+            IPlayerSkills capability = PlayerSkillsProvider.get(minecraft.player);
+            capability.setSkillPoints(capability.getSkillPoints() + 1);
+>>>>>>> Stashed changes
             screen.updateSkillPoints(capability.getSkillPoints());
             screen.init();
         }

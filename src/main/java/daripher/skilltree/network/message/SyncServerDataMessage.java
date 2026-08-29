@@ -13,8 +13,11 @@ import net.minecraft.resources.Identifier;
 public class SyncServerDataMessage implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<SyncServerDataMessage> TYPE =
             new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "sync_server_data"));
+<<<<<<< Updated upstream
 
     
+=======
+>>>>>>> Stashed changes
     public static final StreamCodec<RegistryFriendlyByteBuf, SyncServerDataMessage> STREAM_CODEC =
             StreamCodec.of(
                     (buf, message) -> message.encode(buf),
@@ -28,10 +31,13 @@ public class SyncServerDataMessage implements CustomPacketPayload {
     }
 
     public static SyncServerDataMessage decode(RegistryFriendlyByteBuf buf) {
+<<<<<<< Updated upstream
         
         
         
         
+=======
+>>>>>>> Stashed changes
         return new SyncServerDataMessage(new RegistryFriendlyByteBuf(buf.readBytes(buf.readableBytes()), buf.registryAccess()));
     }
 

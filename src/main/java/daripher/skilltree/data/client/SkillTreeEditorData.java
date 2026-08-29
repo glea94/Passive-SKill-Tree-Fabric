@@ -94,12 +94,15 @@ public class SkillTreeEditorData {
         }
     }
     private static void generatePackMcmetaFile(File file) {
+<<<<<<< Updated upstream
         
         
         
         
         
         
+=======
+>>>>>>> Stashed changes
         String fileContents = """
                 {
                   "pack": {

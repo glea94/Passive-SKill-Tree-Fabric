@@ -63,23 +63,32 @@ public class SkillTreesReloader extends SimplePreparableReloadListener<Map<Ident
     public static @Nullable Identifier getDefaultSkillTreeId() {
         return getSkillTrees().keySet().stream().findAny().orElse(null);
     }
+<<<<<<< Updated upstream
 
     
     
+=======
+>>>>>>> Stashed changes
     public static java.util.List<Identifier> getOrderedSkillTreeIds() {
         return SKILL_TREES.values().stream()
                 .filter(tree -> !tree.getSkillIds().isEmpty())
                 .map(PassiveSkillTree::getId)
                 .toList();
     }
+<<<<<<< Updated upstream
 
     
+=======
+>>>>>>> Stashed changes
     public static void loadFromByteBuf(RegistryFriendlyByteBuf buf) {
         SKILL_TREES.clear();
         NetworkHelper.readPassiveSkillTrees(buf).forEach(t -> SKILL_TREES.put(t.getId(), t));
     }
+<<<<<<< Updated upstream
 
     
+=======
+>>>>>>> Stashed changes
     @Override
     protected Map<Identifier, JsonElement> prepare(ResourceManager resourceManager, ProfilerFiller profilerFiller) {
         Map<Identifier, JsonElement> map = new HashMap<>();

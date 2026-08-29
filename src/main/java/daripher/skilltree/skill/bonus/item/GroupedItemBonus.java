@@ -17,7 +17,10 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -88,6 +91,7 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
     public int hashCode() {
         return Objects.hash(innerBonuses);
     }
+<<<<<<< Updated upstream
 
 
 
@@ -95,6 +99,8 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
 
 
 
+=======
+>>>>>>> Stashed changes
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<GroupedItemBonus> consumer) {
         GroupedItemBonusEditor.addEditorWidgets(this, editor, consumer);

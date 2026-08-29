@@ -13,11 +13,16 @@ import net.minecraft.world.entity.player.Player;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+<<<<<<< Updated upstream
 
 
 public class DamageConversionBonusHandler {
     private static boolean isProcessingConversion; 
 
+=======
+public class DamageConversionBonusHandler {
+    private static boolean isProcessingConversion; 
+>>>>>>> Stashed changes
     public static void register() {
         PSTEvents.LIVING_HURT.register(EventPriority.LOWEST, DamageConversionBonusHandler::dealConvertedDamage);
     }

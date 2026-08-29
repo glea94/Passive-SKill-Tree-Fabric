@@ -20,8 +20,11 @@ public class SkillRequirementSerializer implements JsonSerializer<SkillRequireme
         } else {
             type = jsonObj.get("type").getAsString();
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         Identifier serializerId = Identifier.parse(type);
         SkillRequirement.Serializer serializer = PSTRegistries.SKILL_REQUIREMENTS.get().getValue(serializerId);
         Objects.requireNonNull(serializer, "Unknown skill requirement: " + serializerId);

@@ -41,7 +41,10 @@ public class PoisonedWeaponClientEvents {
         Style style = TooltipHelper.getSkillBonusStyle(true);
         Component effectNameTooltip = TooltipHelper.getEffectTooltip(mobEffectInstance);
         MutableComponent effectTooltip;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
         if (!mobEffectInstance.getEffect().value().isInstantaneous()) {
             int duration = mobEffectInstance.getDuration();
             Component durationTooltip = getDurationTooltip(duration);

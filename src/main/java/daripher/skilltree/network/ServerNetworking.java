@@ -21,7 +21,10 @@ import java.util.Objects;
 
 public class ServerNetworking {
     public static void register() {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         ServerPlayNetworking.registerGlobalReceiver(LearnSkillMessage.TYPE, (message, context) -> {
             context.server().execute(() -> handleLearnSkill(context.player(), message));
         });
@@ -37,7 +40,14 @@ public class ServerNetworking {
         Objects.requireNonNull(skill);
         if (capability.learnSkill(skill)) {
             skill.learn(player, true);
+<<<<<<< Updated upstream
             
+=======
+            // NOUVEAU : si le nœud appris est un nœud mace_mastery_X et que le joueur a déjà
+            // atteint le seuil de kills correspondant, la teinte et les enchantements de sa
+            // masse sont recalculés immédiatement (sinon ils ne l'étaient qu'au kill suivant).
+            MaceMasteryEvents.onSkillLearned(player, skill.getId());
+>>>>>>> Stashed changes
             PlayerSkillsProvider.KEY.sync(player);
         }
     }
@@ -56,16 +66,23 @@ public class ServerNetworking {
         }
         player.giveExperiencePoints(-cost);
         capability.grantSkillPoints(1);
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         PlayerSkillsProvider.KEY.sync(player);
     }
 
     public static void sendSyncPlayerSkills(ServerPlayer player) {
         ServerPlayNetworking.send(player, new SyncPlayerSkillsMessage(player));
     }
+<<<<<<< Updated upstream
 
     public static void sendSyncServerData(ServerPlayer player) {
         
+=======
+    public static void sendSyncServerData(ServerPlayer player) {
+>>>>>>> Stashed changes
         ServerPlayNetworking.send(player, new SyncServerDataMessage(null));
     }
 

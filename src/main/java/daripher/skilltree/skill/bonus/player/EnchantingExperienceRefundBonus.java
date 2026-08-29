@@ -244,8 +244,11 @@ public final class EnchantingExperienceRefundBonus implements SkillBonus<Enchant
             SerializationHelper.serializeItemPredicate(tag, aBonus.itemStackPredicate);
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public EnchantingExperienceRefundBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -255,8 +258,11 @@ public final class EnchantingExperienceRefundBonus implements SkillBonus<Enchant
             bonus.itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return bonus;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof EnchantingExperienceRefundBonus aBonus)) {

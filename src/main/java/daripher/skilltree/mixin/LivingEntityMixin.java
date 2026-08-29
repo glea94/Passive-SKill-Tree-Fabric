@@ -21,6 +21,7 @@ public abstract class LivingEntityMixin {
     private float skilltree$modifiedHurtAmount;
     @Unique
     private boolean skilltree$hurtAmountModified;
+<<<<<<< Updated upstream
 
     
     @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true, require = 1)
@@ -28,6 +29,11 @@ public abstract class LivingEntityMixin {
         LivingEntity self = (LivingEntity) (Object) this;
 
         
+=======
+    @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true, require = 1)
+    private void skilltree$onHurtServerHead(ServerLevel level, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        LivingEntity self = (LivingEntity) (Object) this;
+>>>>>>> Stashed changes
         LivingAttackPSTEvent attackEvent = new LivingAttackPSTEvent(self, source, amount);
         PSTEvents.LIVING_ATTACK.post(attackEvent);
         if (attackEvent.isCanceled()) {
@@ -36,8 +42,11 @@ public abstract class LivingEntityMixin {
             cir.cancel();
             return;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         LivingHurtPSTEvent hurtEvent = new LivingHurtPSTEvent(self, source, amount);
         PSTEvents.LIVING_HURT.post(hurtEvent);
         if (hurtEvent.isCanceled()) {
@@ -49,8 +58,11 @@ public abstract class LivingEntityMixin {
         skilltree$hurtAmountModified = hurtEvent.getAmount() != amount;
         skilltree$modifiedHurtAmount = hurtEvent.getAmount();
     }
+<<<<<<< Updated upstream
 
     
+=======
+>>>>>>> Stashed changes
     @ModifyVariable(method = "hurtServer", at = @At("HEAD"), argsOnly = true, require = 1)
     private float skilltree$applyModifiedAmount(float amount) {
         return skilltree$hurtAmountModified ? skilltree$modifiedHurtAmount : amount;
@@ -87,7 +99,10 @@ public abstract class LivingEntityMixin {
         if (usedItem.isEmpty()) {
             return;
         }
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         PSTEvents.ITEM_USE_FINISH.post(new daripher.skilltree.event.LivingEntityUseItemFinishPSTEvent(self, usedItem.copy()));
     }
 }

@@ -151,14 +151,20 @@ public final class EquipmentBonus implements ItemBonus<EquipmentBonus> {
             tag.put("skill_bonus", skillBonusTag);
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public ItemBonus<?> deserialize(RegistryFriendlyByteBuf buf) {
             return new EquipmentBonus(NetworkHelper.readSkillBonus(buf));
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemBonus<?> bonus) {
             if (!(bonus instanceof EquipmentBonus aBonus)) {

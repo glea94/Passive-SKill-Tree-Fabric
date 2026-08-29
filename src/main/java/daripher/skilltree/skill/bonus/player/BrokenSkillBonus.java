@@ -57,7 +57,10 @@ public class BrokenSkillBonus implements SkillBonus<BrokenSkillBonus> {
 
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<BrokenSkillBonus> consumer) {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
     }
 
     public static class Serializer implements SkillBonus.Serializer {
@@ -86,15 +89,21 @@ public class BrokenSkillBonus implements SkillBonus<BrokenSkillBonus> {
             tag.putString("error_message", validBonus.errorMessage);
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public BrokenSkillBonus deserialize(RegistryFriendlyByteBuf buf) {
             String errorMessage = buf.readUtf();
             return new BrokenSkillBonus(errorMessage);
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             BrokenSkillBonus validBonus = validateBonus(bonus);

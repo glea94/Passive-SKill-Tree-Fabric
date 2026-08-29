@@ -31,7 +31,10 @@ public class JumpHeightBonusHandler {
         if (multiplier <= 1) {
             return;
         }
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         event.setDistance(event.getDistance() / multiplier);
     }
 }

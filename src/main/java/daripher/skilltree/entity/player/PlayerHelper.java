@@ -40,8 +40,11 @@ public class PlayerHelper {
         }
         return stack;
     }
+<<<<<<< Updated upstream
 
     
+=======
+>>>>>>> Stashed changes
     public static Stream<ItemStack> getCurios(LivingEntity living) {
         if (FabricLoader.getInstance().isModLoaded("trinkets")) {
             return TrinketsCompatibility.INSTANCE.getTrinkets(living);

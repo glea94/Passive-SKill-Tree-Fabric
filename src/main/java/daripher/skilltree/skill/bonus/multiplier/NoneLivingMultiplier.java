@@ -52,14 +52,20 @@ public enum NoneLivingMultiplier implements LivingMultiplier {
             }
             return new CompoundTag();
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public LivingMultiplier deserialize(RegistryFriendlyByteBuf buf) {
             return INSTANCE;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingMultiplier multiplier) {
             if (multiplier != NoneLivingMultiplier.INSTANCE) {

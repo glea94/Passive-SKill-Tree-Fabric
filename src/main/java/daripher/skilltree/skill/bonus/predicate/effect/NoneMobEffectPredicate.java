@@ -61,14 +61,20 @@ public enum NoneMobEffectPredicate implements MobEffectPredicate {
             }
             return new CompoundTag();
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public MobEffectPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return NoneMobEffectPredicate.INSTANCE;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, MobEffectPredicate condition) {
             if (condition != NoneMobEffectPredicate.INSTANCE) {

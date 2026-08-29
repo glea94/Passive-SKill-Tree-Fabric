@@ -36,8 +36,11 @@ public class AmnesiaScrollItem extends Item {
         if (!player.getAbilities().instabuild) {
             scroll.shrink(1);
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         if (!level.isClientSide()) {
             level.playSound(null, player, SoundEvents.BOOK_PAGE_TURN, player.getSoundSource(), 0.9F, 0.7F + player.getRandom().nextFloat() * 0.3F);
             level.playSound(null, player, SoundEvents.ALLAY_AMBIENT_WITHOUT_ITEM, player.getSoundSource(), 0.4F, 0.2F + player.getRandom().nextFloat() * 0.2F);

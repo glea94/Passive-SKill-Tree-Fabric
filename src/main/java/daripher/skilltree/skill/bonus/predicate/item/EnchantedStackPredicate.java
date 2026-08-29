@@ -25,7 +25,10 @@ public final class EnchantedStackPredicate implements ItemStackPredicate {
 
     @Override
     public boolean test(ItemStack stack) {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         return stack.isEnchanted() && itemStackPredicate.test(stack);
     }
 
@@ -115,14 +118,20 @@ public final class EnchantedStackPredicate implements ItemStackPredicate {
             SerializationHelper.serializeItemPredicate(tag, aCondition.itemStackPredicate);
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new EnchantedStackPredicate(NetworkHelper.readItemPredicate(buf));
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof EnchantedStackPredicate aCondition)) {

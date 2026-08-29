@@ -4,7 +4,10 @@ import net.minecraft.world.entity.player.Player;
 
 public class ExpHelper {
     public static long getPlayerExp(Player player) {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         return levelsToXP(player.experienceLevel) + Math.round(player.experienceProgress * player.getXpNeededForNextLevel());
     }
 

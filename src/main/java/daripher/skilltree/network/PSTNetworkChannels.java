@@ -11,13 +11,19 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
 public class PSTNetworkChannels {
     public static void register() {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         PayloadTypeRegistry.clientboundPlay().register(SyncServerDataMessage.TYPE, SyncServerDataMessage.STREAM_CODEC);
         PayloadTypeRegistry.clientboundPlay().register(SyncPlayerSkillsMessage.TYPE, SyncPlayerSkillsMessage.STREAM_CODEC);
         PayloadTypeRegistry.serverboundPlay().register(LearnSkillMessage.TYPE, LearnSkillMessage.STREAM_CODEC);
         PayloadTypeRegistry.serverboundPlay().register(GainSkillPointMessage.TYPE, GainSkillPointMessage.STREAM_CODEC);
         PayloadTypeRegistry.clientboundPlay().register(OpenSkillTreeEditorMessage.TYPE, OpenSkillTreeEditorMessage.STREAM_CODEC);
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         PayloadTypeRegistry.clientboundPlay().register(SyncWorkbenchRecipesMessage.TYPE, SyncWorkbenchRecipesMessage.STREAM_CODEC);
     }
 }

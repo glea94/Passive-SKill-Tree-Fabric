@@ -122,16 +122,22 @@ public class SkillLearnedEventListener implements SkillEventListener {
             SerializationHelper.serializeLivingMultiplier(tag, aListener.playerMultiplier, "player_multiplier");
             return tag;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             SkillLearnedEventListener listener = new SkillLearnedEventListener();
             listener.setPlayerMultiplier(NetworkHelper.readLivingMultiplier(buf));
             return listener;
         }
+<<<<<<< Updated upstream
 
         
+=======
+>>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof SkillLearnedEventListener aListener)) {

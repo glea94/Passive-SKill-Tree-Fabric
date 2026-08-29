@@ -13,10 +13,14 @@ public interface Serializer<T> {
     T deserialize(CompoundTag tag);
 
     CompoundTag serialize(T object);
+<<<<<<< Updated upstream
 
     
     T deserialize(RegistryFriendlyByteBuf buf);
 
     
+=======
+    T deserialize(RegistryFriendlyByteBuf buf);
+>>>>>>> Stashed changes
     void serialize(RegistryFriendlyByteBuf buf, T object);
 }

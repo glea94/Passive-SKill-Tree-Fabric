@@ -48,7 +48,10 @@ public class SkillTreeSelectionScreen extends Screen {
 
     @Override
     public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
         renderBackground(guiGraphics);
         super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         for (var widget : children()) {
