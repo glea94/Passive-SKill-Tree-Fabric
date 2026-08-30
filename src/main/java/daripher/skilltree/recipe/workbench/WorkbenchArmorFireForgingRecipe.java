@@ -39,11 +39,6 @@ import java.util.stream.Stream;
 public class WorkbenchArmorFireForgingRecipe extends AbstractWorkbenchRecipe {
     private static final String FIRE_RESISTANCE_EFFECT_ID = "minecraft:fire_resistance";
     private static final Identifier UNKNOWN_ID = Identifier.fromNamespaceAndPath("skilltree", "unknown_workbench_armor_fire_forging_recipe");
-    // Chaque pièce d'armure ne peut être forgée que si le node blacksmith correspondant
-    // (celui qui porte réellement le champ "recipe_ids" pointant vers cette recette) est appris.
-    // blacksmith_58 et blacksmith_60 sont mutuellement exclusifs dans l'arbre (un seul chemin
-    // possible), mais SEUL blacksmith_60 référence armor_fire_forging via recipe_ids : 58 est
-    // un keystone crit/regen indépendant qui ne débloque pas ce craft.
     private static final Identifier LEGGINGS_SKILL_ID = Identifier.fromNamespaceAndPath("skilltree", "blacksmith_38");
     private static final Identifier BOOTS_SKILL_ID = Identifier.fromNamespaceAndPath("skilltree", "blacksmith_41");
     private static final Identifier HELMET_SKILL_ID = Identifier.fromNamespaceAndPath("skilltree", "blacksmith_44");
