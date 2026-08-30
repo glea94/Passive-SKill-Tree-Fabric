@@ -12,12 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 public class DamageConversionBonusHandler {
-<<<<<<< Updated upstream
-    private static boolean isProcessingConversion;
-
-=======
     private static boolean isProcessingConversion; 
->>>>>>> Stashed changes
     public static void register() {
         PSTEvents.LIVING_HURT.register(EventPriority.LOWEST, DamageConversionBonusHandler::dealConvertedDamage);
     }

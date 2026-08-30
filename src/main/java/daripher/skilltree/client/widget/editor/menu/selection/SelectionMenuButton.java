@@ -15,10 +15,6 @@ public class SelectionMenuButton<T> extends Button {
     protected int selectionListColumns = 10;
     private boolean requiresSearch = true;
     public SelectionMenuButton(SkillTreeEditor editor, int x, int y, int width, String message, Collection<T> values) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         super(x, y, width, 14, Component.literal(message));
         this.selectionList = new TextSelectionList<>(0, 0, 190, 14, values).setRows(8);
         setPressFunc(b -> selectMenu(editor));

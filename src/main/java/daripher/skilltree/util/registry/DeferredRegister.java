@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 public class DeferredRegister<T> {
-    private final Registry<T> backingRegistry;
+    private final Registry<T> backingRegistry; 
     private final String modId;
     private final Map<Identifier, T> byId = new LinkedHashMap<>();
     private final Map<T, Identifier> byValue = new IdentityHashMap<>();
@@ -47,10 +47,6 @@ public class DeferredRegister<T> {
         return RegistryObject.of(id, value);
     }
     public void register(Object eventBus) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     }
     public Collection<RegistryObject<? extends T>> getEntries() {
         return byId.entrySet().stream()

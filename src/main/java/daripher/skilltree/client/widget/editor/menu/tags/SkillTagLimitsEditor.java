@@ -41,11 +41,6 @@ public class SkillTagLimitsEditor extends EditorMenu {
             limitEditor.setNumericFilter(d -> d >= 0).setNumericResponder(v -> {
                 saveFunc.run();
                 if (v == 0) {
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
                     editor.clearWidgets();
                     editor.rebuildWidgets();
                 }

@@ -21,10 +21,6 @@ public class PSTEventListeners {
     public static final RegistryObject<SkillEventListener.Serializer> TICKING = REGISTRY.register("ticking", TickingEventListener.Serializer::new);
     public static final RegistryObject<SkillEventListener.Serializer> CRITICAL_HIT = REGISTRY.register("critical_hit", CriticalHitEventListener.Serializer::new);
     public static List<SkillEventListener> eventsList() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         return PSTRegistries.EVENT_LISTENERS.get().getValues().stream()
                 .map(SkillEventListener.Serializer::createDefaultInstance)
                 .toList();

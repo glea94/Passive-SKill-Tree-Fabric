@@ -18,10 +18,6 @@ public class PSTEnchantmentPredicates {
     public static final RegistryObject<EnchantmentCondition.Serializer> ARMOR = REGISTRY.register("armor", ArmorEnchantmentCondition.Serializer::new);
     public static final RegistryObject<EnchantmentCondition.Serializer> WEAPON = REGISTRY.register("weapon", WeaponEnchantmentCondition.Serializer::new);
     public static List<EnchantmentCondition> conditionsList() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         return PSTRegistries.ENCHANTMENT_CONDITIONS.get().getValues().stream()
                 .map(EnchantmentCondition.Serializer::createDefaultInstance)
                 .toList();

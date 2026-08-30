@@ -34,10 +34,6 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
         return getEnchantLevels(PlayerHelper.getAllEquipment(entity).filter(itemStackPredicate));
     }
     private int getEnchantLevels(Stream<ItemStack> items) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         return items.map(item -> item.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY))
                 .mapToInt(enchantments -> enchantments.entrySet().stream().mapToInt(Object2IntMap.Entry::getIntValue).sum())
                 .reduce(Integer::sum).orElse(0);
@@ -159,21 +155,11 @@ public class EnchantmentLevelsFunction implements FloatFunction<EnchantmentLevel
             SerializationHelper.serializeItemPredicate(tag, aProvider.itemStackPredicate);
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return new EnchantmentLevelsFunction(itemStackPredicate);
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof EnchantmentLevelsFunction aProvider)) {

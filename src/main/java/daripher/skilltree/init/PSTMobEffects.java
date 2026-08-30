@@ -6,10 +6,6 @@ import daripher.skilltree.util.registry.RegistryObject;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 public class PSTMobEffects {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     public static final DeferredRegister<MobEffect> REGISTRY = DeferredRegister.create(BuiltInRegistries.MOB_EFFECT, SkillTreeMod.MOD_ID);
     public static final RegistryObject<MobEffect> LIQUID_FIRE = REGISTRY.register("liquid_fire", LiquidFireEffect::new);
 }

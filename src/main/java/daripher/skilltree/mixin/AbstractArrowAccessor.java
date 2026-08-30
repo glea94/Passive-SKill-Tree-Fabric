@@ -7,19 +7,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(AbstractArrow.class)
 public interface AbstractArrowAccessor {
-<<<<<<< Updated upstream
-
     @Nullable
     @Invoker("getPickupItem")
     ItemStack invokeGetPickupItem();
-
-
-
-=======
-    @Nullable
-    @Invoker("getPickupItem")
-    ItemStack invokeGetPickupItem();
->>>>>>> Stashed changes
     @Accessor("baseDamage")
     double getBaseDamage();
 }

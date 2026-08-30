@@ -122,10 +122,6 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
     }
     private void addEnemyConditionWidgets(SkillTreeEditor editor, Consumer<EffectImmunityBypassBonus> consumer) {
         enemyCondition.addEditorWidgets(editor, c -> {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             setEnemyCondition(c);
             consumer.accept(this.copy());
         });
@@ -173,11 +169,6 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
             SerializationHelper.serializeLivingCondition(compoundTag, validBonus.enemyCondition, "enemy_condition");
             return compoundTag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public EffectImmunityBypassBonus deserialize(RegistryFriendlyByteBuf buf) {
             MobEffectPredicate mobEffectPredicate = NetworkHelper.readMobEffectCondition(buf);
@@ -186,11 +177,6 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
             bonus.enemyCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             EffectImmunityBypassBonus validBonus = validateBonus(bonus);
@@ -206,10 +192,6 @@ public final class EffectImmunityBypassBonus implements SkillBonus<EffectImmunit
         }
         @Override
         public SkillBonus<?> createDefaultInstance() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             return new EffectImmunityBypassBonus(new MobEffectIdPredicate(MobEffects.POISON));
         }
     }

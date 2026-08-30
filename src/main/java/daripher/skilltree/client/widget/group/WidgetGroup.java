@@ -17,10 +17,6 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     protected Runnable rebuildFunc = () -> {
     };
     public WidgetGroup(int x, int y, int width, int height) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         super(x, y, width, height, Component.empty());
     }
     @Override
@@ -138,10 +134,6 @@ public class WidgetGroup<T extends AbstractWidget> extends AbstractWidget implem
     }
     public @Nullable T getWidgetAt(double mouseX, double mouseY) {
         for (T widget : widgets) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             if (!widget.visible) {
                 continue;
             }

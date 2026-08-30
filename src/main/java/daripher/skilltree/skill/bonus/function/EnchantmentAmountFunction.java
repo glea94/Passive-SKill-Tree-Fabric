@@ -154,21 +154,11 @@ public class EnchantmentAmountFunction implements FloatFunction<EnchantmentAmoun
             SerializationHelper.serializeItemPredicate(tag, aProvider.itemStackPredicate);
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return new EnchantmentAmountFunction(itemStackPredicate);
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof EnchantmentAmountFunction aProvider)) {

@@ -75,10 +75,6 @@ public class ItemTagPredicate implements ItemStackPredicate {
         }
         @Override
         public ItemStackPredicate deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             Identifier tagId = Identifier.parse(tag.getString("tag_id").orElse(""));
             return new ItemTagPredicate(tagId);
         }
@@ -91,21 +87,11 @@ public class ItemTagPredicate implements ItemStackPredicate {
             tag.putString("tag_id", aCondition.tagId.toString());
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             Identifier tagId = Identifier.parse(buf.readUtf());
             return new ItemTagPredicate(tagId);
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof ItemTagPredicate aCondition)) {

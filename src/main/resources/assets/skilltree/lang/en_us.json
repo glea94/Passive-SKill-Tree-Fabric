@@ -179,6 +179,7 @@
   "recipe.skilltree.workbench_weapon_poisoning": "Weapon poisoning",
   "recipe.skilltree.workbench_weapon_poisoning.custom_skill_description": "You can apply poisons to weapons using advanced workbench",
   "recipe.skilltree.workbench_armor_fire_forging": "Armor fire forging",
+  "recipe.skilltree.workbench_armor_fire_forging.skill_requirement": "Requires the matching blacksmith skill for each armor piece",
   "recipe.skilltree.workbench_armor_fire_forging.custom_skill_description": "You can forge fire-resistant armor using advanced workbench",
   "skill.limitation": "Limited to: %s",
   "skill.requirements": "Requirements:",

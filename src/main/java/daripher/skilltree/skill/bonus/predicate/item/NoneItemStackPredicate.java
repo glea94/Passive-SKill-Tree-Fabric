@@ -37,20 +37,10 @@ public enum NoneItemStackPredicate implements ItemStackPredicate {
             }
             return new CompoundTag();
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return NoneItemStackPredicate.INSTANCE;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (condition != NoneItemStackPredicate.INSTANCE) {

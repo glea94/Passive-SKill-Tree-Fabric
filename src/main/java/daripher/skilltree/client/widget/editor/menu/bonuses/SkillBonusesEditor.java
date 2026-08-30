@@ -72,19 +72,11 @@ public class SkillBonusesEditor extends EditorMenu {
             }
         });
         editor.saveSelectedSkills();
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         editor.selectMenu(previousMenu);
     }
     private void addSkillBonus(SkillTreeEditor editor, SkillBonus<?> skillBonus) {
         editor.getSelectedSkills().forEach(s -> s.getBonuses().add(skillBonus.copy()));
         editor.saveSelectedSkills();
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         editor.selectMenu(previousMenu);
     }
 }

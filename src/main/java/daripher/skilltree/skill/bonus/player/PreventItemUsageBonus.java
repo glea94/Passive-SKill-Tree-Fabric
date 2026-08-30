@@ -122,20 +122,10 @@ public final class PreventItemUsageBonus implements SkillBonus<PreventItemUsageB
             SerializationHelper.serializeItemPredicate(tag, aBonus.itemStackPredicate);
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public PreventItemUsageBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new PreventItemUsageBonus(NetworkHelper.readItemPredicate(buf));
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof PreventItemUsageBonus aBonus)) {

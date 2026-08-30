@@ -48,20 +48,10 @@ public record MeleeDamageCondition() implements DamageCondition {
             }
             return new CompoundTag();
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public DamageCondition deserialize(RegistryFriendlyByteBuf buf) {
             return new MeleeDamageCondition();
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, DamageCondition condition) {
             if (!(condition instanceof MeleeDamageCondition)) {

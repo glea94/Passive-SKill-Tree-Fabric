@@ -31,10 +31,6 @@ public class DamageAvoidanceBonusHandler {
             avoidanceChance += skillBonus.getChance(damageSource, player, attacker);
         }
         if (player.getRandom().nextFloat() < avoidanceChance) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             event.setCanceled(true);
             EventListenerBonusHandler.triggerEvent(player, EvasionEventListener.class, (eventListener, skillBonus) -> {
                 eventListener.onEvent(player, attacker, skillBonus);

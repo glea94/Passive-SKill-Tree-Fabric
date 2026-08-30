@@ -30,7 +30,6 @@ import java.util.Objects;
 import java.util.stream.Stream;
 public class SkillTreeScreen extends Screen {
     public static final int BACKGROUND_SIZE = 2048;
-    private static final int NAV_ARROW_SIZE = 16;
     private final PassiveSkillTree skillTree;
     private final SkillButtons skillButtons;
     private final SkillTreeWidgets skillTreeWidgets;
@@ -38,6 +37,7 @@ public class SkillTreeScreen extends Screen {
     private int prevMouseX;
     private int prevMouseY;
     private boolean statsUpdated;
+    private static final int NAV_ARROW_SIZE = 16;
     private @Nullable Identifier prevTreeId;
     private @Nullable Identifier nextTreeId;
     private @Nullable NavigationArrowButton prevButton;
@@ -45,22 +45,12 @@ public class SkillTreeScreen extends Screen {
     public SkillTreeScreen(Identifier skillTreeId) {
         super(Component.empty());
         this.skillTree = SkillTreesReloader.getSkillTreeById(skillTreeId);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         this.skillButtons = new SkillButtons(skillTree, () -> renderAnimation);
         this.skillTreeWidgets = new SkillTreeWidgets(getLocalPlayer(), skillButtons, skillTree);
         this.skillButtons.setRebuildFunc(this::rebuildWidgets);
         this.skillTreeWidgets.setRebuildFunc(this::rebuildWidgets);
         updateNavigationTreeIds();
     }
-<<<<<<< Updated upstream
-
-
-
-=======
->>>>>>> Stashed changes
     private void updateNavigationTreeIds() {
         List<Identifier> orderedIds = SkillTreesReloader.getOrderedSkillTreeIds();
         int index = orderedIds.indexOf(skillTree.getId());
@@ -75,12 +65,6 @@ public class SkillTreeScreen extends Screen {
     private void switchToTree(Identifier skillTreeId) {
         Objects.requireNonNull(this.minecraft).setScreen(new SkillTreeScreen(skillTreeId));
     }
-<<<<<<< Updated upstream
-
-
-
-=======
->>>>>>> Stashed changes
     private void addNavigationArrows() {
         prevButton = null;
         nextButton = null;
@@ -141,18 +125,10 @@ public class SkillTreeScreen extends Screen {
     @Override
     public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         renderAnimation += partialTick;
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         renderBackground(graphics);
         skillButtons.extractRenderState(graphics, mouseX, mouseY, partialTick);
         renderOverlay(graphics);
         skillTreeWidgets.extractRenderState(graphics, mouseX, mouseY, partialTick);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         if (prevButton != null) {
             prevButton.extractRenderState(graphics, mouseX, mouseY, partialTick);
         }
@@ -173,10 +149,6 @@ public class SkillTreeScreen extends Screen {
         if (skillButtons.mouseClicked(mouseButtonEvent, doubleClick)) {
             return true;
         }
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         if (prevButton != null && prevButton.isMouseOver(mouseButtonEvent.x(), mouseButtonEvent.y())) {
             return prevButton.mouseClicked(mouseButtonEvent, doubleClick);
         }
@@ -185,11 +157,6 @@ public class SkillTreeScreen extends Screen {
         }
         return false;
     }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
     @Override
     public void tick() {
         if (!statsUpdated) {
@@ -222,22 +189,10 @@ public class SkillTreeScreen extends Screen {
         return skillTreeWidgets.charTyped(characterEvent);
     }
     private void renderOverlay(GuiGraphicsExtractor graphics) {
-<<<<<<< Updated upstream
-
-        Identifier texture = Identifier.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_overlay.png");
-
-        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, width, height, width, height);
-    }
-
-
-    public void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
-
-=======
         Identifier texture = Identifier.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_overlay.png");
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, width, height, width, height);
     }
     public void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
->>>>>>> Stashed changes
         Identifier texture = Identifier.fromNamespaceAndPath("skilltree", "textures/screen/skill_tree_background.png");
         Matrix3x2fStack poseStack = graphics.pose();
         poseStack.pushMatrix();

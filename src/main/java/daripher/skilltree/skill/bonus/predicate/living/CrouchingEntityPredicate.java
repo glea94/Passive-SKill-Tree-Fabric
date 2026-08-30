@@ -40,10 +40,6 @@ public final class CrouchingEntityPredicate implements LivingEntityPredicate {
     }
     public void setReverseLogic(boolean reverseLogic, Consumer<LivingEntityPredicate> consumer) {
         this.reverseLogic = reverseLogic;
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         consumer.accept(new CrouchingEntityPredicate(this.reverseLogic));
     }
     @Override
@@ -84,21 +80,11 @@ public final class CrouchingEntityPredicate implements LivingEntityPredicate {
             compoundTag.putBoolean("reverse_logic", validPredicate.reverseLogic);
             return compoundTag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             boolean reverseLogic = buf.readBoolean();
             return new CrouchingEntityPredicate(reverseLogic);
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             CrouchingEntityPredicate validPredicate = validatePredicate(predicate);

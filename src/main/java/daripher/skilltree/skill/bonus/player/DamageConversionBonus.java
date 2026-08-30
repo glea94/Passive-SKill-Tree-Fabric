@@ -293,20 +293,11 @@ public final class DamageConversionBonus implements SkillBonus<DamageConversionB
             SerializationHelper.serializeDamageCondition(tag, aBonus.originalDamageCondition, "original_damage");
             SerializationHelper.serializeDamageCondition(tag, aBonus.resultDamageCondition, "result_damage");
             SerializationHelper.serializeLivingMultiplier(tag, aBonus.playerMultiplier, "player_multiplier");
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             SerializationHelper.serializeLivingMultiplier(tag, aBonus.targetMultiplier, "enemy_multiplier");
             SerializationHelper.serializeLivingCondition(tag, aBonus.playerCondition, "player_condition");
             SerializationHelper.serializeLivingCondition(tag, aBonus.targetCondition, "target_condition");
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public DamageConversionBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -319,11 +310,6 @@ public final class DamageConversionBonus implements SkillBonus<DamageConversionB
             bonus.targetCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof DamageConversionBonus aBonus)) {

@@ -131,20 +131,10 @@ public final class PotionStackPredicate implements ItemStackPredicate {
             SerializationHelper.serializePotionType(tag, aCondition.type);
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new PotionStackPredicate(NetworkHelper.readEnum(buf, Type.class));
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof PotionStackPredicate aCondition)) {

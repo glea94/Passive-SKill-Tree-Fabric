@@ -128,21 +128,11 @@ public class RecipeUnlockBonus implements SkillBonus<RecipeUnlockBonus> {
             tag.putString("recipe_id", aBonus.recipeId.toString());
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public RecipeUnlockBonus deserialize(RegistryFriendlyByteBuf buf) {
             Identifier recipeId = Identifier.parse(buf.readUtf());
             return new RecipeUnlockBonus(recipeId);
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof RecipeUnlockBonus aBonus)) {

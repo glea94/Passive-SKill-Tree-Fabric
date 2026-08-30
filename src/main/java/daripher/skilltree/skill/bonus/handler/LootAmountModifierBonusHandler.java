@@ -24,20 +24,9 @@ public class LootAmountModifierBonusHandler {
             if (!lootType.canAffect(lootContext, lootTableId)) {
                 continue;
             }
-<<<<<<< Updated upstream
-
             player = (Player) lootContext.getParameter(lootType.getPlayerLootContextParam());
             if (lootContext.hasParameter(LootContextParams.TOOL)) {
                 ItemInstance tool = lootContext.getParameter(LootContextParams.TOOL);
-
-
-
-
-=======
-            player = (Player) lootContext.getParameter(lootType.getPlayerLootContextParam());
-            if (lootContext.hasParameter(LootContextParams.TOOL)) {
-                ItemInstance tool = lootContext.getParameter(LootContextParams.TOOL);
->>>>>>> Stashed changes
                 int silkTouchLevel = tool.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY).getLevel(
                         player.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.SILK_TOUCH)
                 );

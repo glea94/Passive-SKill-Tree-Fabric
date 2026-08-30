@@ -14,10 +14,6 @@ import daripher.skilltree.skill.requirement.SkillRequirement;
 import daripher.skilltree.util.registry.DeferredRegister;
 import java.util.function.Supplier;
 public class PSTRegistries {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     public static final Supplier<DeferredRegister<SkillBonus.Serializer>> SKILL_BONUSES = () -> PSTSkillBonuses.REGISTRY;
     public static final Supplier<DeferredRegister<LivingMultiplier.Serializer>> LIVING_MULTIPLIERS = () -> PSTLivingMultipliers.REGISTRY;
     public static final Supplier<DeferredRegister<LivingEntityPredicate.Serializer>> LIVING_CONDITIONS = () -> PSTLivingEntityPredicates.REGISTRY;

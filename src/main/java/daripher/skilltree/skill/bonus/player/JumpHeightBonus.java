@@ -156,20 +156,10 @@ public final class JumpHeightBonus implements SkillBonus<JumpHeightBonus> {
             tag.putFloat("multiplier", aBonus.multiplier);
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public JumpHeightBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new JumpHeightBonus(NetworkHelper.readLivingCondition(buf), buf.readFloat());
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof JumpHeightBonus aBonus)) {

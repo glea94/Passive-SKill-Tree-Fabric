@@ -161,10 +161,6 @@ public class FoodLevelFunction implements FloatFunction<FoodLevelFunction> {
         }
         @Override
         public FloatFunction<?> deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             boolean percentage = tag.getBooleanOr("percentage", false);
             boolean missing = tag.getBooleanOr("missing", false);
             return new FoodLevelFunction(percentage, missing);
@@ -179,22 +175,12 @@ public class FoodLevelFunction implements FloatFunction<FoodLevelFunction> {
             tag.putBoolean("missing", aProvider.missing);
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             boolean percentage = buf.readBoolean();
             boolean missing = buf.readBoolean();
             return new FoodLevelFunction(percentage, missing);
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof FoodLevelFunction aProvider)) {

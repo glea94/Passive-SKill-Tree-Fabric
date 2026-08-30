@@ -19,10 +19,6 @@ public class PSTItemPredicates {
     public static final RegistryObject<ItemStackPredicate.Serializer> TAG = REGISTRY.register("tag", ItemTagPredicate.Serializer::new);
     public static final RegistryObject<ItemStackPredicate.Serializer> EQUIPMENT_TYPE = REGISTRY.register("equipment_type", EquipmentPredicate.Serializer::new);
     public static List<ItemStackPredicate> conditionsList() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         return PSTRegistries.ITEM_CONDITIONS.get().getValues().stream()
                 .map(ItemStackPredicate.Serializer::createDefaultInstance)
                 .toList();

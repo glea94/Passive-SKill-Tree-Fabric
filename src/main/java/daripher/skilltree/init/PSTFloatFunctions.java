@@ -21,10 +21,6 @@ public class PSTFloatFunctions {
     public static final RegistryObject<FloatFunction.Serializer> LEARNED_SKILLS_AMOUNT = REGISTRY.register("learned_skills_amount", LearnedSkillsNumberFunction.Serializer::new);
     @SuppressWarnings("rawtypes")
     public static List<FloatFunction> providerList() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         return PSTRegistries.FLOAT_FUNCTIONS.get().getValues().stream()
                 .map(FloatFunction.Serializer::createDefaultInstance)
                 .map(FloatFunction.class::cast)

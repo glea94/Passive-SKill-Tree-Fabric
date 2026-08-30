@@ -181,11 +181,6 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
             SerializationHelper.serializeEventListener(tag, aBonus.eventListener);
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public GrantExperienceBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -194,11 +189,6 @@ public final class GrantExperienceBonus implements EventListenerBonus<GrantExper
             bonus.eventListener = NetworkHelper.readEventListener(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof GrantExperienceBonus aBonus)) {

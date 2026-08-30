@@ -192,11 +192,6 @@ public class TickingEventListener implements SkillEventListener {
             tag.putInt("cooldown", aListener.cooldown);
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             TickingEventListener listener = new TickingEventListener();
@@ -205,11 +200,6 @@ public class TickingEventListener implements SkillEventListener {
             listener.setCooldown(buf.readInt());
             return listener;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof TickingEventListener aListener)) {

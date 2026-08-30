@@ -129,10 +129,6 @@ public class ServerConfig {
             }
             return skill_points_costs.get(level);
         }
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         int totalPoints = max_skill_points <= 0 ? DEFAULT_MAX_SKILLS : max_skill_points;
         return first_skill_cost + (last_skill_cost - first_skill_cost) * level / totalPoints;
     }

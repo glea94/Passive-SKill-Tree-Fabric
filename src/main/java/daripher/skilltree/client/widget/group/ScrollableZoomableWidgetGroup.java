@@ -13,10 +13,6 @@ public class ScrollableZoomableWidgetGroup<T extends AbstractWidget> extends Wid
     protected int maxScrollY;
     private float zoom = 1F;
     public ScrollableZoomableWidgetGroup(int pX, int pY, int pWidth, int pHeight) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         super(pX, pY, pWidth, pHeight);
     }
     @Override

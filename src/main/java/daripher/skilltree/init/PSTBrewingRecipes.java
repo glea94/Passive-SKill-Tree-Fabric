@@ -10,19 +10,11 @@ import net.minecraft.world.item.crafting.Ingredient;
 public class PSTBrewingRecipes {
     private static boolean itemRecipesRegistered = false;
     public static void addRecipes() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         FabricPotionBrewingBuilder.BUILD.register(builder -> {
             builder.registerPotionRecipe(Potions.FIRE_RESISTANCE, Ingredient.of(Items.FERMENTED_SPIDER_EYE), wrapPotion(PSTPotions.LIQUID_FIRE_1.get()));
             builder.registerPotionRecipe(wrapPotion(PSTPotions.LIQUID_FIRE_1.get()), Ingredient.of(Items.GLOWSTONE_DUST), wrapPotion(PSTPotions.LIQUID_FIRE_2.get()));
             if (!itemRecipesRegistered) {
                 itemRecipesRegistered = true;
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
                 builder.registerItemRecipe((Item) Items.POTION, Ingredient.of(Items.GUNPOWDER), (Item) Items.SPLASH_POTION);
                 builder.registerItemRecipe((Item) Items.SPLASH_POTION, Ingredient.of(Items.DRAGON_BREATH), (Item) Items.LINGERING_POTION);
             }

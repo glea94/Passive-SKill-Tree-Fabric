@@ -17,11 +17,6 @@ public class TextSelectionList<T> extends SelectionList<T> {
         String elementName = getElementName(element);
         String selectedElementName = getElementName(getSelectedElement());
         int textColor = ARGB.opaque(elementName.equals(selectedElementName) ? 0x55ff55 : 0xe0e0e0);
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         elementName = TooltipHelper.getTrimmedString(elementName, this.getWidth() - 10);
         Font font = Minecraft.getInstance().font;
         String lowerCase = elementName.toLowerCase(Locale.ROOT);

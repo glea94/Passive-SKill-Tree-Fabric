@@ -14,11 +14,6 @@ public class ScrollableComponentList extends AbstractWidget {
     private int maxLines;
     private int scroll;
     public ScrollableComponentList(int y, int maxHeight) {
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         super(0, y, 0, 0, Component.empty());
         this.maxHeight = maxHeight;
     }
@@ -32,10 +27,6 @@ public class ScrollableComponentList extends AbstractWidget {
         renderScrollBar(graphics);
     }
     private void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         graphics.fill(getX(), getY(), getX() + this.getWidth(), getY() + this.getHeight(), 0xDD000000);
     }
     private void renderText(@NotNull GuiGraphicsExtractor graphics) {
@@ -45,11 +36,6 @@ public class ScrollableComponentList extends AbstractWidget {
             Component component = components.get(i);
             int x = getX() + 5;
             int y = getY() + 5 + (i - scroll) * (font.lineHeight + 3);
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
             graphics.text(font, component, x, y, 0xFF7B7BE5);
         }
     }
@@ -68,10 +54,6 @@ public class ScrollableComponentList extends AbstractWidget {
     }
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         int maxScroll = components.size() - maxLines;
         if (scrollY < 0 && scroll < maxScroll) {
             scroll++;
@@ -93,10 +75,6 @@ public class ScrollableComponentList extends AbstractWidget {
             }
         }
         calculatedWidth += 14;
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         this.setWidth(calculatedWidth);
         int calculatedHeight = components.size() * (font.lineHeight + 3) + 10;
         while (calculatedHeight > maxHeight) {

@@ -41,10 +41,6 @@ public final class LethalPoisonBonus implements SkillBonus<LethalPoisonBonus> {
     }
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<LethalPoisonBonus> consumer) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     }
     public static class Serializer implements SkillBonus.Serializer {
         @Override
@@ -68,20 +64,10 @@ public final class LethalPoisonBonus implements SkillBonus<LethalPoisonBonus> {
             }
             return new CompoundTag();
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public LethalPoisonBonus deserialize(RegistryFriendlyByteBuf buf) {
             return new LethalPoisonBonus();
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof LethalPoisonBonus)) {

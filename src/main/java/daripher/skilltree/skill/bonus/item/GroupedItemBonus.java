@@ -3,6 +3,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import daripher.skilltree.client.widget.editor.SkillTreeEditor;
+import daripher.skilltree.client.widget.editor.menu.bonuses.GroupedItemBonusEditor;
 import daripher.skilltree.init.PSTItemBonuses;
 import daripher.skilltree.init.PSTRegistries;
 import daripher.skilltree.network.NetworkHelper;
@@ -15,11 +16,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-<<<<<<< Updated upstream
-
-import java.lang.reflect.Method;
-=======
->>>>>>> Stashed changes
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -80,31 +76,9 @@ public final class GroupedItemBonus implements ItemBonus<GroupedItemBonus> {
     public int hashCode() {
         return Objects.hash(innerBonuses);
     }
-<<<<<<< Updated upstream
-
-
-
-
-
-
-
-
-
-
-
-=======
->>>>>>> Stashed changes
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<GroupedItemBonus> consumer) {
-        try {
-            Class<?> editorClass = Class.forName(
-                    "daripher.skilltree.client.widget.editor.menu.bonuses.GroupedItemBonusEditor");
-            Method method = editorClass.getMethod(
-                    "addEditorWidgets", GroupedItemBonus.class, SkillTreeEditor.class, Consumer.class);
-            method.invoke(null, this, editor, consumer);
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException("Failed to open GroupedItemBonus editor widgets", e);
-        }
+        GroupedItemBonusEditor.addEditorWidgets(this, editor, consumer);
     }
     public List<? extends ItemBonus<?>> getInnerBonuses() {
         return innerBonuses;

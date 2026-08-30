@@ -8,14 +8,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 public class PSTPotions {
-<<<<<<< Updated upstream
-
     public static final DeferredRegister<Potion> REGISTRY = DeferredRegister.create(BuiltInRegistries.POTION, SkillTreeMod.MOD_ID);
-
-
-=======
-    public static final DeferredRegister<Potion> REGISTRY = DeferredRegister.create(BuiltInRegistries.POTION, SkillTreeMod.MOD_ID);
->>>>>>> Stashed changes
     public static final RegistryObject<Potion> LIQUID_FIRE_1 = REGISTRY.register("liquid_fire_1",
             () -> new Potion("liquid_fire_1", new MobEffectInstance(wrapEffect(PSTMobEffects.LIQUID_FIRE.get()))));
     public static final RegistryObject<Potion> LIQUID_FIRE_2 = REGISTRY.register("liquid_fire_2",

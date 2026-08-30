@@ -15,10 +15,6 @@ public class SkillDragger extends AbstractWidget {
     private double totalDragX;
     private double totalDragY;
     public SkillDragger(SkillTreeEditor editor) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         super(0, 0, 0, 0, Component.empty());
         this.editor = editor;
     }

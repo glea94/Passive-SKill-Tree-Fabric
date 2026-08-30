@@ -41,10 +41,6 @@ public class MainEditorMenu extends EditorMenu {
             SkillTreeEditorData.saveEditorSkillTree(skillTree);
         });
         selectedSkills.clear();
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         editor.clearWidgets();
         editor.rebuildWidgets();
     }

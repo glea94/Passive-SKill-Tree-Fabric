@@ -37,10 +37,6 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
     @Override
     public void applyEffect(LivingEntity target, @Nullable LivingEntity source) {
         if (target.getRandom().nextFloat() < chance) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             target.igniteForSeconds(duration);
         }
     }
@@ -76,10 +72,6 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
     }
     @Override
     public MutableComponent getSimpleTooltip() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         String durationDescription = StringUtil.formatTickDuration(duration * 20, 20.0F);
         String targetDescription = eventListener.getTarget().name().toLowerCase(Locale.ROOT);
         String bonusDescription = getDescriptionId() + "." + targetDescription;
@@ -181,11 +173,6 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
             SerializationHelper.serializeEventListener(tag, aBonus.eventListener);
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public InflictIgniteBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -194,11 +181,6 @@ public final class InflictIgniteBonus implements EventListenerBonus<InflictIgnit
             bonus.eventListener = NetworkHelper.readEventListener(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof InflictIgniteBonus aBonus)) {

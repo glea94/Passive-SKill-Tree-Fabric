@@ -9,21 +9,9 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 public class PSTLootModifiers {
-<<<<<<< Updated upstream
-
-
-
-=======
->>>>>>> Stashed changes
     private static final ResourceKey<LootTable> ENDER_DRAGON = ResourceKey.create(Registries.LOOT_TABLE, Identifier.withDefaultNamespace("entities/ender_dragon"));
     public static void register() {
-<<<<<<< Updated upstream
-
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-
-=======
-        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
->>>>>>> Stashed changes
             if (source.isBuiltin() && ENDER_DRAGON.equals(key) && ServerConfig.dragon_drops_amnesia_scroll) {
                 LootPool.Builder poolBuilder = LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(1.0F))

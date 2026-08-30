@@ -37,20 +37,10 @@ public enum NoneEnchantmentCondition implements EnchantmentCondition {
             }
             return new CompoundTag();
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public EnchantmentCondition deserialize(RegistryFriendlyByteBuf buf) {
             return NoneEnchantmentCondition.INSTANCE;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, EnchantmentCondition condition) {
             if (condition != NoneEnchantmentCondition.INSTANCE) {

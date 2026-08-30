@@ -168,11 +168,6 @@ public class ItemUseEventListener implements SkillEventListener {
             SerializationHelper.serializeLivingMultiplier(tag, aListener.playerMultiplier, "player_multiplier");
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public SkillEventListener deserialize(RegistryFriendlyByteBuf buf) {
             ItemStackPredicate itemStackPredicate = NetworkHelper.readItemPredicate(buf);
@@ -181,11 +176,6 @@ public class ItemUseEventListener implements SkillEventListener {
             listener.setPlayerMultiplier(NetworkHelper.readLivingMultiplier(buf));
             return listener;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillEventListener listener) {
             if (!(listener instanceof ItemUseEventListener aListener)) {

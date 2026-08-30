@@ -81,11 +81,6 @@ public class SkillDescriptionEditor extends EditorMenu {
             editor.getSkillButton(skill.getId()).addSkillBonusTooltip(description);
             skill.setDescription(description);
         });
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         editor.clearWidgets();
         editor.rebuildWidgets();
     }

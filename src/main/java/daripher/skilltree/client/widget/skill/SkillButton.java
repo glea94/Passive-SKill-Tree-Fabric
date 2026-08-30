@@ -39,19 +39,11 @@ public class SkillButton extends Button {
     public boolean selected;
     public boolean hasBrokenBonuses;
     public SkillButton(Supplier<Float> animationFunc, float x, float y, PassiveSkill skill) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         super((int) x, (int) y, skill.getSkillSize(), skill.getSkillSize(), Component.empty(), b -> {}, DEFAULT_NARRATION);
         this.x = x;
         this.y = y;
         this.skill = skill;
         this.animationFunction = animationFunc;
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         this.active = false;
         this.hasBrokenBonuses = skill.getBonuses().stream().anyMatch(bonus -> bonus instanceof BrokenSkillBonus);
     }
@@ -149,10 +141,6 @@ public class SkillButton extends Button {
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0F, 0F, currentWidth, currentHeight, currentWidth, currentHeight, currentWidth * 3, currentHeight, color);
     }
     public void setButtonSize(int size) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         this.setWidth(size);
         this.setHeight(size);
     }
@@ -194,14 +182,6 @@ public class SkillButton extends Button {
         addInfoTooltip(tooltip);
     }
     private void addInfoTooltip(List<MutableComponent> tooltip) {
-<<<<<<< Updated upstream
-
-
-
-
-
-=======
->>>>>>> Stashed changes
         boolean altDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_LEFT_ALT)
                 || InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), GLFW.GLFW_KEY_RIGHT_ALT);
         if (!altDown) {
@@ -269,10 +249,6 @@ public class SkillButton extends Button {
         canLearn = true;
     }
     public void setActive() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         this.active = true;
     }
     private String getSkillId() {

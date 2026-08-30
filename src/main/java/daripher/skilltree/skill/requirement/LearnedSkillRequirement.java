@@ -93,10 +93,6 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
         }
         @Override
         public SkillRequirement<?> deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             Identifier id = Identifier.parse(tag.getString("skill_id").orElse(""));
             return new LearnedSkillRequirement(id);
         }
@@ -108,21 +104,11 @@ public class LearnedSkillRequirement implements SkillRequirement<LearnedSkillReq
             }
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public SkillRequirement<?> deserialize(RegistryFriendlyByteBuf buf) {
             Identifier id = Identifier.parse(buf.readUtf());
             return new LearnedSkillRequirement(id);
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillRequirement<?> requirement) {
             if (requirement instanceof LearnedSkillRequirement aRequirement) {

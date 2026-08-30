@@ -9,10 +9,6 @@ import net.minecraft.world.item.ItemStack;
 public record FoodStackPredicate() implements ItemStackPredicate {
     @Override
     public boolean test(ItemStack stack) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         return stack.has(DataComponents.FOOD);
     }
     @Override
@@ -50,20 +46,10 @@ public record FoodStackPredicate() implements ItemStackPredicate {
             }
             return new CompoundTag();
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public ItemStackPredicate deserialize(RegistryFriendlyByteBuf buf) {
             return new FoodStackPredicate();
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, ItemStackPredicate condition) {
             if (!(condition instanceof FoodStackPredicate)) {

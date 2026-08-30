@@ -15,12 +15,6 @@ public class SkillBonusEditor extends EditorMenu {
     @Override
     public void init() {
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
-<<<<<<< Updated upstream
-
-
-
-=======
->>>>>>> Stashed changes
         editor.addConfirmationButton(110, 0, 90, 14, "Remove", "Confirm").setPressFunc(button -> {
             changesListener.accept(null);
             editor.selectMenu(previousMenu);

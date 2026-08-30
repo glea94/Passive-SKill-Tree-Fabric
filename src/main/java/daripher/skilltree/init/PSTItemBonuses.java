@@ -16,10 +16,6 @@ public class PSTItemBonuses {
     public static final RegistryObject<ItemBonus.Serializer> ITEM_BONUS_LIST = REGISTRY.register("item_bonus_list", GroupedItemBonus.Serializer::new);
     @SuppressWarnings("rawtypes")
     public static List<ItemBonus> bonusList() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         return PSTRegistries.ITEM_BONUSES.get().getValues().stream()
                 .map(ItemBonus.Serializer::createDefaultInstance)
                 .map(ItemBonus.class::cast)

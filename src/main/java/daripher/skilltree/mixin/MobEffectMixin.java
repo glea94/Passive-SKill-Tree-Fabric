@@ -21,24 +21,9 @@ public abstract class MobEffectMixin {
             cir.setReturnValue(false);
         }
     }
-<<<<<<< Updated upstream
-
-
-    @Inject(method = "addEffect(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z", at = @At("RETURN"), require = 1)
-=======
     @Inject(method = "addEffect(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z", at = @At("HEAD"), require = 1)
->>>>>>> Stashed changes
     private void skilltree$onAddEffect(MobEffectInstance effectInstance, Entity source, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity self = (LivingEntity) (Object) this;
-<<<<<<< Updated upstream
-
-        MobEffectInstance activeInstance = self.getEffect(effectInstance.getEffect());
-        if (activeInstance == null) {
-            return;
-        }
-        PSTEvents.MOB_EFFECT_ADDED.post(new MobEffectAddedPSTEvent(self, activeInstance, source));
-=======
         PSTEvents.MOB_EFFECT_ADDED.post(new MobEffectAddedPSTEvent(self, effectInstance, source));
->>>>>>> Stashed changes
     }
 }

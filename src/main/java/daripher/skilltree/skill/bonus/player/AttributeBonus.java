@@ -64,11 +64,6 @@ public final class AttributeBonus implements SkillBonus<AttributeBonus>, Ticking
     }
     @Override
     public void tick(ServerPlayer player) {
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         if (playerCondition != NoneLivingEntityPredicate.INSTANCE) {
             if (!playerCondition.test(player)) {
                 onSkillRemoved(player);
@@ -101,10 +96,6 @@ public final class AttributeBonus implements SkillBonus<AttributeBonus>, Ticking
         applyAttributeModifier(instance, dynamicModifier, player);
     }
     private void applyAttributeModifier(AttributeInstance instance, AttributeModifier modifier, Player player) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         float currentHealth = player.getHealth();
         float maxHealthBefore = player.getMaxHealth();
         float healthPercentage = (currentHealth <= 0 || maxHealthBefore <= 0) ? 1.0f : (currentHealth / maxHealthBefore);
@@ -204,10 +195,6 @@ public final class AttributeBonus implements SkillBonus<AttributeBonus>, Ticking
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<AttributeBonus> consumer) {
         editor.addLabel(0, 0, "Attribute", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         editor.addSelectionMenu(0, 0, 200, attribute.value()).setResponder(holder -> selectAttribute(consumer, BuiltInRegistries.ATTRIBUTE.wrapAsHolder((Attribute) holder)));
         editor.increaseHeight(19);
         editor.addLabel(110, 0, "Amount", ChatFormatting.GOLD);
@@ -326,11 +313,6 @@ public final class AttributeBonus implements SkillBonus<AttributeBonus>, Ticking
             SerializationHelper.serializeLivingCondition(tag, aBonus.playerCondition, "player_condition");
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public AttributeBonus deserialize(RegistryFriendlyByteBuf buf) {
             Holder<Attribute> attribute = BuiltInRegistries.ATTRIBUTE.wrapAsHolder(NetworkHelper.readAttribute(buf));
@@ -340,11 +322,6 @@ public final class AttributeBonus implements SkillBonus<AttributeBonus>, Ticking
             bonus.playerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof AttributeBonus aBonus)) {
@@ -357,10 +334,6 @@ public final class AttributeBonus implements SkillBonus<AttributeBonus>, Ticking
         }
         @Override
         public SkillBonus<?> createDefaultInstance() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             return new AttributeBonus(
                     Attributes.ARMOR,
                     new AttributeModifier(Identifier.parse("skilltree:default_bonus"), 1, AttributeModifier.Operation.ADD_VALUE)

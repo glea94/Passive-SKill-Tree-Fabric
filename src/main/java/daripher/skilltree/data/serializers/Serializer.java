@@ -8,14 +8,6 @@ public interface Serializer<T> {
     void serialize(JsonObject json, T object);
     T deserialize(CompoundTag tag);
     CompoundTag serialize(T object);
-<<<<<<< Updated upstream
-
-
     T deserialize(RegistryFriendlyByteBuf buf);
-
-
-=======
-    T deserialize(RegistryFriendlyByteBuf buf);
->>>>>>> Stashed changes
     void serialize(RegistryFriendlyByteBuf buf, T object);
 }

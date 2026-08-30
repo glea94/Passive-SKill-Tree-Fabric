@@ -111,7 +111,6 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchMenu> {
     public void extractRenderState(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         this.extractContents(guiGraphics, mouseX, mouseY, partialTicks);
         super.extractCarriedItem(guiGraphics, mouseX, mouseY);
-        super.extractSnapbackItem(guiGraphics);
         renderGhostRecipe(guiGraphics);
         this.extractTooltip(guiGraphics, mouseX, mouseY);
         tickCount += partialTicks;

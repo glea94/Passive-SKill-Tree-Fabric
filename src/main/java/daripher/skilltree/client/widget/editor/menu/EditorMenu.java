@@ -7,10 +7,6 @@ public abstract class EditorMenu extends WidgetGroup<AbstractWidget> {
     protected final SkillTreeEditor editor;
     public final @Nullable EditorMenu previousMenu;
     public EditorMenu(SkillTreeEditor editor, @Nullable EditorMenu previousMenu) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         super(0, 0, 0, 0);
         this.setX(0);
         this.setY(0);

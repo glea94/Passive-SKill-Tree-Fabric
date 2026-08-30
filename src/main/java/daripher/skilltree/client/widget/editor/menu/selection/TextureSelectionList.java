@@ -17,11 +17,6 @@ public class TextureSelectionList extends SelectionList<Identifier> {
         Identifier texture = getDisplayedElements().get(elementIndex);
         int textureX = x + (this.elementWidth - textureWidth) / 2;
         int textureY = y + (this.elementHeight - textureHeight) / 2;
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, textureX, textureY, 0F, 0F, textureWidth, textureHeight, textureWidth, textureHeight);
     }
     public TextureSelectionList setElementTextureSize(int width, int height) {

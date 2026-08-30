@@ -57,19 +57,8 @@ public class ArrowRetrievalChanceBonusHandler {
         }
         LivingEntity target = event.getEntity();
         CompoundTag targetPersistentData = PersistentDataProvider.get(target);
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         ListTag stuckArrowsTag = targetPersistentData.getList(STUCK_ARROWS_TAG_NAME).orElse(new ListTag());
         HolderLookup.Provider registries = player.level().registryAccess();
-<<<<<<< Updated upstream
-
-
-
-=======
->>>>>>> Stashed changes
         RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
         Tag arrowTag = ItemStack.CODEC.encodeStart(ops, arrowStack).getOrThrow(IllegalStateException::new);
         stuckArrowsTag.add(arrowTag);
@@ -77,31 +66,17 @@ public class ArrowRetrievalChanceBonusHandler {
     }
     private static void retrieveArrows(LivingEntity entity) {
         CompoundTag entityPersistentData = PersistentDataProvider.get(entity);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         ListTag arrowsTag = entityPersistentData.getList(STUCK_ARROWS_TAG_NAME).orElse(new ListTag());
         if (arrowsTag.isEmpty()) {
             return;
         }
         HolderLookup.Provider registries = entity.level().registryAccess();
-<<<<<<< Updated upstream
-
-
-
-=======
->>>>>>> Stashed changes
         RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
         for (Tag tag : arrowsTag) {
             ItemStack arrowStack = ItemStack.CODEC.parse(ops, tag).result().orElse(ItemStack.EMPTY);
             if (arrowStack.isEmpty()) {
                 continue;
             }
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             if (entity.level() instanceof ServerLevel serverLevel) {
                 entity.spawnAtLocation(serverLevel, arrowStack);
             }

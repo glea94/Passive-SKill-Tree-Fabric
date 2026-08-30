@@ -39,10 +39,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
         if (playerCondition != NoneLivingEntityPredicate.INSTANCE || playerMultiplier != NoneLivingMultiplier.INSTANCE) {
             return;
         }
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         AttributesHelper.playerAttributesList().stream()
                 .map(attr -> player.getAttribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attr)))
                 .filter(Objects::nonNull)
@@ -51,10 +47,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
     }
     @Override
     public void onSkillRemoved(ServerPlayer player) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         AttributesHelper.playerAttributesList().stream()
                 .map(attr -> player.getAttribute(net.minecraft.core.registries.BuiltInRegistries.ATTRIBUTE.wrapAsHolder(attr)))
                 .filter(Objects::nonNull)
@@ -115,10 +107,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
     }
     @Override
     public AllAttributesBonus copy() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         AttributeModifier modifier = new AttributeModifier(
                 Identifier.fromNamespaceAndPath("skilltree", "modifier_" + UUID.randomUUID()),
                 this.modifier.amount(),
@@ -270,11 +258,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
             SerializationHelper.serializeLivingCondition(tag, aBonus.playerCondition, "player_condition");
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public AllAttributesBonus deserialize(RegistryFriendlyByteBuf buf) {
             AttributeModifier modifier = NetworkHelper.readAttributeModifier(buf);
@@ -283,11 +266,6 @@ public final class AllAttributesBonus implements SkillBonus<AllAttributesBonus>,
             bonus.playerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof AllAttributesBonus aBonus)) {

@@ -117,11 +117,6 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
     public float getRequiredValue() {
         return requiredValue;
     }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
     public FloatFunctionEntityPredicate copy() {
         return new FloatFunctionEntityPredicate(valueProvider, requiredValue, logic);
     }
@@ -144,10 +139,6 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
         public LivingEntityPredicate deserialize(CompoundTag tag) {
             FloatFunction<?> valueProvider = SerializationHelper.deserializeValueProvider(tag);
             float requiredValue = tag.getFloatOr("required_value", 0f);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             Logic logic = Logic.valueOf(tag.getString("logic").orElse(""));
             return new FloatFunctionEntityPredicate(valueProvider, requiredValue, logic);
         }
@@ -160,11 +151,6 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
             tag.putString("logic", validPredicate.logic.name());
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public LivingEntityPredicate deserialize(RegistryFriendlyByteBuf buf) {
             FloatFunction<?> valueProvider = NetworkHelper.readValueProvider(buf);
@@ -172,11 +158,6 @@ public class FloatFunctionEntityPredicate implements LivingEntityPredicate {
             Logic logic = Logic.values()[buf.readInt()];
             return new FloatFunctionEntityPredicate(valueProvider, requiredValue, logic);
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, LivingEntityPredicate predicate) {
             FloatFunctionEntityPredicate validPredicate = validatePredicate(predicate);

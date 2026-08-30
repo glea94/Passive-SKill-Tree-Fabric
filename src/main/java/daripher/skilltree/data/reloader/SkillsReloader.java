@@ -67,20 +67,10 @@ public class SkillsReloader extends SimplePreparableReloadListener<Map<Identifie
     public static @Nullable PassiveSkill getSkillById(Identifier id) {
         return SKILLS.get(id);
     }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
     public static void loadFromByteBuf(RegistryFriendlyByteBuf buf) {
         SKILLS.clear();
         NetworkHelper.readPassiveSkills(buf).forEach(s -> SKILLS.put(s.getId(), s));
     }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
     @Override
     protected Map<Identifier, JsonElement> prepare(ResourceManager resourceManager, ProfilerFiller profilerFiller) {
         Map<Identifier, JsonElement> map = new HashMap<>();

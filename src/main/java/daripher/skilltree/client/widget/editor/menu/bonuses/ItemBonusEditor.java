@@ -14,10 +14,6 @@ public class ItemBonusEditor extends EditorMenu {
     }
     @Override
     public void init() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         editor.addButton(0, 0, 90, 14, "Back").setPressFunc(b -> editor.selectMenu(previousMenu));
         editor.addConfirmationButton(110, 0, 90, 14, "Remove", "Confirm").setPressFunc(b -> {
             changesListener.accept(null);
@@ -29,11 +25,6 @@ public class ItemBonusEditor extends EditorMenu {
             editor.selectMenu(previousMenu);
             return;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         itemBonus.addEditorWidgets(editor, changesListener::accept);
     }
 }

@@ -216,11 +216,6 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
             SerializationHelper.serializeItemPredicate(tag, aBonus.itemStackPredicate);
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public ItemDurabilityLossPreventionBonus deserialize(RegistryFriendlyByteBuf buf) {
             float chance = buf.readFloat();
@@ -230,11 +225,6 @@ public final class ItemDurabilityLossPreventionBonus implements SkillBonus<ItemD
             bonus.itemStackPredicate = NetworkHelper.readItemPredicate(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ItemDurabilityLossPreventionBonus aBonus)) {

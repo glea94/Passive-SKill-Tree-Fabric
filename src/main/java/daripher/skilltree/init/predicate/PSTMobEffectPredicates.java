@@ -18,10 +18,6 @@ public class PSTMobEffectPredicates {
     public static final RegistryObject<MobEffectPredicate.Serializer> EFFECT_CATEGORY = REGISTRY.register("effect_category", MobEffectTypePredicate.Serializer::new);
     public static final RegistryObject<MobEffectPredicate.Serializer> EFFECT_ID = REGISTRY.register("effect_id", MobEffectIdPredicate.Serializer::new);
     public static List<MobEffectPredicate> defaultInstances() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         return PSTRegistries.MOB_EFFECT_PREDICATES.get().getValues().stream()
                 .map(MobEffectPredicate.Serializer::createDefaultInstance)
                 .toList();

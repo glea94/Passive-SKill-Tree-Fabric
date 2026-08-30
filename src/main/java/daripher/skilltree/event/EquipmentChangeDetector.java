@@ -21,11 +21,6 @@ public class EquipmentChangeDetector {
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             ItemStack current = player.getItemBySlot(slot);
             ItemStack before = previous.getOrDefault(slot, ItemStack.EMPTY);
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
             if (!ItemStack.isSameItemSameComponents(before, current)) {
                 previous.put(slot, current.copy());
                 PSTEvents.LIVING_EQUIPMENT_CHANGE.post(new LivingEquipmentChangePSTEvent(player, slot, before, current));

@@ -14,10 +14,6 @@ public abstract class LivingVisibilityMixin {
         LivingVisibilityPSTEvent event = new LivingVisibilityPSTEvent((LivingEntity) (Object) this, lookingEntity);
         PSTEvents.LIVING_VISIBILITY.post(event);
         if (event.getVisibilityModifier() != 1.0) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             cir.setReturnValue(cir.getReturnValue() * event.getVisibilityModifier());
         }
     }

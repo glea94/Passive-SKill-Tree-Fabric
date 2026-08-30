@@ -142,11 +142,6 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
         this.eventListener = eventListener;
     }
     private static CommandSourceStack createCommandSourceStack(Player player, ServerLevel level) {
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         return new CommandSourceStack(((ServerPlayer) player).commandSource(), player.position(), player.getRotationVector(), level, PermissionSet.ALL_PERMISSIONS, player.getName()
                 .getString(), player.getDisplayName(), level.getServer(), player);
     }
@@ -190,11 +185,6 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
             SerializationHelper.serializeEventListener(tag, aBonus.eventListener);
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public ExecuteCommandBonus deserialize(RegistryFriendlyByteBuf buf) {
             String command = buf.readUtf();
@@ -202,11 +192,6 @@ public class ExecuteCommandBonus implements EventListenerBonus<ExecuteCommandBon
             SkillEventListener eventListener = NetworkHelper.readEventListener(buf);
             return new ExecuteCommandBonus(command, description, eventListener);
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof ExecuteCommandBonus aBonus)) {

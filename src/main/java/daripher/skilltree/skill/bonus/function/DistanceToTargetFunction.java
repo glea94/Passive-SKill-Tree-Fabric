@@ -54,10 +54,6 @@ public class DistanceToTargetFunction implements FloatFunction<DistanceToTargetF
     }
     @Override
     public void addEditorWidgets(SkillTreeEditor editor, Consumer<FloatFunction<?>> consumer) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     }
     public static class Serializer implements FloatFunction.Serializer {
         @Override
@@ -81,20 +77,10 @@ public class DistanceToTargetFunction implements FloatFunction<DistanceToTargetF
             }
             return new CompoundTag();
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public FloatFunction<?> deserialize(RegistryFriendlyByteBuf buf) {
             return new DistanceToTargetFunction();
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, FloatFunction<?> provider) {
             if (!(provider instanceof DistanceToTargetFunction)) {

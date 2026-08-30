@@ -30,17 +30,8 @@ public class EffectDurationBonusHandler {
         }
         float durationMultiplier = 1f;
         MobEffectInstance effectInstance = event.getEffectInstance();
-<<<<<<< Updated upstream
-
-
         Holder<MobEffect> mobEffectHolder = effectInstance.getEffect();
         MobEffect mobEffect = mobEffectHolder.value();
-
-
-=======
-        Holder<MobEffect> mobEffectHolder = effectInstance.getEffect();
-        MobEffect mobEffect = mobEffectHolder.value();
->>>>>>> Stashed changes
         if (playerEffectSource != null) {
             List<EffectDurationBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(playerEffectSource, EffectDurationBonus.class);
             for (EffectDurationBonus skillBonus : skillBonuses) {
@@ -49,10 +40,6 @@ public class EffectDurationBonusHandler {
                 }
             }
         }
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         if (target instanceof Player playerTarget) {
             List<EffectDurationBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(playerTarget, EffectDurationBonus.class);
             for (EffectDurationBonus skillBonus : skillBonuses) {

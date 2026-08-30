@@ -15,10 +15,6 @@ public class PSTRecipeTypes {
                 return identifier;
             }
         };
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         return Registry.register(BuiltInRegistries.RECIPE_TYPE, Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, identifier), recipeType);
     }
 }

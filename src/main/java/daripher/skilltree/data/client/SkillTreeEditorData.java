@@ -88,15 +88,6 @@ public class SkillTreeEditorData {
         }
     }
     private static void generatePackMcmetaFile(File file) {
-<<<<<<< Updated upstream
-
-
-
-
-
-
-=======
->>>>>>> Stashed changes
         String fileContents = """
                 {
                   "pack": {
@@ -105,8 +96,8 @@ public class SkillTreeEditorData {
                     },
                     "pack_format": 69,
                     "min_format": 64,
-                    "max_format": 81,
-                    "supported_formats": [64, 81]
+                    "max_format": 120,
+                    "supported_formats": [64, 120]
                   }
                 }
                 """;

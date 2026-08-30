@@ -13,16 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import java.util.List;
 public class ItemUsagePreventionBonusHandler {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     private static boolean isProcessingRejection;
     public static void register() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         AttackEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
             ItemStack mainHandItem = player.getMainHandItem();
             if (shouldPreventItemUsage(player, mainHandItem)) {

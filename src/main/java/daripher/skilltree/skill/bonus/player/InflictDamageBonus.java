@@ -211,11 +211,6 @@ public final class InflictDamageBonus implements EventListenerBonus<InflictDamag
             SerializationHelper.serializeDamageCondition(tag, aBonus.damageType, "damage_type");
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public InflictDamageBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -225,11 +220,6 @@ public final class InflictDamageBonus implements EventListenerBonus<InflictDamag
             bonus.damageType = NetworkHelper.readDamageCondition(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof InflictDamageBonus aBonus)) {

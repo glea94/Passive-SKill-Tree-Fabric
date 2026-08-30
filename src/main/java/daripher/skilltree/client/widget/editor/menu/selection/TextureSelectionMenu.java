@@ -30,11 +30,6 @@ public class TextureSelectionMenu extends EditorMenu {
         editor.increaseHeight(29);
         editor.addLabel(0, 0, "Folder", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         TextField folderField = editor.addTextField(0, 0, 200, 14, texturesFolder);
         folderField.setSoftFilter(SkillTexturesData::isTextureFolder);
         folderField.setSuggestionProvider(SkillTexturesData::autocompleteFolderName);
@@ -47,11 +42,6 @@ public class TextureSelectionMenu extends EditorMenu {
         editor.increaseHeight(19);
         editor.addLabel(0, 0, "Search", ChatFormatting.GOLD);
         editor.increaseHeight(19);
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         TextField searchField = editor.addTextField(0, 0, 200, 14, "");
         searchField.setFocused(true);
         searchField.setResponder(selectionList::setSearchString);

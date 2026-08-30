@@ -269,6 +269,7 @@
   "loot.type.mobs": "награды с существ",
   "loot.type.ore": "награды из руды",
   "recipe.skilltree.workbench_armor_fire_forging": "Огнестойкая ковка брони",
+  "recipe.skilltree.workbench_armor_fire_forging.skill_requirement": "Требуется соответствующий навык кузнеца для каждого элемента брони",
   "recipe.skilltree.workbench_armor_fire_forging.custom_skill_description": "Вы можете ковать огнестойкую броню используя продвинутый рабочий стол",
   "recipe.skilltree.workbench_item_bonus": "%s [%s]",
   "recipe.skilltree.workbench_potion_mixing": "Смешивание зелий",

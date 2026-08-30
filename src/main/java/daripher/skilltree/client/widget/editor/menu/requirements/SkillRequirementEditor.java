@@ -38,11 +38,6 @@ public class SkillRequirementEditor extends EditorMenu {
     private void deleteSelectedSkillBonuses(SkillTreeEditor editor) {
         editor.getSelectedSkills().forEach(s -> removeRequirement(s, selectedRequirement));
         editor.saveSelectedSkills();
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         editor.clearWidgets();
         editor.selectMenu(previousMenu);
         editor.rebuildWidgets();

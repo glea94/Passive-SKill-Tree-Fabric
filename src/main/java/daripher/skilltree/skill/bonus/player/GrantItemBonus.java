@@ -156,22 +156,12 @@ public final class GrantItemBonus implements SkillBonus<GrantItemBonus> {
             tag.putInt("amount", aBonus.amount);
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public GrantItemBonus deserialize(RegistryFriendlyByteBuf buf) {
             Identifier itemId = buf.readIdentifier();
             int amount = buf.readInt();
             return new GrantItemBonus(itemId, amount);
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof GrantItemBonus aBonus)) {

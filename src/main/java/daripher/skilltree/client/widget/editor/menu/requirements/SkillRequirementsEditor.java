@@ -39,11 +39,6 @@ public class SkillRequirementsEditor extends EditorMenu {
     private void addSkillRequirement(SkillTreeEditor editor, SkillRequirement<?> requirement) {
         editor.getSelectedSkills().forEach(s -> s.getRequirements().add(requirement.copy()));
         editor.saveSelectedSkills();
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         editor.selectMenu(previousMenu);
     }
 }

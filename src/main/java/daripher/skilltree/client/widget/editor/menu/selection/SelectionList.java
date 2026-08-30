@@ -28,10 +28,6 @@ public abstract class SelectionList<T> extends AbstractButton {
     protected int maxScroll;
     protected int scroll;
     public SelectionList(int x, int y, int elementWidth, int elementHeight, Collection<T> elementsList) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         super(x, y, elementWidth, elementHeight, Component.empty());
         this.elementsList = new ArrayList<>(elementsList);
         this.elementWidth = elementWidth;
@@ -44,14 +40,7 @@ public abstract class SelectionList<T> extends AbstractButton {
         responder.accept(selectedElement);
     }
     @Override
-<<<<<<< Updated upstream
-
-
     public void extractContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-
-=======
-    public void extractContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
->>>>>>> Stashed changes
         if (!this.visible) {
             return;
         }
@@ -87,10 +76,6 @@ public abstract class SelectionList<T> extends AbstractButton {
     }
     private void renderBackgroundLine(@NotNull GuiGraphicsExtractor graphics, int x, int y, int textureOffset, int width, int height) {
         Identifier texture = WIDGETS_TEXTURE;
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, 0F, textureOffset, width / 2, height, 256, 256);
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, x + width / 2, y, (256F - width / 2F), textureOffset, width / 2, height, 256, 256);
     }
@@ -123,10 +108,6 @@ public abstract class SelectionList<T> extends AbstractButton {
         if (maxScroll == 0) {
             return;
         }
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         int maxScrollSize = this.getHeight() - 8;
         int scrollSize = maxScrollSize / (maxScroll + 1);
         int x = getX() + this.getWidth() - 4;
@@ -173,10 +154,6 @@ public abstract class SelectionList<T> extends AbstractButton {
         return this;
     }
     private void sortValues() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         List<T> sorted = new ArrayList<>(getDisplayedElements());
         sorted.sort(Comparator.comparing(t -> nameGetter.apply(t).getString()));
     }

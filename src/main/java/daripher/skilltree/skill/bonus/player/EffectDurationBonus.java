@@ -325,11 +325,6 @@ public final class EffectDurationBonus implements SkillBonus<EffectDurationBonus
             bonus.enemyCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof EffectDurationBonus aBonus)) {

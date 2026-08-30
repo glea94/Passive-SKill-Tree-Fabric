@@ -241,11 +241,6 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
             SerializationHelper.serializeLivingCondition(tag, aBonus.enemyCondition, "target_condition");
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public StealthBonus deserialize(RegistryFriendlyByteBuf buf) {
             float amount = buf.readFloat();
@@ -256,11 +251,6 @@ public final class StealthBonus implements SkillBonus<StealthBonus> {
             bonus.enemyCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof StealthBonus aBonus)) {

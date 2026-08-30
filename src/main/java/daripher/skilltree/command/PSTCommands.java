@@ -25,10 +25,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import org.jetbrains.annotations.NotNull;
 import java.util.stream.Stream;
 public class PSTCommands {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     public static final SuggestionProvider<CommandSourceStack> SKILL_ID_SUGGESTION = (ctx, builder) ->
             SharedSuggestionProvider.suggestResource(SkillsReloader.getSkillIds().stream(), builder);
     public static final SuggestionProvider<CommandSourceStack> SKILL_TREE_ID_SUGGESTION = (ctx, builder) ->
@@ -39,17 +35,9 @@ public class PSTCommands {
     public static final String SKILL_ID_ARGUMENT_NAME = "skill_id";
     public static final String SKILL_TREE_ID_ARGUMENT_NAME = "skill_tree_id";
     public static void register() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> registerCommands(dispatcher));
     }
     private static void registerCommands(com.mojang.brigadier.CommandDispatcher<CommandSourceStack> dispatcher) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         LiteralArgumentBuilder<CommandSourceStack> baseCommand = getRootCommand();
         baseCommand.then(getResetCommand().then(getPlayerArgument().executes(PSTCommands::executeResetCommand)));
         baseCommand.then(getPointsSubCommand()
@@ -123,10 +111,6 @@ public class PSTCommands {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         Identifier treeId;
         try {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             treeId = IdentifierArgument.getId(ctx, SKILL_TREE_ID_ARGUMENT_NAME);
         } catch (IllegalArgumentException e) {
             treeId = DEFAULT_SKILL_TREE_ID;
@@ -136,10 +120,6 @@ public class PSTCommands {
     }
     private static int executeGrantSkillCommand(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer player = EntityArgument.getPlayer(ctx, PLAYER_ARGUMENT_NAME);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         Identifier skillId = IdentifierArgument.getId(ctx, SKILL_ID_ARGUMENT_NAME);
         IPlayerSkills skillsCapability = PlayerSkillsProvider.get(player);
         var skillInstance = SkillsReloader.getSkillById(skillId);

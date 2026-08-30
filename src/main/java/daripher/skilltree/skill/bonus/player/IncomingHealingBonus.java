@@ -175,11 +175,6 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
             SerializationHelper.serializeLivingCondition(tag, aBonus.playerCondition, "player_condition");
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public IncomingHealingBonus deserialize(RegistryFriendlyByteBuf buf) {
             IncomingHealingBonus bonus = new IncomingHealingBonus(buf.readFloat());
@@ -187,11 +182,6 @@ public final class IncomingHealingBonus implements SkillBonus<IncomingHealingBon
             bonus.playerCondition = NetworkHelper.readLivingCondition(buf);
             return bonus;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof IncomingHealingBonus aBonus)) {

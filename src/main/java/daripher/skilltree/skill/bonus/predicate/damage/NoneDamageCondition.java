@@ -37,20 +37,10 @@ public enum NoneDamageCondition implements DamageCondition {
             }
             return new CompoundTag();
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public DamageCondition deserialize(RegistryFriendlyByteBuf buf) {
             return NoneDamageCondition.INSTANCE;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, DamageCondition condition) {
             if (condition != NoneDamageCondition.INSTANCE) {

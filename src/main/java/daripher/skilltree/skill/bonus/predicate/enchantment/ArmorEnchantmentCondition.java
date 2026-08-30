@@ -49,20 +49,10 @@ public class ArmorEnchantmentCondition implements EnchantmentCondition {
             }
             return new CompoundTag();
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public EnchantmentCondition deserialize(RegistryFriendlyByteBuf buf) {
             return new ArmorEnchantmentCondition();
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, EnchantmentCondition condition) {
             if (!(condition instanceof ArmorEnchantmentCondition)) {

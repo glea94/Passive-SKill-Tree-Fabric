@@ -26,10 +26,6 @@ public class AnvilUpdatePSTEvent extends PSTEvent {
         return output;
     }
     public void setOutput(ItemStack output) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         this.output = output != null ? output : ItemStack.EMPTY;
     }
 }

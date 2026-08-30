@@ -19,19 +19,10 @@ public class EffectImmunityBypassBonusHandler {
             return;
         }
         List<EffectImmunityBypassBonus> skillBonuses = SkillBonusProvider.getSkillBonuses(effectSource, EffectImmunityBypassBonus.class);
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         Holder<MobEffect> mobEffectHolder = event.getEffectInstance().getEffect();
         MobEffect mobEffect = mobEffectHolder.value();
         for (EffectImmunityBypassBonus skillBonus : skillBonuses) {
             if (skillBonus.shouldIgnoreEffectImmunity(mobEffect, effectSource, affectedEntity)) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
                 event.setResult(MobEffectApplicablePSTEvent.Result.ALLOW);
                 return;
             }

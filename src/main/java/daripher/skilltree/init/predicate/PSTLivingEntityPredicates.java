@@ -24,10 +24,6 @@ public class PSTLivingEntityPredicates {
     public static final RegistryObject<LivingEntityPredicate.Serializer> NUMERIC_VALUE = REGISTRY.register("numeric_value", FloatFunctionEntityPredicate.Serializer::new);
     public static final RegistryObject<LivingEntityPredicate.Serializer> ALL_ARMOR = REGISTRY.register("all_armor", AllArmorEntityPredicate.Serializer::new);
     public static List<LivingEntityPredicate> conditionsList() {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         return PSTRegistries.LIVING_CONDITIONS.get().getValues().stream()
                 .map(LivingEntityPredicate.Serializer::createDefaultInstance)
                 .toList();

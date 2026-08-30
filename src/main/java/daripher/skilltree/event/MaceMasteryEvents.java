@@ -82,9 +82,9 @@ public class MaceMasteryEvents {
             new MaceMasteryNode(Identifier.fromNamespaceAndPath("skilltree", "mace_mastery_5"), 85, 3, 5, 5, 1, 0, 0, 0, 0, 0, 0, false, false, false, false),
             new MaceMasteryNode(Identifier.fromNamespaceAndPath("skilltree", "mace_mastery_6"), 100, 3, 5, 6, 1, 1, 0, 0, 0, 0, 0, false, false, false, false),
             new MaceMasteryNode(Identifier.fromNamespaceAndPath("skilltree", "mace_mastery_8"), 105, 3, 6, 6, 1, 0, 1, 0, 0, 0, 0, false, false, false, false),
-            new MaceMasteryNode(Identifier.fromNamespaceAndPath("skilltree", "mace_mastery_7"), 120, 3, 6, 6, 2, 0, 0, 1, 0, 0, 0, false, false, true, false),
-            new MaceMasteryNode(Identifier.fromNamespaceAndPath("skilltree", "mace_mastery_10"), 130, 3, 6, 6, 2, 0, 0, 0, 1, 0, 0, true, false, false, false),
-            new MaceMasteryNode(Identifier.fromNamespaceAndPath("skilltree", "mace_mastery_9"), 135, 3, 6, 6, 2, 1, 0, 0, 0, 1, 0, false, true, false, false),
+            new MaceMasteryNode(Identifier.fromNamespaceAndPath("skilltree", "mace_mastery_10"), 120, 3, 6, 6, 2, 0, 0, 1, 0, 0, 0, false, false, true, false),
+            new MaceMasteryNode(Identifier.fromNamespaceAndPath("skilltree", "mace_mastery_7"), 130, 3, 6, 6, 2, 1, 0, 0, 1, 0, 0, true, false, false, false),
+            new MaceMasteryNode(Identifier.fromNamespaceAndPath("skilltree", "mace_mastery_9"), 135, 3, 6, 6, 2, 0, 1, 0, 0, 1, 0, false, true, false, false),
             new MaceMasteryNode(Identifier.fromNamespaceAndPath("skilltree", "mace_mastery_11"), 150, 3, 6, 6, 3, 1, 1, 1, 1, 1, 1, true, true, true, true)
     );
     public static void register() {
@@ -372,7 +372,7 @@ public class MaceMasteryEvents {
             AABB area = player.getBoundingBox().inflate(GOD_RADIUS);
             List<LivingEntity> targets = serverLevel.getEntitiesOfClass(LivingEntity.class, area,
                     e -> e != player && e.isAlive() && !(e instanceof Player));
-            DamageSource lightningDamage = player.damageSources().lightningBolt();
+            DamageSource lightningDamage = player.damageSources().source(DamageTypes.LIGHTNING_BOLT, player);
             for (LivingEntity nearby : targets) {
                 nearby.invulnerableTime = 0;
                 nearby.hurtServer(serverLevel, lightningDamage, GOD_DAMAGE);

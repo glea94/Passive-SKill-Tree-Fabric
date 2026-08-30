@@ -7,11 +7,6 @@ import net.minecraft.resources.Identifier;
 public class GainSkillPointMessage implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<GainSkillPointMessage> TYPE =
             new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "gain_skill_point"));
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
     public static final StreamCodec<RegistryFriendlyByteBuf, GainSkillPointMessage> STREAM_CODEC = StreamCodec.of(
             (buf, msg) -> msg.encode(buf),
             buf -> decode(buf)
@@ -22,10 +17,6 @@ public class GainSkillPointMessage implements CustomPacketPayload {
         return new GainSkillPointMessage();
     }
     public void encode(RegistryFriendlyByteBuf buf) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     }
     @Override
     public Type<? extends CustomPacketPayload> type() {

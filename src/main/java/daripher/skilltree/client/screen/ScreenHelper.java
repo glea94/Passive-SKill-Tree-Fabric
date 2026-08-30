@@ -19,11 +19,6 @@ public class ScreenHelper {
     public static void drawCenteredOutlinedText(GuiGraphicsExtractor graphics, String text, int x, int y, int color) {
         Font font = Minecraft.getInstance().font;
         x -= font.width(text) / 2;
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         int outlineColor = ARGB.opaque(0);
         int textColor = ARGB.opaque(color);
         graphics.text(font, text, x + 1, y, outlineColor, false);
@@ -99,19 +94,11 @@ public class ScreenHelper {
             tooltipY = 5;
         }
         graphics.pose().pushMatrix();
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         graphics.pose().translate(tooltipX, tooltipY);
         graphics.fill(1, 4, (int) (tooltipWidth - 1), tooltipHeight + 4, 0xDD000000);
         int textX = 5;
         int textY = 2;
         Identifier texture = button.skill.getTooltipFrameTexture();
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, -4, -4, 0F, 0F, 21, 20, 110, 20);
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, (int) (tooltipWidth + 4 - 21), -4, 89F, 0F, 21, 20, 110, 20);
         int centerWidth = (int) (tooltipWidth + 8 - 42);
@@ -123,11 +110,6 @@ public class ScreenHelper {
             centerWidth -= partWidth;
         }
         MutableComponent title = tooltip.remove(0);
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         graphics.centeredText(font, title, (int) (tooltipWidth / 2), textY, ARGB.opaque(0xFFFFFF));
         textY += 19;
         for (MutableComponent component : tooltip) {
@@ -143,20 +125,10 @@ public class ScreenHelper {
         SkillButton button2 = connection.getSecondButton();
         double connectionX = button1.getX() + button1.getWidth() / 2F;
         double connectionY = button1.getY() + button1.getHeight() / 2F;
-<<<<<<< Updated upstream
-
-        graphics.pose().translate((float) connectionX, (float) connectionY);
-        float rotation = ScreenHelper.getAngleBetweenButtons(button1, button2);
-
-        graphics.pose().rotate(rotation);
-        int length = (int) (ScreenHelper.getDistanceBetweenButtons(button1, button2) / zoom);
-
-=======
         graphics.pose().translate((float) connectionX, (float) connectionY);
         float rotation = ScreenHelper.getAngleBetweenButtons(button1, button2);
         graphics.pose().rotate(rotation);
         int length = (int) (ScreenHelper.getDistanceBetweenButtons(button1, button2) / zoom);
->>>>>>> Stashed changes
         graphics.pose().scale(zoom, zoom);
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, -8, -animation, highlighted ? 0F : 6F, length, 6, 30, 12);
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 2, animation, highlighted ? 0F : 6F, length, 6, 30, 12);
@@ -193,10 +165,6 @@ public class ScreenHelper {
         graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, -3, 0F, highlighted ? 0F : 6F, length, 6, 50, 12);
         boolean shouldAnimate = button1.skillLearned && button2.canLearn || button2.skillLearned && button1.canLearn;
         if (!highlighted && shouldAnimate) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             int tintColor = ARGB.color((Mth.sin(animation / 3F) + 1) / 2, -1);
             graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, -3, 0F, 0F, length, 6, 50, 12, tintColor);
         }

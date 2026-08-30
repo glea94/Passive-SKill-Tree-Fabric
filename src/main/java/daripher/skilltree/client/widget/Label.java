@@ -14,17 +14,9 @@ public class Label extends AbstractWidget {
     public static final Identifier WIDGETS_TEXTURE = Identifier.parse("skilltree:textures/screen/widgets.png");
     private boolean hasBackground;
     public Label(int x, int y, Component message) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         super(x, y, Minecraft.getInstance().font.width(message), 14, message);
     }
     public Label(int x, int y, int width, int height, Component message) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         super(x, y, width, height, message);
         setHasBackground(true);
     }
@@ -35,24 +27,11 @@ public class Label extends AbstractWidget {
         int currentWidth = this.getWidth();
         int currentHeight = this.getHeight();
         if (hasBackground) {
-<<<<<<< Updated upstream
-
-            graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS_TEXTURE, getX(), getY(), 0F, 14F, currentWidth / 2, currentHeight, 256, 256);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS_TEXTURE, getX() + currentWidth / 2, getY(), 256F - currentWidth / 2F, 14F, currentWidth / 2, currentHeight, 256, 256);
-
-
-            int textColor = 0xFFFFFF | Mth.ceil(this.alpha * 255F) << 24;
-            graphics.centeredText(font, getMessage(), getX() + currentWidth / 2, getY() + (currentHeight - 8) / 2, textColor);
-        } else {
-
-
-=======
             graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS_TEXTURE, getX(), getY(), 0F, 14F, currentWidth / 2, currentHeight, 256, 256);
             graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS_TEXTURE, getX() + currentWidth / 2, getY(), 256F - currentWidth / 2F, 14F, currentWidth / 2, currentHeight, 256, 256);
             int textColor = 0xFFFFFF | Mth.ceil(this.alpha * 255F) << 24;
             graphics.centeredText(font, getMessage(), getX() + currentWidth / 2, getY() + (currentHeight - 8) / 2, textColor);
         } else {
->>>>>>> Stashed changes
             graphics.text(font, getMessage(), getX(), getY() + 3, ARGB.opaque(0xFFFFFF));
         }
     }

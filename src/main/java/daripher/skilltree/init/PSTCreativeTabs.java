@@ -12,10 +12,6 @@ public class PSTCreativeTabs {
     public static final MutableComponent TAB_TITLE = Component.translatable("itemGroup.skilltree");
     public static final Supplier<ItemStack> TAB_ICON_STACK = () -> new ItemStack(PSTItems.AMNESIA_SCROLL.get());
     static {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         REGISTRY.register("skilltree", () -> CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
                 .title(TAB_TITLE)
                 .icon(TAB_ICON_STACK)

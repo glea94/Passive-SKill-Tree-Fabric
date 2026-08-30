@@ -33,10 +33,6 @@ public class SkillTreeEditorScreen extends Screen {
     private boolean statsUpdated;
     public SkillTreeEditorScreen(Identifier skillTreeId) {
         super(Component.empty());
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         this.skillTree = SkillTreeEditorData.getOrCreateEditorTree(skillTreeId);
         this.skillButtons = new SkillButtons(skillTree, () -> 0f);
         this.editorWidgets = new SkillTreeEditor(skillButtons);
@@ -57,11 +53,6 @@ public class SkillTreeEditorScreen extends Screen {
         ((AbstractWidgetAccessor) (Object) skillButtons).setHeight(this.height);
         ((AbstractWidgetAccessor) (Object) editorWidgets).setWidth(210);
         ((AbstractWidgetAccessor) (Object) editorWidgets).setHeight(10);
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         editorWidgets.setX(this.width - editorWidgets.getWidth());
         editorWidgets.init();
         editorWidgets.increaseHeight(5);
@@ -92,10 +83,6 @@ public class SkillTreeEditorScreen extends Screen {
     }
     @Override
     public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         renderBackground(graphics);
         skillButtons.extractRenderState(graphics, mouseX, mouseY, partialTick);
         renderOverlay(graphics);
@@ -157,11 +144,6 @@ public class SkillTreeEditorScreen extends Screen {
     public boolean mouseReleased(MouseButtonEvent mouseButtonEvent) {
         return editorWidgets.mouseReleased(mouseButtonEvent);
     }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         return editorWidgets.mouseScrolled(mouseX, mouseY, 0, scrollY) || skillButtons.mouseScrolled(mouseX, mouseY, 0, scrollY);

@@ -47,10 +47,6 @@ public class SkillTagsEditor extends EditorMenu {
             String finalName = name;
             editor.getSelectedSkills().forEach(s -> s.getTags().add(finalName));
             editor.saveSelectedSkills();
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             editor.clearWidgets();
             editor.rebuildWidgets();
         });
@@ -58,10 +54,6 @@ public class SkillTagsEditor extends EditorMenu {
             editor.addButton(110, 0, 90, 14, "Remove").setPressFunc(b -> {
                 editor.getSelectedSkills().forEach(s -> s.getTags().remove(tags.size() - 1));
                 editor.saveSelectedSkills();
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
                 editor.clearWidgets();
                 editor.rebuildWidgets();
             });
@@ -76,10 +68,6 @@ public class SkillTagsEditor extends EditorMenu {
                 name += "1";
             }
             limitations.put(name, 1);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             editor.clearWidgets();
             editor.rebuildWidgets();
             SkillTreeEditorData.saveEditorSkillTree(skillTree);

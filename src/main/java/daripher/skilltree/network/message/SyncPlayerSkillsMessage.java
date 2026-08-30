@@ -14,11 +14,6 @@ import java.util.List;
 public class SyncPlayerSkillsMessage implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<SyncPlayerSkillsMessage> TYPE =
             new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(SkillTreeMod.MOD_ID, "sync_player_skills"));
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
     public static final StreamCodec<RegistryFriendlyByteBuf, SyncPlayerSkillsMessage> STREAM_CODEC = StreamCodec.composite(
             Identifier.STREAM_CODEC.apply(ByteBufCodecs.list()), message -> message.learnedSkills,
             ByteBufCodecs.VAR_INT, message -> message.skillPoints,
@@ -26,11 +21,6 @@ public class SyncPlayerSkillsMessage implements CustomPacketPayload {
     );
     public final List<Identifier> learnedSkills;
     public final int skillPoints;
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
     private SyncPlayerSkillsMessage(List<Identifier> learnedSkills, int skillPoints) {
         this.learnedSkills = learnedSkills;
         this.skillPoints = skillPoints;

@@ -16,15 +16,8 @@ public class SkillMirrorer extends AbstractWidget {
     private float mirrorAngle;
     private int mirrorSides = 2;
     public SkillMirrorer(SkillTreeEditor editor) {
-<<<<<<< Updated upstream
-
         super(0, 0, 0, 0, Component.empty());
         this.editor = editor;
-
-=======
-        super(0, 0, 0, 0, Component.empty());
-        this.editor = editor;
->>>>>>> Stashed changes
         this.active = false;
     }
     public void init() {
@@ -69,11 +62,6 @@ public class SkillMirrorer extends AbstractWidget {
         ScreenHelper.drawRectangle(graphics, -4, -4, 8, 8, 0x55CFCFCF);
         graphics.pose().popMatrix();
     }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
     private void updateMirrorActive(SkillTreeEditor editor, boolean active) {
         this.active = active;
         editor.clearWidgets();

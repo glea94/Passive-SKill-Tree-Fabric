@@ -15,10 +15,6 @@ public class NavigationArrowButton extends Button {
     }
     @Override
     protected void renderBackground(@NotNull GuiGraphicsExtractor graphics) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     }
     @Override
     protected void renderText(@NotNull GuiGraphicsExtractor graphics) {
@@ -28,11 +24,6 @@ public class NavigationArrowButton extends Button {
         int textColor = baseColor | (Mth.ceil(this.alpha * 255F) << 24);
         float centerX = getX() + this.getWidth() / 2F;
         float centerY = getY() + this.getHeight() / 2F;
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         Matrix3x2fStack poseStack = graphics.pose();
         poseStack.pushMatrix();
         poseStack.translate(centerX, centerY);

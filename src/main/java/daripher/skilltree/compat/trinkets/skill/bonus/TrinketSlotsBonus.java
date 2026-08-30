@@ -37,20 +37,12 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
     }
     private AttributeInstance getSlotAttributeInstance(ServerPlayer player) {
         Identifier attributeId = Identifier.fromNamespaceAndPath("trinkets", slotName);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         Holder<Attribute> slotAttributeHolder = BuiltInRegistries.ATTRIBUTE.get(attributeId)
                 .map(holder -> (Holder<Attribute>) (Object) holder)
                 .orElse(null);
         if (slotAttributeHolder == null) {
             return null;
         }
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         return player.getAttribute(slotAttributeHolder);
     }
     @Override
@@ -150,10 +142,6 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
         }
         @Override
         public TrinketSlotsBonus deserialize(CompoundTag tag) {
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             String slotName = tag.getString("slot").orElse("");
             int amount = tag.getInt("amount").orElse(0);
             String modifierId = tag.getString("modifier_id").orElse("");
@@ -170,11 +158,6 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
             tag.putString("modifier_id", aBonus.modifierId.toString());
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public TrinketSlotsBonus deserialize(RegistryFriendlyByteBuf buf) {
             String slotName = buf.readUtf();
@@ -182,11 +165,6 @@ public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
             String modifierId = buf.readUtf();
             return new TrinketSlotsBonus(slotName, amount, Identifier.parse(modifierId));
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof TrinketSlotsBonus aBonus)) {

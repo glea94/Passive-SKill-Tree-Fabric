@@ -186,22 +186,12 @@ public final class BlockBreakSpeedBonus implements SkillBonus<BlockBreakSpeedBon
             tag.putFloat("multiplier", aBonus.multiplier);
             return tag;
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public BlockBreakSpeedBonus deserialize(RegistryFriendlyByteBuf buf) {
             LivingEntityPredicate playerCondition = NetworkHelper.readLivingCondition(buf);
             LivingMultiplier playerMultiplier = NetworkHelper.readLivingMultiplier(buf);
             return new BlockBreakSpeedBonus(buf.readFloat()).setPlayerCondition(playerCondition).setPlayerMultiplier(playerMultiplier);
         }
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
         @Override
         public void serialize(RegistryFriendlyByteBuf buf, SkillBonus<?> bonus) {
             if (!(bonus instanceof BlockBreakSpeedBonus aBonus)) {
