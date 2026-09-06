@@ -16,6 +16,10 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+import net.minecraft.resources.ResourceLocation;
+>>>>>>> Stashed changes
 =======
 import net.minecraft.resources.ResourceLocation;
 >>>>>>> Stashed changes
@@ -74,7 +78,10 @@ public class ServerNetworking {
         message.encode(buf);
         ServerPlayNetworking.send(player, PSTNetworkChannels.SYNC_SERVER_DATA, buf);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     }
 
     public static void sendOpenSkillTreeEditor(ServerPlayer player, ResourceLocation treeId) {
@@ -82,6 +89,11 @@ public class ServerNetworking {
         FriendlyByteBuf buf = PacketByteBufs.create();
         message.encode(buf);
         ServerPlayNetworking.send(player, PSTNetworkChannels.OPEN_SKILL_TREE_EDITOR, buf);
+<<<<<<< Updated upstream
 >>>>>>> Stashed changes
     }
 }
+=======
+    }
+}
+>>>>>>> Stashed changes

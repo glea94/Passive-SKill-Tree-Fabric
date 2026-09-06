@@ -21,6 +21,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import java.util.Objects;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 /**
  * Portage Fabric : remplace la partie DistExecutor.unsafeRunWhenOn(Dist.CLIENT, ...) /
  * @OnlyIn(Dist.CLIENT) de SyncPlayerSkillsMessage côté Forge. Sous Fabric, cette séparation se
@@ -30,13 +31,18 @@ import java.util.Objects;
  */
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 public class ClientNetworking {
     public static void register() {
         ClientPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.SYNC_SERVER_DATA, (client, handler, buf, responseSender) -> {
             SyncServerDataMessage message = SyncServerDataMessage.decode(buf);
             client.execute(() -> {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 // le decode() a déjà appliqué les données (SkillsReloader/SkillTreesReloader), comme dans la version Forge.
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
             });
@@ -45,11 +51,17 @@ public class ClientNetworking {
             SyncPlayerSkillsMessage message = SyncPlayerSkillsMessage.decode(buf);
             client.execute(() -> handleSyncPlayerSkills(client, message));
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
         });
         ClientPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.OPEN_SKILL_TREE_EDITOR, (client, handler, buf, responseSender) -> {
             OpenSkillTreeEditorMessage message = OpenSkillTreeEditorMessage.decode(buf);
             client.execute(() -> client.setScreen(new SkillTreeEditorScreen(message.treeId)));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         });
     }
