@@ -95,7 +95,7 @@ java {
 sourceSets {
 	main {
 		resources {
-			// Inclut explicitement le dossier généré à côté des ressources classiques
+
 			srcDir 'src/main/generated'
 		}
 	}

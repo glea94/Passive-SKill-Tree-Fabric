@@ -1,4 +1,3 @@
-// Fichier : src/main/java/daripher/skilltree/client/network/ClientNetworking.java
 package daripher.skilltree.client.network;
 
 import daripher.skilltree.capability.skill.IPlayerSkills;
@@ -20,49 +19,20 @@ import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.Objects;
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-/**
- * Portage Fabric : remplace la partie DistExecutor.unsafeRunWhenOn(Dist.CLIENT, ...) /
- * @OnlyIn(Dist.CLIENT) de SyncPlayerSkillsMessage côté Forge. Sous Fabric, cette séparation se
- * fait simplement en gardant ce code dans le package client (jamais référencé par le code
- * commun ni par l'entrypoint serveur), donc jamais chargé sur un serveur dédié - même résultat
- * qu'avec DistExecutor, par la structure du code plutôt que par un test à l'exécution.
- */
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 public class ClientNetworking {
     public static void register() {
         ClientPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.SYNC_SERVER_DATA, (client, handler, buf, responseSender) -> {
             SyncServerDataMessage message = SyncServerDataMessage.decode(buf);
             client.execute(() -> {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-                // le decode() a déjà appliqué les données (SkillsReloader/SkillTreesReloader), comme dans la version Forge.
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             });
         });
         ClientPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.SYNC_PLAYER_SKILLS, (client, handler, buf, responseSender) -> {
             SyncPlayerSkillsMessage message = SyncPlayerSkillsMessage.decode(buf);
             client.execute(() -> handleSyncPlayerSkills(client, message));
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
         });
         ClientPlayNetworking.registerGlobalReceiver(PSTNetworkChannels.OPEN_SKILL_TREE_EDITOR, (client, handler, buf, responseSender) -> {
             OpenSkillTreeEditorMessage message = OpenSkillTreeEditorMessage.decode(buf);
             client.execute(() -> client.setScreen(new SkillTreeEditorScreen(message.treeId)));
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         });
     }
 

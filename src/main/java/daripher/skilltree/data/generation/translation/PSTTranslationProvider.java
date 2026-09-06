@@ -24,11 +24,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.Objects;
 
-/**
- * Portage Fabric de LanguageProvider (Forge) vers FabricLanguageProvider (Fabric Data Generation API).
- * Signature confirmée par le compilateur (23/07/2026) : constructeur à 2 arguments (pas de
- * CompletableFuture), generateTranslations(TranslationBuilder) sans RegistryAccess.
- */
 public abstract class PSTTranslationProvider extends FabricLanguageProvider {
     public PSTTranslationProvider(FabricDataOutput dataOutput, String locale) {
         super(dataOutput, locale);

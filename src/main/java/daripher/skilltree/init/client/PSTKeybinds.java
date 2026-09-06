@@ -15,11 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.glfw.GLFW;
 
-/**
- * Portage Fabric : RegisterKeyMappingsEvent -> KeyBindingHelper.registerKeyBinding,
- * InputEvent.Key -> boucle consumeClick() sur ClientTickEvents.END_CLIENT_TICK (idiome standard
- * Fabric pour la détection d'appui sur une touche, remplace l'event par touche individuelle).
- */
 public class PSTKeybinds {
     private static final KeyMapping SKILL_TREE_KEY = new KeyMapping("key.display_skill_tree", GLFW.GLFW_KEY_O, "key.categories." + SkillTreeMod.MOD_ID);
 

@@ -41,7 +41,6 @@ public class PlayerHelper {
         return stack;
     }
 
-    // Portage Fabric : Curios -> Trinkets (choix confirmé en début de projet), ModList.get().isLoaded -> FabricLoader.
     public static Stream<ItemStack> getCurios(LivingEntity living) {
         if (FabricLoader.getInstance().isModLoaded("trinkets")) {
             return TrinketsCompatibility.INSTANCE.getTrinkets(living);

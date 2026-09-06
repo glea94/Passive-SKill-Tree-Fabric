@@ -4,7 +4,7 @@ import daripher.skilltree.util.event.PSTEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 
-/** Équivalent de net.minecraftforge.event.entity.living.LivingHurtEvent (mêmes accesseurs). */
+
 public class LivingHurtPSTEvent extends PSTEvent {
     private final LivingEntity entity;
     private final DamageSource source;

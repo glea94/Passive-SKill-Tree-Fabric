@@ -9,18 +9,6 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Portage Fabric : Forge utilisait BrewingRecipeRegistry.addRecipe(Ingredient, Ingredient,
- * ItemStack) avec un StrictNBTIngredient pour matcher précisément la potion d'entrée par NBT.
- * Fabric expose net.fabricmc.fabric.api.registry.FabricBrewingRecipeRegistry, l'équivalent
- * officiel pensé pour les mods, avec exactement les deux mêmes opérations :
- * - registerPotionRecipe(Potion, Ingredient, Potion) : potion précise -> potion précise
- *   (équivalent exact du cas "liquid_fire_1 + glowstone -> liquid_fire_2")
- * - registerItemRecipe(PotionItem, Ingredient, PotionItem) : conversion de contenant
- *   (potion -> splash -> lingering), valable pour TOUTES les potions de ce type d'item en un
- *   seul appel (donc appelée une seule fois globalement, pas par potion, contrairement au code
- *   Forge d'origine qui la répétait par sécurité pour chaque potion custom).
- */
 public class PSTBrewingRecipes {
     private static boolean itemRecipesRegistered = false;
 

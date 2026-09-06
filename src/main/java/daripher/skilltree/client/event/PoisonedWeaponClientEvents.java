@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-/** Portage Fabric : logique identique, seule la souscription change. */
 public class PoisonedWeaponClientEvents {
     public static void register() {
         PSTEvents.ITEM_TOOLTIP.register(PoisonedWeaponClientEvents::addPoisonedWeaponTooltip);

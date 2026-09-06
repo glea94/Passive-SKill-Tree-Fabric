@@ -28,10 +28,6 @@ public class SkillTexturesData implements IdentifiableResourceReloadListener {
         return new ResourceLocation(SkillTreeMod.MOD_ID, "skill_textures_reloader");
     }
 
-    // Portage Fabric : IdentifiableResourceReloadListener étend PreparableReloadListener
-    // directement (pas le simple ResourceManagerReloadListener) : la vraie méthode abstraite à
-    // implémenter est reload(...), pas onResourceManagerReload(ResourceManager). Le travail
-    // (scan des textures) est simple et synchrone, donc fait entièrement côté "prepare".
     @Override
     public CompletableFuture<Void> reload(PreparableReloadListener.PreparationBarrier barrier, ResourceManager resourceManager,
                                            ProfilerFiller prepareProfiler, ProfilerFiller applyProfiler,

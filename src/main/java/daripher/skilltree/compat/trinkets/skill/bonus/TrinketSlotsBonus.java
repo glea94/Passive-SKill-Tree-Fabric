@@ -22,16 +22,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-/**
- * Portage/réécriture de compat/curios/skill/bonus/CurioSlotsBonus.java contre Trinkets API.
- * <p>
- * Différence de mécanisme avec Curios (assumée) : Curios modifiait directement l'inventaire de
- * slots (inv.addPermanentSlotModifiers). Trinkets expose à la place un Attribute vanilla par
- * groupe/slot (ex. "trinkets:ring/ring") que l'on modifie via AttributeInstance.addPermanentModifier
- * comme n'importe quel attribut vanilla (max_health, armor...) - le nombre de slots disponibles
- * suit alors la valeur de cet attribut. CONFIANCE MODÉRÉE sur le format exact de l'identifiant
- * ("trinkets:" + slotName, à confirmer une fois la dépendance Trinkets résolue dans Gradle).
- */
 public final class TrinketSlotsBonus implements SkillBonus<TrinketSlotsBonus> {
     private String slotName;
     private int amount;

@@ -1,4 +1,3 @@
-// Fichier : src/main/java/daripher/skilltree/command/PSTCommands.java
 package daripher.skilltree.command;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;

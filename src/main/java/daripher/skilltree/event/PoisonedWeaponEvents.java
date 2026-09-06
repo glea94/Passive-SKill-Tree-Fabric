@@ -12,7 +12,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Portage Fabric : logique identique, seule la souscription à LivingAttackEvent change. */
+
 public class PoisonedWeaponEvents {
     public static final String WEAPON_EFFECTS_TAG_NAME = "poisoned_weapon_effects";
     public static final String POISON_USES_LEFT_TAG_NAME = "poisoned_weapon_uses_left";

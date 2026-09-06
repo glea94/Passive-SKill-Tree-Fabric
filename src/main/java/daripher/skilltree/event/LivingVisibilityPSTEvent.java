@@ -4,7 +4,7 @@ import daripher.skilltree.util.event.PSTEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
-/** Équivalent de net.minecraftforge.event.entity.living.LivingEvent.LivingVisibilityEvent. */
+
 public class LivingVisibilityPSTEvent extends PSTEvent {
     private final LivingEntity entity;
     private final Entity lookingEntity;

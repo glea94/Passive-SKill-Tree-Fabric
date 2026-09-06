@@ -5,7 +5,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
-/** Équivalent de net.minecraftforge.event.entity.living.MobEffectEvent.Added. */
+
 public class MobEffectAddedPSTEvent extends PSTEvent {
     private final LivingEntity entity;
     private final MobEffectInstance effectInstance;

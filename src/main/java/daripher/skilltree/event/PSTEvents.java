@@ -2,15 +2,6 @@ package daripher.skilltree.event;
 
 import daripher.skilltree.util.event.PSTEventBus;
 
-/**
- * Point central d'enregistrement/déclenchement de tous les events "maison" du mod qui remplacent
- * des events Forge sans équivalent direct dans Fabric API. Un bus par type d'event, comme des
- * "canaux" séparés plutôt qu'un event bus global filtré par type comme chez Forge - même résultat.
- * <p>
- * État actuel (étape events, en cours) : LIVING_HURT est le premier porté (8 handlers Forge
- * l'utilisaient). Les ~18 autres types d'event du mod seront ajoutés ici au fur et à mesure des
- * prochaines étapes (voir le tableau de classification donné dans le chat).
- */
 public class PSTEvents {
     public static final PSTEventBus<LivingHurtPSTEvent> LIVING_HURT = new PSTEventBus<>();
     public static final PSTEventBus<CriticalHitPSTEvent> CRITICAL_HIT = new PSTEventBus<>();

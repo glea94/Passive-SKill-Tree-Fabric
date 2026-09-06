@@ -13,13 +13,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Portage Fabric : remplace net.minecraftforge.common.ForgeConfigSpec (pas d'équivalent direct
- * sur Fabric, pas de "config API" officielle) par un simple fichier JSON dans le dossier de
- * config, lu/écrit avec Gson (déjà fourni par Minecraft, aucune dépendance supplémentaire).
- * Mêmes noms de champs statiques publics que la version Forge (max_skill_points,
- * first_skill_cost, etc.) : tout le reste du mod qui les référence déjà n'a rien à changer.
- */
 public class ServerConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve(SkillTreeMod.MOD_ID + "-server.json");
